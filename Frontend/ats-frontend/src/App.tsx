@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
@@ -10,6 +10,6 @@ function App() {
         <Route path="/settings" element={<div>Settings</div>} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
-export default App
+export default App;
