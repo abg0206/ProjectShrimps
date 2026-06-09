@@ -1,4 +1,4 @@
-import { defineWorkspace } from 'vitest/config'
+import { defineWorkspace } from 'vitest/config';
 
 export default defineWorkspace([
   // Backend configuration
@@ -20,4 +20,4 @@ export default defineWorkspace([
       // If using React/Vue, you can add your plugins here
     },
   },
-])
+]);
