@@ -62,8 +62,8 @@ export default function LoginPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={handleKeyDown}
-          style={{ padding: '10px', borderRadius: '6px', border: 'none', fontSize: '14px' }}
+          style={{ padding: '10px', borderRadius: '6px', border: 'solid', fontSize: '14px' }}
+  
         />
 
         <input
@@ -71,8 +71,8 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={handleKeyDown}
-          style={{ padding: '10px', borderRadius: '6px', border: 'none', fontSize: '14px' }}
+          style={{ padding: '10px', borderRadius: '6px', border: 'solid', fontSize: '14px' }}
+        
         />
 
         {error && (
