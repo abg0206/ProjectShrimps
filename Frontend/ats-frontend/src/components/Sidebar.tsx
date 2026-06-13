@@ -1,39 +1,72 @@
-import { NavLink } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function handleLogout() {
-   
-    localStorage.removeItem('isLoggedIn')
-    navigate('/')
-  
+    localStorage.removeItem('isLoggedIn');
+    navigate('/');
   }
 
   return (
-    <div style={{ backgroundColor: '#E6CECB', width: '200px', minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '16px' }}>
-      
+    <div
+      style={{
+        backgroundColor: '#E6CECB',
+        width: '200px',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '16px',
+      }}
+    >
       {/* app name */}
-      <h2 style={{ color: '#3C1510', textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
+      <h2
+        style={{
+          color: '#3C1510',
+          textAlign: 'center',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          marginBottom: '16px',
+        }}
+      >
         Shrimply
       </h2>
 
       {/* profile picture circle */}
-      <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#3C1510', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E6CECB', margin: '0 auto 8px', fontSize: '18px', fontWeight: 'bold' }}>
+      <div
+        style={{
+          width: '64px',
+          height: '64px',
+          borderRadius: '50%',
+          backgroundColor: '#3C1510',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#E6CECB',
+          margin: '0 auto 8px',
+          fontSize: '18px',
+          fontWeight: 'bold',
+        }}
+      >
         CS
       </div>
 
       {/* username */}
-      <p style={{ textAlign: 'center', color: '#3C1510', fontSize: '14px', marginBottom: '24px' }}>
-
+      <p
+        style={{
+          textAlign: 'center',
+          color: '#3C1510',
+          fontSize: '14px',
+          marginBottom: '24px',
+        }}
+      >
         Caridean Shrimp
-      
       </p>
 
       {/* Nav links */}
-      <NavLink to="/dashboard"
+      <NavLink
+        to="/dashboard"
         style={({ isActive }) => ({
           color: isActive ? '#E6CECB' : '#3C1510',
           backgroundColor: isActive ? '#932C20' : 'transparent',
@@ -41,14 +74,14 @@ export default function Sidebar() {
           borderRadius: '6px',
           textDecoration: 'none',
           marginBottom: '4px',
-          fontSize: '14px'
-        })}>
-
+          fontSize: '14px',
+        })}
+      >
         Dashboard
-      
       </NavLink>
 
-      <NavLink to="/profile"
+      <NavLink
+        to="/profile"
         style={({ isActive }) => ({
           color: isActive ? '#E6CECB' : '#3C1510',
           backgroundColor: isActive ? '#932C20' : 'transparent',
@@ -56,14 +89,14 @@ export default function Sidebar() {
           borderRadius: '6px',
           textDecoration: 'none',
           marginBottom: '4px',
-          fontSize: '14px'
-        })}>
-
+          fontSize: '14px',
+        })}
+      >
         Profile
-      
       </NavLink>
 
-      <NavLink to="/settings"
+      <NavLink
+        to="/settings"
         style={({ isActive }) => ({
           color: isActive ? '#E6CECB' : '#3C1510',
           backgroundColor: isActive ? '#932C20' : 'transparent',
@@ -71,22 +104,27 @@ export default function Sidebar() {
           borderRadius: '6px',
           textDecoration: 'none',
           marginBottom: '4px',
-          fontSize: '14px'
-        })}>
-
+          fontSize: '14px',
+        })}
+      >
         Settings
-      
       </NavLink>
 
-
-       <button
+      <button
         onClick={handleLogout}
-        style={{ marginTop: 'auto', backgroundColor: 'transparent', color: '#932C20', border: '10px solid #932C20', borderRadius: '6px', padding: '8px 12px', fontSize: '14px', cursor: 'pointer' }}>
-
+        style={{
+          marginTop: 'auto',
+          backgroundColor: 'transparent',
+          color: '#932C20',
+          border: '10px solid #932C20',
+          borderRadius: '6px',
+          padding: '8px 12px',
+          fontSize: '14px',
+          cursor: 'pointer',
+        }}
+      >
         Logout
-      
       </button>
-
     </div>
-  )
+  );
 }
