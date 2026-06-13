@@ -4,9 +4,11 @@ const express = require('express');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
 
 // PostgreSQL Connection Pool
