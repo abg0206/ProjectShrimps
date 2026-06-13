@@ -22,4 +22,4 @@ async function createUser(email, clerkId, phone, firstName, lastName){
         client.release();
     }
 }
-module.exports = { findByClerkId, createdUser };
+module.exports = { findByClerkId, createUser };
