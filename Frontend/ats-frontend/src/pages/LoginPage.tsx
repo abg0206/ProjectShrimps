@@ -35,7 +35,7 @@ export default function LoginPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ padding: '10px', borderRadius: '6px', border: 'none', fontSize: '14px' }}
+          style={{ padding: '10px', borderRadius: '6px', border: 'solid', fontSize: '14px' }}
   
         />
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ padding: '10px', borderRadius: '6px', border: 'none', fontSize: '14px' }}
+          style={{ padding: '10px', borderRadius: '6px', border: 'solid', fontSize: '14px' }}
         
         />
 
