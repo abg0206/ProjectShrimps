@@ -35,7 +35,7 @@ export default function ProfilePage() {
         
         </h1>
 
-        {/* Progress bar */}
+        {/* progress bar */}
         <div style={{ marginBottom: '24px' }}>
           
           <div style={{ backgroundColor: '#E6CECB', borderRadius: '999px', height: '10px', width: '100%', marginBottom: '4px' }}>
@@ -48,9 +48,9 @@ export default function ProfilePage() {
         
         </div>
 
-        {/* Identity & Contact */}
+        {/* id */}
         
-        <div style={{ backgroundColor: '#FFF', borderRadius: '10px', padding: '24px', marginBottom: '16px' }}>
+        <div style={{ backgroundColor: '#E6CECB', borderRadius: '10px', padding: '24px', marginBottom: '16px' }}>
           
           <h2 style={{ color: '#3C1510', fontSize: '16px', fontWeight: 'bold', marginBottom: '16px' }}>
             
@@ -128,8 +128,8 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Professional Summary */}
-        <div style={{ backgroundColor: '#FFF', borderRadius: '10px', padding: '24px' }}>
+        {/* professional summary */}
+        <div style={{ backgroundColor: '#E6CECB', borderRadius: '10px', padding: '24px' }}>
           <h2 style={{ color: '#3C1510', fontSize: '16px', fontWeight: 'bold', marginBottom: '16px' }}>
             Professional Summary
           </h2>

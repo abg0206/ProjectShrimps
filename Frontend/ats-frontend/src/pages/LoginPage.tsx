@@ -9,7 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate()
 
   function handleLogin() {
-    //takes us to the dashboard once we hit login. 
+    localStorage.setItem('isLoggedIn', 'true')
     navigate('/dashboard')
   
   }
@@ -56,13 +56,19 @@ export default function LoginPage() {
         </button>
 
         <p style={{ textAlign: 'center', fontSize: '13px', color: '#3C1510' }}> 
+
           Don't have an account? <a href="/register" style={{ color: '#932C20' }}>Create one here</a>
-      `</p>
+
+      </p>
 
         <p style={{ textAlign: 'center', fontSize: '13px' }}>
+          
           <a href="/forgot-password" style={{ color: '#932C20' }}>Forgot Password?</a>
+        
         </p>
 
+ 
+ 
       </div>
     </div>
   )

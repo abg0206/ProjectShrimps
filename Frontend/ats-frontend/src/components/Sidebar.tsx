@@ -1,22 +1,35 @@
 import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function Sidebar() {
+
+  const navigate = useNavigate()
+
+  function handleLogout() {
+   
+    localStorage.removeItem('isLoggedIn')
+    navigate('/')
+  
+  }
+
   return (
     <div style={{ backgroundColor: '#E6CECB', width: '200px', minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '16px' }}>
       
-      {/* App name */}
+      {/* app name */}
       <h2 style={{ color: '#3C1510', textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
         Shrimply
       </h2>
 
-      {/* Profile picture circle */}
+      {/* profile picture circle */}
       <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#3C1510', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E6CECB', margin: '0 auto 8px', fontSize: '18px', fontWeight: 'bold' }}>
         CS
       </div>
 
-      {/* Username */}
+      {/* username */}
       <p style={{ textAlign: 'center', color: '#3C1510', fontSize: '14px', marginBottom: '24px' }}>
+
         Caridean Shrimp
+      
       </p>
 
       {/* Nav links */}
@@ -30,7 +43,9 @@ export default function Sidebar() {
           marginBottom: '4px',
           fontSize: '14px'
         })}>
+
         Dashboard
+      
       </NavLink>
 
       <NavLink to="/profile"
@@ -43,7 +58,9 @@ export default function Sidebar() {
           marginBottom: '4px',
           fontSize: '14px'
         })}>
+
         Profile
+      
       </NavLink>
 
       <NavLink to="/settings"
@@ -56,8 +73,19 @@ export default function Sidebar() {
           marginBottom: '4px',
           fontSize: '14px'
         })}>
+
         Settings
+      
       </NavLink>
+
+
+       <button
+        onClick={handleLogout}
+        style={{ marginTop: 'auto', backgroundColor: 'transparent', color: '#932C20', border: '10px solid #932C20', borderRadius: '6px', padding: '8px 12px', fontSize: '14px', cursor: 'pointer' }}>
+
+        Logout
+      
+      </button>
 
     </div>
   )
