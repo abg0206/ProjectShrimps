@@ -11,8 +11,15 @@ export default function LoginPage() {
 
   function handleLogin() {
     //takes us to the dashboard once we hit login. 
+    if(!email || !password) {
+      setError('Please enter both email and password.')
+      return
+    }
+
+    setError('')
     localStorage.setItem('isLoggedIn', 'true')
-    navigate('/dashboard')
+      navigate('/dashboard')
+    
   
   }
 
