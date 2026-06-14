@@ -29,6 +29,17 @@ app.get('/', (req, res) => {
   res.json({ message: 'Server is running' });
 });
 
+//Database connection test
+app.get('/db-test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ connected: true, time: result.rows[0].now });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ connected: false, error: err.message });
+  }
+});
+
 // Login api
 app.post('/login', async (req, res) => {
   try {
@@ -142,10 +153,8 @@ app.put('/profile/:email', async (req, res) => {
         .json({ error: 'first_name and last_name are required' });
     }
 
-    // phone is stored as BIGINT in the DB — strip non-digits before saving
     const phoneValue = phone ? Number(String(phone).replace(/\D/g, '')) || null : null;
 
-    // Upsert: insert a new profile row if none exists, otherwise update in place
     const result = await pool.query(
       `INSERT INTO user_profile (email, first_name, last_name, phone, summary)
        VALUES ($1, $2, $3, $4, $5)
@@ -200,17 +209,105 @@ app.get('/user/:email', async (req, res) => {
   }
 });
 
-// Test Database Connection
-app.get('/db-test', async (req, res) => {
+// GET /jobs/:email — all active jobs for a user
+app.get('/jobs/:email', async (req, res) => {
   try {
-    const result = await pool.query('SELECT NOW()');
-    res.json({ connected: true, time: result.rows[0].now });
+    const { email } = req.params;
+
+    const result = await pool.query(
+      `SELECT unique_num AS id, title, company, description, stages AS status, created_at
+       FROM job_table
+       WHERE email = $1 AND is_deleted = FALSE
+       ORDER BY created_at DESC`,
+      [email]
+    );
+
+    res.status(200).json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ connected: false, error: err.message });
+    console.error('Get jobs error:', err);
+    res.status(500).json({ error: 'Failed to fetch jobs' });
   }
 });
 
+// POST /jobs/:email — add a new job
+app.post('/jobs/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { title, company, description } = req.body;
+
+    if (!title || !company || !description) {
+      return res.status(400).json({ error: 'title, company, and description are required' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO job_table (email, title, company, description, stages)
+       VALUES ($1, $2, $3, $4, '0')
+       RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
+      [email, title, company, description]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Add job error:', err);
+    res.status(500).json({ error: 'Failed to add job' });
+  }
+});
+
+// PUT /jobs/:email/:id — update job status (stage)
+app.put('/jobs/:email/:id', async (req, res) => {
+  try {
+    const { email, id } = req.params;
+    const { stages } = req.body;
+
+    const validStages = ['0', '1', '2', '3', '4'];
+    if (!validStages.includes(stages)) {
+      return res.status(400).json({ error: 'stages must be 0–4' });
+    }
+
+    const result = await pool.query(
+      `UPDATE job_table
+       SET stages = $1
+       WHERE unique_num = $2 AND email = $3 AND is_deleted = FALSE
+       RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
+      [stages, id, email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error('Update job error:', err);
+    res.status(500).json({ error: 'Failed to update job' });
+  }
+});
+
+// DELETE /jobs/:email/:id — soft delete a job
+app.delete('/jobs/:email/:id', async (req, res) => {
+  try {
+    const { email, id } = req.params;
+
+    const result = await pool.query(
+      `UPDATE job_table
+       SET is_deleted = TRUE
+       WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE
+       RETURNING unique_num AS id`,
+      [id, email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    res.status(200).json({ success: true, deleted: result.rows[0].id });
+  } catch (err) {
+    console.error('Delete job error:', err);
+    res.status(500).json({ error: 'Failed to delete job' });
+  }
+});
+
+//start
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

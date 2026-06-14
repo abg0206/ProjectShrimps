@@ -52,73 +52,85 @@ async function main() {
 
 
     //User profile
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS user_profile (
-        email VARCHAR(255) PRIMARY KEY,
-        phone BIGINT NOT NULL,
-        first_name VARCHAR(100) NOT NULL,
-        last_name VARCHAR(101) NOT NULL,
-        summary TEXT,
-        experience TEXT,
-        skills skill_enum[],
-        career_preferences TEXT,
-        profile_picture_url VARCHAR(255)
-      );
-    `);
-
-    //user accoount 
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS user_account (
-        user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        clerk_id VARCHAR(255) UNIQUE NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        email_verified BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT NOW()
-      );
-    `);
-
-    //job table 
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS job_table (
-        unique_num SERIAL PRIMARY KEY,
-        company VARCHAR(255) NOT NULL,
-        title VARCHAR(255) NOT NULL,
-        description TEXT NOT NULL,
-        stages job_stage_enum NOT NULL DEFAULT '0',
-        is_deleted BOOLEAN DEFAULT FALSE
-      );
-    `);
-
-
-    //resume 
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS resume_table (
-        experience_id SERIAL PRIMARY KEY,
-        email VARCHAR(255),
-        other_links TEXT,
-        linkedin VARCHAR(255),
-        education TEXT,
-        summary TEXT
-      );
-    `);
-
-    //Job and resume logic 
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS job_resume (
-        job_id INTEGER NOT NULL,
-        resume_id INTEGER NOT NULL,
-        PRIMARY KEY (job_id, resume_id)
-      );
-    `);
+     await pool.query(`
+       CREATE TABLE IF NOT EXISTS user_profile (
+         email               VARCHAR(255) PRIMARY KEY,
+         phone               BIGINT NOT NULL,
+         first_name          VARCHAR(100) NOT NULL,
+         last_name           VARCHAR(101) NOT NULL,
+         summary             TEXT,
+         experience          TEXT,
+         skills              skill_enum[],
+         career_preferences  TEXT,
+         profile_picture_url VARCHAR(255)
+       );
+     `);
+ 
+     await pool.query(`
+       CREATE TABLE IF NOT EXISTS user_account (
+         user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+         clerk_id       VARCHAR(255) UNIQUE NOT NULL,
+         email          VARCHAR(255) UNIQUE NOT NULL,
+         email_verified BOOLEAN DEFAULT FALSE,
+         created_at     TIMESTAMP DEFAULT NOW()
+       );
+     `);
+ 
+     await pool.query(`
+       CREATE TABLE IF NOT EXISTS job_table (
+         unique_num  SERIAL PRIMARY KEY,
+         email       VARCHAR(255) NOT NULL,
+         company     VARCHAR(255) NOT NULL,
+         title       VARCHAR(255) NOT NULL,
+         description TEXT NOT NULL,
+         stages      job_stage_enum NOT NULL DEFAULT '0',
+         is_deleted  BOOLEAN DEFAULT FALSE,
+         created_at  TIMESTAMP DEFAULT NOW()
+       );
+     `);
+ 
+     // Migration: add email + created_at to job_table if they were created without them
+     await pool.query(`
+       DO $$
+       BEGIN
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'email'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT '';
+         END IF;
+ 
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'created_at'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
+         END IF;
+       END $$;
+     `);
+ 
+     await pool.query(`
+       CREATE TABLE IF NOT EXISTS resume_table (
+         experience_id SERIAL PRIMARY KEY,
+         email         VARCHAR(255),
+         other_links   TEXT,
+         linkedin      VARCHAR(255),
+         education     TEXT,
+         summary       TEXT
+       );
+     `);
+ 
+     await pool.query(`
+       CREATE TABLE IF NOT EXISTS job_resume (
+         job_id    INTEGER NOT NULL,
+         resume_id INTEGER NOT NULL,
+         PRIMARY KEY (job_id, resume_id)
+       );
+     `);
 
     //forein keys and indexes 
 
-    // Interview → Job (RESTRICT for safety)
+    // Interview to Job 
     await pool.query(`
       ALTER TABLE interview_table
       ADD CONSTRAINT fk_interview_job
