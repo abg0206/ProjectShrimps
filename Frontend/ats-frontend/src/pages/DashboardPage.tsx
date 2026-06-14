@@ -2,16 +2,16 @@ import Sidebar from '../components/Sidebar';
 import { useState } from 'react';
 
 export default function DashboardPage() {
-
-  const [jobs, setJobs] = useState<{
-    id: number
-    title: string
-    company: string
-    status: string
-    date: string
-    body: string
-  }[]>([])
-  
+  const [jobs, setJobs] = useState<
+    {
+      id: number;
+      title: string;
+      company: string;
+      status: string;
+      date: string;
+      body: string;
+    }[]
+  >([]);
 
   const [showModal, setShowModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
