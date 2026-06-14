@@ -1,5 +1,5 @@
-const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node');
-const { findByClerkId } = require('../models/users');
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import { findByClerkId } from '../models/users';
 
 const requireAuth = ClerkExpressRequireAuth();
 
@@ -25,7 +25,7 @@ async function attachDbUser(req, res, next) {
   }
 }
 
-module.exports = {
+export default {
   requireAuth,
   attachDbUser,
 };

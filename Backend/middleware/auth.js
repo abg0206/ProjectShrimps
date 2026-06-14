@@ -1,5 +1,5 @@
-const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node');
-const { findByClerkId } = require('../models/users');
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import { findByClerkId } from '../models/users';
 
 const requireAuth = ClerkExpressRequireAuth();
 
@@ -20,11 +20,12 @@ async function attachUser(req, res, next) {
     req.user = user;
     next();
   } catch (err) {
+    console.error('Error attaching user:', err);
     res.status(500).json({ error: 'Auth error' });
   }
 }
 
-module.exports = {
+export default {
   requireAuth,
   attachUser,
 };

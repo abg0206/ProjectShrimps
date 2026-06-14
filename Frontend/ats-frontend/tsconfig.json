@@ -11,7 +11,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"] // 👈 Simplified back to your local folder mapping
+    },
+    "types": ["@testing-library/jest-dom", "vitest/globals"],
+    "ignoreDeprecations": "6.0"
   },
-  "include": ["src"]
+  "include": ["src/**/*", "vitest.setup.ts"] // 👈 Looks at its own local contents now
 }
