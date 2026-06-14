@@ -1,5 +1,5 @@
 import Sidebar from '../components/Sidebar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ProfilePage() {
   const [firstName, setFirstName] = useState('');
@@ -7,7 +7,46 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [summary, setSummary] = useState('');
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+
+  // Read the logged-in user's email from sessionStorage (set by LoginPage)
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
+
+  // Load profile from the backend on mount
+  useEffect(() => {
+    if (!userEmail) {
+      setLoading(false);
+      return;
+    }
+
+    fetch(`/profile/${encodeURIComponent(userEmail)}`)
+      .then((res) => {
+        if (res.status === 404) return null; // no profile row yet — that's fine
+        if (!res.ok) throw new Error('Failed to load profile');
+        return res.json();
+      })
+      .then((data) => {
+        if (data) {
+          setFirstName(data.first_name ?? '');
+          setLastName(data.last_name ?? '');
+          setEmail(userEmail);
+          setPhone(data.phone ? String(data.phone) : '');
+          setSummary(data.summary ?? '');
+        } else {
+          setEmail(userEmail);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Could not load profile. Please refresh and try again.');
+      })
+      .finally(() => setLoading(false));
+  }, [userEmail]);
 
   function getCompletion() {
     const fields = [firstName, lastName, email, phone, summary];
@@ -15,8 +54,58 @@ export default function ProfilePage() {
     return Math.round((filled / fields.length) * 100);
   }
 
-  function handleSave() {
-    setSaved(true);
+  async function handleSave() {
+    setError('');
+    setSaved(false);
+
+    if (!firstName.trim() || !lastName.trim()) {
+      setError('First name and last name are required.');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const res = await fetch(`/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          phone: phone.trim() || null,
+          summary: summary.trim() || null,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error ?? 'Failed to save profile.');
+        return;
+      }
+
+      setSaved(true);
+    } catch (err) {
+      console.error(err);
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          minHeight: '100vh',
+          backgroundColor: '#D9958C',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <p style={{ color: '#3C1510', fontSize: '16px' }}>Loading profile...</p>
+      </div>
+    );
   }
 
   return (
