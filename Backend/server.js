@@ -1,3 +1,5 @@
+//run express app on local
+//connects to aws RDS database using connection string from .env file
 require('dotenv').config();
 
 const express = require('express');
@@ -8,7 +10,7 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 
 // PostgreSQL Connection Pool
@@ -19,8 +21,8 @@ const pool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   ssl: {
-    rejectUnauthorized: true,
-    ca: fs.readFileSync('./repoConnect.pem', 'utf8'),
+  rejectUnauthorized: false,
+  ca: fs.readFileSync(__dirname + '/repoConnect.pem').toString(),
   },
 });
 
@@ -34,26 +36,22 @@ app.get('/', (req, res) => {
 // Login api
 app.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
-    if (!email || !password) {
+    if (!email) {
       return res.status(400).json({
-        error: 'Email and password are required',
+        error: 'Email is required',
       });
     }
 
     const result = await pool.query(
-      `
-      SELECT email, password_hash, clerk_id
-      FROM user_account
-      WHERE email = $1
-      `,
+      `SELECT email, clerk_id FROM user_account WHERE email = $1`,
       [email]
     );
 
     if (result.rows.length === 0) {
       return res.status(401).json({
-        error: 'Invalid email or password',
+        error: 'No account found for that email',
       });
     }
 
@@ -74,7 +72,6 @@ app.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Login error:', err);
-
     res.status(500).json({
       error: 'Login failed',
     });
