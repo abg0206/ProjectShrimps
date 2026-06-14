@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Login api 
+// Login api
 app.post('/login', async (req, res) => {
   try {
     const { email } = req.body;
@@ -57,6 +57,14 @@ app.post('/login', async (req, res) => {
 
     const account = result.rows[0];
 
+    const validPassword = await bcrypt.compare(password, account.password_hash);
+
+    if (!validPassword) {
+      return res.status(401).json({
+        error: 'Invalid email or password',
+      });
+    }
+
     res.status(200).json({
       success: true,
       email: account.email,
@@ -70,7 +78,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Create register api 
+// Create register api
 app.post('/register', async (req, res) => {
   try {
     const { email, password, clerk_id } = req.body;

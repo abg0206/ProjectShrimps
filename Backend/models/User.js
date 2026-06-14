@@ -43,7 +43,6 @@ async function createUser(email, clerkId, phone, firstName, lastName) {
     await client.query('COMMIT');
 
     return accountResult.rows[0];
-
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
