@@ -1,14 +1,55 @@
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  useEffect(() => {
+    if (!userEmail) return;
+
+    fetch(`/profile/${encodeURIComponent(userEmail)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          setFirstName(data.first_name ?? '');
+          setLastName(data.last_name ?? '');
+        }
+      })
+      .catch(console.error);
+  }, [userEmail]);
+
+  const initials =
+    firstName && lastName
+      ? `${firstName[0]}${lastName[0]}`.toUpperCase()
+      : userEmail.slice(0, 2).toUpperCase();
+
+  const displayName =
+    firstName && lastName ? `${firstName} ${lastName}` : userEmail;
 
   function handleLogout() {
-    localStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('user');
     navigate('/');
   }
 
+  const linkStyle = ({ isActive }: { isActive: boolean }) => ({
+    color: isActive ? '#E6CECB' : '#3C1510',
+    backgroundColor: isActive ? '#932C20' : 'transparent',
+    padding: '8px 12px',
+    borderRadius: '6px',
+    textDecoration: 'none',
+    marginBottom: '4px',
+    fontSize: '14px',
+    display: 'block',
+  });
+
+
+  
   return (
     <div
       style={{

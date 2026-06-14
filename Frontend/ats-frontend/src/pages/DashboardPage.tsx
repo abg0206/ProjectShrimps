@@ -1,38 +1,138 @@
 import Sidebar from '../components/Sidebar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const STAGE_LABELS: Record<string, string> = {
+  '0': 'Interested',
+  '1': 'Applied',
+  '2': 'Interview',
+  '3': 'Offer',
+  '4': 'Rejected',
+};
+
+type Job = {
+  id: number;
+  title: string;
+  company: string;
+  description: string;
+  status: string;        // '0'–'4'
+  created_at: string;
+};
 
 export default function DashboardPage() {
-  const [jobs, setJobs] = useState<
-    {
-      id: number;
-      title: string;
-      company: string;
-      status: string;
-      date: string;
-      body: string;
-    }[]
-  >([]);
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
 
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Add job modal
   const [showModal, setShowModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newCompany, setNewCompany] = useState('');
-  const [newBody, setNewBody] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [modalError, setModalError] = useState('');
 
-  function handleAddJob() {
-    const newJob = {
-      id: jobs.length + 1,
-      title: newTitle,
-      company: newCompany,
-      status: 'Interested',
-      date: new Date().toLocaleDateString(),
-      body: newBody,
-    };
-    setJobs([...jobs, newJob]);
-    setNewTitle('');
-    setNewCompany('');
-    setNewBody('');
-    setShowModal(false);
+  // Load jobs on mount
+  useEffect(() => {
+    if (!userEmail) return;
+
+    fetch(`/jobs/${encodeURIComponent(userEmail)}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to load jobs');
+        return res.json();
+      })
+      .then((data) => setJobs(data))
+      .catch((err) => {
+        console.error(err);
+        setError('Could not load jobs. Please refresh.');
+      })
+      .finally(() => setLoading(false));
+  }, [userEmail]);
+
+  // Add a new job
+  async function handleAddJob() {
+    setModalError('');
+    if (!newTitle.trim() || !newCompany.trim() || !newDescription.trim()) {
+      setModalError('All fields are required.');
+      return;
+    }
+
+    setAdding(true);
+    try {
+      const res = await fetch(`/jobs/${encodeURIComponent(userEmail)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newTitle.trim(),
+          company: newCompany.trim(),
+          description: newDescription.trim(),
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setModalError(data.error ?? 'Failed to add job.');
+        return;
+      }
+
+      const newJob = await res.json();
+      setJobs((prev) => [newJob, ...prev]);
+      setNewTitle('');
+      setNewCompany('');
+      setNewDescription('');
+      setShowModal(false);
+    } catch (err) {
+      console.error(err);
+      setModalError('Could not connect to the server.');
+    } finally {
+      setAdding(false);
+    }
   }
+
+  // Update job status
+  async function handleStatusChange(jobId: number, newStage: string) {
+    try {
+      const res = await fetch(
+        `/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stages: newStage }),
+        }
+      );
+
+      if (!res.ok) return;
+
+      const updated = await res.json();
+      setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)));
+    } catch (err) {
+      console.error('Status update failed:', err);
+    }
+  }
+
+  // Soft-delete a job
+  async function handleDelete(jobId: number) {
+    try {
+      const res = await fetch(
+        `/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
+        { method: 'DELETE' }
+      );
+
+      if (!res.ok) return;
+      setJobs((prev) => prev.filter((j) => j.id !== jobId));
+    } catch (err) {
+      console.error('Delete failed:', err);
+    }
+  }
+
+  const filtered = jobs.filter(
+    (j) =>
+      j.title.toLowerCase().includes(search.toLowerCase()) ||
+      j.company.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div
