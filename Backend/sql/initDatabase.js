@@ -12,21 +12,46 @@ async function main() {
 
     console.log('Existing tables:', result.rows);
 
+    // enums logic (need to make better options for sprint 2)
+
     await pool.query(`
       DO $$
       BEGIN
-        IF NOT EXISTS (
-          SELECT 1
-          FROM pg_type
-          WHERE typname = 'skill_enum'
-        ) THEN
-          CREATE TYPE skill_enum AS ENUM (
-            'Python',
-            'Java'
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'skill_enum') THEN
+          CREATE TYPE skill_enum AS ENUM ('Python', 'Java');
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'job_stage_enum') THEN
+          CREATE TYPE job_stage_enum AS ENUM ('0','1','2','3','4');
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'interview_type_enum') THEN
+          CREATE TYPE interview_type_enum AS ENUM (
+            'Phone',
+            'Technical',
+            'Onsite',
+            'HR',
+            'Other'
           );
         END IF;
       END $$;
     `);
+
+
+    //tables logic 
+
+
+    //User profile
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS user_profile (
@@ -42,6 +67,8 @@ async function main() {
       );
     `);
 
+    //user accoount 
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS user_account (
         user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -50,6 +77,92 @@ async function main() {
         email_verified BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT NOW()
       );
+    `);
+
+    //job table 
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS job_table (
+        unique_num SERIAL PRIMARY KEY,
+        company VARCHAR(255) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        description TEXT NOT NULL,
+        stages job_stage_enum NOT NULL DEFAULT '0',
+        is_deleted BOOLEAN DEFAULT FALSE
+      );
+    `);
+
+
+    //resume 
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS resume_table (
+        experience_id SERIAL PRIMARY KEY,
+        email VARCHAR(255),
+        other_links TEXT,
+        linkedin VARCHAR(255),
+        education TEXT,
+        summary TEXT
+      );
+    `);
+
+    //Job and resume logic 
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS job_resume (
+        job_id INTEGER NOT NULL,
+        resume_id INTEGER NOT NULL,
+        PRIMARY KEY (job_id, resume_id)
+      );
+    `);
+
+    //forein keys and indexes 
+
+    // Interview → Job (RESTRICT for safety)
+    await pool.query(`
+      ALTER TABLE interview_table
+      ADD CONSTRAINT fk_interview_job
+      FOREIGN KEY (job_id)
+      REFERENCES job_table(unique_num)
+      ON DELETE RESTRICT;
+    `);
+
+    // JobResume & Job deleate
+    await pool.query(`
+      ALTER TABLE job_resume
+      ADD CONSTRAINT fk_jobresume_job
+      FOREIGN KEY (job_id)
+      REFERENCES job_table(unique_num)
+      ON DELETE CASCADE;
+    `);
+
+    // JobResume & Resume deleate 
+    await pool.query(`
+      ALTER TABLE job_resume
+      ADD CONSTRAINT fk_jobresume_resume
+      FOREIGN KEY (resume_id)
+      REFERENCES resume_table(experience_id)
+      ON DELETE CASCADE;
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_job_company
+      ON job_table(company);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_job_title
+      ON job_table(title);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_interview_job_id
+      ON interview_table(job_id);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_resume_email
+      ON resume_table(email);
     `);
 
     console.log('Tables created successfully');
