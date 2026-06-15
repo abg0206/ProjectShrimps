@@ -26,9 +26,18 @@ const pool = new Pool({
 
 // Server running check
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Server is running',
-  });
+  res.json({ message: 'Server is running' });
+});
+
+//Database connection test
+app.get('/db-test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ connected: true, time: result.rows[0].now });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ connected: false, error: err.message });
+  }
 });
 
 // Login api
@@ -36,24 +45,26 @@ app.post('/login', async (req, res) => {
   try {
     const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).json({
-        error: 'Email is required',
-      });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
     }
 
     const result = await pool.query(
-      `SELECT email, clerk_id FROM user_account WHERE email = $1`,
+      `SELECT email, clerk_id, password_hash FROM user_account WHERE email = $1`,
       [email]
     );
 
     if (result.rows.length === 0) {
-      return res.status(401).json({
-        error: 'No account found for that email',
-      });
+      return res.status(401).json({ error: 'No account found for that email' });
     }
 
     const account = result.rows[0];
+
+    const validPassword = await bcrypt.compare(password, account.password_hash);
+
+    if (!validPassword) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
 
     res.status(200).json({
       success: true,
@@ -62,36 +73,27 @@ app.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({
-      error: 'Login failed',
-    });
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 
-// Create register api
+// Register api
 app.post('/register', async (req, res) => {
   try {
     const { email, password, clerk_id } = req.body;
 
     if (!email || !password || !clerk_id) {
-      return res.status(400).json({
-        error: 'email, password, and clerk_id are required',
-      });
+      return res
+        .status(400)
+        .json({ error: 'email, password, and clerk_id are required' });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      `
-      INSERT INTO user_account
-      (
-        email,
-        password_hash,
-        clerk_id
-      )
-      VALUES ($1, $2, $3)
-      RETURNING email, clerk_id
-      `,
+      `INSERT INTO user_account (email, password_hash, clerk_id)
+       VALUES ($1, $2, $3)
+       RETURNING email, clerk_id`,
       [email, passwordHash, clerk_id]
     );
 
@@ -100,117 +102,212 @@ app.post('/register', async (req, res) => {
     console.error('Create account error:', err);
 
     if (err.code === '23505') {
-      return res.status(409).json({
-        error: 'Account already exists',
-      });
+      return res.status(409).json({ error: 'Account already exists' });
     }
 
     if (err.code === '23503') {
-      return res.status(400).json({
-        error: 'Email does not exist',
-      });
+      return res.status(400).json({ error: 'Email does not exist' });
     }
 
-    res.status(500).json({
-      error: 'Failed to create account',
-    });
+    res.status(500).json({ error: 'Failed to create account' });
   }
 });
 
-// Get User Profile api (returns first, last, and profile pic)
+// GET /profile/:email — fetch all profile fields for the profile page
 app.get('/profile/:email', async (req, res) => {
   try {
     const { email } = req.params;
 
     const result = await pool.query(
-      `
-      SELECT
-        first_name,
-        last_name,
-        profile_picture_url
-      FROM user_profile
-      WHERE email = $1
-      `,
+      `SELECT
+         first_name,
+         last_name,
+         phone,
+         summary,
+         profile_picture_url
+       FROM user_profile
+       WHERE email = $1`,
       [email]
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        error: 'Profile not found',
-      });
+      return res.status(404).json({ error: 'Profile not found' });
     }
 
     res.status(200).json(result.rows[0]);
   } catch (err) {
     console.error('Get profile error:', err);
-
-    res.status(500).json({
-      error: 'Failed to fetch profile',
-    });
+    res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
 
-// All Profile (gets all user info for profile page)
+// PUT /profile/:email — create or update profile fields
+app.put('/profile/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { first_name, last_name, phone, summary } = req.body;
+
+    if (!first_name || !last_name) {
+      return res
+        .status(400)
+        .json({ error: 'first_name and last_name are required' });
+    }
+
+    const phoneValue = phone ? Number(String(phone).replace(/\D/g, '')) || null : null;
+
+    const result = await pool.query(
+      `INSERT INTO user_profile (email, first_name, last_name, phone, summary)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (email)
+       DO UPDATE SET
+         first_name = EXCLUDED.first_name,
+         last_name  = EXCLUDED.last_name,
+         phone      = EXCLUDED.phone,
+         summary    = EXCLUDED.summary
+       RETURNING first_name, last_name, phone, summary`,
+      [email, first_name, last_name, phoneValue, summary ?? null]
+    );
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// GET /user/:email — full user info (profile + account join)
 app.get('/user/:email', async (req, res) => {
   try {
     const { email } = req.params;
 
     const result = await pool.query(
-      `
-      SELECT
-        up.email,
-        up.phone,
-        up.first_name,
-        up.last_name,
-        up.summary,
-        up.experience,
-        up.skills,
-        up.career_preferences,
-        up.profile_picture_url,
-        ua.clerk_id
-      FROM user_profile up
-      JOIN user_account ua
-        ON up.email = ua.email
-      WHERE up.email = $1
-      `,
+      `SELECT
+         up.email,
+         up.phone,
+         up.first_name,
+         up.last_name,
+         up.summary,
+         up.experience,
+         up.skills,
+         up.career_preferences,
+         up.profile_picture_url,
+         ua.clerk_id
+       FROM user_profile up
+       JOIN user_account ua ON up.email = ua.email
+       WHERE up.email = $1`,
       [email]
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        error: 'User not found',
-      });
+      return res.status(404).json({ error: 'User not found' });
     }
 
     res.json(result.rows[0]);
   } catch (err) {
     console.error('Get user error:', err);
-
-    res.status(500).json({
-      error: 'Failed to fetch user',
-    });
+    res.status(500).json({ error: 'Failed to fetch user' });
   }
 });
 
-// Test Database Connection
-app.get('/db-test', async (req, res) => {
+// GET /jobs/:email — all active jobs for a user
+app.get('/jobs/:email', async (req, res) => {
   try {
-    const result = await pool.query('SELECT NOW()');
+    const { email } = req.params;
 
-    res.json({
-      connected: true,
-      time: result.rows[0].now,
-    });
+    const result = await pool.query(
+      `SELECT unique_num AS id, title, company, description, stages AS status, created_at
+       FROM job_table
+       WHERE email = $1 AND is_deleted = FALSE
+       ORDER BY created_at DESC`,
+      [email]
+    );
+
+    res.status(200).json(result.rows);
   } catch (err) {
-    console.error(err);
-
-    res.status(500).json({
-      connected: false,
-      error: err.message,
-    });
+    console.error('Get jobs error:', err);
+    res.status(500).json({ error: 'Failed to fetch jobs' });
   }
 });
 
+// POST /jobs/:email — add a new job
+app.post('/jobs/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { title, company, description } = req.body;
+
+    if (!title || !company || !description) {
+      return res.status(400).json({ error: 'title, company, and description are required' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO job_table (email, title, company, description, stages)
+       VALUES ($1, $2, $3, $4, '0')
+       RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
+      [email, title, company, description]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Add job error:', err);
+    res.status(500).json({ error: 'Failed to add job' });
+  }
+});
+
+// PUT /jobs/:email/:id — update job status (stage)
+app.put('/jobs/:email/:id', async (req, res) => {
+  try {
+    const { email, id } = req.params;
+    const { stages } = req.body;
+
+    const validStages = ['0', '1', '2', '3', '4'];
+    if (!validStages.includes(stages)) {
+      return res.status(400).json({ error: 'stages must be 0–4' });
+    }
+
+    const result = await pool.query(
+      `UPDATE job_table
+       SET stages = $1
+       WHERE unique_num = $2 AND email = $3 AND is_deleted = FALSE
+       RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
+      [stages, id, email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error('Update job error:', err);
+    res.status(500).json({ error: 'Failed to update job' });
+  }
+});
+
+// DELETE /jobs/:email/:id — soft delete a job
+app.delete('/jobs/:email/:id', async (req, res) => {
+  try {
+    const { email, id } = req.params;
+
+    const result = await pool.query(
+      `UPDATE job_table
+       SET is_deleted = TRUE
+       WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE
+       RETURNING unique_num AS id`,
+      [id, email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    res.status(200).json({ success: true, deleted: result.rows[0].id });
+  } catch (err) {
+    console.error('Delete job error:', err);
+    res.status(500).json({ error: 'Failed to delete job' });
+  }
+});
+
+//start
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

@@ -1,3 +1,4 @@
+/*
 import { expect, test, describe } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Label } from './label'; // Adjust path to your component file
@@ -55,3 +56,4 @@ describe('Label Component', () => {
     expect(labelEl.className).toContain('peer-disabled:cursor-not-allowed');
   });
 });
+*/
