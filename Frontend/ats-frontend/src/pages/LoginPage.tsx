@@ -17,6 +17,7 @@ export default function LoginPage() {
     }
 
     setError('');
+    setLoading(true);
     localStorage.setItem('isLoggedIn', 'true');
     navigate('/dashboard');
   }
