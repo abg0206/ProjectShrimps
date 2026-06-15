@@ -5,7 +5,7 @@ export default function RouteProtect({
 }: {
   children: React.ReactNode;
 }) {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const isLoggedIn = !!sessionStorage.getItem('user');
 
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
