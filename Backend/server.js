@@ -25,12 +25,12 @@ const pool = new Pool({
 });
 
 // Server running check
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
   res.json({ message: 'Server is running' });
 });
 
 //Database connection test
-app.get('/db-test', async (req, res) => {
+app.get('/api/db-test', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
     res.json({ connected: true, time: result.rows[0].now });
@@ -41,7 +41,7 @@ app.get('/db-test', async (req, res) => {
 });
 
 // Login api
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -78,7 +78,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Register api
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   try {
     const { email, password, clerk_id } = req.body;
 
@@ -114,7 +114,7 @@ app.post('/register', async (req, res) => {
 });
 
 // GET /profile/:email — fetch all profile fields for the profile page
-app.get('/profile/:email', async (req, res) => {
+app.get('/api/profile/:email', async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -141,8 +141,8 @@ app.get('/profile/:email', async (req, res) => {
   }
 });
 
-// PUT /profile/:email — create or update profile fields
-app.put('/profile/:email', async (req, res) => {
+// create or update profile fields
+app.put('/api/profile/:email', async (req, res) => {
   try {
     const { email } = req.params;
     const { first_name, last_name, phone, summary } = req.body;
@@ -153,7 +153,9 @@ app.put('/profile/:email', async (req, res) => {
         .json({ error: 'first_name and last_name are required' });
     }
 
-    const phoneValue = phone ? Number(String(phone).replace(/\D/g, '')) || null : null;
+    const phoneValue = phone
+      ? Number(String(phone).replace(/\D/g, '')) || null
+      : null;
 
     const result = await pool.query(
       `INSERT INTO user_profile (email, first_name, last_name, phone, summary)
@@ -175,8 +177,8 @@ app.put('/profile/:email', async (req, res) => {
   }
 });
 
-// GET /user/:email — full user info (profile + account join)
-app.get('/user/:email', async (req, res) => {
+// full user info (profile + account join)
+app.get('/api/user/:email', async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -209,8 +211,8 @@ app.get('/user/:email', async (req, res) => {
   }
 });
 
-// GET /jobs/:email — all active jobs for a user
-app.get('/jobs/:email', async (req, res) => {
+// all active jobs for a user
+app.get('/api/jobs/:email', async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -229,14 +231,16 @@ app.get('/jobs/:email', async (req, res) => {
   }
 });
 
-// POST /jobs/:email — add a new job
-app.post('/jobs/:email', async (req, res) => {
+// add a new job
+app.post('/api/jobs/:email', async (req, res) => {
   try {
     const { email } = req.params;
     const { title, company, description } = req.body;
 
     if (!title || !company || !description) {
-      return res.status(400).json({ error: 'title, company, and description are required' });
+      return res
+        .status(400)
+        .json({ error: 'title, company, and description are required' });
     }
 
     const result = await pool.query(
@@ -253,23 +257,26 @@ app.post('/jobs/:email', async (req, res) => {
   }
 });
 
-// PUT /jobs/:email/:id — update job status (stage)
-app.put('/jobs/:email/:id', async (req, res) => {
+//  update job status (stage)
+app.put('/api/jobs/:email/:id', async (req, res) => {
   try {
     const { email, id } = req.params;
-    const { stages } = req.body;
+    const { stages, title, company, description } = req.body;
 
-    const validStages = ['0', '1', '2', '3', '4'];
+    const validStages = ['0', '1', '2', '3', '4', '5'];
     if (!validStages.includes(stages)) {
       return res.status(400).json({ error: 'stages must be 0–4' });
     }
 
     const result = await pool.query(
       `UPDATE job_table
-       SET stages = $1
+        SET stages = $1,
+            title = COALESCE($4, title),
+            company = COALESCE($5, company),
+            description = COALESCE($6, description)
        WHERE unique_num = $2 AND email = $3 AND is_deleted = FALSE
        RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
-      [stages, id, email]
+      [stages, id, email, title ?? null, company ?? null, description ?? null]
     );
 
     if (result.rows.length === 0) {
@@ -283,8 +290,8 @@ app.put('/jobs/:email/:id', async (req, res) => {
   }
 });
 
-// DELETE /jobs/:email/:id — soft delete a job
-app.delete('/jobs/:email/:id', async (req, res) => {
+//  soft delete a job
+app.delete('/api/jobs/:email/:id', async (req, res) => {
   try {
     const { email, id } = req.params;
 

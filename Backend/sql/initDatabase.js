@@ -1,6 +1,6 @@
-require('dotenv').config();
+import 'dotenv/config';
 
-const pool = require('../config/db');
+import pool from '../config/db';
 
 async function main() {
   try {
@@ -47,12 +47,10 @@ async function main() {
       END $$;
     `);
 
-
-    //tables logic 
-
+    //tables logic
 
     //User profile
-     await pool.query(`
+    await pool.query(`
        CREATE TABLE IF NOT EXISTS user_profile (
          email               VARCHAR(255) PRIMARY KEY,
          phone               BIGINT NOT NULL,
@@ -65,8 +63,8 @@ async function main() {
          profile_picture_url VARCHAR(255)
        );
      `);
- 
-     await pool.query(`
+
+    await pool.query(`
        CREATE TABLE IF NOT EXISTS user_account (
          user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
          clerk_id       VARCHAR(255) UNIQUE NOT NULL,
@@ -75,8 +73,8 @@ async function main() {
          created_at     TIMESTAMP DEFAULT NOW()
        );
      `);
- 
-     await pool.query(`
+
+    await pool.query(`
        CREATE TABLE IF NOT EXISTS job_table (
          unique_num  SERIAL PRIMARY KEY,
          email       VARCHAR(255) NOT NULL,
@@ -88,9 +86,9 @@ async function main() {
          created_at  TIMESTAMP DEFAULT NOW()
        );
      `);
- 
-     // Migration: add email + created_at to job_table if they were created without them
-     await pool.query(`
+
+    // Migration: add email + created_at to job_table if they were created without them
+    await pool.query(`
        DO $$
        BEGIN
          IF NOT EXISTS (
@@ -108,8 +106,8 @@ async function main() {
          END IF;
        END $$;
      `);
- 
-     await pool.query(`
+
+    await pool.query(`
        CREATE TABLE IF NOT EXISTS resume_table (
          experience_id SERIAL PRIMARY KEY,
          email         VARCHAR(255),
@@ -119,8 +117,8 @@ async function main() {
          summary       TEXT
        );
      `);
- 
-     await pool.query(`
+
+    await pool.query(`
        CREATE TABLE IF NOT EXISTS job_resume (
          job_id    INTEGER NOT NULL,
          resume_id INTEGER NOT NULL,
@@ -128,9 +126,9 @@ async function main() {
        );
      `);
 
-    //forein keys and indexes 
+    //forein keys and indexes
 
-    // Interview to Job 
+    // Interview to Job
     await pool.query(`
       ALTER TABLE interview_table
       ADD CONSTRAINT fk_interview_job
@@ -148,7 +146,7 @@ async function main() {
       ON DELETE CASCADE;
     `);
 
-    // JobResume & Resume deleate 
+    // JobResume & Resume deleate
     await pool.query(`
       ALTER TABLE job_resume
       ADD CONSTRAINT fk_jobresume_resume

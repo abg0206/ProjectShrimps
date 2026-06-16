@@ -1,5 +1,5 @@
-const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node');
-const { findByClerkId } = require('../models/users');
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import { findByClerkId } from '../models/User';
 
 const requireAuth = ClerkExpressRequireAuth();
 
@@ -17,7 +17,7 @@ async function attachDbUser(req, res, next) {
       return res.status(404).json({ error: 'User not found in DB' });
     }
 
-    req.user = user; // 👈 your real app user
+    req.user = user;
     next();
   } catch (err) {
     console.error(err);
@@ -25,7 +25,7 @@ async function attachDbUser(req, res, next) {
   }
 }
 
-module.exports = {
+export default {
   requireAuth,
   attachDbUser,
 };

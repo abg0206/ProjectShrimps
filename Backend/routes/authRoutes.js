@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const { requireAuth, attachUser } = require('../middleware/auth');
-const authController = require('../controllers/authController');
+import { requireAuth, attachUser } from '../middleware/auth';
+import authController from '../controllers/authController';
 
 // Sync user after login/signup
 router.post('/sync', requireAuth, authController.syncUser);
@@ -10,4 +10,4 @@ router.post('/sync', requireAuth, authController.syncUser);
 // Get current
 router.get('/me', requireAuth, attachUser, authController.me);
 
-module.exports = router;
+export default router;

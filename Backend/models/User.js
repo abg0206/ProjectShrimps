@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+import pool from '../config/db';
 
 //  Find user by Clerk ID
 async function findByClerkId(clerkId) {
@@ -17,7 +17,6 @@ async function createUser(email, clerkId, phone, firstName, lastName) {
   try {
     await client.query('BEGIN');
 
-    // 1. Create user_account
     const accountResult = await client.query(
       `
       INSERT INTO user_account (email, clerk_id)
@@ -51,4 +50,4 @@ async function createUser(email, clerkId, phone, firstName, lastName) {
   }
 }
 
-module.exports = { findByClerkId, createUser };
+export default { findByClerkId, createUser };

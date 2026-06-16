@@ -1,4 +1,4 @@
-const authService = require('../services/authService');
+import authService from '../middleware/clerkAuth';
 
 async function register(req, res) {
   try {
@@ -32,4 +32,4 @@ async function register(req, res) {
   }
 }
 
-module.exports = { register };
+export default { register };
