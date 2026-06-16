@@ -24,7 +24,7 @@ export default function ProfilePage() {
       return;
     }
 
-    fetch(`/profile/${encodeURIComponent(userEmail)}`)
+    fetch(`/api/profile/${encodeURIComponent(userEmail)}`)
       .then((res) => {
         if (res.status === 404) return null; // no profile row yet — that's fine
         if (!res.ok) throw new Error('Failed to load profile');
@@ -66,13 +66,13 @@ export default function ProfilePage() {
     setSaving(true);
 
     try {
-      const res = await fetch(`/profile/${encodeURIComponent(userEmail)}`, {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           first_name: firstName.trim(),
           last_name: lastName.trim(),
-          phone: phone.trim() || null,
+          phone: phone.trim() ? phone.trim() : null,
           summary: summary.trim() || null,
         }),
       });
@@ -280,7 +280,7 @@ export default function ProfilePage() {
               <input
                 type="text"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
                 style={{
                   width: '100%',
                   padding: '8px',

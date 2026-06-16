@@ -17,12 +17,6 @@ export default function LoginPage() {
       return
     }
 
-<<<<<<< HEAD
-    setError('');
-    setLoading(true);
-    localStorage.setItem('isLoggedIn', 'true');
-    navigate('/dashboard');
-=======
     setLoading(true)
 
     try {
@@ -50,7 +44,6 @@ export default function LoginPage() {
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter') handleLogin()
->>>>>>> b4bc96bd50fbfb77197d2873490ddff704c85c02
   }
 
   return (
