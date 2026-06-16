@@ -1,5 +1,5 @@
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
-import { findByClerkId } from '../models/users';
+import { findByClerkId } from '../models/User';
 
 const requireAuth = ClerkExpressRequireAuth();
 

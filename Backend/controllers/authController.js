@@ -1,4 +1,4 @@
-import authService from '../services/authService';
+import authService from '../middleware/clerkAuth';
 
 async function register(req, res) {
   try {

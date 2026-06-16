@@ -48,8 +48,6 @@ export default function Sidebar() {
     display: 'block',
   });
 
-
-  
   return (
     <div
       style={{

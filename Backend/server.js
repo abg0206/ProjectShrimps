@@ -43,7 +43,7 @@ app.get('/db-test', async (req, res) => {
 // Login api
 app.post('/login', async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
@@ -153,7 +153,9 @@ app.put('/profile/:email', async (req, res) => {
         .json({ error: 'first_name and last_name are required' });
     }
 
-    const phoneValue = phone ? Number(String(phone).replace(/\D/g, '')) || null : null;
+    const phoneValue = phone
+      ? Number(String(phone).replace(/\D/g, '')) || null
+      : null;
 
     const result = await pool.query(
       `INSERT INTO user_profile (email, first_name, last_name, phone, summary)
@@ -236,7 +238,9 @@ app.post('/jobs/:email', async (req, res) => {
     const { title, company, description } = req.body;
 
     if (!title || !company || !description) {
-      return res.status(400).json({ error: 'title, company, and description are required' });
+      return res
+        .status(400)
+        .json({ error: 'title, company, and description are required' });
     }
 
     const result = await pool.query(
