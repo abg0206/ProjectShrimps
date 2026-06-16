@@ -3,7 +3,7 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import RouteProtect from './RouteProtect'; // Adjust path as needed
+import RouteProtect from './RouteProtect';
 import '@testing-library/jest-dom/vitest';
 
 describe('RouteProtect', () => {
@@ -65,7 +65,6 @@ describe('RouteProtect', () => {
 
   // --- NEGATIVE TEST CASE 2: Key exists but is an empty string ---
   it('should redirect to "/" when the user key is an empty string', () => {
-    // Coercing an empty string !!"" results in false
     sessionStorage.setItem('user', '');
 
     render(
@@ -93,8 +92,6 @@ describe('RouteProtect', () => {
 
   // --- NEGATIVE TEST CASE 3: Key exists but is literally "null" or "undefined" as strings ---
   it('should redirect to "/" when the user key is the string "null"', () => {
-    // Common bug: sometimes devs accidentally stringify a null value into storage
-    // !!"null" evaluates to true in JS, so let's verify how your current code handles it
     sessionStorage.setItem('user', 'null');
 
     render(
@@ -116,16 +113,6 @@ describe('RouteProtect', () => {
       </MemoryRouter>
     );
 
-    /* ⚠️ CAUTION NOTE: 
-      Because your component uses `!!sessionStorage.getItem('user')`, 
-      the literal string 'null' actually evaluates to `true` in JavaScript!
-      
-      If you want this test to PASS (meaning it successfully blocks them), 
-      you will need to update your component logic to parse the item or explicitly check for 'null'.
-      
-      If your intention is to assert that it currently FAILS to protect against 'null' strings, 
-      swap `.not.toBeInTheDocument()` with `.toBeInTheDocument()`.
-    */
     expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument();
     expect(screen.getByTestId('landing-page')).toBeInTheDocument();
   });

@@ -17,7 +17,7 @@ async function attachDbUser(req, res, next) {
       return res.status(404).json({ error: 'User not found in DB' });
     }
 
-    req.user = user; // 👈 your real app user
+    req.user = user;
     next();
   } catch (err) {
     console.error(err);

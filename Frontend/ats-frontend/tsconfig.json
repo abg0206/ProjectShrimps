@@ -14,10 +14,10 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"] // 👈 Simplified back to your local folder mapping
+      "@/*": ["src/*"]
     },
     "types": ["@testing-library/jest-dom", "vitest/globals"],
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*", "vitest.setup.ts"] // 👈 Looks at its own local contents now
+  "include": ["src/**/*", "vitest.setup.ts"]
 }

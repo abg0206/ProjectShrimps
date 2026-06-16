@@ -7,6 +7,7 @@ const STAGE_LABELS: Record<string, string> = {
   '2': 'Interview',
   '3': 'Offer',
   '4': 'Rejected',
+  '5': 'Archived',
 };
 
 type Job = {
@@ -14,7 +15,7 @@ type Job = {
   title: string;
   company: string;
   description: string;
-  status: string; // '0'–'4'
+  status: string;
   created_at: string;
 };
 
@@ -27,24 +28,45 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Add job modal
-  const [showModal, setShowModal] = useState(false);
+  // Add modal
+  const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newCompany, setNewCompany] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
 
+  // Edit modal
+  const [editJob, setEditJob] = useState<Job | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editCompany, setEditCompany] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editStage, setEditStage] = useState('0');
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+
+  // Normalise a raw API response into our Job shape
+  function normalise(raw: Record<string, string | number>): Job {
+    return {
+      id: Number(raw.id ?? raw.unique_num),
+      title: String(raw.title),
+      company: String(raw.company),
+      description: String(raw.description),
+      status: String(raw.status ?? raw.stages ?? '0'),
+      created_at: String(raw.created_at),
+    };
+  }
+
   // Load jobs on mount
   useEffect(() => {
     if (!userEmail) return;
 
-    fetch(`/jobs/${encodeURIComponent(userEmail)}`)
+    fetch(`/api/jobs/${encodeURIComponent(userEmail)}`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load jobs');
         return res.json();
       })
-      .then((data) => setJobs(data))
+      .then((data) => setJobs(data.map(normalise)))
       .catch((err) => {
         console.error(err);
         setError('Could not load jobs. Please refresh.');
@@ -52,7 +74,7 @@ export default function DashboardPage() {
       .finally(() => setLoading(false));
   }, [userEmail]);
 
-  // Add a new job
+  // Add job
   async function handleAddJob() {
     setModalError('');
     if (!newTitle.trim() || !newCompany.trim() || !newDescription.trim()) {
@@ -62,7 +84,7 @@ export default function DashboardPage() {
 
     setAdding(true);
     try {
-      const res = await fetch(`/jobs/${encodeURIComponent(userEmail)}`, {
+      const res = await fetch(`/api/jobs/${encodeURIComponent(userEmail)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -78,12 +100,12 @@ export default function DashboardPage() {
         return;
       }
 
-      const newJob = await res.json();
-      setJobs((prev) => [newJob, ...prev]);
+      const raw = await res.json();
+      setJobs((prev) => [normalise(raw), ...prev]);
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
-      setShowModal(false);
+      setShowAddModal(false);
     } catch (err) {
       console.error(err);
       setModalError('Could not connect to the server.');
@@ -92,35 +114,85 @@ export default function DashboardPage() {
     }
   }
 
-  // Update job status
+  // Open edit modal
+  function openEdit(job: Job) {
+    setEditJob(job);
+    setEditTitle(job.title);
+    setEditCompany(job.company);
+    setEditDescription(job.description);
+    setEditStage(job.status);
+    setEditError('');
+  }
+
+  // Save edit
+  async function handleSaveEdit() {
+    if (!editJob) return;
+    setEditError('');
+    if (!editTitle.trim() || !editCompany.trim() || !editDescription.trim()) {
+      setEditError('All fields are required.');
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${editJob.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            stages: editStage,
+            title: editTitle.trim(),
+            company: editCompany.trim(),
+            description: editDescription.trim(),
+          }),
+        }
+      );
+      if (!res.ok) {
+        const data = await res.json();
+        setEditError(data.error ?? 'Failed to save.');
+        return;
+      }
+      const raw = await res.json();
+      const updated = normalise(raw);
+      setJobs((prev) => prev.map((j) => (j.id === updated.id ? updated : j)));
+      setEditJob(null);
+    } catch (err) {
+      console.error(err);
+      setEditError('Could not connect to the server.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  // Quick status change from card dropdown
   async function handleStatusChange(jobId: number, newStage: string) {
     try {
       const res = await fetch(
-        `/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
+        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ stages: newStage }),
         }
       );
-
       if (!res.ok) return;
 
-      const updated = await res.json();
-      setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)));
+      const raw = await res.json();
+      setJobs((prev) => prev.map((j) => (j.id === jobId ? normalise(raw) : j)));
     } catch (err) {
       console.error('Status update failed:', err);
     }
   }
 
-  // Soft-delete a job
+  // Delete job
   async function handleDelete(jobId: number) {
     try {
       const res = await fetch(
-        `/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
-        { method: 'DELETE' }
+        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
+        {
+          method: 'DELETE',
+        }
       );
-
       if (!res.ok) return;
       setJobs((prev) => prev.filter((j) => j.id !== jobId));
     } catch (err) {
@@ -133,6 +205,39 @@ export default function DashboardPage() {
       j.title.toLowerCase().includes(search.toLowerCase()) ||
       j.company.toLowerCase().includes(search.toLowerCase())
   );
+
+  const inputStyle = {
+    width: '100%',
+    padding: '8px',
+    borderRadius: '6px',
+    border: 'none',
+    fontSize: '14px',
+    boxSizing: 'border-box' as const,
+  };
+  const labelStyle = {
+    fontSize: '13px',
+    color: '#3C1510',
+    display: 'block',
+    marginBottom: '4px',
+  };
+  const btnPrimary = (disabled = false) => ({
+    backgroundColor: disabled ? '#c0847a' : '#932C20',
+    color: '#E6CECB',
+    padding: '8px 20px',
+    borderRadius: '6px',
+    border: 'none',
+    cursor: disabled ? ('not-allowed' as const) : ('pointer' as const),
+    fontSize: '14px',
+  });
+  const btnSecondary = {
+    backgroundColor: 'transparent',
+    color: '#3C1510',
+    padding: '8px 20px',
+    borderRadius: '6px',
+    border: '1px solid #3C1510',
+    cursor: 'pointer' as const,
+    fontSize: '14px',
+  };
 
   return (
     <div
@@ -166,24 +271,15 @@ export default function DashboardPage() {
           </h1>
           <button
             onClick={() => {
-              setShowModal(true);
+              setShowAddModal(true);
               setModalError('');
             }}
-            style={{
-              backgroundColor: '#932C20',
-              color: '#E6CECB',
-              padding: '8px 20px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '14px',
-            }}
+            style={btnPrimary()}
           >
             Add Job
           </button>
         </div>
 
-        {/* Error banner */}
         {error && (
           <p
             style={{
@@ -200,7 +296,6 @@ export default function DashboardPage() {
           </p>
         )}
 
-        {/* Search */}
         <input
           type="text"
           placeholder="Search jobs..."
@@ -217,7 +312,6 @@ export default function DashboardPage() {
           }}
         />
 
-        {/* Job cards */}
         {loading ? (
           <p style={{ color: '#3C1510' }}>Loading jobs...</p>
         ) : filtered.length === 0 ? (
@@ -268,7 +362,6 @@ export default function DashboardPage() {
                   {job.description}
                 </p>
 
-                {/* Status dropdown */}
                 <select
                   value={job.status}
                   onChange={(e) => handleStatusChange(job.id, e.target.value)}
@@ -301,19 +394,34 @@ export default function DashboardPage() {
                   <span>
                     Added: {new Date(job.created_at).toLocaleDateString()}
                   </span>
-                  <button
-                    onClick={() => handleDelete(job.id)}
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      color: '#932C20',
-                      cursor: 'pointer',
-                      fontSize: '13px',
-                      padding: 0,
-                    }}
-                  >
-                    Remove
-                  </button>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      onClick={() => openEdit(job)}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#932C20',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        padding: 0,
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(job.id)}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#932C20',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        padding: 0,
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -322,18 +430,16 @@ export default function DashboardPage() {
       </div>
 
       {/* Add Job Modal */}
-      {showModal && (
+      {showAddModal && (
         <div
           style={{
             position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            inset: 0,
             backgroundColor: 'rgba(0,0,0,0.4)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            zIndex: 50,
           }}
         >
           <div
@@ -357,92 +463,38 @@ export default function DashboardPage() {
             >
               Add Job
             </h2>
-
             {modalError && (
               <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
                 {modalError}
               </p>
             )}
-
             <div>
-              <label
-                style={{
-                  fontSize: '13px',
-                  color: '#3C1510',
-                  display: 'block',
-                  marginBottom: '4px',
-                }}
-              >
-                Job Title
-              </label>
+              <label style={labelStyle}>Job Title</label>
               <input
                 type="text"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '14px',
-                  boxSizing: 'border-box',
-                }}
+                style={inputStyle}
               />
             </div>
 
             <div>
-              <label
-                style={{
-                  fontSize: '13px',
-                  color: '#3C1510',
-                  display: 'block',
-                  marginBottom: '4px',
-                }}
-              >
-                Company
-              </label>
+              <label style={labelStyle}>Company</label>
               <input
                 type="text"
                 value={newCompany}
                 onChange={(e) => setNewCompany(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '14px',
-                  boxSizing: 'border-box',
-                }}
+                style={inputStyle}
               />
             </div>
-
             <div>
-              <label
-                style={{
-                  fontSize: '13px',
-                  color: '#3C1510',
-                  display: 'block',
-                  marginBottom: '4px',
-                }}
-              >
-                Job Description
-              </label>
+              <label style={labelStyle}>Job Description</label>
               <textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                style={{
-                  width: '100%',
-                  height: '100px',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '14px',
-                  boxSizing: 'border-box',
-                  resize: 'vertical',
-                }}
+                style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
               />
             </div>
-
             <div
               style={{
                 display: 'flex',
@@ -452,33 +504,124 @@ export default function DashboardPage() {
               }}
             >
               <button
-                onClick={() => setShowModal(false)}
-                style={{
-                  backgroundColor: 'transparent',
-                  color: '#3C1510',
-                  padding: '8px 20px',
-                  borderRadius: '6px',
-                  border: '1px solid #3C1510',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                }}
+                onClick={() => setShowAddModal(false)}
+                style={btnSecondary}
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddJob}
                 disabled={adding}
-                style={{
-                  backgroundColor: adding ? '#c0847a' : '#932C20',
-                  color: '#E6CECB',
-                  padding: '8px 20px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: adding ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
-                }}
+                style={btnPrimary(adding)}
               >
                 {adding ? 'Adding...' : 'Add Job'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Job Modal */}
+      {editJob && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '400px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              Edit Job
+            </h2>
+            {editError && (
+              <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
+                {editError}
+              </p>
+            )}
+            <div>
+              <label style={labelStyle}>Job Title</label>
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Company</label>
+              <input
+                type="text"
+                value={editCompany}
+                onChange={(e) => setEditCompany(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Job Description</label>
+              <textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Status</label>
+              <select
+                value={editStage}
+                onChange={(e) => setEditStage(e.target.value)}
+                style={{
+                  ...inputStyle,
+                  border: '1px solid #932C20',
+                  backgroundColor: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                {Object.entries(STAGE_LABELS).map(([val, label]) => (
+                  <option key={val} value={val}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+                marginTop: '8px',
+              }}
+            >
+              <button onClick={() => setEditJob(null)} style={btnSecondary}>
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                disabled={saving}
+                style={btnPrimary(saving)}
+              >
+                {saving ? 'Saving...' : 'Save'}
               </button>
             </div>
           </div>

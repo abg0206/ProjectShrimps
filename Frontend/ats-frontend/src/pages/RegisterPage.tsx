@@ -29,7 +29,8 @@ export default function RegisterPage() {
         body: JSON.stringify({
           email,
           password,
-          clerk_id: crypto.randomUUID(),
+          clerk_id:
+            'local-' + Date.now() + '-' + Math.random().toString(36).slice(2),
         }),
       });
 

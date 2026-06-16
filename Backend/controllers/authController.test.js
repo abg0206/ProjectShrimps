@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import authController from './authController'; // Adjust path as needed
+import authController from './authController';
 import authService from '../middleware/clerkAuth';
 
 // Mock the authService module

@@ -17,7 +17,6 @@ async function createUser(email, clerkId, phone, firstName, lastName) {
   try {
     await client.query('BEGIN');
 
-    // 1. Create user_account
     const accountResult = await client.query(
       `
       INSERT INTO user_account (email, clerk_id)

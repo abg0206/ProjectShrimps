@@ -13,7 +13,7 @@ export default function Sidebar() {
   useEffect(() => {
     if (!userEmail) return;
 
-    fetch(`/profile/${encodeURIComponent(userEmail)}`)
+    fetch(`/api/profile/${encodeURIComponent(userEmail)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data) {
@@ -100,7 +100,7 @@ export default function Sidebar() {
           marginBottom: '24px',
         }}
       >
-        Caridean Shrimp
+        {displayName}
       </p>
 
       {/* Nav links */}
