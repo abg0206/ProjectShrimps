@@ -52,6 +52,7 @@ async function main() {
     //User profile
     await pool.query(`
        CREATE TABLE IF NOT EXISTS user_profile (
+         user_id        UUID foreign key references user_account(user_id) ON DELETE CASCADE,
          email               VARCHAR(255) PRIMARY KEY,
          phone               BIGINT NOT NULL,
          first_name          VARCHAR(100) NOT NULL,
