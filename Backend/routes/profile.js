@@ -1,8 +1,9 @@
 const express = require('express');
 
-module.exports = function profileRouter(pool) {
+module.exports = function (pool) {
   const router = express.Router();
 
+  // GET /profile/:email — fetch all profile fields for the profile page
   router.get('/profile/:email', async (req, res) => {
     try {
       const { email } = req.params;
@@ -30,7 +31,7 @@ module.exports = function profileRouter(pool) {
     }
   });
 
-  // create/update profile fields
+  // PUT /profile/:email — create or update profile fields
   router.put('/profile/:email', async (req, res) => {
     try {
       const { email } = req.params;
@@ -63,6 +64,40 @@ module.exports = function profileRouter(pool) {
     } catch (err) {
       console.error('Update profile error:', err);
       res.status(500).json({ error: 'Failed to update profile' });
+    }
+  });
+
+  // GET /user/:email — full user info (profile + account join)
+  router.get('/user/:email', async (req, res) => {
+    try {
+      const { email } = req.params;
+
+      const result = await pool.query(
+        `SELECT
+           up.email,
+           up.phone,
+           up.first_name,
+           up.last_name,
+           up.summary,
+           up.experience,
+           up.skills,
+           up.career_preferences,
+           up.profile_picture_url,
+           ua.clerk_id
+         FROM user_profile up
+         JOIN user_account ua ON up.email = ua.email
+         WHERE up.email = $1`,
+        [email]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error('Get user error:', err);
+      res.status(500).json({ error: 'Failed to fetch user' });
     }
   });
 

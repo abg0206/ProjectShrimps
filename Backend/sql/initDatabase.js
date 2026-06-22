@@ -1,6 +1,5 @@
-import 'dotenv/config';
-
-import pool from '../config/db';
+require('dotenv').config();
+const pool = require('../config/db');
 
 async function main() {
   try {
@@ -50,30 +49,46 @@ async function main() {
     //tables logic
 
     //User profile
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS user_profile (
-         user_id        UUID foreign key references user_account(user_id) ON DELETE CASCADE,
-         email               VARCHAR(255) PRIMARY KEY,
-         phone               BIGINT NOT NULL,
-         first_name          VARCHAR(100) NOT NULL,
-         last_name           VARCHAR(101) NOT NULL,
-         summary             TEXT,
-         experience          TEXT,
-         skills              skill_enum[],
-         career_preferences  TEXT,
-         profile_picture_url VARCHAR(255)
-       );
-     `);
+    //User account (must come first — user_profile references it)
+await pool.query(`
+   CREATE TABLE IF NOT EXISTS user_account (
+     user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     clerk_id       VARCHAR(255) UNIQUE NOT NULL,
+     email          VARCHAR(255) UNIQUE NOT NULL,
+     email_verified BOOLEAN DEFAULT FALSE,
+     password_hash  VARCHAR(255),
+     created_at     TIMESTAMP DEFAULT NOW()
+   );
+ `);
 
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS user_account (
-         user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-         clerk_id       VARCHAR(255) UNIQUE NOT NULL,
-         email          VARCHAR(255) UNIQUE NOT NULL,
-         email_verified BOOLEAN DEFAULT FALSE,
-         created_at     TIMESTAMP DEFAULT NOW()
-       );
-     `);
+ // Migration: add password_hash to user_account if missing
+await pool.query(`
+   DO $$
+   BEGIN
+     IF NOT EXISTS (
+       SELECT 1 FROM information_schema.columns
+       WHERE table_name = 'user_account' AND column_name = 'password_hash'
+     ) THEN
+       ALTER TABLE user_account ADD COLUMN password_hash VARCHAR(255);
+     END IF;
+   END $$;
+ `);
+
+//User profile
+await pool.query(`
+   CREATE TABLE IF NOT EXISTS user_profile (
+     user_id        UUID REFERENCES user_account(user_id) ON DELETE CASCADE,
+     email               VARCHAR(255) PRIMARY KEY,
+     phone               BIGINT NOT NULL,
+     first_name          VARCHAR(100) NOT NULL,
+     last_name           VARCHAR(101) NOT NULL,
+     summary             TEXT,
+     experience          TEXT,
+     skills              skill_enum[],
+     career_preferences  TEXT,
+     profile_picture_url VARCHAR(255)
+   );
+ `);
 
     await pool.query(`
        CREATE TABLE IF NOT EXISTS job_table (
@@ -127,33 +142,70 @@ async function main() {
        );
      `);
 
+    await pool.query(`
+       CREATE TABLE IF NOT EXISTS job_resume (
+         job_id    INTEGER NOT NULL,
+         resume_id INTEGER NOT NULL,
+         PRIMARY KEY (job_id, resume_id)
+       );
+     `);
+    await pool.query(`
+       CREATE TABLE IF NOT EXISTS interview_table (
+         interview_id   SERIAL PRIMARY KEY,
+         job_id         INTEGER NOT NULL,
+         interview_type interview_type_enum NOT NULL DEFAULT 'Other',
+         scheduled_at   TIMESTAMP,
+         notes          TEXT,
+         created_at     TIMESTAMP DEFAULT NOW()
+       );
+     `);
     //forein keys and indexes
-
     // Interview to Job
     await pool.query(`
-      ALTER TABLE interview_table
-      ADD CONSTRAINT fk_interview_job
-      FOREIGN KEY (job_id)
-      REFERENCES job_table(unique_num)
-      ON DELETE RESTRICT;
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_interview_job'
+        ) THEN
+          ALTER TABLE interview_table
+          ADD CONSTRAINT fk_interview_job
+          FOREIGN KEY (job_id)
+          REFERENCES job_table(unique_num)
+          ON DELETE RESTRICT;
+        END IF;
+      END $$;
     `);
 
     // JobResume & Job deleate
     await pool.query(`
-      ALTER TABLE job_resume
-      ADD CONSTRAINT fk_jobresume_job
-      FOREIGN KEY (job_id)
-      REFERENCES job_table(unique_num)
-      ON DELETE CASCADE;
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobresume_job'
+        ) THEN
+          ALTER TABLE job_resume
+          ADD CONSTRAINT fk_jobresume_job
+          FOREIGN KEY (job_id)
+          REFERENCES job_table(unique_num)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
     `);
 
     // JobResume & Resume deleate
     await pool.query(`
-      ALTER TABLE job_resume
-      ADD CONSTRAINT fk_jobresume_resume
-      FOREIGN KEY (resume_id)
-      REFERENCES resume_table(experience_id)
-      ON DELETE CASCADE;
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobresume_resume'
+        ) THEN
+          ALTER TABLE job_resume
+          ADD CONSTRAINT fk_jobresume_resume
+          FOREIGN KEY (resume_id)
+          REFERENCES resume_table(experience_id)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
     `);
 
     await pool.query(`

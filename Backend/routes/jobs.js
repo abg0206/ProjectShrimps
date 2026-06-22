@@ -1,9 +1,9 @@
 const express = require('express');
 
-module.exports = function jobsRouter(pool) {
+module.exports = function (pool) {
   const router = express.Router();
 
-  // all active jobs for a user
+  // GET /jobs/:email — all active jobs for a user
   router.get('/jobs/:email', async (req, res) => {
     try {
       const { email } = req.params;
@@ -23,7 +23,7 @@ module.exports = function jobsRouter(pool) {
     }
   });
 
-  // adds new jobs
+  // POST /jobs/:email — add a new job
   router.post('/jobs/:email', async (req, res) => {
     try {
       const { email } = req.params;
@@ -49,7 +49,7 @@ module.exports = function jobsRouter(pool) {
     }
   });
 
-  // update job status 
+  // PUT /jobs/:email/:id — update job status (stage)
   router.put('/jobs/:email/:id', async (req, res) => {
     try {
       const { email, id } = req.params;
@@ -82,7 +82,7 @@ module.exports = function jobsRouter(pool) {
     }
   });
 
-  // soft delete a job
+  // DELETE /jobs/:email/:id — soft delete a job
   router.delete('/jobs/:email/:id', async (req, res) => {
     try {
       const { email, id } = req.params;

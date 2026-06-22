@@ -15,16 +15,18 @@ app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 
 // PostgreSQL Connection Pool
+const isLocal = process.env.NODE_ENV === 'development';
+const sslConfig = isLocal
+  ? false
+  : { rejectUnauthorized: false, ca: fs.readFileSync(__dirname + '/repoConnect.pem').toString() };
+
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  ssl: {
-    rejectUnauthorized: false,
-    ca: fs.readFileSync(__dirname + '/repoConnect.pem').toString(),
-  },
+  ssl: sslConfig,
 });
 
 // Server running check
