@@ -2,6 +2,9 @@ import Sidebar from '../components/Sidebar';
 import { useState } from 'react';
 
 export default function SettingsPage() {
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
+
   const [newEmail, setNewEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -57,6 +60,31 @@ export default function SettingsPage() {
               maxWidth: '400px',
             }}
           >
+            <div>
+              <label
+                style={{
+                  fontSize: '13px',
+                  color: '#3C1510',
+                  display: 'block',
+                  marginBottom: '4px',
+                }}
+              >
+                Current Email
+              </label>
+              <input
+                type="email"
+                value={userEmail}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: 'solid',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                }}
+                readOnly
+              />
+            </div>
             <div>
               <label
                 style={{

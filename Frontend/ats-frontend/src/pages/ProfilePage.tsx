@@ -8,6 +8,11 @@ export default function ProfilePage() {
   const [phone, setPhone] = useState('');
   const [summary, setSummary] = useState('');
 
+  //Adding skills
+  const [skills, setSkills] = useState<string[]>([]);
+  const [skillInput, setSkillInput] = useState('');
+  const [skillError, setSkillError] = useState('');
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -52,6 +57,27 @@ export default function ProfilePage() {
     const fields = [firstName, lastName, email, phone, summary];
     const filled = fields.filter((f) => f.trim() !== '').length;
     return Math.round((filled / fields.length) * 100);
+  }
+
+  function handleAddSkill() {
+    setSkillError('');
+    const trimmed = skillInput.trim();
+
+    if (!trimmed) {
+      setSkillError('Please enter a skill.');
+      return;
+    }
+    if (skills.map((s) => s.toLowerCase()).includes(trimmed.toLowerCase())) {
+      setSkillError('That skill has already been added.');
+      return;
+    }
+
+    setSkills([...skills, trimmed]);
+    setSkillInput('');
+  }
+
+  function handleDeleteSkill(index: number) {
+    setSkills(skills.filter((_, i) => i !== index));
   }
 
   async function handleSave() {
@@ -199,6 +225,7 @@ export default function ProfilePage() {
 
               <input
                 type="text"
+                placeholder="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 style={{
@@ -226,6 +253,7 @@ export default function ProfilePage() {
 
               <input
                 type="text"
+                placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 style={{
@@ -253,6 +281,7 @@ export default function ProfilePage() {
 
               <input
                 type="email"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{
@@ -263,6 +292,7 @@ export default function ProfilePage() {
                   fontSize: '14px',
                   boxSizing: 'border-box',
                 }}
+                readOnly
               />
             </div>
             <div>
@@ -279,10 +309,18 @@ export default function ProfilePage() {
 
               <input
                 type="text"
+                placeholder="123-456-7890"
                 value={phone}
-                onChange={(e) =>
-                  setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))
-                }
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  let formatted = digits;
+                  if (digits.length >= 7) {
+                    formatted = `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+                  } else if (digits.length >= 4) {
+                    formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+                  }
+                  setPhone(formatted);
+                }}
                 style={{
                   width: '100%',
                   padding: '8px',
@@ -294,43 +332,105 @@ export default function ProfilePage() {
               />
             </div>
           </div>
-          <div
+          <h2
             style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: '16px',
+              color: '#3C1510',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              marginBottom: '5px',
+              marginTop: '24px',
             }}
           >
+            Skills
+          </h2>
+
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+            <input
+              type="text"
+              placeholder="e.g. React, Python, SQL"
+              value={skillInput}
+              onChange={(e) => setSkillInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleAddSkill();
+              }}
+              style={{
+                flex: 1,
+                padding: '8px',
+                borderRadius: '6px',
+                border: 'solid',
+                fontSize: '14px',
+                boxSizing: 'border-box',
+              }}
+            />
             <button
-              onClick={handleSave}
+              onClick={handleAddSkill}
               style={{
                 backgroundColor: '#932C20',
-                padding: '8px 20px',
+                color: 'white',
+                padding: '8px 16px',
                 borderRadius: '6px',
                 border: 'none',
                 cursor: 'pointer',
                 fontSize: '14px',
               }}
             >
-              Save
+              Add
             </button>
           </div>
-        </div>
 
-        {/* professional summary */}
-        <div
-          style={{
-            backgroundColor: '#E6CECB',
-            borderRadius: '10px',
-            padding: '24px',
-          }}
-        >
+          {skillError && (
+            <p
+              style={{
+                color: '#932C20',
+                fontSize: '13px',
+                margin: '0 0 8px 0',
+              }}
+            >
+              {skillError}
+            </p>
+          )}
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {skills.map((skill, index) => (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: '#932C20',
+                  color: 'white',
+                  padding: '4px 12px',
+                  borderRadius: '999px',
+                  fontSize: '13px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                {skill}
+                <button
+                  onClick={() => handleDeleteSkill(index)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    padding: 0,
+                    lineHeight: 1,
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+
           <h2
             style={{
               color: '#3C1510',
               fontSize: '16px',
               fontWeight: 'bold',
-              marginBottom: '16px',
+              marginBottom: '5px',
+              marginTop: '24px',
             }}
           >
             Professional Summary
@@ -361,7 +461,7 @@ export default function ProfilePage() {
               onClick={handleSave}
               style={{
                 backgroundColor: '#932C20',
-                color: '#E6CECB',
+                color: '#FFFFFF',
                 padding: '8px 20px',
                 borderRadius: '6px',
                 border: 'none',
