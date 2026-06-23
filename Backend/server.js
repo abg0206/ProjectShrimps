@@ -18,7 +18,10 @@ app.use(express.json());
 const isLocal = process.env.NODE_ENV === 'development';
 const sslConfig = isLocal
   ? false
-  : { rejectUnauthorized: false, ca: fs.readFileSync(__dirname + '/repoConnect.pem').toString() };
+  : {
+      rejectUnauthorized: false,
+      ca: fs.readFileSync(__dirname + '/repoConnect.pem').toString(),
+    };
 
 const pool = new Pool({
   host: process.env.DB_HOST,

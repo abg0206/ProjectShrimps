@@ -50,7 +50,7 @@ async function main() {
 
     //User profile
     //User account (must come first — user_profile references it)
-await pool.query(`
+    await pool.query(`
    CREATE TABLE IF NOT EXISTS user_account (
      user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
      clerk_id       VARCHAR(255) UNIQUE NOT NULL,
@@ -61,8 +61,8 @@ await pool.query(`
    );
  `);
 
- // Migration: add password_hash to user_account if missing
-await pool.query(`
+    // Migration: add password_hash to user_account if missing
+    await pool.query(`
    DO $$
    BEGIN
      IF NOT EXISTS (
@@ -74,8 +74,8 @@ await pool.query(`
    END $$;
  `);
 
-//User profile
-await pool.query(`
+    //User profile
+    await pool.query(`
    CREATE TABLE IF NOT EXISTS user_profile (
      user_id        UUID REFERENCES user_account(user_id) ON DELETE CASCADE,
      email               VARCHAR(255) PRIMARY KEY,

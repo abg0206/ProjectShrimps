@@ -10,7 +10,9 @@ module.exports = function (pool) {
       const { email, password } = req.body;
 
       if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
+        return res
+          .status(400)
+          .json({ error: 'Email and password are required' });
       }
 
       const result = await pool.query(
@@ -19,12 +21,17 @@ module.exports = function (pool) {
       );
 
       if (result.rows.length === 0) {
-        return res.status(401).json({ error: 'No account found for that email' });
+        return res
+          .status(401)
+          .json({ error: 'No account found for that email' });
       }
 
       const account = result.rows[0];
 
-      const validPassword = await bcrypt.compare(password, account.password_hash);
+      const validPassword = await bcrypt.compare(
+        password,
+        account.password_hash
+      );
 
       if (!validPassword) {
         return res.status(401).json({ error: 'Invalid email or password' });
