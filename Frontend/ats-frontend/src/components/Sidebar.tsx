@@ -88,7 +88,7 @@ export default function Sidebar() {
           fontWeight: 'bold',
         }}
       >
-        CS
+        {initials}
       </div>
 
       {/* username */}
@@ -153,8 +153,8 @@ export default function Sidebar() {
         onClick={handleLogout}
         style={{
           marginTop: 'auto',
-          backgroundColor: 'transparent',
-          color: '#932C20',
+          backgroundColor: '#932C20',
+          color: '#FFFFFF',
           border: '10px solid #932C20',
           borderRadius: '6px',
           padding: '8px 12px',

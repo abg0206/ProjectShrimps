@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import shrimplyLogo from '../assets/ShrimplyLogo.png';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -60,16 +61,14 @@ export default function LoginPage() {
         justifyContent: 'center',
       }}
     >
-      <h1
+      <img
+        src={shrimplyLogo}
+        alt="Shrimply Logo"
         style={{
-          color: '#3C1510',
-          fontSize: '32px',
-          fontWeight: 'bold',
-          marginBottom: '24px',
+          width: '200px',
+          marginBottom: '32px',
         }}
-      >
-        Shrimply
-      </h1>
+      />
       <div
         style={{
           backgroundColor: '#E6CECB',
