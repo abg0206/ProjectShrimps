@@ -25,6 +25,8 @@ export default function DashboardPage() {
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [search, setSearch] = useState('');
+  const [filterStage, setFilterStage] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -200,11 +202,30 @@ export default function DashboardPage() {
     }
   }
 
-  const filtered = jobs.filter(
-    (j) =>
-      j.title.toLowerCase().includes(search.toLowerCase()) ||
-      j.company.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = jobs
+    .filter((job) => {
+      const matchesSearch =
+        job.title.toLowerCase().includes(search.toLowerCase()) ||
+        job.company.toLowerCase().includes(search.toLowerCase());
+      const matchesStage = filterStage === 'all' || job.status === filterStage;
+      return matchesSearch && matchesStage;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'newest') {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      } else if (sortBy === 'oldest') {
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      } else if (sortBy === 'company') {
+        return a.company.localeCompare(b.company);
+      } else if (sortBy === 'title') {
+        return a.title.localeCompare(b.title);
+      }
+      return 0;
+    });
 
   const inputStyle = {
     width: '100%',
@@ -278,6 +299,71 @@ export default function DashboardPage() {
           >
             Add Job
           </button>
+        </div>
+
+        {/* Filters */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+            marginBottom: '24px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search by title or company..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              flex: 1,
+              minWidth: '200px',
+              padding: '8px 12px',
+              borderRadius: '6px',
+              border: 'none',
+              fontSize: '14px',
+            }}
+          />
+
+          <select
+            value={filterStage}
+            onChange={(e) => setFilterStage(e.target.value)}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '6px',
+              border: 'none',
+              fontSize: '14px',
+              backgroundColor: '#E6CECB',
+              color: '#3C1510',
+              cursor: 'pointer',
+            }}
+          >
+            <option value="all">All Stages</option>
+            {Object.entries(STAGE_LABELS).map(([val, label]) => (
+              <option key={val} value={val}>
+                {label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '6px',
+              border: 'none',
+              fontSize: '14px',
+              backgroundColor: '#E6CECB',
+              color: '#3C1510',
+              cursor: 'pointer',
+            }}
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="company">Company A-Z</option>
+            <option value="title">Title A-Z</option>
+          </select>
         </div>
 
         {error && (

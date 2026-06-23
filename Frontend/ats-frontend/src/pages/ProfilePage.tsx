@@ -1,5 +1,13 @@
 import Sidebar from '../components/Sidebar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+type EducationInfo = {
+  school: string;
+  degree: string;
+  field_of_study: string;
+  start_date: string;
+  end_date: string;
+};
 
 export default function ProfilePage() {
   const [firstName, setFirstName] = useState('');
@@ -17,6 +25,11 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+
+  const [education, setEducation] = useState<EducationInfo[]>([]);
+  const [educationError, setEducationError] = useState('');
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Read the logged-in user's email from sessionStorage (set by LoginPage)
   const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
@@ -42,6 +55,8 @@ export default function ProfilePage() {
           setEmail(userEmail);
           setPhone(data.phone ? String(data.phone) : '');
           setSummary(data.summary ?? '');
+          setSkills(data.skills ?? []); //added this to load skills from the backend
+          setEducation(data.education ?? []); //same for education
         } else {
           setEmail(userEmail);
         }
@@ -80,6 +95,60 @@ export default function ProfilePage() {
     setSkills(skills.filter((_, i) => i !== index));
   }
 
+  function handleAddEducation() {
+    setEducationError('');
+    setEducation([
+      ...education,
+      {
+        school: '',
+        degree: '',
+        field_of_study: '',
+        start_date: '',
+        end_date: '',
+      },
+    ]);
+  }
+
+  //Education information handlers
+  function handleEducationChange(
+    index: number,
+    field: keyof EducationInfo,
+    value: string
+  ) {
+    const updated = education.map((entry, i) =>
+      i === index ? { ...entry, [field]: value } : entry
+    );
+    setEducation(updated);
+  }
+
+  function handleDeleteEducation(index: number) {
+    setEducation(education.filter((_, i) => i !== index));
+  }
+
+  function validateEducation() {
+    for (const entry of education) {
+      if (!entry.school.trim() || !entry.degree.trim()) {
+        setEducationError('Each entry requires at least a school and degree.');
+        return false;
+      }
+      if (
+        entry.start_date &&
+        entry.end_date &&
+        entry.end_date < entry.start_date
+      ) {
+        setEducationError('End date cannot be earlier than start date.');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function handleProfilePictureChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setProfilePicture(file);
+  }
+
   async function handleSave() {
     setError('');
     setSaved(false);
@@ -88,7 +157,7 @@ export default function ProfilePage() {
       setError('First name and last name are required.');
       return;
     }
-
+    if (!validateEducation()) return;
     setSaving(true);
 
     try {
@@ -100,6 +169,8 @@ export default function ProfilePage() {
           last_name: lastName.trim(),
           phone: phone.trim() ? phone.trim() : null,
           summary: summary.trim() || null,
+          skills, //added these to the profile save function
+          education,
         }),
       });
 
@@ -181,6 +252,72 @@ export default function ProfilePage() {
           <p style={{ fontSize: '13px', color: '#3C1510' }}>
             {getCompletion()}% complete
           </p>
+        </div>
+
+        {/* profile picture */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginBottom: '24px',
+          }}
+        >
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              width: '100px',
+              height: '100px',
+              borderRadius: '50%',
+              backgroundColor: '#3C1510',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              overflow: 'hidden',
+              marginBottom: '8px',
+            }}
+          >
+            {profilePicture ? (
+              <img
+                src={URL.createObjectURL(profilePicture)}
+                alt="Profile"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <span
+                style={{
+                  color: '#E6CECB',
+                  fontSize: '13px',
+                  textAlign: 'center',
+                  padding: '8px',
+                }}
+              >
+                Click to upload
+              </span>
+            )}
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleProfilePictureChange}
+            style={{ display: 'none' }}
+          />
+          {profilePicture && (
+            <button
+              onClick={() => setProfilePicture(null)}
+              style={{
+                fontSize: '12px',
+                color: '#932C20',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              Remove photo
+            </button>
+          )}
         </div>
 
         {/* id */}
@@ -332,6 +469,250 @@ export default function ProfilePage() {
               />
             </div>
           </div>
+
+          {/* Education */}
+          <h2
+            style={{
+              color: '#3C1510',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              marginBottom: '5px',
+              marginTop: '24px',
+            }}
+          >
+            Education
+          </h2>
+
+          {education.map((entry, index) => (
+            <div
+              key={index}
+              style={{
+                backgroundColor: '#D9958C',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '12px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '12px',
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      fontSize: '13px',
+                      color: '#3C1510',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    School *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. NJIT"
+                    value={entry.school}
+                    onChange={(e) =>
+                      handleEducationChange(index, 'school', e.target.value)
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: 'solid',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      fontSize: '13px',
+                      color: '#3C1510',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Degree *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bachelor of Science"
+                    value={entry.degree}
+                    onChange={(e) =>
+                      handleEducationChange(index, 'degree', e.target.value)
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: 'solid',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      fontSize: '13px',
+                      color: '#3C1510',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Field of Study
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Computer Science"
+                    value={entry.field_of_study}
+                    onChange={(e) =>
+                      handleEducationChange(
+                        index,
+                        'field_of_study',
+                        e.target.value
+                      )
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: 'solid',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '8px',
+                  }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '13px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      Start Date
+                    </label>
+                    <input
+                      type="month"
+                      value={entry.start_date}
+                      onChange={(e) =>
+                        handleEducationChange(
+                          index,
+                          'start_date',
+                          e.target.value
+                        )
+                      }
+                      style={{
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '13px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      End Date
+                    </label>
+                    <input
+                      type="month"
+                      value={entry.end_date}
+                      onChange={(e) =>
+                        handleEducationChange(index, 'end_date', e.target.value)
+                      }
+                      style={{
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  marginTop: '8px',
+                }}
+              >
+                <button
+                  onClick={() => handleDeleteEducation(index)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#932C20',
+                    border: '2px solid #932C20',
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {educationError && (
+            <p
+              style={{
+                color: '#932C20',
+                fontSize: '13px',
+                margin: '0 0 8px 0',
+              }}
+            >
+              {educationError}
+            </p>
+          )}
+
+          <button
+            onClick={handleAddEducation}
+            style={{
+              backgroundColor: 'transparent',
+              color: '#932C20',
+              border: '2px solid #932C20',
+              padding: '6px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              marginBottom: '8px',
+            }}
+          >
+            + Add Education
+          </button>
+
           <h2
             style={{
               color: '#3C1510',
@@ -459,6 +840,7 @@ export default function ProfilePage() {
           >
             <button
               onClick={handleSave}
+              disabled={saving}
               style={{
                 backgroundColor: '#932C20',
                 color: '#FFFFFF',
