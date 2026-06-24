@@ -41,7 +41,7 @@ DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-postgres}"
 DB_USER="${DB_USER:?".env is missing DB_USER"}"
 DB_PASSWORD="${DB_PASSWORD:?".env is missing DB_PASSWORD"}"
-BACKEND_PORT="${PORT:-5000}"
+BACKEND_PORT="${PORT:-8080}"
 
 # =============================================================================
 # PREREQUISITES
