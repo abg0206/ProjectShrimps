@@ -3,53 +3,26 @@ const express = require('express');
 module.exports = function (pool) {
   const router = express.Router();
 
-  // GET /jobs/:email — all active jobs for a user
-  router.get('/jobs/:email', async (req, res) => {
+router.get('/archived/:email', async (req, res) => {
     try {
       const { email } = req.params;
 
       const result = await pool.query(
         `SELECT unique_num AS id, title, company, description, stages AS status, created_at
          FROM job_table
-         WHERE email = $1 AND is_deleted = FALSE AND stages != 'Archived'
+         WHERE email = $1 AND is_deleted = FALSE AND stages = 'Archived'
          ORDER BY created_at DESC`,
         [email]
       );
-
+a
       res.status(200).json(result.rows);
     } catch (err) {
       console.error('Get jobs error:', err);
-      res.status(500).json({ error: 'Failed to fetch jobs' });
+      res.status(500).json({ error: 'Failed to fetch archived jobs' });
     }
-  });
+}
 
-  // POST /jobs/:email — add a new job
-  router.post('/jobs/:email', async (req, res) => {
-    try {
-      const { email } = req.params;
-      const { title, company, description } = req.body;
-
-      if (!title || !company || !description) {
-        return res
-          .status(400)
-          .json({ error: 'title, company, and description are required' });
-      }
-
-      const result = await pool.query(
-        `INSERT INTO job_table (email, title, company, description, stages)
-         VALUES ($1, $2, $3, $4, '0')
-         RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
-        [email, title, company, description]
-      );
-
-      res.status(201).json(result.rows[0]);
-    } catch (err) {
-      console.error('Add job error:', err);
-      res.status(500).json({ error: 'Failed to add job' });
-    }
-  });
-
-  // PUT /jobs/:email/:id — update job status (stage)
+// PUT /jobs/:email/:id — update job status (stage)
   router.put('/jobs/:email/:id', async (req, res) => {
     try {
       const { email, id } = req.params;
