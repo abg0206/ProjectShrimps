@@ -64,8 +64,7 @@ fi
 log "Python found: $PYTHON_BIN"
 
 "$PYTHON_BIN" -c "import psycopg2" 2>/dev/null \
-  || { warn "psycopg2 not installed. Installing..."; "$PYTHON_BIN" -m pip install psycopg2-binary --quiet \
-       || fail "Run: pip install psycopg2-binary"; }
+  || { fail "Run: pip install psycopg2-binary"; }
 
 # =============================================================================
 # DATABASE CONNECTION CHECK

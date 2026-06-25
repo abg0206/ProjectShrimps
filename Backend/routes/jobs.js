@@ -11,7 +11,7 @@ module.exports = function (pool) {
       const result = await pool.query(
         `SELECT unique_num AS id, title, company, description, stages AS status, created_at
          FROM job_table
-         WHERE email = $1 AND is_deleted = FALSE AND stages != 'Archived'
+         WHERE email = $1 AND is_deleted = FALSE AND stages != 5
          ORDER BY created_at DESC`,
         [email]
       );
