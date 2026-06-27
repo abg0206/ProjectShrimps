@@ -11,8 +11,6 @@ async function main() {
 
     console.log('Existing tables:', result.rows);
 
-    // enums logic (need to make better options for sprint 2)
-
     await pool.query(`
       DO $$
       BEGIN
@@ -26,7 +24,19 @@ async function main() {
       DO $$
       BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'job_stage_enum') THEN
-          CREATE TYPE job_stage_enum AS ENUM ('0','1','2','3','4');
+          CREATE TYPE job_stage_enum AS ENUM ('0','1','2','3','4','5');
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_enum
+          WHERE enumtypid = 'job_stage_enum'::regtype AND enumlabel = '5'
+        ) THEN
+          ALTER TYPE job_stage_enum ADD VALUE '5';
         END IF;
       END $$;
     `);
@@ -49,7 +59,7 @@ async function main() {
     //tables logic
 
     //User profile
-    //User account (must come first — user_profile references it)
+    //User account
     await pool.query(`
    CREATE TABLE IF NOT EXISTS user_account (
      user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -103,7 +113,6 @@ async function main() {
        );
      `);
 
-    // Migration: add email + created_at to job_table if they were created without them
     await pool.query(`
        DO $$
        BEGIN

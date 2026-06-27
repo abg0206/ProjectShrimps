@@ -59,6 +59,7 @@ export default function ProfilePage() {
     return Math.round((filled / fields.length) * 100);
   }
 
+  //Skills here
   function handleAddSkill() {
     setSkillError('');
     const trimmed = skillInput.trim();
