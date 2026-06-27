@@ -8,6 +8,7 @@ const cors = require('cors');
 const usersRouter = require('./routes/users');
 const profileRouter = require('./routes/profile');
 const jobsRouter = require('./routes/jobs');
+const settingsRouter = require('./routes/settings');
 
 const app = express();
 
@@ -52,6 +53,8 @@ app.get('/api/db-test', async (req, res) => {
 app.use('/api', usersRouter(pool));
 app.use('/api', profileRouter(pool));
 app.use('/api', jobsRouter(pool));
+app.use('/api/settings', settingsRouter);
+app.use('/api/users', settingsRouter);
 
 // start
 const PORT = process.env.PORT || 3000;

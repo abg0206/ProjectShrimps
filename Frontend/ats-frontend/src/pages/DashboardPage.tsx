@@ -1,5 +1,5 @@
 import Sidebar from '../components/Sidebar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const STAGE_LABELS: Record<string, string> = {
   '0': 'Interested',
@@ -19,6 +19,27 @@ type Job = {
   created_at: string;
 };
 
+function normalise(raw: Record<string, string | number>): Job {
+  return {
+    id: Number(raw.id ?? raw.unique_num),
+    title: String(raw.title),
+    company: String(raw.company),
+    description: String(raw.description),
+    status: String(raw.status ?? raw.stages ?? '0'),
+    created_at: String(raw.created_at),
+  };
+}
+
+// Debounce hook — delays updating a value until the user stops typing
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}
+
 export default function DashboardPage() {
   const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
   const userEmail = session.email ?? '';
@@ -30,6 +51,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Debounce search so we don't fire on every keystroke
+  const debouncedSearch = useDebounce(search, 300);
+
   // Add modal
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -37,6 +61,13 @@ export default function DashboardPage() {
   const [newDescription, setNewDescription] = useState('');
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
+
+  // Archive confirmation modal
+  const [archiveTarget, setArchiveTarget] = useState<{
+    id: number;
+    title: string;
+  } | null>(null);
+  const [archiving, setArchiving] = useState(false);
 
   // Edit modal
   const [editJob, setEditJob] = useState<Job | null>(null);
@@ -47,34 +78,35 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState('');
 
-  // Normalise a raw API response into our Job shape
-  function normalise(raw: Record<string, string | number>): Job {
-    return {
-      id: Number(raw.id ?? raw.unique_num),
-      title: String(raw.title),
-      company: String(raw.company),
-      description: String(raw.description),
-      status: String(raw.status ?? raw.stages ?? '0'),
-      created_at: String(raw.created_at),
-    };
-  }
-
-  // Load jobs on mount
-  useEffect(() => {
+  // Fetch jobs from the server, passing filters as query params
+  const fetchJobs = useCallback(async () => {
     if (!userEmail) return;
+    setLoading(true);
+    setError('');
 
-    fetch(`/api/jobs/${encodeURIComponent(userEmail)}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load jobs');
-        return res.json();
-      })
-      .then((data) => setJobs(data.map(normalise)))
-      .catch((err) => {
-        console.error(err);
-        setError('Could not load jobs. Please refresh.');
-      })
-      .finally(() => setLoading(false));
-  }, [userEmail]);
+    try {
+      const params = new URLSearchParams();
+      if (filterStage !== 'all') params.set('stage', filterStage);
+      if (debouncedSearch.trim()) params.set('search', debouncedSearch.trim());
+      params.set('sort', sortBy);
+
+      const url = `/api/jobs/${encodeURIComponent(userEmail)}?${params.toString()}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to load jobs');
+      const data = await res.json();
+      setJobs(data.map(normalise));
+    } catch (err) {
+      console.error(err);
+      setError('Could not load jobs. Please refresh.');
+    } finally {
+      setLoading(false);
+    }
+  }, [userEmail, filterStage, debouncedSearch, sortBy]);
+
+  // Re-fetch whenever filters change
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
 
   // Add job
   async function handleAddJob() {
@@ -83,7 +115,6 @@ export default function DashboardPage() {
       setModalError('All fields are required.');
       return;
     }
-
     setAdding(true);
     try {
       const res = await fetch(`/api/jobs/${encodeURIComponent(userEmail)}`, {
@@ -95,15 +126,13 @@ export default function DashboardPage() {
           description: newDescription.trim(),
         }),
       });
-
       if (!res.ok) {
         const data = await res.json();
         setModalError(data.error ?? 'Failed to add job.');
         return;
       }
-
-      const raw = await res.json();
-      setJobs((prev) => [normalise(raw), ...prev]);
+      // Refetch so new job respects current filters/sort
+      await fetchJobs();
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
@@ -134,6 +163,12 @@ export default function DashboardPage() {
       setEditError('All fields are required.');
       return;
     }
+    // Intercept archive from edit modal too
+    if (editStage === '5') {
+      setArchiveTarget({ id: editJob.id, title: editJob.title });
+      setEditJob(null);
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch(
@@ -154,9 +189,8 @@ export default function DashboardPage() {
         setEditError(data.error ?? 'Failed to save.');
         return;
       }
-      const raw = await res.json();
-      const updated = normalise(raw);
-      setJobs((prev) => prev.map((j) => (j.id === updated.id ? updated : j)));
+      // Refetch so the card reflects the new stage filter
+      await fetchJobs();
       setEditJob(null);
     } catch (err) {
       console.error(err);
@@ -167,7 +201,16 @@ export default function DashboardPage() {
   }
 
   // Quick status change from card dropdown
-  async function handleStatusChange(jobId: number, newStage: string) {
+  async function handleStatusChange(
+    jobId: number,
+    newStage: string,
+    jobTitle: string
+  ) {
+    // Intercept archive — show confirmation modal instead of firing immediately
+    if (newStage === '5') {
+      setArchiveTarget({ id: jobId, title: jobTitle });
+      return;
+    }
     try {
       const res = await fetch(
         `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
@@ -178,22 +221,43 @@ export default function DashboardPage() {
         }
       );
       if (!res.ok) return;
-
-      const raw = await res.json();
-      setJobs((prev) => prev.map((j) => (j.id === jobId ? normalise(raw) : j)));
+      await fetchJobs();
     } catch (err) {
       console.error('Status update failed:', err);
     }
   }
 
+  // Confirm and execute archive
+  async function handleConfirmArchive() {
+    if (!archiveTarget) return;
+    setArchiving(true);
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${archiveTarget.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stages: '5' }),
+        }
+      );
+      if (res.ok) {
+        setJobs((prev) => prev.filter((j) => j.id !== archiveTarget.id));
+      }
+    } catch (err) {
+      console.error('Archive failed:', err);
+    } finally {
+      setArchiving(false);
+      setArchiveTarget(null);
+    }
+  }
+
   // Delete job
   async function handleDelete(jobId: number) {
+    if (!confirm('Remove this job?')) return;
     try {
       const res = await fetch(
         `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}`,
-        {
-          method: 'DELETE',
-        }
+        { method: 'DELETE' }
       );
       if (!res.ok) return;
       setJobs((prev) => prev.filter((j) => j.id !== jobId));
@@ -202,30 +266,8 @@ export default function DashboardPage() {
     }
   }
 
-  const filtered = jobs
-    .filter((j) => {
-      const matchesSearch =
-        j.title.toLowerCase().includes(search.toLowerCase()) ||
-        j.company.toLowerCase().includes(search.toLowerCase());
-      const matchesStage = filterStage === 'all' || j.status === filterStage;
-      return matchesSearch && matchesStage;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'newest') {
-        return (
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-      } else if (sortBy === 'oldest') {
-        return (
-          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-      } else if (sortBy === 'company') {
-        return a.company.localeCompare(b.company);
-      } else if (sortBy === 'title') {
-        return a.title.localeCompare(b.title);
-      }
-      return 0;
-    });
+  // ── Styles ──────────────────────────────────────────────────────────────────
+
   const inputStyle = {
     width: '100%',
     padding: '8px',
@@ -258,6 +300,17 @@ export default function DashboardPage() {
     cursor: 'pointer' as const,
     fontSize: '14px',
   };
+  const selectStyle = {
+    padding: '8px 12px',
+    borderRadius: '6px',
+    border: 'none',
+    fontSize: '14px',
+    backgroundColor: '#E6CECB',
+    color: '#3C1510',
+    cursor: 'pointer' as const,
+  };
+
+  // ── Render ───────────────────────────────────────────────────────────────────
 
   return (
     <div
@@ -300,18 +353,19 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Filters */}
+        {/* Filters — single row, all server-driven */}
         <div
           style={{
             display: 'flex',
             gap: '12px',
             marginBottom: '24px',
             flexWrap: 'wrap',
+            alignItems: 'center',
           }}
         >
           <input
             type="text"
-            placeholder="Search by title or company..."
+            placeholder="Search by title or company…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
@@ -327,15 +381,7 @@ export default function DashboardPage() {
           <select
             value={filterStage}
             onChange={(e) => setFilterStage(e.target.value)}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '6px',
-              border: 'none',
-              fontSize: '14px',
-              backgroundColor: '#E6CECB',
-              color: '#3C1510',
-              cursor: 'pointer',
-            }}
+            style={selectStyle}
           >
             <option value="all">All Stages</option>
             {Object.entries(STAGE_LABELS).map(([val, label]) => (
@@ -348,21 +394,31 @@ export default function DashboardPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '6px',
-              border: 'none',
-              fontSize: '14px',
-              backgroundColor: '#E6CECB',
-              color: '#3C1510',
-              cursor: 'pointer',
-            }}
+            style={selectStyle}
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
-            <option value="company">Company A-Z</option>
-            <option value="title">Title A-Z</option>
+            <option value="company">Company A–Z</option>
+            <option value="title">Title A–Z</option>
           </select>
+
+          {/* Active-filter badge */}
+          {(filterStage !== 'all' || debouncedSearch) && (
+            <button
+              onClick={() => {
+                setSearch('');
+                setFilterStage('all');
+              }}
+              style={{
+                ...btnSecondary,
+                fontSize: '12px',
+                padding: '6px 12px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Clear filters ✕
+            </button>
+          )}
         </div>
 
         {error && (
@@ -381,39 +437,34 @@ export default function DashboardPage() {
           </p>
         )}
 
-        <input
-          type="text"
-          placeholder="Search jobs..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '6px',
-            border: 'solid',
-            marginBottom: '24px',
-            fontSize: '14px',
-            boxSizing: 'border-box',
-          }}
-        />
+        {/* Job count */}
+        {!loading && (
+          <p
+            style={{ color: '#3C1510', fontSize: '13px', marginBottom: '16px' }}
+          >
+            {jobs.length} job{jobs.length !== 1 ? 's' : ''}
+            {filterStage !== 'all' ? ` · ${STAGE_LABELS[filterStage]}` : ''}
+            {debouncedSearch ? ` · "${debouncedSearch}"` : ''}
+          </p>
+        )}
 
         {loading ? (
-          <p style={{ color: '#3C1510' }}>Loading jobs...</p>
-        ) : filtered.length === 0 ? (
+          <p style={{ color: '#3C1510' }}>Loading jobs…</p>
+        ) : jobs.length === 0 ? (
           <p style={{ color: '#3C1510', fontSize: '14px' }}>
-            {jobs.length === 0
+            {filterStage === 'all' && !debouncedSearch
               ? 'No jobs yet. Click "Add Job" to get started.'
-              : 'No jobs match your search.'}
+              : 'No jobs match your filters.'}
           </p>
         ) : (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
               gap: '16px',
             }}
           >
-            {filtered.map((job) => (
+            {jobs.map((job) => (
               <div
                 key={job.id}
                 style={{
@@ -449,7 +500,9 @@ export default function DashboardPage() {
 
                 <select
                   value={job.status}
-                  onChange={(e) => handleStatusChange(job.id, e.target.value)}
+                  onChange={(e) =>
+                    handleStatusChange(job.id, e.target.value, job.title)
+                  }
                   style={{
                     fontSize: '13px',
                     padding: '4px 6px',
@@ -460,11 +513,18 @@ export default function DashboardPage() {
                     cursor: 'pointer',
                   }}
                 >
-                  {Object.entries(STAGE_LABELS).map(([val, label]) => (
-                    <option key={val} value={val}>
-                      {label}
+                  {/* Current stage is always shown */}
+                  <option value={job.status}>{STAGE_LABELS[job.status]}</option>
+                  {/* Next stage (if not already at Rejected=4 or Archived=5) */}
+                  {Number(job.status) < 4 && (
+                    <option value={String(Number(job.status) + 1)}>
+                      {STAGE_LABELS[String(Number(job.status) + 1)]}
                     </option>
-                  ))}
+                  )}
+                  {/* Archived is always available unless already archived */}
+                  {job.status !== '5' && (
+                    <option value="5">{STAGE_LABELS['5']}</option>
+                  )}
                 </select>
 
                 <div
@@ -514,7 +574,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Add Job Modal */}
+      {/* ── Add Job Modal ── */}
       {showAddModal && (
         <div
           style={{
@@ -562,7 +622,6 @@ export default function DashboardPage() {
                 style={inputStyle}
               />
             </div>
-
             <div>
               <label style={labelStyle}>Company</label>
               <input
@@ -599,14 +658,14 @@ export default function DashboardPage() {
                 disabled={adding}
                 style={btnPrimary(adding)}
               >
-                {adding ? 'Adding...' : 'Add Job'}
+                {adding ? 'Adding…' : 'Add Job'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Edit Job Modal */}
+      {/* ── Edit Job Modal ── */}
       {editJob && (
         <div
           style={{
@@ -683,11 +742,20 @@ export default function DashboardPage() {
                   cursor: 'pointer',
                 }}
               >
-                {Object.entries(STAGE_LABELS).map(([val, label]) => (
-                  <option key={val} value={val}>
-                    {label}
+                {/* Current stage always shown */}
+                <option value={editJob!.status}>
+                  {STAGE_LABELS[editJob!.status]}
+                </option>
+                {/* Next stage (if not already at Rejected=4 or Archived=5) */}
+                {Number(editJob!.status) < 4 && (
+                  <option value={String(Number(editJob!.status) + 1)}>
+                    {STAGE_LABELS[String(Number(editJob!.status) + 1)]}
                   </option>
-                ))}
+                )}
+                {/* Archived is always available unless already archived */}
+                {editJob!.status !== '5' && (
+                  <option value="5">{STAGE_LABELS['5']}</option>
+                )}
               </select>
             </div>
             <div
@@ -706,7 +774,69 @@ export default function DashboardPage() {
                 disabled={saving}
                 style={btnPrimary(saving)}
               >
-                {saving ? 'Saving...' : 'Save'}
+                {saving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ── Archive Confirmation Modal ── */}
+      {archiveTarget && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '380px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              Archive Job?
+            </h2>
+            <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
+              <strong>{archiveTarget.title}</strong> will be removed from your
+              jobs list and moved to your archive. This cannot be undone.
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
+              <button
+                onClick={() => setArchiveTarget(null)}
+                style={btnSecondary}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmArchive}
+                disabled={archiving}
+                style={btnPrimary(archiving)}
+              >
+                {archiving ? 'Archiving…' : 'Archive'}
               </button>
             </div>
           </div>

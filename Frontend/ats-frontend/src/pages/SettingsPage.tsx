@@ -14,12 +14,17 @@ export default function SettingsPage() {
 
   const [emailError, setEmailError] = useState('');
   const [emailSaved, setEmailSaved] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+
   const [passwordError, setPasswordError] = useState('');
   const [passwordSaved, setPasswordSaved] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
-  function handleUpdateEmail() {
+  async function handleUpdateEmail() {
     setEmailError('');
     setEmailSaved(false);
 
@@ -35,11 +40,37 @@ export default function SettingsPage() {
       setEmailError('New email must be different from your current email.');
       return;
     }
-    // TODO: wire to backend
-    setEmailSaved(true);
+
+    setEmailLoading(true);
+    try {
+      const res = await fetch('/api/settings/email', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentEmail: userEmail, newEmail }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setEmailError(data.error ?? 'Failed to update email.');
+        return;
+      }
+
+      // Update session with new email
+      sessionStorage.setItem(
+        'user',
+        JSON.stringify({ ...session, email: newEmail })
+      );
+      setNewEmail('');
+      setEmailSaved(true);
+    } catch (err) {
+      setEmailError('Could not connect to the server. Please try again.');
+    } finally {
+      setEmailLoading(false);
+    }
   }
 
-  function handleUpdatePassword() {
+  async function handleUpdatePassword() {
     setPasswordError('');
     setPasswordSaved(false);
 
@@ -55,12 +86,40 @@ export default function SettingsPage() {
       setPasswordError('New passwords do not match.');
       return;
     }
-    // TODO: wire to backend
-    setPasswordSaved(true);
+
+    setPasswordLoading(true);
+    try {
+      const res = await fetch('/api/settings/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: userEmail,
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPasswordError(data.error ?? 'Failed to update password.');
+        return;
+      }
+
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setPasswordSaved(true);
+    } catch (err) {
+      setPasswordError('Could not connect to the server. Please try again.');
+    } finally {
+      setPasswordLoading(false);
+    }
   }
 
   async function handleDeleteAccount() {
     setDeleteError('');
+    setDeleteLoading(true);
     try {
       const res = await fetch(`/api/users/${encodeURIComponent(userEmail)}`, {
         method: 'DELETE',
@@ -76,6 +135,8 @@ export default function SettingsPage() {
       navigate('/');
     } catch (err) {
       setDeleteError('Could not connect to the server. Please try again.');
+    } finally {
+      setDeleteLoading(false);
     }
   }
 
@@ -193,17 +254,19 @@ export default function SettingsPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 onClick={handleUpdateEmail}
+                disabled={emailLoading}
                 style={{
                   backgroundColor: '#932C20',
                   color: '#E6CECB',
                   padding: '8px 20px',
                   borderRadius: '6px',
                   border: 'none',
-                  cursor: 'pointer',
+                  cursor: emailLoading ? 'not-allowed' : 'pointer',
                   fontSize: '14px',
+                  opacity: emailLoading ? 0.7 : 1,
                 }}
               >
-                Update Email
+                {emailLoading ? 'Updating…' : 'Update Email'}
               </button>
             </div>
           </div>
@@ -323,17 +386,19 @@ export default function SettingsPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 onClick={handleUpdatePassword}
+                disabled={passwordLoading}
                 style={{
                   backgroundColor: '#932C20',
                   color: '#E6CECB',
                   padding: '8px 20px',
                   borderRadius: '6px',
                   border: 'none',
-                  cursor: 'pointer',
+                  cursor: passwordLoading ? 'not-allowed' : 'pointer',
                   fontSize: '14px',
+                  opacity: passwordLoading ? 0.7 : 1,
                 }}
               >
-                Update Password
+                {passwordLoading ? 'Updating…' : 'Update Password'}
               </button>
             </div>
           </div>
@@ -417,30 +482,33 @@ export default function SettingsPage() {
               <div style={{ display: 'flex', gap: '12px' }}>
                 <button
                   onClick={handleDeleteAccount}
+                  disabled={deleteLoading}
                   style={{
                     backgroundColor: '#932C20',
                     color: 'white',
                     padding: '8px 20px',
                     borderRadius: '6px',
                     border: 'none',
-                    cursor: 'pointer',
+                    cursor: deleteLoading ? 'not-allowed' : 'pointer',
                     fontSize: '14px',
+                    opacity: deleteLoading ? 0.7 : 1,
                   }}
                 >
-                  Yes, Delete My Account
+                  {deleteLoading ? 'Deleting…' : 'Yes, Delete My Account'}
                 </button>
                 <button
                   onClick={() => {
                     setShowDeleteConfirm(false);
                     setDeleteError('');
                   }}
+                  disabled={deleteLoading}
                   style={{
                     backgroundColor: 'transparent',
                     color: '#3C1510',
                     padding: '8px 20px',
                     borderRadius: '6px',
                     border: '2px solid #3C1510',
-                    cursor: 'pointer',
+                    cursor: deleteLoading ? 'not-allowed' : 'pointer',
                     fontSize: '14px',
                   }}
                 >
