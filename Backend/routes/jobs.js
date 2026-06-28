@@ -27,13 +27,16 @@ module.exports = function (pool) {
         paramIndex++;
       }
 
-      // Search filter — title or company (case-insensitive)
+      // Search filter
       if (search && search.trim()) {
-        conditions.push(
-          `(title ILIKE $${paramIndex} OR company ILIKE $${paramIndex})`
-        );
-        params.push(`%${search.trim()}%`);
-        paramIndex++;
+        const keywords = search.trim().split(/\s+/).filter(Boolean);
+        for (const keyword of keywords) {
+          conditions.push(
+            `(title ILIKE $${paramIndex} OR company ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`
+          );
+          params.push(`%${keyword}%`);
+          paramIndex++;
+        }
       }
 
       // Sort order
