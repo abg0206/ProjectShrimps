@@ -120,24 +120,25 @@ export default function JobCard({
           fontSize: '13px',
           color: '#932C20',
         }}
-      > 
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2px',
-        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+          }}
         >
-        <span>Added: {new Date(job.created_at).toLocaleDateString()}</span>
-        {job.deadline && (
-          <span
-            style={{
-              color: '#DC2626',
-              fontSize: '12px',
-            }}
-          >
-            Deadline: {new Date(job.deadline).toLocaleDateString()}
-          </span>
-        )}
+          <span>Added: {new Date(job.created_at).toLocaleDateString()}</span>
+          {job.deadline && (
+            <span
+              style={{
+                color: '#DC2626',
+                fontSize: '12px',
+              }}
+            >
+              Deadline: {new Date(job.deadline).toLocaleDateString()}
+            </span>
+          )}
         </div>
         <div
           style={{

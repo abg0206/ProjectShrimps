@@ -84,6 +84,18 @@ export default function DashboardPage() {
   const [savingNotes, setSaveNotes] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
 
+  // interview tracker
+  type InterviewEntry = {
+    round_type: string;
+    interview_date: string;
+    notes: string;
+  };
+  const [interviews, setInterviews] = useState<InterviewEntry[]>([]);
+  const [showAddInterview, setShowAddInterview] = useState(false);
+  const [newInterviewRound, setNewInterviewRound] = useState('');
+  const [newInterviewDate, setNewInterviewDate] = useState('');
+  const [newInterviewNotes, setNewInterviewNotes] = useState('');
+
   // Fetch jobs from the server, passing filters as query params
   const fetchJobs = useCallback(async () => {
     if (!userEmail) return;
@@ -298,6 +310,26 @@ export default function DashboardPage() {
     } finally {
       setSaveNotes(false);
     }
+  }
+
+  function handleAddInterview() {
+    if (!newInterviewRound.trim() || !newInterviewDate) return;
+    setInterviews([
+      ...interviews,
+      {
+        round_type: newInterviewRound.trim(),
+        interview_date: newInterviewDate,
+        notes: newInterviewNotes.trim(),
+      },
+    ]);
+    setNewInterviewRound('');
+    setNewInterviewDate('');
+    setNewInterviewNotes('');
+    setShowAddInterview(false);
+  }
+
+  function handleDeleteInterview(index: number) {
+    setInterviews(interviews.filter((_, i) => i !== index));
   }
 
   const filtered = jobs
@@ -577,6 +609,8 @@ export default function DashboardPage() {
                   setDetailJob(job);
                   setDetailNotes(job.recruiter_notes ?? '');
                   setNotesSaved(false);
+                  setInterviews([]);
+                  setShowAddInterview(false);
                 }}
               />
             ))}
@@ -816,6 +850,258 @@ export default function DashboardPage() {
                   <option value="5">{STAGE_LABELS['5']}</option>
                 )}
               </select>
+            </div>
+
+            {/* interview tracker */}
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '8px',
+                }}
+              >
+                <p
+                  style={{
+                    color: '#3C1510',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    margin: 0,
+                  }}
+                >
+                  Interview History
+                </p>
+                <button
+                  onClick={() => setShowAddInterview(!showAddInterview)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#932C20',
+                    border: '2px solid #932C20',
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                  }}
+                >
+                  Add Interview
+                </button>
+              </div>
+
+              {/* add interview form */}
+              {showAddInterview && (
+                <div
+                  style={{
+                    backgroundColor: '#D9958C',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    marginBottom: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '12px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      Round Type
+                    </label>
+                    <select
+                      value={newInterviewRound}
+                      onChange={(e) => setNewInterviewRound(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '13px',
+                        boxSizing: 'border-box',
+                        backgroundColor: 'white',
+                      }}
+                    >
+                      <option value="">Select round...</option>
+                      <option value="First Round">First Round</option>
+                      <option value="Virtual">Virtual</option>
+                      <option value="Technical">Technical</option>
+                      <option value="Final">Final</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '12px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      Date & Time
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={newInterviewDate}
+                      onChange={(e) => setNewInterviewDate(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '13px',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '12px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      Notes
+                    </label>
+                    <textarea
+                      value={newInterviewNotes}
+                      onChange={(e) => setNewInterviewNotes(e.target.value)}
+                      placeholder="How did it go? What was discussed?"
+                      style={{
+                        width: '100%',
+                        height: '60px',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '13px',
+                        boxSizing: 'border-box',
+                        resize: 'vertical',
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      gap: '8px',
+                    }}
+                  >
+                    <button
+                      onClick={() => setShowAddInterview(false)}
+                      style={{
+                        backgroundColor: 'transparent',
+                        color: '#3C1510',
+                        border: '1px solid #3C1510',
+                        padding: '4px 12px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAddInterview}
+                      style={{
+                        backgroundColor: '#932C20',
+                        color: 'white',
+                        border: 'none',
+                        padding: '4px 12px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Interview list */}
+              {interviews.length === 0 ? (
+                <p style={{ color: '#3C1510', fontSize: '13px', margin: 0 }}>
+                  No interviews logged yet.
+                </p>
+              ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  {interviews.map((interview, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        backgroundColor: '#D9958C',
+                        borderRadius: '8px',
+                        padding: '12px',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        <p
+                          style={{
+                            color: '#3C1510',
+                            fontSize: '13px',
+                            fontWeight: 'bold',
+                            margin: 0,
+                          }}
+                        >
+                          {interview.round_type}
+                        </p>
+                        <button
+                          onClick={() => handleDeleteInterview(index)}
+                          style={{
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: '#932C20',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            padding: 0,
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '12px',
+                          margin: '0 0 4px 0',
+                        }}
+                      >
+                        {new Date(interview.interview_date).toLocaleString()}
+                      </p>
+                      {interview.notes && (
+                        <p
+                          style={{
+                            color: '#3C1510',
+                            fontSize: '12px',
+                            margin: 0,
+                          }}
+                        >
+                          {interview.notes}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Close button */}
