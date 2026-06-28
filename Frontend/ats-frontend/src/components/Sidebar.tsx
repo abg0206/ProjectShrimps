@@ -104,50 +104,10 @@ export default function Sidebar() {
       </p>
 
       {/* Nav links */}
-      <NavLink
-        to="/dashboard"
-        style={({ isActive }) => ({
-          color: isActive ? '#E6CECB' : '#3C1510',
-          backgroundColor: isActive ? '#932C20' : 'transparent',
-          padding: '8px 12px',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          marginBottom: '4px',
-          fontSize: '14px',
-        })}
-      >
-        Dashboard
-      </NavLink>
-
-      <NavLink
-        to="/profile"
-        style={({ isActive }) => ({
-          color: isActive ? '#E6CECB' : '#3C1510',
-          backgroundColor: isActive ? '#932C20' : 'transparent',
-          padding: '8px 12px',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          marginBottom: '4px',
-          fontSize: '14px',
-        })}
-      >
-        Profile
-      </NavLink>
-
-      <NavLink
-        to="/settings"
-        style={({ isActive }) => ({
-          color: isActive ? '#E6CECB' : '#3C1510',
-          backgroundColor: isActive ? '#932C20' : 'transparent',
-          padding: '8px 12px',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          marginBottom: '4px',
-          fontSize: '14px',
-        })}
-      >
-        Settings
-      </NavLink>
+      <NavLink to="/dashboard" style={linkStyle}>Dashboard</NavLink>
+      <NavLink to="/archived" style={linkStyle}>Archive</NavLink>
+      <NavLink to="/profile" style={linkStyle}>Profile</NavLink>
+      <NavLink to="/settings" style={linkStyle}>Settings</NavLink>
 
       <button
         onClick={handleLogout}
