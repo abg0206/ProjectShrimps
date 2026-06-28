@@ -31,6 +31,12 @@ export default function ProfilePage() {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  //career preferences
+  const [targetRole, setTargetRole] = useState('');
+  const [locationPreference, setLocationPreference] = useState('');
+  const [workModePreference, setWorkModePreference] = useState('');
+  const [SalaryExpectation, setSalaryExpectation] = useState('');
+
   // Read the logged-in user's email from sessionStorage (set by LoginPage)
   const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
   const userEmail = session.email ?? '';
@@ -57,6 +63,10 @@ export default function ProfilePage() {
           setSummary(data.summary ?? '');
           setSkills(data.skills ?? []); //added this to load skills from the backend
           setEducation(data.education ?? []); //same for education
+          setTargetRole(data.target_role ?? '');
+          setLocationPreference(data.location_preference ?? '');
+          setWorkModePreference(data.work_mode_preference ?? '');
+          setSalaryExpectation(data.salary_expectation ?? '');
         } else {
           setEmail(userEmail);
         }
@@ -172,6 +182,10 @@ export default function ProfilePage() {
           summary: summary.trim() || null,
           skills, //added these to the profile save function
           education,
+          target_role: targetRole.trim() || null,
+          location_preference: locationPreference.trim() || null,
+          work_mode_preference: workModePreference.trim() || null,
+          salary_expectation: SalaryExpectation.trim() || null,
         }),
       });
 
@@ -713,6 +727,139 @@ export default function ProfilePage() {
           >
             + Add Education
           </button>
+          {/* Career Preferences */}
+          <h2
+            style={{
+              color: '#3C1510',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              marginBottom: '5px',
+              marginTop: '24px',
+            }}
+          >
+            Career Preferences
+          </h2>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '16px',
+              marginBottom: '8px',
+            }}
+          >
+            <div>
+              <label
+                style={{
+                  fontSize: '13px',
+                  color: '#3C1510',
+                  display: 'block',
+                  marginBottom: '4px',
+                }}
+              >
+                Target Role
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Software Engineer"
+                value={targetRole}
+                onChange={(e) => setTargetRole(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: 'solid',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                style={{
+                  fontSize: '13px',
+                  color: '#3C1510',
+                  display: 'block',
+                  marginBottom: '4px',
+                }}
+              >
+                Preferred Location
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. New York, NY"
+                value={locationPreference}
+                onChange={(e) => setLocationPreference(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: 'solid',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                style={{
+                  fontSize: '13px',
+                  color: '#3C1510',
+                  display: 'block',
+                  marginBottom: '4px',
+                }}
+              >
+                Work Mode
+              </label>
+              <select
+                value={workModePreference}
+                onChange={(e) => setWorkModePreference(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: 'solid',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  backgroundColor: 'white',
+                }}
+              >
+                <option value="">Select...</option>
+                <option value="remote">Remote</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="onsite">On-Site</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                style={{
+                  fontSize: '13px',
+                  color: '#3C1510',
+                  display: 'block',
+                  marginBottom: '4px',
+                }}
+              >
+                Salary Preference
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. $80,000 - $100,000"
+                value={SalaryExpectation}
+                onChange={(e) => setSalaryExpectation(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: 'solid',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+          </div>
 
           <h2
             style={{

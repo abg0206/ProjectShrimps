@@ -1,5 +1,6 @@
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import JobCard, { Job } from '../components/JobCard';
 
 const STAGE_LABELS: Record<string, string> = {
   '0': 'Interested',
@@ -10,14 +11,7 @@ const STAGE_LABELS: Record<string, string> = {
   '5': 'Archived',
 };
 
-type Job = {
-  id: number;
-  title: string;
-  company: string;
-  description: string;
-  status: string;
-  created_at: string;
-};
+//we no longer need since we have a job card
 
 function normalise(raw: Record<string, string | number>): Job {
   return {
@@ -486,110 +480,13 @@ export default function DashboardPage() {
             }}
           >
             {jobs.map((job) => (
-              <div
+              <JobCard
                 key={job.id}
-                style={{
-                  backgroundColor: '#E6CECB',
-                  borderRadius: '10px',
-                  padding: '16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                  minHeight: '200px',
-                }}
-              >
-                <p style={{ fontWeight: 'bold', color: '#3C1510', margin: 0 }}>
-                  {job.title}
-                </p>
-                <p style={{ color: '#3C1510', margin: 0, fontSize: '14px' }}>
-                  {job.company}
-                </p>
-                <p
-                  style={{
-                    color: '#3C1510',
-                    margin: 0,
-                    fontSize: '13px',
-                    flex: 1,
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: 'vertical' as const,
-                  }}
-                >
-                  {job.description}
-                </p>
-
-                <select
-                  value={job.status}
-                  onChange={(e) =>
-                    handleStatusChange(job.id, e.target.value, job.title)
-                  }
-                  style={{
-                    fontSize: '13px',
-                    padding: '4px 6px',
-                    borderRadius: '4px',
-                    border: '1px solid #932C20',
-                    backgroundColor: '#fff',
-                    color: '#3C1510',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {/* Current stage is always shown */}
-                  <option value={job.status}>{STAGE_LABELS[job.status]}</option>
-                  {/* Next stage (if not already at Rejected=4 or Archived=5) */}
-                  {Number(job.status) < 4 && (
-                    <option value={String(Number(job.status) + 1)}>
-                      {STAGE_LABELS[String(Number(job.status) + 1)]}
-                    </option>
-                  )}
-                  {/* Archived is always available unless already archived */}
-                  {job.status !== '5' && (
-                    <option value="5">{STAGE_LABELS['5']}</option>
-                  )}
-                </select>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    fontSize: '13px',
-                    color: '#932C20',
-                  }}
-                >
-                  <span>
-                    Added: {new Date(job.created_at).toLocaleDateString()}
-                  </span>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <button
-                      onClick={() => openEdit(job)}
-                      style={{
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        color: '#932C20',
-                        cursor: 'pointer',
-                        fontSize: '13px',
-                        padding: 0,
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(job.id)}
-                      style={{
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        color: '#932C20',
-                        cursor: 'pointer',
-                        fontSize: '13px',
-                        padding: 0,
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
+                job={job}
+                onStatusChange={handleStatusChange}
+                onEdit={openEdit}
+                onDelete={handleDelete}
+              />
             ))}
           </div>
         )}
