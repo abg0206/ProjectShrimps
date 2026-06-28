@@ -100,6 +100,141 @@ async function main() {
    );
  `);
 
+    // --- Migration: bring user_profile up to date with the Profile page ---
+    // skills used to be a skill_enum[] limited to 'Python'/'Java'. The UI lets
+    // users type any skill string, so we convert it to jsonb to store an
+    // arbitrary array of strings. experience was TEXT; the UI now sends an
+    // array of structured experience entries, so it becomes jsonb too.
+    // education, and the four separate career-preference fields, never
+    // existed as columns at all — they're added here.
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile'
+            AND column_name = 'skills'
+            AND udt_name = '_skill_enum'
+        ) THEN
+          ALTER TABLE user_profile
+          ALTER COLUMN skills TYPE jsonb
+          USING (
+            CASE
+              WHEN skills IS NULL THEN '[]'::jsonb
+              ELSE to_jsonb(skills::text[])
+            END
+          );
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'skills'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN skills jsonb DEFAULT '[]'::jsonb;
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile'
+            AND column_name = 'experience'
+            AND data_type = 'text'
+        ) THEN
+          ALTER TABLE user_profile
+          ALTER COLUMN experience TYPE jsonb
+          USING (
+            CASE
+              WHEN experience IS NULL OR experience = '' THEN '[]'::jsonb
+              ELSE '[]'::jsonb
+            END
+          );
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'experience'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN experience jsonb DEFAULT '[]'::jsonb;
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'education'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN education jsonb DEFAULT '[]'::jsonb;
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'target_role'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN target_role VARCHAR(255);
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'location_preference'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN location_preference VARCHAR(255);
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'work_mode_preference'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN work_mode_preference VARCHAR(50);
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'user_profile' AND column_name = 'salary_expectation'
+        ) THEN
+          ALTER TABLE user_profile ADD COLUMN salary_expectation VARCHAR(100);
+        END IF;
+      END $$;
+    `);
+    // --- end user_profile migration ---
+
     await pool.query(`
        CREATE TABLE IF NOT EXISTS job_table (
          unique_num  SERIAL PRIMARY KEY,
@@ -159,15 +294,16 @@ async function main() {
        );
      `);
     await pool.query(`
-       CREATE TABLE IF NOT EXISTS interview_table (
-         interview_id   SERIAL PRIMARY KEY,
-         job_id         INTEGER NOT NULL,
-         interview_type interview_type_enum NOT NULL DEFAULT 'Other',
-         scheduled_at   TIMESTAMP,
-         notes          TEXT,
-         created_at     TIMESTAMP DEFAULT NOW()
-       );
-     `);
+  CREATE TABLE IF NOT EXISTS interview_table (
+    interview_id   SERIAL PRIMARY KEY,
+    job_id         INTEGER NOT NULL,
+    interview_type interview_type_enum NOT NULL DEFAULT 'Other',
+    scheduled_at   TIMESTAMP,
+    reminder_at    TIMESTAMP,
+    notes          TEXT,
+    created_at     TIMESTAMP DEFAULT NOW()
+  );
+`);
     //forein keys and indexes
     // Interview to Job
     await pool.query(`
