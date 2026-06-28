@@ -187,12 +187,14 @@ export default function ProfilePage() {
   function validateEducation(): string | null {
     for (const entry of education) {
       if (!entry.school.trim() || !entry.degree.trim()) {
-        const msg = 'Each education entry requires at least a school and degree.';
+        const msg =
+          'Each education entry requires at least a school and degree.';
         setEducationError(msg);
         return msg;
       }
       if (entry.start_date && !isValidMonthYear(entry.start_date)) {
-        const msg = 'Education start date must be in MM-YY format (e.g. 06-22).';
+        const msg =
+          'Education start date must be in MM-YY format (e.g. 06-22).';
         setEducationError(msg);
         return msg;
       }
@@ -258,12 +260,14 @@ export default function ProfilePage() {
   function validateExperience(): string | null {
     for (const entry of experience) {
       if (!entry.company.trim() || !entry.title.trim()) {
-        const msg = 'Each experience entry requires at least a company and title.';
+        const msg =
+          'Each experience entry requires at least a company and title.';
         setExperienceError(msg);
         return msg;
       }
       if (entry.start_date && !isValidMonthYear(entry.start_date)) {
-        const msg = 'Experience start date must be in MM-YY format (e.g. 06-22).';
+        const msg =
+          'Experience start date must be in MM-YY format (e.g. 06-22).';
         setExperienceError(msg);
         return msg;
       }
@@ -1119,11 +1123,7 @@ export default function ProfilePage() {
                 <textarea
                   value={entry.description}
                   onChange={(e) =>
-                    handleExperienceChange(
-                      index,
-                      'description',
-                      e.target.value
-                    )
+                    handleExperienceChange(index, 'description', e.target.value)
                   }
                   placeholder="Briefly describe your responsibilities and accomplishments..."
                   style={{
