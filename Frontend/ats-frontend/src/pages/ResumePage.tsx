@@ -2,376 +2,404 @@ import Sidebar from '../components/Sidebar';
 import { useState, useRef, type CSSProperties, type ChangeEvent } from 'react';
 
 export default function ResumePage() {
-    const editorRef = useRef<HTMLDivElement>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isEmpty, setIsEmpty] = useState<boolean>(true);
-    const [fontSize, setFontSize] = useState<string>('3');
-    const [blockType, setBlockType] = useState<string>('<p>');
-    const [activeFormats, setActiveFormats] = useState({
-        bold: false,
-        italic: false,
-        underline: false,
+  const editorRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isEmpty, setIsEmpty] = useState<boolean>(true);
+  const [fontSize, setFontSize] = useState<string>('3');
+  const [blockType, setBlockType] = useState<string>('<p>');
+  const [activeFormats, setActiveFormats] = useState({
+    bold: false,
+    italic: false,
+    underline: false,
+  });
+
+  function updateActiveFormats() {
+    setActiveFormats({
+      bold: document.queryCommandState('bold'),
+      italic: document.queryCommandState('italic'),
+      underline: document.queryCommandState('underline'),
     });
+  }
 
-    function updateActiveFormats() {
-        setActiveFormats({
-            bold: document.queryCommandState('bold'),
-            italic: document.queryCommandState('italic'),
-            underline: document.queryCommandState('underline'),
-        });
-    }
+  function exec(command: string, value: string | null = null) {
+    editorRef.current?.focus();
+    document.execCommand(command, false, value ?? undefined);
+    updateActiveFormats();
+  }
 
-    function exec(command: string, value: string | null = null) {
-        editorRef.current?.focus();
-        document.execCommand(command, false, value ?? undefined);
-        updateActiveFormats();
-    }
+  function handleFormatBlock(e: ChangeEvent<HTMLSelectElement>) {
+    const value = e.target.value;
+    setBlockType(value);
+    exec('formatBlock', value);
+  }
 
-    function handleFormatBlock(e: ChangeEvent<HTMLSelectElement>) {
-        const value = e.target.value;
-        setBlockType(value);
-        exec('formatBlock', value);
-    }
+  function handleFontSize(e: ChangeEvent<HTMLSelectElement>) {
+    const value = e.target.value;
+    setFontSize(value);
+    exec('fontSize', value);
+  }
 
-    function handleFontSize(e: ChangeEvent<HTMLSelectElement>) {
-        const value = e.target.value;
-        setFontSize(value);
-        exec('fontSize', value);
-    }
+  function handleInput() {
+    const text = editorRef.current?.textContent || '';
+    setIsEmpty(text.trim().length === 0);
+    updateActiveFormats();
+  }
 
-    function handleInput() {
-        const text = editorRef.current?.textContent || '';
-        setIsEmpty(text.trim().length === 0);
-        updateActiveFormats();
-    }
+  async function handleSave() {
+    const html = editorRef.current?.innerHTML || '';
+    // TODO: replace with your real save logic (API call, DB write, etc.)
+    console.log('Saving resume HTML:', html);
+  }
 
-    async function handleSave() {
-        const html = editorRef.current?.innerHTML || '';
-        // TODO: replace with your real save logic (API call, DB write, etc.)
-        console.log('Saving resume HTML:', html);
-    }
+  function handleUploadClick() {
+    fileInputRef.current?.click();
+  }
 
-    function handleUploadClick() {
-        fileInputRef.current?.click();
-    }
+  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const ext = file.name.split('.').pop()?.toLowerCase();
 
-    async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const ext = file.name.split('.').pop()?.toLowerCase();
+    try {
+      if (!editorRef.current) return;
 
-        try {
-            if (!editorRef.current) return;
-
-            if (ext === 'txt') {
-                const text = await file.text();
-                editorRef.current.innerText = text;
-            } else if (ext === 'docx') {
-                // npm install mammoth
-                const mammoth = await import('mammoth');
-                const arrayBuffer = await file.arrayBuffer();
-                const { value: html } = await mammoth.convertToHtml({ arrayBuffer });
-                editorRef.current.innerHTML = html;
-            } else if (ext === 'pdf') {
-                // npm install pdfjs-dist
-                const pdfjsLib = await import('pdfjs-dist');
-                pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                let fullText = '';
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const content = await page.getTextContent();
-                    let pageText = '';
-                    let lastY: number | null = null;
-                    for (const item of content.items as any[]) {
-                        if (typeof item.str !== 'string') continue;
-                        const y = item.transform[5];
-                        if (lastY !== null && Math.abs(y - lastY) > 1) {
-                            pageText += '\n';
-                        } else if (pageText.length > 0) {
-                            pageText += ' ';
-                        }
-                        pageText += item.str;
-                        lastY = y;
-                    }
-                    fullText += pageText + '\n\n';
-                }
-                editorRef.current.innerText = fullText.trim();
-            } else {
-                window.alert('Please upload a PDF, DOCX, or TXT file.');
-                return;
+      if (ext === 'txt') {
+        const text = await file.text();
+        editorRef.current.innerText = text;
+      } else if (ext === 'docx') {
+        // npm install mammoth
+        const mammoth = await import('mammoth');
+        const arrayBuffer = await file.arrayBuffer();
+        const { value: html } = await mammoth.convertToHtml({ arrayBuffer });
+        editorRef.current.innerHTML = html;
+      } else if (ext === 'pdf') {
+        // npm install pdfjs-dist
+        const pdfjsLib = await import('pdfjs-dist');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          let pageText = '';
+          let lastY: number | null = null;
+          for (const item of content.items as any[]) {
+            if (typeof item.str !== 'string') continue;
+            const y = item.transform[5];
+            if (lastY !== null && Math.abs(y - lastY) > 1) {
+              pageText += '\n';
+            } else if (pageText.length > 0) {
+              pageText += ' ';
             }
-            setIsEmpty(false);
-        } catch (err) {
-            console.error('Error reading file:', err);
-            window.alert('Something went wrong while reading that file.');
-        } finally {
-            e.target.value = '';
+            pageText += item.str;
+            lastY = y;
+          }
+          fullText += pageText + '\n\n';
         }
+        editorRef.current.innerText = fullText.trim();
+      } else {
+        window.alert('Please upload a PDF, DOCX, or TXT file.');
+        return;
+      }
+      setIsEmpty(false);
+    } catch (err) {
+      console.error('Error reading file:', err);
+      window.alert('Something went wrong while reading that file.');
+    } finally {
+      e.target.value = '';
     }
+  }
 
-    function handleAIEdit() {
-        // TODO: wire this up later
-        console.log('AI edit clicked');
-    }
+  function handleAIEdit() {
+    // TODO: wire this up later
+    console.log('AI edit clicked');
+  }
 
-    const toolbarBtnStyle: CSSProperties = {
-        background: 'transparent',
-        border: 'none',
-        borderRadius: '4px',
-        padding: '6px 10px',
-        fontSize: '14px',
-        cursor: 'pointer',
-        color: '#3C1510',
-    };
+  const toolbarBtnStyle: CSSProperties = {
+    background: 'transparent',
+    border: 'none',
+    borderRadius: '4px',
+    padding: '6px 10px',
+    fontSize: '14px',
+    cursor: 'pointer',
+    color: '#3C1510',
+  };
 
-    const activeToolbarBtnStyle: CSSProperties = {
-        backgroundColor: '#932C20',
-        color: '#FFFFFF',
-    };
+  const activeToolbarBtnStyle: CSSProperties = {
+    backgroundColor: '#932C20',
+    color: '#FFFFFF',
+  };
 
-    const dividerStyle: CSSProperties = {
-        width: '1px',
-        height: '22px',
-        backgroundColor: '#c9a8a3',
-        margin: '0 4px',
-    };
+  const dividerStyle: CSSProperties = {
+    width: '1px',
+    height: '22px',
+    backgroundColor: '#c9a8a3',
+    margin: '0 4px',
+  };
 
-    return (
+  return (
+    <div
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        backgroundColor: '#D9958C',
+      }}
+    >
+      <Sidebar />
+      <div style={{ flex: 1, padding: '32px' }}>
+        {/* Header */}
         <div
-            style={{
-                display: 'flex',
-                minHeight: '100vh',
-                backgroundColor: '#D9958C',
-            }}
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '16px',
+            flexWrap: 'wrap',
+            gap: '12px',
+          }}
         >
-            <Sidebar />
-            <div style={{ flex: 1, padding: '32px' }}>
-                {/* Header */}
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '16px',
-                        flexWrap: 'wrap',
-                        gap: '12px',
-                    }}
-                >
-                    <h1
-                        style={{
-                            color: '#3C1510',
-                            fontSize: '24px',
-                            fontWeight: 'bold',
-                            margin: 0,
-                        }}
-                    >
-                        Resume
-                    </h1>
+          <h1
+            style={{
+              color: '#3C1510',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              margin: 0,
+            }}
+          >
+            Resume
+          </h1>
 
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept=".pdf,.docx,.txt"
-                            onChange={handleFileChange}
-                            style={{ display: 'none' }}
-                        />
-                        <button
-                            onClick={handleUploadClick}
-                            style={{
-                                backgroundColor: 'transparent',
-                                color: '#932C20',
-                                border: '1.5px solid #932C20',
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: 500,
-                            }}
-                        >
-                            ⬆ Upload Resume
-                        </button>
-                        <button
-                            onClick={handleAIEdit}
-                            style={{
-                                backgroundColor: '#5B3A8E',
-                                color: '#FFFFFF',
-                                border: 'none',
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: 500,
-                            }}
-                        >
-                            ✨ AI Edit
-                        </button>
-                    </div>
-                </div>
-
-                {/* Toolbar */}
-                <div
-                    style={{
-                        backgroundColor: '#E6CECB',
-                        borderRadius: '10px 10px 0 0',
-                        padding: '8px 12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        flexWrap: 'wrap',
-                        borderBottom: '1px solid #d4b9b5',
-                    }}
-                >
-                    <select
-                        value={blockType}
-                        onChange={handleFormatBlock}
-                        style={{ ...toolbarBtnStyle, border: '1px solid #d4b9b5', backgroundColor: '#fff' }}
-                    >
-                        <option value="<p>">Normal text</option>
-                        <option value="<h1>">Heading 1</option>
-                        <option value="<h2>">Heading 2</option>
-                        <option value="<h3>">Heading 3</option>
-                    </select>
-
-                    <select
-                        value={fontSize}
-                        onChange={handleFontSize}
-                        style={{ ...toolbarBtnStyle, border: '1px solid #d4b9b5', backgroundColor: '#fff' }}
-                    >
-                        <option value="2">Small</option>
-                        <option value="3">Normal</option>
-                        <option value="5">Large</option>
-                        <option value="7">X-Large</option>
-                    </select>
-
-                    <div style={dividerStyle} />
-
-                    <button
-                        style={{
-                            ...toolbarBtnStyle,
-                            fontWeight: 'bold',
-                            ...(activeFormats.bold ? activeToolbarBtnStyle : {}),
-                        }}
-                        onClick={() => exec('bold')}
-                        title="Bold"
-                    >
-                        B
-                    </button>
-                    <button
-                        style={{
-                            ...toolbarBtnStyle,
-                            fontStyle: 'italic',
-                            ...(activeFormats.italic ? activeToolbarBtnStyle : {}),
-                        }}
-                        onClick={() => exec('italic')}
-                        title="Italic"
-                    >
-                        I
-                    </button>
-                    <button
-                        style={{
-                            ...toolbarBtnStyle,
-                            textDecoration: 'underline',
-                            ...(activeFormats.underline ? activeToolbarBtnStyle : {}),
-                        }}
-                        onClick={() => exec('underline')}
-                        title="Underline"
-                    >
-                        U
-                    </button>
-
-                    <div style={dividerStyle} />
-
-                    <button style={toolbarBtnStyle} onClick={() => exec('insertUnorderedList')} title="Bullet list">
-                        • List
-                    </button>
-                    <button style={toolbarBtnStyle} onClick={() => exec('insertOrderedList')} title="Numbered list">
-                        1. List
-                    </button>
-
-                    <div style={dividerStyle} />
-
-                    <button style={toolbarBtnStyle} onClick={() => exec('justifyLeft')} title="Align left">
-                        ⟸
-                    </button>
-                    <button style={toolbarBtnStyle} onClick={() => exec('justifyCenter')} title="Align center">
-                        ≡
-                    </button>
-                    <button style={toolbarBtnStyle} onClick={() => exec('justifyRight')} title="Align right">
-                        ⟹
-                    </button>
-                </div>
-
-                {/* Editor "page" */}
-                <div
-                    style={{
-                        backgroundColor: '#FFFFFF',
-                        borderRadius: '0 0 10px 10px',
-                        boxShadow: '0 2px 10px rgba(60, 21, 16, 0.15)',
-                        marginBottom: '16px',
-                        position: 'relative',
-                    }}
-                >
-                    {isEmpty && (
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: '48px',
-                                left: '48px',
-                                color: '#9b9b9b',
-                                fontSize: '14px',
-                                pointerEvents: 'none',
-                            }}
-                        >
-                            Write your resume here...
-                        </div>
-                    )}
-                    <div
-                        ref={editorRef}
-                        contentEditable
-                        onInput={handleInput}
-                        onSelect={updateActiveFormats}
-                        onKeyUp={updateActiveFormats}
-                        onMouseUp={updateActiveFormats}
-                        onFocus={updateActiveFormats}
-                        suppressContentEditableWarning
-                        style={{
-                            minHeight: '700px',
-                            padding: '48px',
-                            fontSize: '14px',
-                            fontFamily: 'Georgia, "Times New Roman", serif',
-                            color: '#2b2b2b',
-                            lineHeight: 1.6,
-                            outline: 'none',
-                            boxSizing: 'border-box',
-                        }}
-                    />
-                </div>
-
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                    }}
-                >
-                    <button
-                        onClick={handleSave}
-                        style={{
-                            backgroundColor: '#932C20',
-                            color: '#FFFFFF',
-                            padding: '8px 20px',
-                            borderRadius: '6px',
-                            border: 'none',
-                            cursor: 'pointer',
-                            fontSize: '14px',
-                        }}
-                    >
-                        Save
-                    </button>
-                </div>
-            </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.docx,.txt"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
+            <button
+              onClick={handleUploadClick}
+              style={{
+                backgroundColor: 'transparent',
+                color: '#932C20',
+                border: '1.5px solid #932C20',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+              }}
+            >
+              ⬆ Upload Resume
+            </button>
+            <button
+              onClick={handleAIEdit}
+              style={{
+                backgroundColor: '#5B3A8E',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+              }}
+            >
+              ✨ AI Edit
+            </button>
+          </div>
         </div>
-    );
+
+        {/* Toolbar */}
+        <div
+          style={{
+            backgroundColor: '#E6CECB',
+            borderRadius: '10px 10px 0 0',
+            padding: '8px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            flexWrap: 'wrap',
+            borderBottom: '1px solid #d4b9b5',
+          }}
+        >
+          <select
+            value={blockType}
+            onChange={handleFormatBlock}
+            style={{
+              ...toolbarBtnStyle,
+              border: '1px solid #d4b9b5',
+              backgroundColor: '#fff',
+            }}
+          >
+            <option value="<p>">Normal text</option>
+            <option value="<h1>">Heading 1</option>
+            <option value="<h2>">Heading 2</option>
+            <option value="<h3>">Heading 3</option>
+          </select>
+
+          <select
+            value={fontSize}
+            onChange={handleFontSize}
+            style={{
+              ...toolbarBtnStyle,
+              border: '1px solid #d4b9b5',
+              backgroundColor: '#fff',
+            }}
+          >
+            <option value="2">Small</option>
+            <option value="3">Normal</option>
+            <option value="5">Large</option>
+            <option value="7">X-Large</option>
+          </select>
+
+          <div style={dividerStyle} />
+
+          <button
+            style={{
+              ...toolbarBtnStyle,
+              fontWeight: 'bold',
+              ...(activeFormats.bold ? activeToolbarBtnStyle : {}),
+            }}
+            onClick={() => exec('bold')}
+            title="Bold"
+          >
+            B
+          </button>
+          <button
+            style={{
+              ...toolbarBtnStyle,
+              fontStyle: 'italic',
+              ...(activeFormats.italic ? activeToolbarBtnStyle : {}),
+            }}
+            onClick={() => exec('italic')}
+            title="Italic"
+          >
+            I
+          </button>
+          <button
+            style={{
+              ...toolbarBtnStyle,
+              textDecoration: 'underline',
+              ...(activeFormats.underline ? activeToolbarBtnStyle : {}),
+            }}
+            onClick={() => exec('underline')}
+            title="Underline"
+          >
+            U
+          </button>
+
+          <div style={dividerStyle} />
+
+          <button
+            style={toolbarBtnStyle}
+            onClick={() => exec('insertUnorderedList')}
+            title="Bullet list"
+          >
+            • List
+          </button>
+          <button
+            style={toolbarBtnStyle}
+            onClick={() => exec('insertOrderedList')}
+            title="Numbered list"
+          >
+            1. List
+          </button>
+
+          <div style={dividerStyle} />
+
+          <button
+            style={toolbarBtnStyle}
+            onClick={() => exec('justifyLeft')}
+            title="Align left"
+          >
+            ⟸
+          </button>
+          <button
+            style={toolbarBtnStyle}
+            onClick={() => exec('justifyCenter')}
+            title="Align center"
+          >
+            ≡
+          </button>
+          <button
+            style={toolbarBtnStyle}
+            onClick={() => exec('justifyRight')}
+            title="Align right"
+          >
+            ⟹
+          </button>
+        </div>
+
+        {/* Editor "page" */}
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: '0 0 10px 10px',
+            boxShadow: '0 2px 10px rgba(60, 21, 16, 0.15)',
+            marginBottom: '16px',
+            position: 'relative',
+          }}
+        >
+          {isEmpty && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '48px',
+                left: '48px',
+                color: '#9b9b9b',
+                fontSize: '14px',
+                pointerEvents: 'none',
+              }}
+            >
+              Write your resume here...
+            </div>
+          )}
+          <div
+            ref={editorRef}
+            contentEditable
+            onInput={handleInput}
+            onSelect={updateActiveFormats}
+            onKeyUp={updateActiveFormats}
+            onMouseUp={updateActiveFormats}
+            onFocus={updateActiveFormats}
+            suppressContentEditableWarning
+            style={{
+              minHeight: '700px',
+              padding: '48px',
+              fontSize: '14px',
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              color: '#2b2b2b',
+              lineHeight: 1.6,
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <button
+            onClick={handleSave}
+            style={{
+              backgroundColor: '#932C20',
+              color: '#FFFFFF',
+              padding: '8px 20px',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '14px',
+            }}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
