@@ -104,10 +104,18 @@ export default function Sidebar() {
       </p>
 
       {/* Nav links */}
-      <NavLink to="/dashboard" style={linkStyle}>Dashboard</NavLink>
-      <NavLink to="/archived" style={linkStyle}>Archive</NavLink>
-      <NavLink to="/profile" style={linkStyle}>Profile</NavLink>
-      <NavLink to="/settings" style={linkStyle}>Settings</NavLink>
+      <NavLink to="/dashboard" style={linkStyle}>
+        Dashboard
+      </NavLink>
+      <NavLink to="/archived" style={linkStyle}>
+        Archive
+      </NavLink>
+      <NavLink to="/profile" style={linkStyle}>
+        Profile
+      </NavLink>
+      <NavLink to="/settings" style={linkStyle}>
+        Settings
+      </NavLink>
 
       <button
         onClick={handleLogout}

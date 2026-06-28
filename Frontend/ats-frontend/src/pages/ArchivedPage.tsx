@@ -76,7 +76,7 @@ export default function ArchivedPage() {
     fetchJobs();
   }, [fetchJobs]);
 
-  // Unarchive 
+  // Unarchive
   async function handleConfirmUnarchive() {
     if (!unarchiveTarget) return;
     setUnarchiving(true);
@@ -115,8 +115,6 @@ export default function ArchivedPage() {
     }
   }
 
-  
-
   const btnPrimary = (disabled = false) => ({
     backgroundColor: disabled ? '#c0847a' : '#932C20',
     color: '#E6CECB',
@@ -146,8 +144,6 @@ export default function ArchivedPage() {
     color: '#3C1510',
     cursor: 'pointer' as const,
   };
-
-
 
   return (
     <div

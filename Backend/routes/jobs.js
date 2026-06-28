@@ -27,7 +27,7 @@ module.exports = function (pool) {
         paramIndex++;
       }
 
-      // Search filter 
+      // Search filter
       if (search && search.trim()) {
         const keywords = search.trim().split(/\s+/).filter(Boolean);
         for (const keyword of keywords) {
