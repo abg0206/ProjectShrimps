@@ -266,7 +266,30 @@ export default function DashboardPage() {
     }
   }
 
-  // ── Styles ──────────────────────────────────────────────────────────────────
+  const filtered = jobs
+    .filter((job) => {
+      const matchesSearch =
+        job.title.toLowerCase().includes(search.toLowerCase()) ||
+        job.company.toLowerCase().includes(search.toLowerCase());
+      const matchesStage = filterStage === 'all' || job.status === filterStage;
+      return matchesSearch && matchesStage;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'newest') {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      } else if (sortBy === 'oldest') {
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      } else if (sortBy === 'company') {
+        return a.company.localeCompare(b.company);
+      } else if (sortBy === 'title') {
+        return a.title.localeCompare(b.title);
+      }
+      return 0;
+    });
 
   const inputStyle = {
     width: '100%',
@@ -381,7 +404,15 @@ export default function DashboardPage() {
           <select
             value={filterStage}
             onChange={(e) => setFilterStage(e.target.value)}
-            style={selectStyle}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '6px',
+              border: 'none',
+              fontSize: '14px',
+              backgroundColor: '#E6CECB',
+              color: '#3C1510',
+              cursor: 'pointer',
+            }}
           >
             <option value="all">All Stages</option>
             {Object.entries(STAGE_LABELS).map(([val, label]) => (
@@ -394,31 +425,21 @@ export default function DashboardPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            style={selectStyle}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '6px',
+              border: 'none',
+              fontSize: '14px',
+              backgroundColor: '#E6CECB',
+              color: '#3C1510',
+              cursor: 'pointer',
+            }}
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
-            <option value="company">Company A–Z</option>
-            <option value="title">Title A–Z</option>
+            <option value="company">Company A-Z</option>
+            <option value="title">Title A-Z</option>
           </select>
-
-          {/* Active-filter badge */}
-          {(filterStage !== 'all' || debouncedSearch) && (
-            <button
-              onClick={() => {
-                setSearch('');
-                setFilterStage('all');
-              }}
-              style={{
-                ...btnSecondary,
-                fontSize: '12px',
-                padding: '6px 12px',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Clear filters ✕
-            </button>
-          )}
         </div>
 
         {error && (
