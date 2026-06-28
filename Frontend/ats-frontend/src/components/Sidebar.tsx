@@ -9,6 +9,7 @@ export default function Sidebar() {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [profilePic, setProfilePic] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userEmail) return;
@@ -19,6 +20,7 @@ export default function Sidebar() {
         if (data) {
           setFirstName(data.first_name ?? '');
           setLastName(data.last_name ?? '');
+          setProfilePic(data.profile_pic ?? null);
         }
       })
       .catch(console.error);
@@ -86,11 +88,23 @@ export default function Sidebar() {
           margin: '0 auto 8px',
           fontSize: '18px',
           fontWeight: 'bold',
+          overflow: 'hidden',
         }}
       >
-        {initials}
+        {profilePic ? (
+          <img
+            src={profilePic}
+            alt="Pofile"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          initials
+        )}
       </div>
-
       {/* username */}
       <p
         style={{

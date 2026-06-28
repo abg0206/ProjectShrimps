@@ -24,6 +24,8 @@ export type Job = {
   description: string;
   status: string;
   created_at: string;
+  deadline: string | null;
+  recruiter_notes: string | null;
 };
 
 type JobCardProps = {
@@ -31,6 +33,7 @@ type JobCardProps = {
   onStatusChange: (jobId: number, newStage: string, jobTitle: string) => void;
   onEdit: (job: Job) => void;
   onDelete: (jobId: number) => void;
+  onViewDetail: (job: Job) => void;
 };
 
 export default function JobCard({
@@ -38,9 +41,11 @@ export default function JobCard({
   onStatusChange,
   onEdit,
   onDelete,
+  onViewDetail,
 }: JobCardProps) {
   return (
     <div
+      onClick={() => onViewDetail(job)}
       style={{
         backgroundColor: '#E6CECB',
         borderRadius: '10px',
@@ -48,6 +53,7 @@ export default function JobCard({
         display: 'flex',
         flexDirection: 'column',
         gap: '8px',
+        cursor: 'pointer',
       }}
     >
       {/* stage of job  */}
@@ -105,27 +111,6 @@ export default function JobCard({
         {job.description}
       </p>
 
-      {/* stage dropdown */}
-      <select
-        value={job.status}
-        onChange={(e) => onStatusChange(job.id, e.target.value, job.title)}
-        style={{
-          fontSize: '13px',
-          padding: '4px 6px',
-          borderRadius: '4px',
-          border: '1px solid #932C20',
-          backgroundColor: '#fff',
-          color: '#3C1510',
-          cursor: 'pointer',
-        }}
-      >
-        {Object.entries(STAGE_LABELS).map(([val, label]) => (
-          <option key={val} value={val}>
-            {label}
-          </option>
-        ))}
-      </select>
-
       {/* bottom of card */}
       <div
         style={{
@@ -135,9 +120,32 @@ export default function JobCard({
           fontSize: '13px',
           color: '#932C20',
         }}
-      >
+      > 
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2px',
+        }}
+        >
         <span>Added: {new Date(job.created_at).toLocaleDateString()}</span>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        {job.deadline && (
+          <span
+            style={{
+              color: '#DC2626',
+              fontSize: '12px',
+            }}
+          >
+            Deadline: {new Date(job.deadline).toLocaleDateString()}
+          </span>
+        )}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <button
             onClick={() => onEdit(job)}
             style={{
