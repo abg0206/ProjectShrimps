@@ -12,7 +12,7 @@ module.exports = function (pool) {
 //return all interview jobs for a job, sorted by date
   router.get('/job/:jobId', async (req, res) => {
     try {
-      const jobId = parseId(req.params.jobId);
+      const jobId = parseId(req.params.jobId); 
       if (!jobId) return res.status(400).json({ error: 'Invalid job ID' });
       //get all interviews linked to the job (order: oldest first)
       const result = await pool.query(
@@ -43,7 +43,7 @@ module.exports = function (pool) {
          RETURNING interview_id, job_id, interview_type, scheduled_at, notes, created_at`,
          [jobId, interview_type, scheduled_at, notes]
       );
-      res.status(201).json(result.rows[0]); // return the new created interview
+      res.status(201).json(result.rows[0]); // retun the new created interview
     } catch (error) {
       console.error('Error creating interview:', error);
       res.status(500).json({ error: 'Failed to create interview. Internal server error' });
@@ -54,7 +54,7 @@ module.exports = function (pool) {
     try {
       const jobId = parseId(req.params.jobId);
       const interviewId = parseId(req.params.interviewId);
-      if (!jobId) return res.status(400).json({ error: 'Invalid job ID' });
+      if (!jobId) return res.status(400).json({ error: 'Invalid job ID' }); // job and interview IDs from URL
       if (!interviewId) return res.status(400).json({ error: 'Invalid interview ID' });
       const { interview_type, scheduled_at, notes } = req.body; // data from request body
       const result = await pool.query(
@@ -93,7 +93,7 @@ module.exports = function (pool) {
       res.status(200).json({
         success: true,
         message: 'Interview deleted successfully',
-        deleted: result.rows[0].interview_id,
+        deleted: result.rows[0].interview_id,  //confirm which interview was deleted -->
       });
     } catch (error) {
       console.error('Error deleting interview:', error);
