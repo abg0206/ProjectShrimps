@@ -21,6 +21,8 @@ function normalise(raw: Record<string, string | number>): Job {
     description: String(raw.description),
     status: String(raw.status ?? raw.stages ?? '0'),
     created_at: String(raw.created_at),
+    deadline: raw.deadline ? String(raw.deadline) : null,
+    recruiter_notes: raw.recruiter_notes ? String(raw.recruiter_notes) : null,
   };
 }
 
@@ -56,6 +58,8 @@ export default function DashboardPage() {
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
 
+  const [newDeadline, setNewDeadline] = useState('');
+
   // Archive confirmation modal
   const [archiveTarget, setArchiveTarget] = useState<{
     id: number;
@@ -71,6 +75,26 @@ export default function DashboardPage() {
   const [editStage, setEditStage] = useState('0');
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState('');
+
+  const [editDeadline, setEditDeadline] = useState('');
+
+  const [detailJob, setDetailJob] = useState<Job | null>(null);
+
+  const [detailNotes, setDetailNotes] = useState('');
+  const [savingNotes, setSaveNotes] = useState(false);
+  const [notesSaved, setNotesSaved] = useState(false);
+
+  // interview tracker
+  type InterviewEntry = {
+    round_type: string;
+    interview_date: string;
+    notes: string;
+  };
+  const [interviews, setInterviews] = useState<InterviewEntry[]>([]);
+  const [showAddInterview, setShowAddInterview] = useState(false);
+  const [newInterviewRound, setNewInterviewRound] = useState('');
+  const [newInterviewDate, setNewInterviewDate] = useState('');
+  const [newInterviewNotes, setNewInterviewNotes] = useState('');
 
   // Fetch jobs from the server, passing filters as query params
   const fetchJobs = useCallback(async () => {
@@ -118,6 +142,7 @@ export default function DashboardPage() {
           title: newTitle.trim(),
           company: newCompany.trim(),
           description: newDescription.trim(),
+          deadline: newDeadline || null,
         }),
       });
       if (!res.ok) {
@@ -130,6 +155,7 @@ export default function DashboardPage() {
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
+      setNewDeadline('');
       setShowAddModal(false);
     } catch (err) {
       console.error(err);
@@ -146,6 +172,7 @@ export default function DashboardPage() {
     setEditCompany(job.company);
     setEditDescription(job.description);
     setEditStage(job.status);
+    setEditDeadline(job.deadline ?? '');
     setEditError('');
   }
 
@@ -175,6 +202,7 @@ export default function DashboardPage() {
             title: editTitle.trim(),
             company: editCompany.trim(),
             description: editDescription.trim(),
+            deadline: editDeadline || null,
           }),
         }
       );
@@ -258,6 +286,50 @@ export default function DashboardPage() {
     } catch (err) {
       console.error('Delete failed:', err);
     }
+  }
+
+  async function handleSaveNotes() {
+    if (!detailJob) return;
+    setSaveNotes(true);
+    setNotesSaved(false);
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${detailJob.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recruiter_notes: detailNotes }),
+        }
+      );
+      if (res.ok) {
+        setNotesSaved(true);
+        await fetchJobs();
+      }
+    } catch (err) {
+      console.error('Failed to save notes:', err);
+    } finally {
+      setSaveNotes(false);
+    }
+  }
+
+  function handleAddInterview() {
+    if (!newInterviewRound.trim() || !newInterviewDate) return;
+    setInterviews([
+      ...interviews,
+      {
+        round_type: newInterviewRound.trim(),
+        interview_date: newInterviewDate,
+        notes: newInterviewNotes.trim(),
+      },
+    ]);
+    setNewInterviewRound('');
+    setNewInterviewDate('');
+    setNewInterviewNotes('');
+    setShowAddInterview(false);
+  }
+
+  function handleDeleteInterview(index: number) {
+    setInterviews(interviews.filter((_, i) => i !== index));
   }
 
   const filtered = jobs
@@ -463,6 +535,53 @@ export default function DashboardPage() {
           </p>
         )}
 
+        {/* metrics panel */}
+        {!loading && jobs.length > 0 && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gap: '12px',
+              marginBottom: '24px',
+            }}
+          >
+            {Object.entries(STAGE_LABELS).map(([val, label]) => {
+              const count = jobs.filter((j) => j.status === val).length;
+              return (
+                <div
+                  key={val}
+                  style={{
+                    backgroundColor: '#E6CECB',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    textAlign: 'center',
+                  }}
+                >
+                  <p
+                    style={{
+                      color: '#932C20',
+                      fontSize: '22px',
+                      fontWeight: 'bold',
+                      margin: 0,
+                    }}
+                  >
+                    {count}
+                  </p>
+                  <p
+                    style={{
+                      color: '#3C1510',
+                      fontSize: '12px',
+                      margin: '4px 0 0 0',
+                    }}
+                  >
+                    {label}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {loading ? (
           <p style={{ color: '#3C1510' }}>Loading jobs…</p>
         ) : jobs.length === 0 ? (
@@ -486,13 +605,532 @@ export default function DashboardPage() {
                 onStatusChange={handleStatusChange}
                 onEdit={openEdit}
                 onDelete={handleDelete}
+                onViewDetail={(job) => {
+                  setDetailJob(job);
+                  setDetailNotes(job.recruiter_notes ?? '');
+                  setNotesSaved(false);
+                  setInterviews([]);
+                  setShowAddInterview(false);
+                }}
               />
             ))}
           </div>
         )}
       </div>
 
-      {/* ── Add Job Modal ── */}
+      {/* Job detail */}
+      {detailJob && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: '#00000066',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+          onClick={() => setDetailJob(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '32px',
+              width: '520px',
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* stage  */}
+            <div
+              style={{
+                display: 'inline-block',
+                backgroundColor:
+                  (
+                    {
+                      '0': '#6B7280',
+                      '1': '#2563EB',
+                      '2': '#D97706',
+                      '3': '#16A34A',
+                      '4': '#DC2626',
+                      '5': '#9CA3AF',
+                    } as Record<string, string>
+                  )[detailJob.status] ?? '#6B7280',
+                color: 'white',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                padding: '2px 10px',
+                borderRadius: '999px',
+                alignSelf: 'flex-start',
+              }}
+            >
+              {STAGE_LABELS[detailJob.status]}
+            </div>
+
+            {/* title */}
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              {detailJob.title}
+            </h2>
+
+            {/* company */}
+            <p
+              style={{
+                color: '#3C1510',
+                fontSize: '15px',
+                margin: 0,
+                fontWeight: '500',
+              }}
+            >
+              {detailJob.company}
+            </p>
+
+            {/* date added */}
+            <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
+              Added: {new Date(detailJob.created_at).toLocaleDateString()}
+            </p>
+
+            {/*deadline */}
+            <div>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  marginBottom: '4px',
+                }}
+              >
+                Deadline
+              </p>
+              <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
+                {detailJob.deadline
+                  ? new Date(detailJob.deadline).toLocaleDateString()
+                  : 'No deadline set'}
+              </p>
+            </div>
+
+            {/* description */}
+            <div>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  marginBottom: '4px',
+                }}
+              >
+                Job Description
+              </p>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '14px',
+                  margin: 0,
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {detailJob.description}
+              </p>
+            </div>
+
+            {/* recruiter Notes */}
+            <div>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  marginBottom: '4px',
+                }}
+              >
+                Recruiter / Contact Notes
+              </p>
+              <textarea
+                value={detailNotes}
+                onChange={(e) => setDetailNotes(e.target.value)}
+                placeholder="Add notes about recruiter or contact..."
+                style={{
+                  width: '100%',
+                  height: '80px',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: 'solid',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  resize: 'vertical',
+                }}
+              />
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  gap: '12px',
+                  marginTop: '8px',
+                }}
+              >
+                {notesSaved && (
+                  <p style={{ color: '#3C1510', fontSize: '13px', margin: 0 }}>
+                    ✓ Notes saved
+                  </p>
+                )}
+                <button
+                  onClick={handleSaveNotes}
+                  disabled={savingNotes}
+                  style={{
+                    backgroundColor: savingNotes ? '#c0847a' : '#932C20',
+                    color: 'white',
+                    padding: '6px 16px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    cursor: savingNotes ? 'not-allowed' : 'pointer',
+                    fontSize: '13px',
+                  }}
+                >
+                  {savingNotes ? 'Saving...' : 'Save Notes'}
+                </button>
+              </div>
+            </div>
+
+            {/* change stage of job */}
+            <div>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  marginBottom: '4px',
+                }}
+              >
+                Change Stage
+              </p>
+              <select
+                value={detailJob.status}
+                onChange={(e) =>
+                  handleStatusChange(
+                    detailJob.id,
+                    e.target.value,
+                    detailJob.title
+                  )
+                }
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid #932C20',
+                  fontSize: '14px',
+                  backgroundColor: '#fff',
+                  color: '#3C1510',
+                  cursor: 'pointer',
+                }}
+              >
+                <option value={detailJob.status}>
+                  {STAGE_LABELS[detailJob.status]}
+                </option>
+                {Number(detailJob.status) < 4 && (
+                  <option value={String(Number(detailJob.status) + 1)}>
+                    {STAGE_LABELS[String(Number(detailJob.status) + 1)]}
+                  </option>
+                )}
+                {detailJob.status !== '4' && detailJob.status !== '5' && (
+                  <option value="4">{STAGE_LABELS['4']}</option>
+                )}
+                {detailJob.status !== '5' && (
+                  <option value="5">{STAGE_LABELS['5']}</option>
+                )}
+              </select>
+            </div>
+
+            {/* interview tracker */}
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '8px',
+                }}
+              >
+                <p
+                  style={{
+                    color: '#3C1510',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    margin: 0,
+                  }}
+                >
+                  Interview History
+                </p>
+                <button
+                  onClick={() => setShowAddInterview(!showAddInterview)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#932C20',
+                    border: '2px solid #932C20',
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                  }}
+                >
+                  Add Interview
+                </button>
+              </div>
+
+              {/* add interview form */}
+              {showAddInterview && (
+                <div
+                  style={{
+                    backgroundColor: '#D9958C',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    marginBottom: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '12px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      Round Type
+                    </label>
+                    <select
+                      value={newInterviewRound}
+                      onChange={(e) => setNewInterviewRound(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '13px',
+                        boxSizing: 'border-box',
+                        backgroundColor: 'white',
+                      }}
+                    >
+                      <option value="">Select round...</option>
+                      <option value="First Round">First Round</option>
+                      <option value="Virtual">Virtual</option>
+                      <option value="Technical">Technical</option>
+                      <option value="Final">Final</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '12px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      Date & Time
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={newInterviewDate}
+                      onChange={(e) => setNewInterviewDate(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '13px',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '12px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '2px',
+                      }}
+                    >
+                      Notes
+                    </label>
+                    <textarea
+                      value={newInterviewNotes}
+                      onChange={(e) => setNewInterviewNotes(e.target.value)}
+                      placeholder="How did it go? What was discussed?"
+                      style={{
+                        width: '100%',
+                        height: '60px',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '13px',
+                        boxSizing: 'border-box',
+                        resize: 'vertical',
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      gap: '8px',
+                    }}
+                  >
+                    <button
+                      onClick={() => setShowAddInterview(false)}
+                      style={{
+                        backgroundColor: 'transparent',
+                        color: '#3C1510',
+                        border: '1px solid #3C1510',
+                        padding: '4px 12px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAddInterview}
+                      style={{
+                        backgroundColor: '#932C20',
+                        color: 'white',
+                        border: 'none',
+                        padding: '4px 12px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Interview list */}
+              {interviews.length === 0 ? (
+                <p style={{ color: '#3C1510', fontSize: '13px', margin: 0 }}>
+                  No interviews logged yet.
+                </p>
+              ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  {interviews.map((interview, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        backgroundColor: '#D9958C',
+                        borderRadius: '8px',
+                        padding: '12px',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        <p
+                          style={{
+                            color: '#3C1510',
+                            fontSize: '13px',
+                            fontWeight: 'bold',
+                            margin: 0,
+                          }}
+                        >
+                          {interview.round_type}
+                        </p>
+                        <button
+                          onClick={() => handleDeleteInterview(index)}
+                          style={{
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: '#932C20',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            padding: 0,
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '12px',
+                          margin: '0 0 4px 0',
+                        }}
+                      >
+                        {new Date(interview.interview_date).toLocaleString()}
+                      </p>
+                      {interview.notes && (
+                        <p
+                          style={{
+                            color: '#3C1510',
+                            fontSize: '12px',
+                            margin: 0,
+                          }}
+                        >
+                          {interview.notes}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Close button */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginTop: '8px',
+              }}
+            >
+              <button
+                onClick={() => setDetailJob(null)}
+                style={{
+                  backgroundColor: '#932C20',
+                  color: 'white',
+                  padding: '8px 20px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Add Job Modal */}
       {showAddModal && (
         <div
           style={{
@@ -557,6 +1195,15 @@ export default function DashboardPage() {
                 style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
               />
             </div>
+            <div>
+              <label style={labelStyle}>Application Deadline</label>
+              <input
+                type="date"
+                value={newDeadline}
+                onChange={(e) => setNewDeadline(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
             <div
               style={{
                 display: 'flex',
@@ -583,7 +1230,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Edit Job Modal ── */}
+      {/*  Edit Job Modal  */}
       {editJob && (
         <div
           style={{
@@ -649,6 +1296,15 @@ export default function DashboardPage() {
               />
             </div>
             <div>
+              <label style={labelStyle}>Application Deadline</label>
+              <input
+                type="date"
+                value={editDeadline}
+                onChange={(e) => setEditDeadline(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+            <div>
               <label style={labelStyle}>Status</label>
               <select
                 value={editStage}
@@ -698,7 +1354,7 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-      {/* ── Archive Confirmation Modal ── */}
+      {/*  Archive Confirmation Modal */}
       {archiveTarget && (
         <div
           style={{
