@@ -41,12 +41,12 @@ Return meaningful error messages
 ## API Response Format
 
 method: 'POST',  
- headers: { 'Content-Type': 'application/json' },  
- body: JSON.stringify({  
- title: newTitle.trim(),  
- company: newCompany.trim(),  
- description: newDescription.trim(),  
- }),
+headers: { 'Content-Type': 'application/json' },  
+body: JSON.stringify({  
+title: newTitle.trim(),  
+company: newCompany.trim(),  
+description: newDescription.trim(),  
+}),
 
 ## Security Requirements
 

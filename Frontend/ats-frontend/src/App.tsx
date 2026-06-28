@@ -6,6 +6,7 @@ import SettingsPage from './pages/SettingsPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RouteProtect from './components/RouteProtect';
+import ArchivedPage from './pages/ArchivedPage';
 
 function App() {
   return (
@@ -19,6 +20,14 @@ function App() {
           element={
             <RouteProtect>
               <DashboardPage />
+            </RouteProtect>
+          }
+        />
+        <Route
+          path="/archived"
+          element={
+            <RouteProtect>
+              <ArchivedPage />
             </RouteProtect>
           }
         />
