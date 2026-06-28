@@ -9,6 +9,7 @@ const usersRouter = require('./routes/users');
 const profileRouter = require('./routes/profile');
 const jobsRouter = require('./routes/jobs');
 const settingsRouter = require('./routes/settings');
+const interviewRoutes = require('./routes/interviews');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use('/api', profileRouter(pool));
 app.use('/api', jobsRouter(pool));
 app.use('/api/settings', settingsRouter);
 app.use('/api/users', settingsRouter);
+app.use('/api/interviews', interviewRoutes(pool));
 
 // start
 const PORT = process.env.PORT || 3000;
