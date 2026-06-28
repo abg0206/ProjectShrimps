@@ -14,6 +14,13 @@ module.exports = function (pool) {
            last_name,
            phone,
            summary,
+           skills,
+           education,
+           experience,
+           target_role,
+           location_preference,
+           work_mode_preference,
+           salary_expectation,
            profile_picture_url
          FROM user_profile
          WHERE email = $1`,
@@ -35,7 +42,19 @@ module.exports = function (pool) {
   router.put('/profile/:email', async (req, res) => {
     try {
       const { email } = req.params;
-      const { first_name, last_name, phone, summary } = req.body;
+      const {
+        first_name,
+        last_name,
+        phone,
+        summary,
+        skills,
+        education,
+        experience,
+        target_role,
+        location_preference,
+        work_mode_preference,
+        salary_expectation,
+      } = req.body;
 
       if (!first_name || !last_name) {
         return res
@@ -47,17 +66,67 @@ module.exports = function (pool) {
         ? Number(String(phone).replace(/\D/g, '')) || null
         : null;
 
+      // skills/education/experience are stored as JSON columns (jsonb).
+      // Default to empty arrays so we never write NULL for these.
+      const skillsValue = JSON.stringify(skills ?? []);
+      const educationValue = JSON.stringify(education ?? []);
+      const experienceValue = JSON.stringify(experience ?? []);
+
       const result = await pool.query(
-        `INSERT INTO user_profile (email, first_name, last_name, phone, summary)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO user_profile (
+           email,
+           first_name,
+           last_name,
+           phone,
+           summary,
+           skills,
+           education,
+           experience,
+           target_role,
+           location_preference,
+           work_mode_preference,
+           salary_expectation
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
          ON CONFLICT (email)
          DO UPDATE SET
-           first_name = EXCLUDED.first_name,
-           last_name  = EXCLUDED.last_name,
-           phone      = EXCLUDED.phone,
-           summary    = EXCLUDED.summary
-         RETURNING first_name, last_name, phone, summary`,
-        [email, first_name, last_name, phoneValue, summary ?? null]
+           first_name            = EXCLUDED.first_name,
+           last_name             = EXCLUDED.last_name,
+           phone                 = EXCLUDED.phone,
+           summary               = EXCLUDED.summary,
+           skills                = EXCLUDED.skills,
+           education             = EXCLUDED.education,
+           experience            = EXCLUDED.experience,
+           target_role           = EXCLUDED.target_role,
+           location_preference   = EXCLUDED.location_preference,
+           work_mode_preference  = EXCLUDED.work_mode_preference,
+           salary_expectation    = EXCLUDED.salary_expectation
+         RETURNING
+           first_name,
+           last_name,
+           phone,
+           summary,
+           skills,
+           education,
+           experience,
+           target_role,
+           location_preference,
+           work_mode_preference,
+           salary_expectation`,
+        [
+          email,
+          first_name,
+          last_name,
+          phoneValue,
+          summary ?? null,
+          skillsValue,
+          educationValue,
+          experienceValue,
+          target_role ?? null,
+          location_preference ?? null,
+          work_mode_preference ?? null,
+          salary_expectation ?? null,
+        ]
       );
 
       res.status(200).json(result.rows[0]);
