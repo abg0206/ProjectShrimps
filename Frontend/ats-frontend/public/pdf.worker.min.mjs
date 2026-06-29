@@ -20,8 +20,8 @@
  * JavaScript code in this page
  */
 /**
- * pdfjsVersion = 6.0.227
- * pdfjsBuild = 241dbabbf
+ * pdfjsVersion = 6.1.200
+ * pdfjsBuild = 6353acefe
  */
 const e = !(
     'object' != typeof process ||
@@ -95,33 +95,36 @@ const e = !(
     WATERMARK: 24,
     THREED: 25,
     REDACT: 26,
+    RICHMEDIA: 27,
   },
   D = 'Group',
   M = 'R',
-  N = 1,
-  _ = 2,
-  E = 4,
-  z = 16,
-  L = 32,
-  U = 128,
-  X = 512,
-  W = 1,
-  K = 2,
-  G = 4096,
-  V = 8192,
-  $ = 32768,
-  Y = 65536,
-  J = 131072,
-  Q = 1048576,
-  Z = 2097152,
-  ee = 8388608,
-  te = 16777216,
-  ae = 1,
-  ne = 2,
-  se = 3,
-  re = 4,
-  ie = 5,
-  oe = {
+  N = 0,
+  _ = 4,
+  E = 1,
+  z = 2,
+  L = 4,
+  U = 16,
+  X = 32,
+  W = 128,
+  K = 512,
+  G = 1,
+  V = 2,
+  $ = 4096,
+  Y = 8192,
+  J = 32768,
+  Q = 65536,
+  Z = 131072,
+  ee = 1048576,
+  te = 2097152,
+  ae = 8388608,
+  ne = 16777216,
+  se = 1,
+  re = 2,
+  ie = 3,
+  oe = 4,
+  le = 5,
+  fe = {
     E: 'Mouse Enter',
     X: 'Mouse Exit',
     D: 'Mouse Down',
@@ -137,123 +140,123 @@ const e = !(
     V: 'Validate',
     C: 'Calculate',
   },
-  le = {
+  ce = {
     WC: 'WillClose',
     WS: 'WillSave',
     DS: 'DidSave',
     WP: 'WillPrint',
     DP: 'DidPrint',
   },
-  fe = { O: 'PageOpen', C: 'PageClose' },
-  ce = 1,
-  he = 5,
+  he = { O: 'PageOpen', C: 'PageClose' },
   ue = 1,
-  me = 2,
-  pe = 3,
-  de = 4,
-  ge = 5,
-  be = 6,
-  we = 7,
-  je = 8,
-  ke = 9,
-  ye = 10,
-  qe = 11,
-  ve = 12,
-  Se = 13,
-  Ae = 14,
-  xe = 15,
-  Ce = 16,
-  Ie = 17,
-  Fe = 18,
-  Te = 19,
-  Oe = 20,
-  Re = 21,
-  He = 22,
-  Be = 23,
-  De = 24,
-  Me = 25,
-  Ne = 26,
-  Pe = 27,
-  _e = 28,
-  Ee = 29,
-  ze = 30,
-  Le = 31,
-  Ue = 32,
-  Xe = 33,
-  We = 34,
-  Ke = 35,
-  Ge = 36,
-  Ve = 37,
-  $e = 38,
-  Ye = 39,
-  Je = 40,
-  Qe = 41,
-  Ze = 42,
-  et = 43,
-  tt = 44,
-  at = 45,
-  nt = 46,
-  st = 47,
-  rt = 48,
-  it = 49,
-  ot = 50,
-  lt = 51,
-  ft = 52,
-  ct = 53,
-  ht = 54,
-  ut = 55,
-  mt = 56,
-  pt = 57,
-  dt = 58,
-  gt = 59,
-  bt = 60,
-  wt = 61,
-  jt = 62,
-  kt = 63,
-  yt = 64,
-  qt = 65,
-  vt = 66,
-  St = 67,
-  At = 68,
-  xt = 69,
-  Ct = 70,
-  It = 71,
-  Ft = 72,
-  Tt = 73,
-  Ot = 74,
-  Rt = 75,
-  Ht = 76,
-  Bt = 77,
-  Dt = 80,
-  Mt = 81,
-  Nt = 83,
-  Pt = 84,
-  _t = 85,
-  Et = 86,
-  zt = 87,
-  Lt = 88,
-  Ut = 89,
-  Xt = 90,
-  Wt = 91,
-  Kt = 92,
-  Gt = 93,
-  Vt = 94,
-  $t = 0,
-  Yt = 1,
-  Jt = 2,
-  Qt = 3,
-  Zt = 4,
-  ea = 1,
-  ta = 2;
-let aa = ce;
+  me = 5,
+  pe = 1,
+  de = 2,
+  ge = 3,
+  be = 4,
+  we = 5,
+  je = 6,
+  ke = 7,
+  ye = 8,
+  qe = 9,
+  ve = 10,
+  Se = 11,
+  Ae = 12,
+  xe = 13,
+  Ce = 14,
+  Ie = 15,
+  Fe = 16,
+  Te = 17,
+  Oe = 18,
+  Re = 19,
+  He = 20,
+  Be = 21,
+  De = 22,
+  Me = 23,
+  Ne = 24,
+  Pe = 25,
+  _e = 26,
+  Ee = 27,
+  ze = 28,
+  Le = 29,
+  Ue = 30,
+  Xe = 31,
+  We = 32,
+  Ke = 33,
+  Ge = 34,
+  Ve = 35,
+  $e = 36,
+  Ye = 37,
+  Je = 38,
+  Qe = 39,
+  Ze = 40,
+  et = 41,
+  tt = 42,
+  at = 43,
+  nt = 44,
+  st = 45,
+  rt = 46,
+  it = 47,
+  ot = 48,
+  lt = 49,
+  ft = 50,
+  ct = 51,
+  ht = 52,
+  ut = 53,
+  mt = 54,
+  pt = 55,
+  dt = 56,
+  gt = 57,
+  bt = 58,
+  wt = 59,
+  jt = 60,
+  kt = 61,
+  yt = 62,
+  qt = 63,
+  vt = 64,
+  St = 65,
+  At = 66,
+  xt = 67,
+  Ct = 68,
+  It = 69,
+  Ft = 70,
+  Tt = 71,
+  Ot = 72,
+  Rt = 73,
+  Ht = 74,
+  Bt = 75,
+  Dt = 76,
+  Mt = 77,
+  Nt = 80,
+  Pt = 81,
+  _t = 83,
+  Et = 84,
+  zt = 85,
+  Lt = 86,
+  Ut = 87,
+  Xt = 88,
+  Wt = 89,
+  Kt = 90,
+  Gt = 91,
+  Vt = 92,
+  $t = 93,
+  Yt = 94,
+  Jt = 0,
+  Qt = 1,
+  Zt = 2,
+  ea = 3,
+  ta = 4,
+  aa = 1,
+  na = 2;
+let sa = ue;
 function getVerbosityLevel() {
-  return aa;
+  return sa;
 }
 function info(e) {
-  aa >= he && console.info(`Info: ${e}`);
+  sa >= me && console.info(`Info: ${e}`);
 }
 function warn(e) {
-  aa >= ce && console.warn(`Warning: ${e}`);
+  sa >= ue && console.warn(`Warning: ${e}`);
 }
 function unreachable(e) {
   throw new Error(e);
@@ -298,7 +301,7 @@ function shadow(e, t, a, n = !1) {
   });
   return a;
 }
-const na = (function BaseExceptionClosure() {
+const ra = (function BaseExceptionClosure() {
   function BaseException(e, t) {
     this.message = e;
     this.name = t;
@@ -307,36 +310,36 @@ const na = (function BaseExceptionClosure() {
   BaseException.constructor = BaseException;
   return BaseException;
 })();
-class PasswordException extends na {
+class PasswordException extends ra {
   constructor(e, t) {
     super(e, 'PasswordException');
     this.code = t;
   }
 }
-class UnknownErrorException extends na {
+class UnknownErrorException extends ra {
   constructor(e, t) {
     super(e, 'UnknownErrorException');
     this.details = t;
   }
 }
-class InvalidPDFException extends na {
+class InvalidPDFException extends ra {
   constructor(e) {
     super(e, 'InvalidPDFException');
   }
 }
-class ResponseException extends na {
+class ResponseException extends ra {
   constructor(e, t, a) {
     super(e, 'ResponseException');
     this.status = t;
     this.missing = a;
   }
 }
-class FormatError extends na {
+class FormatError extends ra {
   constructor(e) {
     super(e, 'FormatError');
   }
 }
-class AbortException extends na {
+class AbortException extends ra {
   constructor(e) {
     super(e, 'AbortException');
   }
@@ -421,6 +424,13 @@ class FeatureTest {
   }
   static get isAlphaColorInputSupported() {
     return shadow(this, 'isAlphaColorInputSupported', !1);
+  }
+  static get isBackdropFilterSupported() {
+    return shadow(
+      this,
+      'isBackdropFilterSupported',
+      'undefined' != typeof CSS && CSS.supports('backdrop-filter', 'blur(1px)')
+    );
   }
 }
 class Util {
@@ -645,22 +655,22 @@ function isArrayEqual(e, t) {
   for (let a = 0, n = e.length; a < n; a++) if (e[a] !== t[a]) return !1;
   return !0;
 }
-let sa = null,
-  ra = null;
+let ia = null,
+  oa = null;
 const makeArr = () => [],
   makeMap = () => new Map(),
   makeObj = () => Object.create(null),
-  ia = Symbol('CIRCULAR_REF'),
-  oa = Symbol('EOF');
-let la = Object.create(null),
-  fa = Object.create(null),
-  ca = Object.create(null);
+  la = Symbol('CIRCULAR_REF'),
+  fa = Symbol('EOF');
+let ca = Object.create(null),
+  ha = Object.create(null),
+  ua = Object.create(null);
 class Name {
   constructor(e) {
     this.name = e;
   }
   static get(e) {
-    return (fa[e] ||= new Name(e));
+    return (ha[e] ||= new Name(e));
   }
 }
 class Cmd {
@@ -668,14 +678,14 @@ class Cmd {
     this.cmd = e;
   }
   static get(e) {
-    return (la[e] ||= new Cmd(e));
+    return (ca[e] ||= new Cmd(e));
   }
 }
-const ha = function nonSerializableClosure() {
-  return ha;
+const ma = function nonSerializableClosure() {
+  return ma;
 };
 class Dict {
-  __nonSerializable__ = ha;
+  __nonSerializable__ = ma;
   #a = new Map();
   objId = null;
   suppressEncryption = !1;
@@ -778,12 +788,8 @@ class Dict {
     for (const e of t)
       if (e instanceof Dict)
         for (const [t, n] of e.getRawEntries()) {
-          let e = s.get(t);
-          if (void 0 === e) {
-            e = [];
-            s.set(t, e);
-          } else if (!(a && n instanceof Dict)) continue;
-          e.push(n);
+          const e = s.getOrInsertComputed(t, makeArr);
+          (!e.length || (a && n instanceof Dict)) && e.push(n);
         }
     for (const [t, a] of s) {
       if (1 === a.length || !(a[0] instanceof Dict)) {
@@ -816,16 +822,16 @@ class Ref {
     return 0 === this.gen ? `${this.num}R` : `${this.num}R${this.gen}`;
   }
   static fromString(e) {
-    const t = ca[e];
+    const t = ua[e];
     if (t) return t;
     const a = /^(\d+)R(\d*)$/.exec(e);
     return a && '0' !== a[1]
-      ? (ca[e] = new Ref(parseInt(a[1], 10), a[2] ? parseInt(a[2], 10) : 0))
+      ? (ua[e] = new Ref(parseInt(a[1], 10), a[2] ? parseInt(a[2], 10) : 0))
       : null;
   }
   static get(e, t) {
     const a = 0 === t ? `${e}R` : `${e}R${t}`;
-    return (ca[a] ||= new Ref(e, t));
+    return (ua[a] ||= new Ref(e, t));
   }
 }
 class RefSet {
@@ -971,6 +977,9 @@ class BaseStream {
   makeSubStream(e, t, a = null) {
     unreachable('Abstract method `makeSubStream` called');
   }
+  clone() {
+    unreachable('Abstract method `clone` called');
+  }
   getBaseStreams() {
     return null;
   }
@@ -1003,7 +1012,7 @@ function stringToUTF16String(e, t = !1) {
   }
   return a.join('');
 }
-const ua = [
+const pa = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 728,
   711, 710, 729, 733, 731, 730, 732, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1042,15 +1051,15 @@ function stringToPDFString(e, t = !1) {
       for (; ++n < s && 27 !== e.charCodeAt(n););
       continue;
     }
-    const i = ua[r];
+    const i = pa[r];
     a.push(i ? String.fromCharCode(i) : e.charAt(n));
   }
   return a.join('');
 }
-const ma = /^[1-9]\.\d$/,
-  pa = 2 ** 31 - 1,
-  da = [1, 0, 0, 1, 0, 0],
-  ga = [
+const da = /^[1-9]\.\d$/,
+  ga = 2 ** 31 - 1,
+  ba = [1, 0, 0, 1, 0, 0],
+  wa = [
     'ColorSpace',
     'ExtGState',
     'Font',
@@ -1059,7 +1068,7 @@ const ma = /^[1-9]\.\d$/,
     'Shading',
     'XObject',
   ],
-  ba = ['ExtGState', 'Font', 'Properties', 'XObject'];
+  ja = ['ExtGState', 'Font', 'Properties', 'XObject'];
 function getLookupTableFactory(e) {
   let t;
   return function () {
@@ -1071,24 +1080,24 @@ function getLookupTableFactory(e) {
     return t;
   };
 }
-class MissingDataException extends na {
+class MissingDataException extends ra {
   constructor(e, t) {
     super(`Missing data [${e}, ${t})`, 'MissingDataException');
     this.begin = e;
     this.end = t;
   }
 }
-class ParserEOFException extends na {
+class ParserEOFException extends ra {
   constructor(e) {
     super(e, 'ParserEOFException');
   }
 }
-class XRefEntryException extends na {
+class XRefEntryException extends ra {
   constructor(e) {
     super(e, 'XRefEntryException');
   }
 }
-class XRefParseException extends na {
+class XRefParseException extends ra {
   constructor(e) {
     super(e, 'XRefParseException');
   }
@@ -1153,7 +1162,7 @@ function deepCompare(e, t) {
   }
   return !1;
 }
-const wa = [
+const ka = [
   '',
   'C',
   'CC',
@@ -1192,9 +1201,9 @@ function toRomanNumerals(e, t = !1) {
   );
   const a =
     'M'.repeat((e / 1e3) | 0) +
-    wa[((e % 1e3) / 100) | 0] +
-    wa[10 + (((e % 100) / 10) | 0)] +
-    wa[20 + (e % 10)];
+    ka[((e % 1e3) / 100) | 0] +
+    ka[10 + (((e % 100) / 10) | 0)] +
+    ka[20 + (e % 10)];
   return t ? a.toLowerCase() : a;
 }
 function isWhiteSpace(e) {
@@ -1249,7 +1258,7 @@ function escapePDFName(e) {
     }
   }
   if (0 === t.length) return e;
-  a < e.length && t.push(e.substring(a, e.length));
+  a < e.length && t.push(e.substring(a));
   return t.join('');
 }
 function escapeString(e) {
@@ -1303,7 +1312,7 @@ function collectActions(e, t, a) {
   }
   return objectSize(n) > 0 ? n : null;
 }
-const ja = { 60: '&lt;', 62: '&gt;', 38: '&amp;', 34: '&quot;', 39: '&apos;' };
+const ya = { 60: '&lt;', 62: '&gt;', 38: '&amp;', 34: '&quot;', 39: '&apos;' };
 function* codePointIter(e) {
   for (let t = 0, a = e.length; t < a; t++) {
     const a = e.codePointAt(t);
@@ -1317,7 +1326,7 @@ function encodeToXmlString(e) {
   for (let n = 0, s = e.length; n < s; n++) {
     const s = e.codePointAt(n);
     if (32 <= s && s <= 126) {
-      const r = ja[s];
+      const r = ya[s];
       if (r) {
         a < n && t.push(e.substring(a, n));
         t.push(r);
@@ -1331,7 +1340,7 @@ function encodeToXmlString(e) {
     }
   }
   if (0 === t.length) return e;
-  a < e.length && t.push(e.substring(a, e.length));
+  a < e.length && t.push(e.substring(a));
   return t.join('');
 }
 function validateFontName(e, t = !1) {
@@ -1443,7 +1452,7 @@ class QCMS {
     return e?.byteLength ? e : (this.#s = new Uint8Array(this._memory.buffer));
   }
 }
-const ka = Object.freeze({
+const qa = Object.freeze({
     RGB8: 0,
     0: 'RGB8',
     RGBA8: 1,
@@ -1457,7 +1466,7 @@ const ka = Object.freeze({
     CMYK: 5,
     5: 'CMYK',
   }),
-  ya = Object.freeze({
+  va = Object.freeze({
     Perceptual: 0,
     0: 'Perceptual',
     RelativeColorimetric: 1,
@@ -1476,13 +1485,13 @@ function __wbg_get_imports() {
         throw new Error(
           (function getStringFromWasm0(e, t) {
             return (function decodeText(e, t) {
-              Aa += t;
-              if (Aa >= Sa) {
-                va = new TextDecoder('utf-8', { ignoreBOM: !0, fatal: !0 });
-                va.decode();
-                Aa = t;
+              Ca += t;
+              if (Ca >= xa) {
+                Aa = new TextDecoder('utf-8', { ignoreBOM: !0, fatal: !0 });
+                Aa.decode();
+                Ca = t;
               }
-              return va.decode(getUint8ArrayMemory0().subarray(e, e + t));
+              return Aa.decode(getUint8ArrayMemory0().subarray(e, e + t));
             })((e >>>= 0), t);
           })(e, t)
         );
@@ -1528,7 +1537,7 @@ function __wbg_get_imports() {
         })(e >>> 0);
       },
       __wbindgen_init_externref_table: function () {
-        const e = Ca.__wbindgen_externrefs,
+        const e = Fa.__wbindgen_externrefs,
           t = e.grow(4);
         e.set(0, void 0);
         e.set(t + 0, void 0);
@@ -1539,31 +1548,31 @@ function __wbg_get_imports() {
     },
   };
 }
-let qa = null;
+let Sa = null;
 function getUint8ArrayMemory0() {
-  (null !== qa && 0 !== qa.byteLength) ||
-    (qa = new Uint8Array(Ca.memory.buffer));
-  return qa;
+  (null !== Sa && 0 !== Sa.byteLength) ||
+    (Sa = new Uint8Array(Fa.memory.buffer));
+  return Sa;
 }
 function passArray8ToWasm0(e, t) {
   const a = t(1 * e.length, 1) >>> 0;
   getUint8ArrayMemory0().set(e, a / 1);
-  Ia = e.length;
+  Ta = e.length;
   return a;
 }
-let va = new TextDecoder('utf-8', { ignoreBOM: !0, fatal: !0 });
-va.decode();
-const Sa = 2146435072;
-let Aa = 0;
-let xa,
-  Ca,
-  Ia = 0;
+let Aa = new TextDecoder('utf-8', { ignoreBOM: !0, fatal: !0 });
+Aa.decode();
+const xa = 2146435072;
+let Ca = 0;
+let Ia,
+  Fa,
+  Ta = 0;
 function __wbg_finalize_init(e, t) {
-  Ca = e.exports;
-  xa = t;
-  qa = null;
-  Ca.__wbindgen_start();
-  return Ca;
+  Fa = e.exports;
+  Ia = t;
+  Sa = null;
+  Fa.__wbindgen_start();
+  return Fa;
 }
 function MathClamp(e, t, a) {
   return Math.min(Math.max(e, t), a);
@@ -2291,24 +2300,24 @@ class IccColorSpace extends ColorSpace {
     let n;
     switch (a) {
       case 1:
-        n = ka.Gray8;
+        n = qa.Gray8;
         this.#x = (e, t, a) =>
           (function qcms_convert_one(e, t, a) {
-            Ca.qcms_convert_one(e, t, a);
+            Fa.qcms_convert_one(e, t, a);
           })(this.#A, 255 * e[t], a);
         break;
       case 3:
-        n = ka.RGB8;
+        n = qa.RGB8;
         this.#x = (e, t, a) =>
           (function qcms_convert_three(e, t, a, n, s) {
-            Ca.qcms_convert_three(e, t, a, n, s);
+            Fa.qcms_convert_three(e, t, a, n, s);
           })(this.#A, 255 * e[t], 255 * e[t + 1], 255 * e[t + 2], a);
         break;
       case 4:
-        n = ka.CMYK;
+        n = qa.CMYK;
         this.#x = (e, t, a) =>
           (function qcms_convert_four(e, t, a, n, s, r) {
-            Ca.qcms_convert_four(e, t, a, n, s, r);
+            Fa.qcms_convert_four(e, t, a, n, s, r);
           })(
             this.#A,
             255 * e[t],
@@ -2322,14 +2331,14 @@ class IccColorSpace extends ColorSpace {
         throw new Error(`Unsupported number of components: ${a}`);
     }
     this.#A = (function qcms_transformer_from_memory(e, t, a) {
-      const n = passArray8ToWasm0(e, Ca.__wbindgen_malloc),
-        s = Ia;
-      return Ca.qcms_transformer_from_memory(n, s, t, a) >>> 0;
-    })(e, n, ya.Perceptual);
+      const n = passArray8ToWasm0(e, Fa.__wbindgen_malloc),
+        s = Ta;
+      return Fa.qcms_transformer_from_memory(n, s, t, a) >>> 0;
+    })(e, n, va.Perceptual);
     if (!this.#A) throw new Error('Failed to create ICC color space');
     IccColorSpace.#F ||= new FinalizationRegistry((e) => {
       !(function qcms_drop_transformer(e) {
-        Ca.qcms_drop_transformer(e);
+        Fa.qcms_drop_transformer(e);
       })(e);
     });
     IccColorSpace.#F.register(this, this.#A);
@@ -2356,9 +2365,9 @@ class IccColorSpace extends ColorSpace {
     QCMS._destOffset = s;
     QCMS._destLength = a * (3 + i);
     !(function qcms_convert_array(e, t) {
-      const a = passArray8ToWasm0(t, Ca.__wbindgen_malloc),
-        n = Ia;
-      Ca.qcms_convert_array(e, a, n);
+      const a = passArray8ToWasm0(t, Fa.__wbindgen_malloc),
+        n = Ta;
+      Fa.qcms_convert_array(e, a, n);
     })(this.#A, e);
     QCMS._mustAddAlpha = !1;
     QCMS._destBuffer = null;
@@ -2378,7 +2387,7 @@ class IccColorSpace extends ColorSpace {
       if (this.#I)
         try {
           this._module = (function initSync(e) {
-            if (void 0 !== Ca) return Ca;
+            if (void 0 !== Fa) return Fa;
             void 0 !== e &&
               (Object.getPrototypeOf(e) === Object.prototype
                 ? ({ module: e } = e)
@@ -2444,17 +2453,10 @@ class Stream extends BaseStream {
     return this.pos >= this.end ? -1 : this.bytes[this.pos++];
   }
   getBytes(e) {
-    const t = this.bytes,
-      a = this.pos,
-      n = this.end;
-    if (!e) {
-      this.pos = n;
-      return t.subarray(a, n);
-    }
-    let s = a + e;
-    s > n && (s = n);
-    this.pos = s;
-    return t.subarray(a, s);
+    const t = this.pos,
+      a = e ? Math.min(t + e, this.end) : this.end;
+    this.pos = a;
+    return this.bytes.subarray(t, a);
   }
   getByteRange(e, t) {
     e < 0 && (e = 0);
@@ -2474,14 +2476,14 @@ class Stream extends BaseStream {
     return new Stream(
       this.bytes.buffer,
       this.start,
-      this.end - this.start,
-      this.dict.clone()
+      this.length,
+      this.dict?.clone()
     );
   }
 }
 class StringStream extends Stream {
-  constructor(e) {
-    super(stringToBytes(e));
+  constructor(e, t = null) {
+    super(stringToBytes(e), NaN, NaN, t);
   }
 }
 class NullStream extends Stream {
@@ -2569,19 +2571,11 @@ class ChunkedStream extends Stream {
     return this.bytes[this.pos++];
   }
   getBytes(e) {
-    const t = this.bytes,
-      a = this.pos,
-      n = this.end;
-    if (!e) {
-      n > this.progressiveDataLength && this.ensureRange(a, n);
-      this.pos = n;
-      return t.subarray(a, n);
-    }
-    let s = a + e;
-    s > n && (s = n);
-    s > this.progressiveDataLength && this.ensureRange(a, s);
-    this.pos = s;
-    return t.subarray(a, s);
+    const t = this.pos,
+      a = e ? Math.min(t + e, this.end) : this.end;
+    a > this.progressiveDataLength && this.ensureRange(t, a);
+    this.pos = a;
+    return this.bytes.subarray(t, a);
   }
   getByteRange(e, t) {
     e < 0 && (e = 0);
@@ -2623,10 +2617,10 @@ class ChunkedStream extends Stream {
   }
 }
 class ChunkedStreamManager {
-  aborted = !1;
+  #O = !1;
   currRequestId = 0;
   _chunksNeededByRequest = new Map();
-  _loadedStreamCapability = Promise.withResolvers();
+  #R = Promise.withResolvers();
   _promisesByRequest = new Map();
   _requestsByChunk = new Map();
   constructor(e, t) {
@@ -2642,7 +2636,7 @@ class ChunkedStreamManager {
     let n = [];
     for (;;) {
       const { value: e, done: t } = await a.read();
-      if (this.aborted) {
+      if (this.#O) {
         n = null;
         return;
       }
@@ -2659,7 +2653,7 @@ class ChunkedStreamManager {
       const e = this.stream.getMissingChunks();
       this._requestChunks(e);
     }
-    return this._loadedStreamCapability.promise;
+    return this.#R.promise;
   }
   _requestChunks(e) {
     const t = this.currRequestId++,
@@ -2671,13 +2665,12 @@ class ChunkedStreamManager {
     this._promisesByRequest.set(t, n);
     const s = [];
     for (const e of a) {
-      let a = this._requestsByChunk.get(e);
-      if (!a) {
-        a = [];
-        this._requestsByChunk.set(e, a);
-        s.push(e);
-      }
-      a.push(t);
+      this._requestsByChunk
+        .getOrInsertComputed(e, () => {
+          s.push(e);
+          return [];
+        })
+        .push(t);
     }
     if (s.length > 0) {
       const e = this.groupChunks(s);
@@ -2688,7 +2681,7 @@ class ChunkedStreamManager {
       }
     }
     return n.promise.catch((e) => {
-      if (!this.aborted) throw e;
+      if (!this.#O) throw e;
     });
   }
   getStream() {
@@ -2737,7 +2730,7 @@ class ChunkedStreamManager {
       l = Math.floor(i / t),
       f = o < a ? Math.floor(o / t) : Math.ceil(o / t);
     r ? n.onReceiveProgressiveData(s) : n.onReceiveData(i, s);
-    n.isDataLoaded && this._loadedStreamCapability.resolve(n);
+    n.isDataLoaded && this.#R.resolve(n);
     const c = [];
     for (let e = l; e < f; ++e) {
       const t = this._requestsByChunk.get(e);
@@ -2768,9 +2761,6 @@ class ChunkedStreamManager {
       total: a,
     });
   }
-  onError(e) {
-    this._loadedStreamCapability.reject(e);
-  }
   getBeginChunk(e) {
     return Math.floor(e / this.chunkSize);
   }
@@ -2778,9 +2768,10 @@ class ChunkedStreamManager {
     return Math.floor((e - 1) / this.chunkSize) + 1;
   }
   abort(e) {
-    this.aborted = !0;
+    this.#O = !0;
     this.pdfStream?.cancelAllRequests(e);
     for (const t of this._promisesByRequest.values()) t.reject(e);
+    this.#R.reject(e);
   }
 }
 function convertToRGBA(e) {
@@ -2867,8 +2858,8 @@ function convertBlackAndWhiteToRGBA({
   return { srcPos: t, destPos: p };
 }
 class ImageResizer {
-  static #O = 2048;
-  static #R = FeatureTest.isImageDecoderSupported;
+  static #H = 2048;
+  static #B = FeatureTest.isImageDecoderSupported;
   constructor(e, t) {
     this._imgData = e;
     this._isMask = t;
@@ -2877,22 +2868,22 @@ class ImageResizer {
     return shadow(
       this,
       'canUseImageDecoder',
-      this.#R ? ImageDecoder.isTypeSupported('image/bmp') : Promise.resolve(!1)
+      this.#B ? ImageDecoder.isTypeSupported('image/bmp') : Promise.resolve(!1)
     );
   }
   static needsToBeResized(e, t) {
-    if (e <= this.#O && t <= this.#O) return !1;
+    if (e <= this.#H && t <= this.#H) return !1;
     const { MAX_DIM: a } = this;
     if (e > a || t > a) return !0;
     const n = e * t;
     if (this._hasMaxArea) return n > this.MAX_AREA;
-    if (n < this.#O ** 2) return !1;
+    if (n < this.#H ** 2) return !1;
     if (this._areGoodDims(e, t)) {
-      this.#O = Math.max(this.#O, Math.floor(Math.sqrt(e * t)));
+      this.#H = Math.max(this.#H, Math.floor(Math.sqrt(e * t)));
       return !1;
     }
-    this.#O = this._guessMax(this.#O, a, 128, 0);
-    return n > (this.MAX_AREA = this.#O ** 2);
+    this.#H = this._guessMax(this.#H, a, 128, 0);
+    return n > (this.MAX_AREA = this.#H ** 2);
   }
   static getReducePowerForJPX(e, t, a) {
     const n = e * t,
@@ -2911,7 +2902,7 @@ class ImageResizer {
     return shadow(
       this,
       'MAX_AREA',
-      this._guessMax(this.#O, this.MAX_DIM, 128, 0) ** 2
+      this._guessMax(this.#H, this.MAX_DIM, 128, 0) ** 2
     );
   }
   static set MAX_AREA(e) {
@@ -2925,7 +2916,7 @@ class ImageResizer {
     isImageDecoderSupported: t = !1,
   }) {
     this._hasMaxArea || (this.MAX_AREA = e >> 2);
-    this.#R = t;
+    this.#B = t;
   }
   static _areGoodDims(e, t) {
     try {
@@ -2953,8 +2944,8 @@ class ImageResizer {
   async _createImage() {
     const { _imgData: e } = this,
       { width: t, height: a } = e;
-    if (t * a * 4 > pa) {
-      const e = this.#H();
+    if (t * a * 4 > ga) {
+      const e = this.#D();
       if (e) return e;
     }
     const n = this._encodeBMP();
@@ -3006,11 +2997,11 @@ class ImageResizer {
     e.height = p;
     return e;
   }
-  #H() {
+  #D() {
     const { _imgData: e } = this,
       { data: t, width: a, height: n, kind: s } = e,
       r = a * n * 4,
-      i = Math.ceil(Math.log2(r / pa)),
+      i = Math.ceil(Math.log2(r / ga)),
       o = a >> i,
       l = n >> i;
     let f,
@@ -3185,9 +3176,9 @@ class ImageResizer {
     return h;
   }
 }
-const Fa = new Uint8Array(0);
+const Oa = new Uint8Array(0);
 class DecodeStream extends BaseStream {
-  buffer = Fa;
+  buffer = Oa;
   bufferLength = 0;
   eof = !1;
   minBufferLength = 512;
@@ -3288,17 +3279,12 @@ class DecodeStream extends BaseStream {
     }
     return new Stream(this.buffer, e, t, a);
   }
-  getBaseStreams() {
-    return this.stream ? this.stream.getBaseStreams() : null;
-  }
   clone() {
     for (; !this.eof;) this.readBlock();
-    return new Stream(
-      this.buffer,
-      this.start,
-      this.end - this.start,
-      this.dict.clone()
-    );
+    return new Stream(this.buffer, 0, this.bufferLength, this.dict?.clone());
+  }
+  getBaseStreams() {
+    return this.stream ? this.stream.getBaseStreams() : null;
   }
 }
 class StreamsSequenceStream extends DecodeStream {
@@ -3372,7 +3358,7 @@ class ColorSpaceUtils {
       if (t) return t;
     }
     try {
-      c = this.#B(e, o);
+      c = this.#M(e, o);
     } catch (e) {
       if (i && !(e instanceof MissingDataException)) return Promise.reject(e);
       throw e;
@@ -3383,7 +3369,7 @@ class ColorSpaceUtils {
     }
     return i ? Promise.resolve(c) : c;
   }
-  static #D(e, t) {
+  static #N(e, t) {
     const { globalColorSpaceCache: a } = t;
     let n;
     if (e instanceof Ref) {
@@ -3391,11 +3377,11 @@ class ColorSpaceUtils {
       const t = a.getByRef(n);
       if (t) return t;
     }
-    const s = this.#B(e, t);
+    const s = this.#M(e, t);
     n && a.set(null, n, s);
     return s;
   }
-  static #B(e, t) {
+  static #M(e, t) {
     const {
       xref: a,
       resources: n,
@@ -3423,7 +3409,7 @@ class ColorSpaceUtils {
             if (a instanceof Dict) {
               const n = a.get(e.name);
               if (n) {
-                if (n instanceof Name) return this.#B(n, t);
+                if (n instanceof Name) return this.#M(n, t);
                 e = n;
                 break;
               }
@@ -3478,7 +3464,7 @@ class ColorSpaceUtils {
             }
           const g = d.getRaw('Alternate');
           if (g) {
-            const e = this.#D(g, t);
+            const e = this.#N(g, t);
             if (e.numComps === o) return e;
             warn('ICCBased color space: Ignoring incorrect /Alternate entry.');
           }
@@ -3488,11 +3474,11 @@ class ColorSpaceUtils {
           break;
         case 'Pattern':
           l = e[1] || null;
-          l && (l = this.#D(l, t));
+          l && (l = this.#N(l, t));
           return new PatternCS(l);
         case 'I':
         case 'Indexed':
-          l = this.#D(e[1], t);
+          l = this.#N(e[1], t);
           const b = MathClamp(a.fetchIfRef(e[2]), 0, 255),
             w = a.fetchIfRef(e[3]);
           return new IndexedCS(l, b, w);
@@ -3500,7 +3486,7 @@ class ColorSpaceUtils {
         case 'DeviceN':
           const j = a.fetchIfRef(e[1]);
           o = Array.isArray(j) ? j.length : 1;
-          l = this.#D(e[2], t);
+          l = this.#N(e[2], t);
           const k = s.create(e[3]);
           return new AlternateCS(o, l, k);
         case 'Lab':
@@ -3536,36 +3522,36 @@ class ColorSpaceUtils {
     return shadow(this, 'cmyk', new DeviceCmykCS());
   }
 }
-class JpegError extends na {
+class JpegError extends ra {
   constructor(e) {
     super(e, 'JpegError');
   }
 }
-class DNLMarkerError extends na {
+class DNLMarkerError extends ra {
   constructor(e, t) {
     super(e, 'DNLMarkerError');
     this.scanLines = t;
   }
 }
-class EOIMarkerError extends na {
+class EOIMarkerError extends ra {
   constructor(e) {
     super(e, 'EOIMarkerError');
   }
 }
-const Ta = new Uint8Array([
+const Ra = new Uint8Array([
     0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33, 40,
     48, 41, 34, 27, 20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50, 43, 36,
     29, 22, 15, 23, 30, 37, 44, 51, 58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61,
     54, 47, 55, 62, 63,
   ]),
-  Oa = 4017,
-  Ra = 799,
-  Ha = 3406,
-  Ba = 2276,
-  Da = 1567,
-  Ma = 3784,
-  Na = 5793,
-  Pa = 2896;
+  Ha = 4017,
+  Ba = 799,
+  Da = 3406,
+  Ma = 2276,
+  Na = 1567,
+  Pa = 3784,
+  _a = 5793,
+  Ea = 2896;
 function buildHuffmanTable(e, t) {
   let a,
     n,
@@ -3718,7 +3704,7 @@ function decodeScan(e, t, a, n, s, r, i, o, l, f, c = !1) {
                 continue;
               }
               a += r;
-              const i = Ta[a];
+              const i = Ra[a];
               e.blockData[t + i] = receiveAndExtend(s) * (1 << f);
               a++;
             }
@@ -3730,7 +3716,7 @@ function decodeScan(e, t, a, n, s, r, i, o, l, f, c = !1) {
               r,
               l = 0;
             for (; a <= n;) {
-              const n = t + Ta[a],
+              const n = t + Ra[a],
                 i = e.blockData[n] < 0 ? -1 : 1;
               switch (w) {
                 case 0:
@@ -3791,7 +3777,7 @@ function decodeScan(e, t, a, n, s, r, i, o, l, f, c = !1) {
             continue;
           }
           s += r;
-          const i = Ta[s];
+          const i = Ra[s];
           e.blockData[t + i] = receiveAndExtend(n);
           s++;
         }
@@ -3861,18 +3847,18 @@ function quantizeAndInverse(e, t, a) {
       w *= n[e + 5];
       j *= n[e + 6];
       k *= n[e + 7];
-      r = (Na * m + 128) >> 8;
-      i = (Na * b + 128) >> 8;
+      r = (_a * m + 128) >> 8;
+      i = (_a * b + 128) >> 8;
       o = d;
       l = j;
-      f = (Pa * (p - k) + 128) >> 8;
-      u = (Pa * (p + k) + 128) >> 8;
+      f = (Ea * (p - k) + 128) >> 8;
+      u = (Ea * (p + k) + 128) >> 8;
       c = g << 4;
       h = w << 4;
       r = (r + i + 1) >> 1;
       i = r - i;
-      y = (o * Ma + l * Da + 128) >> 8;
-      o = (o * Da - l * Ma + 128) >> 8;
+      y = (o * Pa + l * Na + 128) >> 8;
+      o = (o * Na - l * Pa + 128) >> 8;
       l = y;
       f = (f + h + 1) >> 1;
       h = f - h;
@@ -3882,11 +3868,11 @@ function quantizeAndInverse(e, t, a) {
       l = r - l;
       i = (i + o + 1) >> 1;
       o = i - o;
-      y = (f * Ba + u * Ha + 2048) >> 12;
-      f = (f * Ha - u * Ba + 2048) >> 12;
+      y = (f * Ma + u * Da + 2048) >> 12;
+      f = (f * Da - u * Ma + 2048) >> 12;
       u = y;
-      y = (c * Ra + h * Oa + 2048) >> 12;
-      c = (c * Oa - h * Ra + 2048) >> 12;
+      y = (c * Ba + h * Ha + 2048) >> 12;
+      c = (c * Ha - h * Ba + 2048) >> 12;
       h = y;
       a[e] = r + u;
       a[e + 7] = r - u;
@@ -3897,7 +3883,7 @@ function quantizeAndInverse(e, t, a) {
       a[e + 3] = l + f;
       a[e + 4] = l - f;
     } else {
-      y = (Na * m + 512) >> 10;
+      y = (_a * m + 512) >> 10;
       a[e] = y;
       a[e + 1] = y;
       a[e + 2] = y;
@@ -3918,18 +3904,18 @@ function quantizeAndInverse(e, t, a) {
     j = a[e + 48];
     k = a[e + 56];
     if (0 !== (p | d | g | b | w | j | k)) {
-      r = (Na * m + 2048) >> 12;
-      i = (Na * b + 2048) >> 12;
+      r = (_a * m + 2048) >> 12;
+      i = (_a * b + 2048) >> 12;
       o = d;
       l = j;
-      f = (Pa * (p - k) + 2048) >> 12;
-      u = (Pa * (p + k) + 2048) >> 12;
+      f = (Ea * (p - k) + 2048) >> 12;
+      u = (Ea * (p + k) + 2048) >> 12;
       c = g;
       h = w;
       r = 4112 + ((r + i + 1) >> 1);
       i = r - i;
-      y = (o * Ma + l * Da + 2048) >> 12;
-      o = (o * Da - l * Ma + 2048) >> 12;
+      y = (o * Pa + l * Na + 2048) >> 12;
+      o = (o * Na - l * Pa + 2048) >> 12;
       l = y;
       f = (f + h + 1) >> 1;
       h = f - h;
@@ -3939,11 +3925,11 @@ function quantizeAndInverse(e, t, a) {
       l = r - l;
       i = (i + o + 1) >> 1;
       o = i - o;
-      y = (f * Ba + u * Ha + 2048) >> 12;
-      f = (f * Ha - u * Ba + 2048) >> 12;
+      y = (f * Ma + u * Da + 2048) >> 12;
+      f = (f * Da - u * Ma + 2048) >> 12;
       u = y;
-      y = (c * Ra + h * Oa + 2048) >> 12;
-      c = (c * Oa - h * Ra + 2048) >> 12;
+      y = (c * Ba + h * Ha + 2048) >> 12;
+      c = (c * Ha - h * Ba + 2048) >> 12;
       h = y;
       m = r + u;
       k = r - u;
@@ -3970,7 +3956,7 @@ function quantizeAndInverse(e, t, a) {
       s[t + e + 48] = j;
       s[t + e + 56] = k;
     } else {
-      y = (Na * m + 8192) >> 14;
+      y = (_a * m + 8192) >> 14;
       y = y < -2040 ? 0 : y >= 2024 ? 255 : (y + 2056) >> 4;
       s[t + e] = y;
       s[t + e + 8] = y;
@@ -4168,13 +4154,13 @@ class JpegImage {
             if (t >> 4) {
               if (t >> 4 != 1) throw new JpegError('DQT - invalid table spec');
               for (d = 0; d < 64; d++) {
-                y = Ta[d];
+                y = Ra[d];
                 n[y] = a.getUint16(i);
                 i += 2;
               }
             } else
               for (d = 0; d < 64; d++) {
-                y = Ta[d];
+                y = Ra[d];
                 n[y] = e[i++];
               }
             c[15 & t] = n;
@@ -4321,7 +4307,7 @@ class JpegImage {
     }
     this.numComponents = this.components.length;
   }
-  _getLinearizedBlockData(e, t, a = !1) {
+  #P(e, t, a) {
     const n = this.width / e,
       s = this.height / t;
     let r,
@@ -4366,10 +4352,6 @@ class JpegImage {
       }
     }
     let v = this._decodeTransform;
-    a ||
-      4 !== b ||
-      v ||
-      (v = new Int32Array([-256, 255, -256, 255, -256, 255, -256, 255]));
     if (v)
       for (h = 0; h < w;)
         for (u = 0, m = 0; u < b; u++, h++, m += 2)
@@ -4446,10 +4428,10 @@ class JpegImage {
     height: t,
     forceRGBA: a = !1,
     forceRGB: n = !1,
-    isSourcePDF: s = !1,
+    isSourcePDF: s = !0,
   }) {
     if (this.numComponents > 4) throw new JpegError('Unsupported color mode');
-    const r = this._getLinearizedBlockData(e, t, s);
+    const r = this.#P(e, t, s);
     if (1 === this.numComponents && (a || n)) {
       const e = r.length * (a ? 4 : 3),
         t = new Uint8ClampedArray(e);
@@ -4492,7 +4474,7 @@ class JpegImage {
   }
 }
 class JpegStream extends DecodeStream {
-  static #R = FeatureTest.isImageDecoderSupported;
+  static #B = FeatureTest.isImageDecoderSupported;
   constructor(e, t, a) {
     super(t);
     this.stream = e;
@@ -4504,11 +4486,11 @@ class JpegStream extends DecodeStream {
     return shadow(
       this,
       'canUseImageDecoder',
-      this.#R ? ImageDecoder.isTypeSupported('image/jpeg') : Promise.resolve(!1)
+      this.#B ? ImageDecoder.isTypeSupported('image/jpeg') : Promise.resolve(!1)
     );
   }
   static setOptions({ isImageDecoderSupported: e = !1 }) {
-    this.#R = e;
+    this.#B = e;
   }
   get bytes() {
     return shadow(this, 'bytes', this.stream.getBytes(this.maybeLength));
@@ -4539,7 +4521,7 @@ class JpegStream extends DecodeStream {
     }
     return shadow(this, 'jpegOptions', e);
   }
-  #M(e) {
+  #_(e) {
     for (let t = 0, a = e.length - 1; t < a; t++)
       if (255 === e[t] && 216 === e[t + 1]) {
         t > 0 && (e = e.subarray(t));
@@ -4549,7 +4531,7 @@ class JpegStream extends DecodeStream {
   }
   decodeImage(e) {
     if (this.eof) return this.buffer;
-    e = this.#M(e || this.bytes);
+    e = this.#_(e || this.bytes);
     const t = new JpegImage(this.jpegOptions);
     t.parse(e);
     const a = t.getData({
@@ -4557,7 +4539,6 @@ class JpegStream extends DecodeStream {
       height: this.drawHeight,
       forceRGBA: this.forceRGBA,
       forceRGB: this.forceRGB,
-      isSourcePDF: !0,
     });
     this.buffer = a;
     this.bufferLength = a.length;
@@ -4578,7 +4559,7 @@ class JpegStream extends DecodeStream {
           (await this.stream.asyncGetBytes())) ||
         this.bytes;
       if (!a) return null;
-      let n = this.#M(a);
+      let n = this.#_(a);
       const s = JpegImage.canUseImageDecoder(n, e.colorTransform);
       if (!s) return null;
       if (s.exifStart) {
@@ -4610,23 +4591,23 @@ function addState(e, t, a, n, s) {
   }
   r[t.at(-1)] = { checkFn: a, iterateFn: n, processFn: s };
 }
-const _a = [];
+const za = [];
 addState(
-  _a,
-  [ye, ve, Et, qe],
+  za,
+  [ve, Ae, Lt, Se],
   null,
   function iterateInlineImageGroup(e, t) {
     const a = e.fnArray,
       n = (t - (e.iCurr - 3)) % 4;
     switch (n) {
       case 0:
-        return a[t] === ye;
-      case 1:
         return a[t] === ve;
+      case 1:
+        return a[t] === Ae;
       case 2:
-        return a[t] === Et;
+        return a[t] === Lt;
       case 3:
-        return a[t] === qe;
+        return a[t] === Se;
     }
     throw new Error(`iterateInlineImageGroup - invalid pos: ${n}`);
   },
@@ -4699,27 +4680,27 @@ addState(
       w.kind = R;
       w.data = g;
     }
-    a.splice(r, 4 * l, zt);
+    a.splice(r, 4 * l, Ut);
     n.splice(r, 4 * l, [w, c]);
     return r + 1;
   }
 );
 addState(
-  _a,
-  [ye, ve, Nt, qe],
+  za,
+  [ve, Ae, _t, Se],
   null,
   function iterateImageMaskGroup(e, t) {
     const a = e.fnArray,
       n = (t - (e.iCurr - 3)) % 4;
     switch (n) {
       case 0:
-        return a[t] === ye;
-      case 1:
         return a[t] === ve;
+      case 1:
+        return a[t] === Ae;
       case 2:
-        return a[t] === Nt;
+        return a[t] === _t;
       case 3:
-        return a[t] === qe;
+        return a[t] === Se;
     }
     throw new Error(`iterateImageMaskGroup - invalid pos: ${n}`);
   },
@@ -4767,7 +4748,7 @@ addState(
         e[t << 1] = c[4];
         e[1 + (t << 1)] = c[5];
       }
-      a.splice(r, 4 * l, Ut);
+      a.splice(r, 4 * l, Wt);
       n.splice(r, 4 * l, [u, m, p, d, g, e]);
     } else {
       l = Math.min(l, 100);
@@ -4784,15 +4765,15 @@ addState(
           transform: c,
         });
       }
-      a.splice(r, 4 * l, Pt);
+      a.splice(r, 4 * l, Et);
       n.splice(r, 4 * l, [e]);
     }
     return r + 1;
   }
 );
 addState(
-  _a,
-  [ye, ve, _t, qe],
+  za,
+  [ve, Ae, zt, Se],
   function (e) {
     const t = e.argsArray,
       a = e.iCurr - 2;
@@ -4804,19 +4785,19 @@ addState(
       s = (t - (e.iCurr - 3)) % 4;
     switch (s) {
       case 0:
-        return a[t] === ye;
+        return a[t] === ve;
       case 1:
-        if (a[t] !== ve) return !1;
+        if (a[t] !== Ae) return !1;
         const s = e.iCurr - 2,
           r = n[s][0],
           i = n[s][3];
         return n[t][0] === r && 0 === n[t][1] && 0 === n[t][2] && n[t][3] === i;
       case 2:
-        if (a[t] !== _t) return !1;
+        if (a[t] !== zt) return !1;
         const o = n[e.iCurr - 1][0];
         return n[t][0] === o;
       case 3:
-        return a[t] === qe;
+        return a[t] === Se;
     }
     throw new Error(`iterateImageGroup - invalid pos: ${s}`);
   },
@@ -4839,14 +4820,14 @@ addState(
       h[1 + (e << 1)] = t[5];
     }
     const m = [o, l, f, h];
-    a.splice(r, 4 * c, Lt);
+    a.splice(r, 4 * c, Xt);
     n.splice(r, 4 * c, m);
     return r + 1;
   }
 );
 addState(
-  _a,
-  [Le, Ve, Ze, tt, Ue],
+  za,
+  [Xe, Ye, tt, nt, We],
   null,
   function iterateShowTextGroup(e, t) {
     const a = e.fnArray,
@@ -4854,19 +4835,19 @@ addState(
       s = (t - (e.iCurr - 4)) % 5;
     switch (s) {
       case 0:
-        return a[t] === Le;
+        return a[t] === Xe;
       case 1:
-        return a[t] === Ve;
+        return a[t] === Ye;
       case 2:
-        return a[t] === Ze;
+        return a[t] === tt;
       case 3:
-        if (a[t] !== tt) return !1;
+        if (a[t] !== nt) return !1;
         const s = e.iCurr - 3,
           r = n[s][0],
           i = n[s][1];
         return n[t][0] === r && n[t][1] === i;
       case 4:
-        return a[t] === Ue;
+        return a[t] === We;
     }
     throw new Error(`iterateShowTextGroup - invalid pos: ${s}`);
   },
@@ -4906,12 +4887,12 @@ addState(
   }
 );
 addState(
-  _a,
-  [ye, ve, Wt, qe],
+  za,
+  [ve, Ae, Gt, Se],
   (e) => {
     const t = e.argsArray,
       a = t[e.iCurr - 1][0];
-    if (a !== Oe && a !== Re && a !== De && a !== Me && a !== Ne && a !== Pe)
+    if (a !== He && a !== Be && a !== Ne && a !== Pe && a !== _e && a !== Ee)
       return !0;
     const n = t[e.iCurr - 2];
     return 1 === n[0] && 0 === n[1] && 0 === n[2] && 1 === n[3];
@@ -4931,17 +4912,17 @@ addState(
       h.set(e);
       for (let e = 0, t = c.length; e < t;)
         switch (c[e++]) {
-          case $t:
-          case Yt:
+          case Jt:
+          case Qt:
             Util.applyTransform(c, f, e);
             e += 2;
             break;
-          case Jt:
+          case Zt:
             Util.applyTransformToBezier(c, f, e);
             e += 6;
         }
     }
-    n.splice(i, 4, Wt);
+    n.splice(i, 4, Gt);
     s.splice(i, 4, l);
     return i + 1;
   }
@@ -4978,7 +4959,7 @@ class QueueOptimizer extends NullOptimizer {
       a = e.length,
       n = this.state,
       s = this.match;
-    if (!n && !s && t + 1 === a && !_a[e[t]]) {
+    if (!n && !s && t + 1 === a && !za[e[t]]) {
       this.lastProcessed = a;
       return;
     }
@@ -4995,7 +4976,7 @@ class QueueOptimizer extends NullOptimizer {
         n = null;
         if (t >= a) break;
       }
-      n = (n || _a)[e[t]];
+      n = (n || za)[e[t]];
       if (n && !Array.isArray(n)) {
         r.iCurr = t;
         t++;
@@ -5057,23 +5038,23 @@ class OperatorList {
     this._streamSink &&
       (this.weight >= OperatorList.CHUNK_SIZE ||
         (this.weight >= OperatorList.CHUNK_SIZE_ABOUT &&
-          (e === qe || e === Ue))) &&
+          (e === Se || e === We))) &&
       this.flush();
   }
   addImageOps(e, t, a, n = !1) {
     if (n) {
-      this.addOp(ye);
-      this.addOp(ke, [[['SMask', !1]]]);
+      this.addOp(ve);
+      this.addOp(qe, [[['SMask', !1]]]);
     }
-    void 0 !== a && this.addOp(Ct, ['OC', a]);
+    void 0 !== a && this.addOp(Ft, ['OC', a]);
     this.addOp(e, t);
-    void 0 !== a && this.addOp(It, []);
-    n && this.addOp(qe);
+    void 0 !== a && this.addOp(Tt, []);
+    n && this.addOp(Se);
   }
   addDependency(e) {
     if (!this.dependencies.has(e)) {
       this.dependencies.add(e);
-      this.addOp(ue, [e]);
+      this.addOp(pe, [e]);
     }
   }
   addDependencies(e) {
@@ -5098,24 +5079,24 @@ class OperatorList {
       { fnArray: t, argsArray: a, length: n } = this;
     for (let s = 0; s < n; s++)
       switch (t[s]) {
-        case Et:
-        case zt:
-        case Nt: {
+        case Lt:
+        case Ut:
+        case _t: {
           const { bitmap: t, data: n } = a[s][0];
           (t || n?.buffer) && e.push(t || n.buffer);
           break;
         }
-        case Wt: {
+        case Gt: {
           const [, [t], n] = a[s];
           t && e.push(t.buffer, n.buffer);
           break;
         }
-        case Ot:
+        case Ht:
           const [t, n] = a[s];
           t && e.push(t.buffer);
           n && e.push(n.buffer);
           break;
-        case Ze:
+        case tt:
           e.push(a[s][0].buffer);
       }
     return e;
@@ -5144,52 +5125,51 @@ class OperatorList {
 }
 class CheckedOperatorList extends OperatorList {
   needsIsolation = !1;
+  hasSoftMask = !1;
   addOp(e, t) {
-    if (!this.needsIsolation)
-      if (e === Ht) this.needsIsolation = t[0].needsIsolation;
-      else if (e === ke)
-        for (const [e, a] of t[0]) {
-          if ('BM' === e && 'source-over' !== a) {
+    if (!this.needsIsolation || !this.hasSoftMask)
+      if (e === Dt) {
+        this.needsIsolation ||= t[0].needsIsolation;
+        this.hasSoftMask ||= t[0].hasSoftMask;
+      } else if (e === qe)
+        for (const [e, a] of t[0])
+          if ('BM' === e && 'source-over' !== a) this.needsIsolation = !0;
+          else if ('SMask' === e && !1 !== a) {
             this.needsIsolation = !0;
-            break;
+            this.hasSoftMask = !0;
           }
-          if ('SMask' === e && !1 !== a) {
-            this.needsIsolation = !0;
-            break;
-          }
-        }
     super.addOp(e, t);
   }
 }
-const Ea = 1,
-  za = 2,
-  La = 3,
-  Ua = 4,
-  Xa = 5,
-  Wa = 6,
-  Ka = 7;
+const La = 1,
+  Ua = 2,
+  Xa = 3,
+  Wa = 4,
+  Ka = 5,
+  Ga = 6,
+  Va = 7;
 class Pattern {
-  static #N = !1;
+  static #E = !1;
   constructor() {
     unreachable('Cannot initialize Pattern.');
   }
   static setOptions({ hasGPU: e }) {
-    this.#N = e;
+    this.#E = e;
   }
   static parseShading(e, t, a, n, s, r) {
     const i = e instanceof BaseStream ? e.dict : e,
       o = i.get('ShadingType');
     try {
       switch (o) {
-        case Ea:
-          return new FunctionBasedShading(i, t, a, n, s, r);
-        case za:
         case La:
-          return new RadialAxialShading(i, t, a, n, s, r);
+          return new FunctionBasedShading(i, t, a, n, s, r);
         case Ua:
         case Xa:
+          return new RadialAxialShading(i, t, a, n, s, r);
         case Wa:
         case Ka:
+        case Ga:
+        case Va:
           return new MeshShading(e, t, a, n, s, r);
         default:
           throw new FormatError('Unsupported ShadingType: ' + o);
@@ -5212,7 +5192,7 @@ class RadialAxialShading extends BaseShading {
     super();
     this.shadingType = e.get('ShadingType');
     let i = 0;
-    this.shadingType === za ? (i = 4) : this.shadingType === La && (i = 6);
+    this.shadingType === Ua ? (i = 4) : this.shadingType === Xa && (i = 6);
     this.coordsArr = e.getArray('Coords');
     if (!isNumberArray(this.coordsArr, i))
       throw new FormatError('RadialAxialShading: Invalid /Coords array.');
@@ -5301,8 +5281,9 @@ class RadialAxialShading extends BaseShading {
       T = n;
     }
     b.push([1, Util.makeHexColor(C, F, T)]);
-    let _ = 'transparent';
-    e.has('Background') && (_ = o.getRgbHex(e.get('Background'), 0));
+    const _ = e.has('Background')
+      ? o.getRgbHex(e.get('Background'), 0)
+      : 'transparent';
     if (!h) {
       b.unshift([0, _]);
       b[1][0] += BaseShading.SMALL_NUMBER;
@@ -5316,13 +5297,13 @@ class RadialAxialShading extends BaseShading {
   getIR() {
     const { coordsArr: e, shadingType: t } = this;
     let a, n, s, r, i;
-    if (t === za) {
+    if (t === Ua) {
       n = [e[0], e[1]];
       s = [e[2], e[3]];
       r = null;
       i = null;
       a = 'axial';
-    } else if (t === La) {
+    } else if (t === Xa) {
       n = [e[0], e[1]];
       s = [e[3], e[4]];
       r = e[2];
@@ -5396,7 +5377,7 @@ class FunctionBasedShading extends BaseShading {
     if (!l) throw new FormatError('FunctionBasedShading: missing /Function');
     const f = s.create(l, !0),
       [c, h, u, m] = lookupRect(e.getArray('Domain'), [0, 1, 0, 1]),
-      p = lookupMatrix(e.getArray('Matrix'), da);
+      p = lookupMatrix(e.getArray('Matrix'), ba);
     this.bounds = t.slice();
     Util.axialAlignedBoundingBox([c, u, h, m], p, this.bounds);
     const d = this.bounds[2] - this.bounds[0],
@@ -5442,7 +5423,7 @@ class FunctionBasedShading extends BaseShading {
       colData: t,
       vertexCount: a,
     } = buildMeshVertexData(this.coords, this.colors, this.figures);
-    return ['Mesh', Ea, e, t, a, this.bounds, this.bbox, this.background];
+    return ['Mesh', La, e, t, a, this.bounds, this.bbox, this.background];
   }
 }
 class MeshStreamReader {
@@ -5518,9 +5499,9 @@ class MeshStreamReader {
     return a.getRgb(o, 0);
   }
 }
-let Ga = Object.create(null);
+let $a = Object.create(null);
 function getB(e) {
-  return (Ga[e] ||= (function buildB(e) {
+  return ($a[e] ||= (function buildB(e) {
     const t = [];
     for (let a = 0; a <= e; a++) {
       const n = a / e,
@@ -5571,19 +5552,19 @@ class MeshShading extends BaseShading {
       h = new MeshStreamReader(e, c);
     let u = !1;
     switch (this.shadingType) {
-      case Ua:
+      case Wa:
         this._decodeType4Shading(h);
         break;
-      case Xa:
+      case Ka:
         const e = 0 | i.get('VerticesPerRow');
         if (e < 2) throw new FormatError('Invalid VerticesPerRow');
         this._decodeType5Shading(h, e);
         break;
-      case Wa:
+      case Ga:
         this._decodeType6Shading(h);
         u = !0;
         break;
-      case Ka:
+      case Va:
         this._decodeType7Shading(h);
         u = !0;
         break;
@@ -6085,7 +6066,7 @@ class DummyShading extends BaseShading {
   }
 }
 function getTilingPatternIR(e, t, a, n = !0) {
-  const s = lookupMatrix(t.getArray('Matrix'), da),
+  const s = lookupMatrix(t.getArray('Matrix'), ba),
     r = lookupNormalRect(t.getArray('BBox'), null);
   if (!r || r[2] - r[0] === 0 || r[3] - r[1] === 0)
     throw new FormatError('Invalid getTilingPatternIR /BBox array.');
@@ -6131,7 +6112,7 @@ function incHex(e, t) {
     a >>= 8;
   }
 }
-const Va = 16;
+const Ya = 16;
 class BinaryCMapStream extends Stream {
   tmpBuf = new Uint8Array(19);
   constructor(e) {
@@ -6201,11 +6182,11 @@ class BinaryCMapReader {
       s = n.getByte();
     t.vertical = !!(1 & s);
     let r = null;
-    const i = new Uint8Array(Va),
-      o = new Uint8Array(Va),
-      l = new Uint8Array(Va),
-      f = new Uint8Array(Va),
-      c = new Uint8Array(Va);
+    const i = new Uint8Array(Ya),
+      o = new Uint8Array(Ya),
+      l = new Uint8Array(Ya),
+      f = new Uint8Array(Ya),
+      c = new Uint8Array(Ya);
     let h, u;
     for (; (u = n.getByte()) >= 0;) {
       const e = u >> 5;
@@ -6221,7 +6202,7 @@ class BinaryCMapReader {
       }
       const a = !!(16 & u),
         s = 15 & u;
-      if (s + 1 > Va)
+      if (s + 1 > Ya)
         throw new Error('BinaryCMapReader.process: Invalid dataSize.');
       const m = 1,
         p = n.readNumber();
@@ -6330,7 +6311,7 @@ class BinaryCMapReader {
   }
 }
 class Ascii85Stream extends DecodeStream {
-  #P = new Uint8Array(5);
+  #z = new Uint8Array(5);
   constructor(e, t) {
     t && (t *= 0.8);
     super(t);
@@ -6352,7 +6333,7 @@ class Ascii85Stream extends DecodeStream {
       n.fill(0, a, a + 4);
       this.bufferLength += 4;
     } else {
-      const r = this.#P;
+      const r = this.#z;
       r[0] = t;
       for (s = 1; s < 5; ++s) {
         t = e.getByte();
@@ -6420,7 +6401,7 @@ class AsciiHexStream extends DecodeStream {
     this.bufferLength = n;
   }
 }
-let $a = (() => {
+let Ja = (() => {
   const e = Int32Array.from([
       256, 402, 436, 468, 500, 534, 566, 598, 630, 662, 694, 726, 758, 790, 822,
       854, 886, 920, 952, 984, 1016, 1048, 1080,
@@ -8086,7 +8067,7 @@ let $a = (() => {
   };
 })();
 class BrotliStream extends DecodeStream {
-  #_ = !0;
+  #L = !0;
   constructor(e, t) {
     super(t);
     this.stream = e;
@@ -8094,7 +8075,7 @@ class BrotliStream extends DecodeStream {
   }
   readBlock() {
     const e = this.stream.getBytes(),
-      t = $a(new Int8Array(e.buffer, e.byteOffset, e.length));
+      t = Ja(new Int8Array(e.buffer, e.byteOffset, e.length));
     this.buffer = new Uint8Array(t.buffer, t.byteOffset, t.length);
     this.bufferLength = this.buffer.length;
     this.eof = !0;
@@ -8107,16 +8088,16 @@ class BrotliStream extends DecodeStream {
     const { decompressed: e, compressed: t } =
       await this.asyncGetBytesFromDecompressionStream('brotli');
     if (e) return e;
-    this.#_ = !1;
+    this.#L = !1;
     this.stream = new Stream(t, 0, t.length, this.stream.dict);
     this.reset();
     return null;
   }
   get isAsync() {
-    return this.#_;
+    return this.#L;
   }
 }
-const Ya = async function JBig2(e = {}) {
+const Qa = async function JBig2(e = {}) {
   var t = e,
     quit_ = (e, t) => {
       throw t;
@@ -8347,31 +8328,31 @@ const Ya = async function JBig2(e = {}) {
       });
 };
 class WasmImage {
-  static #E = null;
-  static #z = new Set();
+  static #U = null;
+  static #X = new Set();
   static #C = !0;
-  static #L = !0;
+  static #W = !0;
   static #I = null;
-  #U = null;
-  #X = null;
+  #K = null;
+  #G = null;
   _filename = null;
   _noWasmFilename = null;
   static setOptions({ handler: e, useWasm: t, useWorkerFetch: a, wasmUrl: n }) {
     WasmImage.#C = t;
-    WasmImage.#L = a;
+    WasmImage.#W = a;
     WasmImage.#I = n;
-    a || (WasmImage.#E = e);
+    a || (WasmImage.#U = e);
   }
   static get instance() {
     unreachable('Abstract getter `instance` accessed');
   }
   static cleanup() {
-    for (const e of WasmImage.#z) e.#X = null;
+    for (const e of WasmImage.#X) e.#G = null;
   }
   constructor(e = !1) {
-    e && WasmImage.#z.add(this);
+    e && WasmImage.#X.add(this);
   }
-  async #W(e) {
+  async #V(e) {
     let t = null;
     try {
       t = (
@@ -8386,40 +8367,40 @@ class WasmImage {
     }
     e(t);
   }
-  async #K(e, t, a) {
+  async #$(e, t, a) {
     try {
-      this.#U ||
-        (WasmImage.#L
-          ? (this.#U = await fetchBinaryData(
+      this.#K ||
+        (WasmImage.#W
+          ? (this.#K = await fetchBinaryData(
               `${WasmImage.#I}${this._filename}`
             ))
-          : (this.#U = await WasmImage.#E.sendWithPromise('FetchBinaryData', {
+          : (this.#K = await WasmImage.#U.sendWithPromise('FetchBinaryData', {
               kind: 'wasmUrl',
               filename: this._filename,
             })));
-      return a((await WebAssembly.instantiate(this.#U, t)).instance);
+      return a((await WebAssembly.instantiate(this.#K, t)).instance);
     } catch (t) {
       warn(`#instantiateWasm: ${t}`);
-      this.#W(e);
+      this.#V(e);
       return null;
     }
   }
   _getModule(e) {
-    if (!this.#X) {
+    if (!this.#G) {
       const { promise: t, resolve: a } = Promise.withResolvers(),
         n = [t];
       WasmImage.#C
-        ? n.push(e({ warn, instantiateWasm: this.#K.bind(this, a) }))
-        : this.#W(a);
-      this.#X = Promise.race(n);
+        ? n.push(e({ warn, instantiateWasm: this.#$.bind(this, a) }))
+        : this.#V(a);
+      this.#G = Promise.race(n);
     }
-    return this.#X;
+    return this.#G;
   }
   async decode(e, t) {
     unreachable('Abstract method `decode` called');
   }
 }
-class Jbig2Error extends na {
+class Jbig2Error extends ra {
   constructor(e) {
     super(e, 'Jbig2Error');
   }
@@ -8431,7 +8412,7 @@ class JBig2CCITTFaxImage extends WasmImage {
     return shadow(this, 'instance', new JBig2CCITTFaxImage(!0));
   }
   async decode(e, t, a, n, s) {
-    const r = await this._getModule(Ya);
+    const r = await this._getModule(Qa);
     if (!r) throw new Jbig2Error('JBig2 failed to initialize');
     let i, o;
     try {
@@ -8513,20 +8494,20 @@ class CCITTFaxStream extends DecodeStream {
     return this.buffer;
   }
 }
-const Ja = new Int32Array([
+const Za = new Int32Array([
     16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
   ]),
-  Qa = new Int32Array([
+  en = new Int32Array([
     3, 4, 5, 6, 7, 8, 9, 10, 65547, 65549, 65551, 65553, 131091, 131095, 131099,
     131103, 196643, 196651, 196659, 196667, 262211, 262227, 262243, 262259,
     327811, 327843, 327875, 327907, 258, 258, 258,
   ]),
-  Za = new Int32Array([
+  tn = new Int32Array([
     1, 2, 3, 4, 65541, 65543, 131081, 131085, 196625, 196633, 262177, 262193,
     327745, 327777, 393345, 393409, 459009, 459137, 524801, 525057, 590849,
     591361, 657409, 658433, 724993, 727041, 794625, 798721, 868353, 876545,
   ]),
-  en = [
+  an = [
     new Int32Array([
       459008, 524368, 524304, 524568, 459024, 524400, 524336, 590016, 459016,
       524384, 524320, 589984, 524288, 524416, 524352, 590048, 459012, 524376,
@@ -8588,7 +8569,7 @@ const Ja = new Int32Array([
     ]),
     9,
   ],
-  tn = [
+  nn = [
     new Int32Array([
       327680, 327696, 327688, 327704, 327684, 327700, 327692, 327708, 327682,
       327698, 327690, 327706, 327686, 327702, 327694, 0, 327681, 327697, 327689,
@@ -8598,7 +8579,7 @@ const Ja = new Int32Array([
     5,
   ];
 class FlateStream extends DecodeStream {
-  #_ = !0;
+  #L = !0;
   constructor(e, t) {
     super(t);
     this.stream = e;
@@ -8626,13 +8607,13 @@ class FlateStream extends DecodeStream {
     const { decompressed: e, compressed: t } =
       await this.asyncGetBytesFromDecompressionStream('deflate');
     if (e) return e;
-    this.#_ = !1;
+    this.#L = !1;
     this.stream = new Stream(t, 2, t.length, this.stream.dict);
     this.reset();
     return null;
   }
   get isAsync() {
-    return this.#_;
+    return this.#L;
   }
   getBits(e) {
     const t = this.stream;
@@ -8690,7 +8671,7 @@ class FlateStream extends DecodeStream {
         }
     return [r, n];
   }
-  #G(e) {
+  #Y(e) {
     info(e);
     this.eof = !0;
   }
@@ -8700,7 +8681,7 @@ class FlateStream extends DecodeStream {
     try {
       t = this.getBits(3);
     } catch (e) {
-      this.#G(e.message);
+      this.#Y(e.message);
       return;
     }
     1 & t && (this.eof = !0);
@@ -8708,22 +8689,22 @@ class FlateStream extends DecodeStream {
     if (0 === t) {
       let t;
       if (-1 === (t = n.getByte())) {
-        this.#G('Bad block header in flate stream');
+        this.#Y('Bad block header in flate stream');
         return;
       }
       let a = t;
       if (-1 === (t = n.getByte())) {
-        this.#G('Bad block header in flate stream');
+        this.#Y('Bad block header in flate stream');
         return;
       }
       a |= t << 8;
       if (-1 === (t = n.getByte())) {
-        this.#G('Bad block header in flate stream');
+        this.#Y('Bad block header in flate stream');
         return;
       }
       let s = t;
       if (-1 === (t = n.getByte())) {
-        this.#G('Bad block header in flate stream');
+        this.#Y('Bad block header in flate stream');
         return;
       }
       s |= t << 8;
@@ -8745,17 +8726,17 @@ class FlateStream extends DecodeStream {
     }
     let s, r;
     if (1 === t) {
-      s = en;
-      r = tn;
+      s = an;
+      r = nn;
     } else {
       if (2 !== t) throw new FormatError('Unknown block type in flate stream');
       {
         const e = this.getBits(5) + 257,
           t = this.getBits(5) + 1,
           n = this.getBits(4) + 4,
-          i = new Uint8Array(Ja.length);
+          i = new Uint8Array(Za.length);
         let o;
-        for (o = 0; o < n; ++o) i[Ja[o]] = this.getBits(3);
+        for (o = 0; o < n; ++o) i[Za[o]] = this.getBits(3);
         const l = this.generateHuffmanTable(i);
         a = 0;
         o = 0;
@@ -8806,12 +8787,12 @@ class FlateStream extends DecodeStream {
         return;
       }
       t -= 257;
-      t = Qa[t];
+      t = en[t];
       let n = t >> 16;
       n > 0 && (n = this.getBits(n));
       a = (65535 & t) + n;
       t = this.getCode(r);
-      t = Za[t];
+      t = tn[t];
       n = t >> 16;
       n > 0 && (n = this.getBits(n));
       const l = (65535 & t) + n;
@@ -8841,13 +8822,31 @@ class Jbig2Stream extends DecodeStream {
   get isImageStream() {
     return !0;
   }
+  static stripFileHeader(e) {
+    if (
+      e.length >= 9 &&
+      151 === e[0] &&
+      74 === e[1] &&
+      66 === e[2] &&
+      50 === e[3] &&
+      13 === e[4] &&
+      10 === e[5] &&
+      26 === e[6] &&
+      10 === e[7]
+    ) {
+      const t = 2 & e[8] ? 9 : 13;
+      return e.subarray(t);
+    }
+    return e;
+  }
   async decodeImage(e, t, a) {
     if (this.eof) return this.buffer;
-    e ||= this.bytes;
+    e = Jbig2Stream.stripFileHeader(e || this.bytes);
     let n = null;
     if (this.params instanceof Dict) {
       const e = this.params.get('JBIG2Globals');
-      e instanceof BaseStream && (n = e.getBytes());
+      e instanceof BaseStream &&
+        (n = Jbig2Stream.stripFileHeader(e.getBytes()));
     }
     this.buffer = await JBig2CCITTFaxImage.instance.decode(
       e,
@@ -8863,7 +8862,7 @@ class Jbig2Stream extends DecodeStream {
     return this.stream.isAsync;
   }
 }
-const an = async function OpenJPEG(e = {}) {
+const sn = async function OpenJPEG(e = {}) {
   var t = e,
     a = './this.program',
     quit_ = (e, t) => {
@@ -9298,7 +9297,7 @@ const an = async function OpenJPEG(e = {}) {
         i = t;
       });
 };
-class JpxError extends na {
+class JpxError extends ra {
   constructor(e) {
     super(e, 'JpxError');
   }
@@ -9318,7 +9317,7 @@ class JpxImage extends WasmImage {
       reducePower: s = 0,
     } = {}
   ) {
-    const r = await this._getModule(an);
+    const r = await this._getModule(sn);
     if (!r) throw new JpxError('OpenJPEG failed to initialize');
     let i;
     try {
@@ -9730,9 +9729,9 @@ class Parser {
           return this.makeInlineImage(e);
         case '[':
           const a = [];
-          for (; !isCmd(this.buf1, ']') && this.buf1 !== oa;)
+          for (; !isCmd(this.buf1, ']') && this.buf1 !== fa;)
             a.push(this.getObj(e));
-          if (this.buf1 === oa) {
+          if (this.buf1 === fa) {
             if (this.recoveryMode) return a;
             throw new ParserEOFException('End of file inside array.');
           }
@@ -9740,7 +9739,7 @@ class Parser {
           return a;
         case '<<':
           const n = new Dict(this.xref);
-          for (; !isCmd(this.buf1, '>>') && this.buf1 !== oa;) {
+          for (; !isCmd(this.buf1, '>>') && this.buf1 !== fa;) {
             if (!(this.buf1 instanceof Name)) {
               info('Malformed dictionary: key must be a name object');
               this.shift();
@@ -9748,10 +9747,10 @@ class Parser {
             }
             const t = this.buf1.name;
             this.shift();
-            if (this.buf1 === oa) break;
+            if (this.buf1 === fa) break;
             n.set(t, this.getObj(e));
           }
-          if (this.buf1 === oa) {
+          if (this.buf1 === fa) {
             if (this.recoveryMode) return n;
             throw new ParserEOFException('End of file inside dictionary.');
           }
@@ -9811,7 +9810,7 @@ class Parser {
         let l = 0;
         for (;;) {
           const e = o.getObj();
-          if (e === oa) {
+          if (e === fa) {
             r = 0;
             break;
           }
@@ -9974,20 +9973,20 @@ class Parser {
       a = t.stream,
       n = Object.create(null);
     let s;
-    for (; !isCmd(this.buf1, 'ID') && this.buf1 !== oa;) {
+    for (; !isCmd(this.buf1, 'ID') && this.buf1 !== fa;) {
       if (!(this.buf1 instanceof Name))
         throw new FormatError('Dictionary key must be a name object');
       const t = this.buf1.name;
       this.shift();
-      if (this.buf1 === oa) break;
+      if (this.buf1 === fa) break;
       n[t] = this.getObj(e);
     }
     -1 !== t.beginInlineImagePos && (s = a.pos - t.beginInlineImagePos);
-    const r = this.#V(n.F || n.Filter);
+    const r = this.#J(n.F || n.Filter);
     let i;
     if (r instanceof Name) i = r.name;
     else if (Array.isArray(r)) {
-      const e = this.#V(r[0]);
+      const e = this.#J(r[0]);
       e instanceof Name && (i = e.name);
     }
     const o = a.pos;
@@ -10031,7 +10030,7 @@ class Parser {
     const c = new Dict(this.xref);
     for (const e in n) c.set(e, n[e]);
     let h = a.makeSubStream(o, l, c);
-    e && !this.#$(r) && (h = e.createStream(h, l));
+    e && !this.#Q(r) && (h = e.createStream(h, l));
     h = this.filter(h, c, l, e);
     h.dict = c;
     if (void 0 !== f) {
@@ -10042,15 +10041,15 @@ class Parser {
     this.shift();
     return h;
   }
-  #V(e) {
+  #J(e) {
     return this.xref ? this.xref.fetchIfRef(e) : e;
   }
-  #$(e) {
+  #Q(e) {
     if (!Array.isArray(e)) return isName(e, 'Crypt');
-    for (const t of e) if (isName(this.#V(t), 'Crypt')) return !0;
+    for (const t of e) if (isName(this.#J(t), 'Crypt')) return !0;
     return !1;
   }
-  #Y(e) {
+  #Z(e) {
     const { stream: t } = this.lexer;
     t.pos = e;
     const a = new Uint8Array([101, 110, 100]),
@@ -10114,7 +10113,7 @@ class Parser {
     a.nextChar();
     if (this.tryShift() && isCmd(this.buf2, 'endstream')) this.shift();
     else {
-      r = this.#Y(s);
+      r = this.#Z(s);
       if (r < 0) throw new FormatError('Missing endstream command.');
       a.nextChar();
       this.shift();
@@ -10123,7 +10122,7 @@ class Parser {
     this.shift();
     n = n.makeSubStream(s, r, e);
     const i = e.get('F', 'Filter');
-    t && !this.#$(i) && (n = t.createStream(n, r));
+    t && !this.#Q(i) && (n = t.createStream(n, r));
     n = this.filter(n, e, r, t);
     n.dict = e;
     return n;
@@ -10141,11 +10140,11 @@ class Parser {
       const t = s,
         a = r;
       for (let o = 0, l = t.length; o < l; ++o) {
-        s = this.#V(t[o]);
+        s = this.#J(t[o]);
         if (!(s instanceof Name))
           throw new FormatError(`Bad filter name "${s}"`);
         r = null;
-        Array.isArray(a) && o in a && (r = this.#V(a[o]));
+        Array.isArray(a) && o in a && (r = this.#J(a[o]));
         e = this.makeFilter(e, s.name, i, r, n);
         i = null;
       }
@@ -10213,7 +10212,7 @@ class Parser {
     }
   }
 }
-const nn = [
+const rn = [
   1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -10379,10 +10378,10 @@ class Lexer {
     let e, t;
     const a = this.strBuf;
     a.length = 0;
-    for (; (e = this.nextChar()) >= 0 && !nn[e];)
+    for (; (e = this.nextChar()) >= 0 && !rn[e];)
       if (35 === e) {
         e = this.nextChar();
-        if (nn[e]) {
+        if (rn[e]) {
           warn(
             'Lexer_getName: NUMBER SIGN (#) should be followed by a hexadecimal number.'
           );
@@ -10399,7 +10398,7 @@ class Lexer {
               `Lexer_getName: Illegal digit (${String.fromCharCode(e)}) in hexadecimal number.`
             );
             a.push('#', String.fromCharCode(t));
-            if (nn[e]) break;
+            if (rn[e]) break;
             a.push(String.fromCharCode(e));
             continue;
           }
@@ -10432,7 +10431,7 @@ class Lexer {
         this.nextChar();
         break;
       }
-      if (1 !== nn[t]) {
+      if (1 !== rn[t]) {
         n = toHexDigit(t);
         if (-1 === n) this._hexStringWarn(t);
         else if (-1 === a) a = n;
@@ -10450,10 +10449,10 @@ class Lexer {
     let e = !1,
       t = this.currentChar;
     for (;;) {
-      if (t < 0) return oa;
+      if (t < 0) return fa;
       if (e) (10 !== t && 13 !== t) || (e = !1);
       else if (37 === t) e = !0;
-      else if (1 !== nn[t]) break;
+      else if (1 !== rn[t]) break;
       t = this.nextChar();
     }
     switch (0 | t) {
@@ -10515,7 +10514,7 @@ class Lexer {
     }
     const n = this.knownCommands;
     let s = void 0 !== n?.[a];
-    for (; (t = this.nextChar()) >= 0 && !nn[t];) {
+    for (; (t = this.nextChar()) >= 0 && !rn[t];) {
       const e = a + String.fromCharCode(t);
       if (s && void 0 === n[e]) break;
       if (128 === a.length)
@@ -10600,7 +10599,7 @@ class Linearization {
     };
   }
 }
-const sn = [
+const on = [
     'Adobe-GB1-UCS2',
     'Adobe-CNS1-UCS2',
     'Adobe-Japan1-UCS2',
@@ -10770,7 +10769,7 @@ const sn = [
     'V',
     'WP-Symbol',
   ],
-  rn = 2 ** 24 - 1;
+  ln = 2 ** 24 - 1;
 class CMap {
   constructor(e = !1) {
     this.codespaceRanges = [[], [], [], []];
@@ -10786,12 +10785,12 @@ class CMap {
     this.numCodespaceRanges++;
   }
   mapCidRange(e, t, a) {
-    if (t - e > rn)
+    if (t - e > ln)
       throw new Error('mapCidRange - ignoring data above MAX_MAP_RANGE.');
     for (; e <= t;) this._map[e++] = a++;
   }
   mapBfRange(e, t, a) {
-    if (t - e > rn)
+    if (t - e > ln)
       throw new Error('mapBfRange - ignoring data above MAX_MAP_RANGE.');
     const n = a.length - 1;
     for (; e <= t;) {
@@ -10806,7 +10805,7 @@ class CMap {
     }
   }
   mapBfRangeToArray(e, t, a) {
-    if (t - e > rn)
+    if (t - e > ln)
       throw new Error('mapBfRangeToArray - ignoring data above MAX_MAP_RANGE.');
     const n = a.length;
     let s = 0;
@@ -10938,7 +10937,7 @@ function expectInt(e) {
 function parseBfChar(e, t) {
   for (;;) {
     let a = t.getObj();
-    if (a === oa) break;
+    if (a === fa) break;
     if (isCmd(a, 'endbfchar')) return;
     expectString(a);
     const n = strToInt(a);
@@ -10951,7 +10950,7 @@ function parseBfChar(e, t) {
 function parseBfRange(e, t) {
   for (;;) {
     let a = t.getObj();
-    if (a === oa) break;
+    if (a === fa) break;
     if (isCmd(a, 'endbfrange')) return;
     expectString(a);
     const n = strToInt(a);
@@ -10967,7 +10966,7 @@ function parseBfRange(e, t) {
       {
         a = t.getObj();
         const r = [];
-        for (; !isCmd(a, ']') && a !== oa;) {
+        for (; !isCmd(a, ']') && a !== fa;) {
           r.push(a);
           a = t.getObj();
         }
@@ -10980,7 +10979,7 @@ function parseBfRange(e, t) {
 function parseCidChar(e, t) {
   for (;;) {
     let a = t.getObj();
-    if (a === oa) break;
+    if (a === fa) break;
     if (isCmd(a, 'endcidchar')) return;
     expectString(a);
     const n = strToInt(a);
@@ -10993,7 +10992,7 @@ function parseCidChar(e, t) {
 function parseCidRange(e, t) {
   for (;;) {
     let a = t.getObj();
-    if (a === oa) break;
+    if (a === fa) break;
     if (isCmd(a, 'endcidrange')) return;
     expectString(a);
     const n = strToInt(a);
@@ -11009,7 +11008,7 @@ function parseCidRange(e, t) {
 function parseCodespaceRange(e, t) {
   for (;;) {
     let a = t.getObj();
-    if (a === oa) break;
+    if (a === fa) break;
     if (isCmd(a, 'endcodespacerange')) return;
     if ('string' != typeof a) break;
     const n = strToInt(a);
@@ -11033,7 +11032,7 @@ async function parseCMap(e, t, a, n) {
   e: for (;;)
     try {
       const a = t.getObj();
-      if (a === oa) break;
+      if (a === fa) break;
       if (a instanceof Name) {
         'WMode' === a.name
           ? parseWMode(e, t)
@@ -11084,7 +11083,7 @@ async function extendCMap(e, t, a) {
 async function createBuiltInCMap(e, t) {
   if ('Identity-H' === e) return new IdentityCMap(!1, 2);
   if ('Identity-V' === e) return new IdentityCMap(!0, 2);
-  if (!sn.includes(e)) throw new Error('Unknown CMap name: ' + e);
+  if (!on.includes(e)) throw new Error('Unknown CMap name: ' + e);
   if (!t) throw new Error('Built-in CMap parameters are not provided.');
   const { cMapData: a, isCompressed: n } = await t(e),
     s = new CMap(!0);
@@ -11353,7 +11352,7 @@ function compileFontInfo(e) {
   assert(c <= o.byteLength, 'compileFontInfo: Buffer overflow');
   return o.transferToFixedLength(c);
 }
-const on = [
+const fn = [
     '',
     '',
     '',
@@ -11611,7 +11610,7 @@ const on = [
     'Thornsmall',
     'Ydieresissmall',
   ],
-  ln = [
+  cn = [
     '',
     '',
     '',
@@ -11869,7 +11868,7 @@ const on = [
     '',
     '',
   ],
-  fn = [
+  hn = [
     '',
     '',
     '',
@@ -12127,7 +12126,7 @@ const on = [
     'ogonek',
     'caron',
   ],
-  cn = [
+  un = [
     '',
     '',
     '',
@@ -12385,7 +12384,7 @@ const on = [
     '',
     '',
   ],
-  hn = [
+  mn = [
     '',
     '',
     '',
@@ -12643,7 +12642,7 @@ const on = [
     'thorn',
     'ydieresis',
   ],
-  un = [
+  pn = [
     '',
     '',
     '',
@@ -12901,7 +12900,7 @@ const on = [
     'bracerightbt',
     '',
   ],
-  mn = [
+  dn = [
     '',
     '',
     '',
@@ -13162,24 +13161,24 @@ const on = [
 function getEncoding(e) {
   switch (e) {
     case 'WinAnsiEncoding':
-      return hn;
-    case 'StandardEncoding':
-      return cn;
-    case 'MacRomanEncoding':
-      return fn;
-    case 'SymbolSetEncoding':
-      return un;
-    case 'ZapfDingbatsEncoding':
       return mn;
+    case 'StandardEncoding':
+      return un;
+    case 'MacRomanEncoding':
+      return hn;
+    case 'SymbolSetEncoding':
+      return pn;
+    case 'ZapfDingbatsEncoding':
+      return dn;
     case 'ExpertEncoding':
-      return on;
+      return fn;
     case 'MacExpertEncoding':
-      return ln;
+      return cn;
     default:
       return null;
   }
 }
-const pn = getLookupTableFactory(function (e) {
+const gn = getLookupTableFactory(function (e) {
     e.A = 65;
     e.AE = 198;
     e.AEacute = 508;
@@ -17509,7 +17508,7 @@ const pn = getLookupTableFactory(function (e) {
     e.vextenddouble = 8741;
     e.vextendsingle = 8739;
   }),
-  dn = getLookupTableFactory(function (e) {
+  bn = getLookupTableFactory(function (e) {
     e.space = 32;
     e.a1 = 9985;
     e.a2 = 9986;
@@ -17714,7 +17713,7 @@ const pn = getLookupTableFactory(function (e) {
     e.a96 = 10101;
     e['.notdef'] = 0;
   }),
-  gn = getLookupTableFactory(function (e) {
+  wn = getLookupTableFactory(function (e) {
     e[63721] = 169;
     e[63193] = 169;
     e[63720] = 174;
@@ -17759,7 +17758,7 @@ function getUnicodeForGlyph(e, t) {
   }
   return -1;
 }
-const bn = [
+const jn = [
   [0, 127],
   [128, 255],
   [256, 383],
@@ -17889,25 +17888,25 @@ const bn = [
 ];
 function getUnicodeRangeFor(e, t = -1) {
   if (-1 !== t) {
-    const a = bn[t];
+    const a = jn[t];
     for (let n = 0, s = a.length; n < s; n += 2)
       if (e >= a[n] && e <= a[n + 1]) return t;
   }
-  for (let t = 0, a = bn.length; t < a; t++) {
-    const a = bn[t];
+  for (let t = 0, a = jn.length; t < a; t++) {
+    const a = jn[t];
     for (let n = 0, s = a.length; n < s; n += 2)
       if (e >= a[n] && e <= a[n + 1]) return t;
   }
   return -1;
 }
-const wn = /^(\s)|(\p{Mn})|(\p{Cf})$/u,
-  jn = new Map();
-const kn = !0,
-  yn = 1,
-  qn = 2,
-  vn = 4,
-  Sn = 32,
-  An = [
+const kn = /^(\s)|(\p{Mn})|(\p{Cf})$/u,
+  yn = new Map();
+const qn = !0,
+  vn = 1,
+  Sn = 2,
+  An = 4,
+  xn = 32,
+  Cn = [
     '.notdef',
     '.null',
     'nonmarkingreturn',
@@ -18177,7 +18176,7 @@ function recoverGlyphName(e, t) {
 function type1FontGlyphMapping(e, t, a) {
   const n = Object.create(null);
   let s, r, i;
-  const o = !!(e.flags & vn);
+  const o = !!(e.flags & An);
   if (e.isInternalFont) {
     i = t;
     for (r = 0; r < i.length; r++) {
@@ -18192,7 +18191,7 @@ function type1FontGlyphMapping(e, t, a) {
     }
   } else if (o) for (r in t) n[r] = t[r];
   else {
-    i = cn;
+    i = un;
     for (r = 0; r < i.length; r++) {
       s = a.indexOf(i[r]);
       n[r] = s >= 0 ? s : 0;
@@ -18205,7 +18204,7 @@ function type1FontGlyphMapping(e, t, a) {
       const e = l[r];
       s = a.indexOf(e);
       if (-1 === s) {
-        f || (f = pn());
+        f || (f = gn());
         const t = recoverGlyphName(e, f);
         t !== e && (s = a.indexOf(t));
       }
@@ -18216,7 +18215,7 @@ function type1FontGlyphMapping(e, t, a) {
 function normalizeFontName(e) {
   return e.replaceAll(/[,_]/g, '-').replaceAll(/\s/g, '');
 }
-const xn = getLookupTableFactory((e) => {
+const In = getLookupTableFactory((e) => {
   e[8211] = 65074;
   e[8212] = 65073;
   e[8229] = 65072;
@@ -18251,7 +18250,7 @@ const xn = getLookupTableFactory((e) => {
   e[65371] = 65079;
   e[65373] = 65080;
 });
-const Cn = [
+const Fn = [
     '.notdef',
     'space',
     'exclam',
@@ -18482,7 +18481,7 @@ const Cn = [
     'ydieresis',
     'zcaron',
   ],
-  In = [
+  Tn = [
     '.notdef',
     'space',
     'exclamsmall',
@@ -18650,7 +18649,7 @@ const Cn = [
     'Thornsmall',
     'Ydieresissmall',
   ],
-  Fn = [
+  On = [
     '.notdef',
     'space',
     'dollaroldstyle',
@@ -18740,55 +18739,55 @@ const Cn = [
     'commainferior',
   ];
 class DataBuilder {
-  #J;
-  #Q = 1024;
-  #Z = !1;
-  #ee = 0;
-  #te;
+  #ee;
+  #te = 1024;
+  #ae = !1;
+  #ne = 0;
+  #se;
   constructor({ exactLength: e = 0, minLength: t = 0 }) {
-    this.#Z = !!e;
-    this.#ae(e || t);
+    this.#ae = !!e;
+    this.#re(e || t);
   }
-  #ae(e) {
-    if (this.#Z) this.#Q = e;
-    else for (; this.#Q < e;) this.#Q *= 2;
-    const t = new Uint8Array(this.#Q);
-    this.#J && t.set(this.#J, 0);
-    this.#J = t;
-    this.#te = new DataView(t.buffer);
+  #re(e) {
+    if (this.#ae) this.#te = e;
+    else for (; this.#te < e;) this.#te *= 2;
+    const t = new Uint8Array(this.#te);
+    this.#ee && t.set(this.#ee, 0);
+    this.#ee = t;
+    this.#se = new DataView(t.buffer);
   }
   get data() {
-    return this.#J.subarray(0, this.#ee);
+    return this.#ee.subarray(0, this.#ne);
   }
   get length() {
-    return this.#ee;
+    return this.#ne;
   }
   skip(e) {
-    this.#ee += e;
+    this.#ne += e;
   }
   setArray(e) {
-    const t = this.#ee + e.length;
-    !this.#Z && t > this.#Q && this.#ae(t);
-    this.#J.set(e, this.#ee);
-    this.#ee = t;
+    const t = this.#ne + e.length;
+    !this.#ae && t > this.#te && this.#re(t);
+    this.#ee.set(e, this.#ne);
+    this.#ne = t;
   }
   setInt16(e) {
-    const t = this.#ee + 2;
-    !this.#Z && t > this.#Q && this.#ae(t);
-    this.#te.setInt16(this.#ee, e);
-    this.#ee = t;
+    const t = this.#ne + 2;
+    !this.#ae && t > this.#te && this.#re(t);
+    this.#se.setInt16(this.#ne, e);
+    this.#ne = t;
   }
   setSafeInt16(e) {
-    const t = this.#ee + 2;
-    !this.#Z && t > this.#Q && this.#ae(t);
-    this.#te.setInt16(this.#ee, MathClamp(e, -32768, 32767));
-    this.#ee = t;
+    const t = this.#ne + 2;
+    !this.#ae && t > this.#te && this.#re(t);
+    this.#se.setInt16(this.#ne, MathClamp(e, -32768, 32767));
+    this.#ne = t;
   }
   setInt32(e) {
-    const t = this.#ee + 4;
-    !this.#Z && t > this.#Q && this.#ae(t);
-    this.#te.setInt32(this.#ee, e);
-    this.#ee = t;
+    const t = this.#ne + 4;
+    !this.#ae && t > this.#te && this.#re(t);
+    this.#se.setInt32(this.#ne, e);
+    this.#ne = t;
   }
 }
 function looksLikeUnsigned16BitNegative(e) {
@@ -18801,7 +18800,7 @@ function recoverSigned16BitBBox(e, t = !1) {
     )
   );
 }
-const Tn = [
+const Rn = [
     '.notdef',
     'space',
     'exclam',
@@ -19194,9 +19193,9 @@ const Tn = [
     'Roman',
     'Semibold',
   ],
-  On = 391,
-  Rn = 0.039625,
-  Hn = [
+  Hn = 391,
+  Bn = 0.039625,
+  Dn = [
     null,
     { id: 'hstem', min: 2, stackClearing: !0, stem: !0 },
     null,
@@ -19230,7 +19229,7 @@ const Tn = [
     { id: 'vhcurveto', min: 4, resetStack: !0 },
     { id: 'hvcurveto', min: 4, resetStack: !0 },
   ],
-  Bn = [
+  Mn = [
     null,
     null,
     null,
@@ -19541,7 +19540,7 @@ class CFFParser {
           t[l - 2] = 139;
           t[l - 1] = 22;
           r = 0;
-        } else c = Bn[e];
+        } else c = Mn[e];
       } else if (28 === f) {
         i[r] = s.getInt16(l);
         l += 2;
@@ -19554,7 +19553,7 @@ class CFFParser {
             return !1;
           }
         }
-        c = Hn[f];
+        c = Dn[f];
       } else if (f >= 32 && f <= 246) {
         i[r] = f - 139;
         r++;
@@ -19579,12 +19578,12 @@ class CFFParser {
         }
         l += (e.hints + 7) >> 3;
         r %= 2;
-        c = Hn[f];
+        c = Dn[f];
       } else {
         if (10 === f || 29 === f) {
           const t = 10 === f ? a : n;
           if (!t) {
-            c = Hn[f];
+            c = Dn[f];
             warn('Missing subrsIndex for ' + c.id);
             return !1;
           }
@@ -19592,7 +19591,7 @@ class CFFParser {
           t.count < 1240 ? (s = 107) : t.count < 33900 && (s = 1131);
           const o = i[--r] + s;
           if (o < 0 || o >= t.count || isNaN(o)) {
-            c = Hn[f];
+            c = Dn[f];
             warn('Out of bounds subrIndex for ' + c.id);
             return !1;
           }
@@ -19609,7 +19608,7 @@ class CFFParser {
         }
         if (0 === f && l === t.length) {
           t[l - 1] = 14;
-          c = Hn[14];
+          c = Dn[14];
         } else {
           if (9 === f) {
             t.copyWithin(l - 1, l, -1);
@@ -19617,7 +19616,7 @@ class CFFParser {
             o -= 1;
             continue;
           }
-          c = Hn[f];
+          c = Dn[f];
         }
       }
       if (c) {
@@ -19750,7 +19749,7 @@ class CFFParser {
       c = o.getByName('BlueFuzz'),
       h = o.getByName('ExpansionFactor');
     if (0 === l && 0 === f && 0 === c && 0 === h) {
-      o.setByName('BlueScale', Rn);
+      o.setByName('BlueScale', Bn);
       o.setByName('BlueShift', 7);
       o.setByName('BlueFuzz', 1);
     }
@@ -19760,8 +19759,14 @@ class CFFParser {
       for (const t of [o.getByName('BlueValues'), o.getByName('OtherBlues')])
         if (t) for (let a = 1; a < t.length; a += 2) t[a] > e && (e = t[a]);
       if (e > 0) {
-        const t = MathClamp(l, l < Rn ? 0.5 / e : -1 / 0, 1 / e);
-        t !== l && o.setByName('BlueScale', t);
+        const t = 1e5,
+          a = 0.5 / e,
+          n = MathClamp(
+            l,
+            a <= Bn ? Math.ceil(a * t) / t : -1 / 0,
+            Math.floor(t / e) / t
+          );
+        n !== l && o.setByName('BlueScale', n);
       }
     }
     if (!o.getByName('Subrs')) return;
@@ -19775,9 +19780,9 @@ class CFFParser {
     o.subrsIndex = p.obj;
   }
   parseCharsets(e, t, a, n) {
-    if (0 === e) return new CFFCharset(!0, Nn.ISO_ADOBE, Cn);
-    if (1 === e) return new CFFCharset(!0, Nn.EXPERT, In);
-    if (2 === e) return new CFFCharset(!0, Nn.EXPERT_SUBSET, Fn);
+    if (0 === e) return new CFFCharset(!0, _n.ISO_ADOBE, Fn);
+    if (1 === e) return new CFFCharset(!0, _n.EXPERT, Tn);
+    if (2 === e) return new CFFCharset(!0, _n.EXPERT_SUBSET, On);
     const { bytes: s } = this,
       r = s[e++],
       i = [n ? 0 : '.notdef'];
@@ -19820,7 +19825,7 @@ class CFFParser {
     if (0 === e || 1 === e) {
       f = !0;
       i = e;
-      const t = e ? on : cn;
+      const t = e ? fn : un;
       for (o = 0, l = n.length; o < l; o++) {
         const e = t.indexOf(n[o]);
         -1 !== e && (s[e] = o);
@@ -19940,16 +19945,16 @@ class CFFStrings {
   strings = [];
   get(e) {
     return e >= 0 && e <= 390
-      ? Tn[e]
-      : e - On <= this.strings.length
-        ? this.strings[e - On]
-        : Tn[0];
+      ? Rn[e]
+      : e - Hn <= this.strings.length
+        ? this.strings[e - Hn]
+        : Rn[0];
   }
   getSID(e) {
-    let t = Tn.indexOf(e);
+    let t = Rn.indexOf(e);
     if (-1 !== t) return t;
     t = this.strings.indexOf(e);
-    return -1 !== t ? t + On : -1;
+    return -1 !== t ? t + Hn : -1;
   }
   add(e) {
     this.strings.push(e);
@@ -20038,7 +20043,7 @@ class CFFDict {
     return t;
   }
 }
-const Dn = [
+const Nn = [
   [[12, 30], 'ROS', ['sid', 'sid', 'num'], null],
   [[12, 20], 'SyntheticBase', 'num', null],
   [0, 'version', 'sid', null],
@@ -20081,19 +20086,19 @@ const Dn = [
 ];
 class CFFTopDict extends CFFDict {
   static get tables() {
-    return shadow(this, 'tables', this.createTables(Dn));
+    return shadow(this, 'tables', this.createTables(Nn));
   }
   constructor(e) {
     super(CFFTopDict.tables, e);
     this.privateDict = null;
   }
 }
-const Mn = [
+const Pn = [
   [6, 'BlueValues', 'delta', null],
   [7, 'OtherBlues', 'delta', null],
   [8, 'FamilyBlues', 'delta', null],
   [9, 'FamilyOtherBlues', 'delta', null],
-  [[12, 9], 'BlueScale', 'num', Rn],
+  [[12, 9], 'BlueScale', 'num', Bn],
   [[12, 10], 'BlueShift', 'num', 7],
   [[12, 11], 'BlueFuzz', 'num', 1],
   [10, 'StdHW', 'num', null],
@@ -20110,14 +20115,14 @@ const Mn = [
 ];
 class CFFPrivateDict extends CFFDict {
   static get tables() {
-    return shadow(this, 'tables', this.createTables(Mn));
+    return shadow(this, 'tables', this.createTables(Pn));
   }
   constructor(e) {
     super(CFFPrivateDict.tables, e);
     this.subrsIndex = null;
   }
 }
-const Nn = { ISO_ADOBE: 0, EXPERT: 1, EXPERT_SUBSET: 2 };
+const _n = { ISO_ADOBE: 0, EXPERT: 1, EXPERT_SUBSET: 2 };
 class CFFCharset {
   constructor(e, t, a) {
     this.predefined = e;
@@ -20516,7 +20521,7 @@ class CFFCompiler {
     return o;
   }
 }
-const Pn = getLookupTableFactory(function (e) {
+const En = getLookupTableFactory(function (e) {
     e['Times-Roman'] = 'Times-Roman';
     e.Helvetica = 'Helvetica';
     e.Courier = 'Courier';
@@ -20590,7 +20595,7 @@ const Pn = getLookupTableFactory(function (e) {
     e['TimesNewRomanPSMT-BoldItalic'] = 'Times-BoldItalic';
     e['TimesNewRomanPSMT-Italic'] = 'Times-Italic';
   }),
-  _n = getLookupTableFactory(function (e) {
+  zn = getLookupTableFactory(function (e) {
     e.Courier = 'FoxitFixed.pfb';
     e['Courier-Bold'] = 'FoxitFixedBold.pfb';
     e['Courier-BoldOblique'] = 'FoxitFixedBoldItalic.pfb';
@@ -20610,7 +20615,7 @@ const Pn = getLookupTableFactory(function (e) {
     e['LiberationSans-Italic'] = 'LiberationSans-Italic.ttf';
     e['LiberationSans-BoldItalic'] = 'LiberationSans-BoldItalic.ttf';
   }),
-  En = getLookupTableFactory(function (e) {
+  Ln = getLookupTableFactory(function (e) {
     e.Calibri = 'Helvetica';
     e['Calibri-Bold'] = 'Helvetica-Bold';
     e['Calibri-BoldItalic'] = 'Helvetica-BoldOblique';
@@ -20658,7 +20663,7 @@ const Pn = getLookupTableFactory(function (e) {
     e.NuptialScript = 'Times-Italic';
     e.SegoeUISymbol = 'Helvetica';
   }),
-  zn = getLookupTableFactory(function (e) {
+  Un = getLookupTableFactory(function (e) {
     e['Adobe Jenson'] = !0;
     e['Adobe Text'] = !0;
     e.Albertus = !0;
@@ -20794,7 +20799,7 @@ const Pn = getLookupTableFactory(function (e) {
     e.Windsor = !0;
     e.XITS = !0;
   }),
-  Ln = getLookupTableFactory(function (e) {
+  Xn = getLookupTableFactory(function (e) {
     e.Dingbats = !0;
     e.Symbol = !0;
     e.ZapfDingbats = !0;
@@ -20802,7 +20807,7 @@ const Pn = getLookupTableFactory(function (e) {
     e['Wingdings-Bold'] = !0;
     e['Wingdings-Regular'] = !0;
   }),
-  Un = getLookupTableFactory(function (e) {
+  Wn = getLookupTableFactory(function (e) {
     e[2] = 10;
     e[3] = 32;
     e[4] = 33;
@@ -21300,12 +21305,12 @@ const Pn = getLookupTableFactory(function (e) {
     e[3393] = 1159;
     e[3416] = 8377;
   }),
-  Xn = getLookupTableFactory(function (e) {
+  Kn = getLookupTableFactory(function (e) {
     e[227] = 322;
     e[264] = 261;
     e[291] = 346;
   }),
-  Wn = getLookupTableFactory(function (e) {
+  Gn = getLookupTableFactory(function (e) {
     e[1] = 32;
     e[4] = 65;
     e[5] = 192;
@@ -21426,14 +21431,14 @@ const Pn = getLookupTableFactory(function (e) {
   });
 function getStandardFontName(e) {
   const t = normalizeFontName(e);
-  return Pn()[t];
+  return En()[t];
 }
 function isKnownFontName(e) {
   const t = normalizeFontName(e);
-  return !!(Pn()[t] || En()[t] || zn()[t] || Ln()[t]);
+  return !!(En()[t] || Ln()[t] || Un()[t] || Xn()[t]);
 }
-const Kn = 256,
-  Gn = 10;
+const Vn = 256,
+  $n = 10;
 class GlyfTable {
   constructor({
     glyfTable: e,
@@ -21543,7 +21548,7 @@ class GlyphHeader {
   }
   static parse(e, t) {
     return [
-      Gn,
+      $n,
       new GlyphHeader({
         numberOfContours: t.getInt16(e),
         xMin: t.getInt16(e + 2),
@@ -21554,7 +21559,7 @@ class GlyphHeader {
     ];
   }
   getSize() {
-    return Gn;
+    return $n;
   }
   write(e, t) {
     t.setInt16(e, this.numberOfContours);
@@ -21562,7 +21567,7 @@ class GlyphHeader {
     t.setInt16(e + 4, this.yMin);
     t.setInt16(e + 6, this.xMax);
     t.setInt16(e + 8, this.yMax);
-    return Gn;
+    return $n;
   }
   scale(e, t) {
     this.xMin = Math.round(e + (this.xMin - e) * t);
@@ -21810,7 +21815,7 @@ class CompositeGlyph {
       e += 8;
     }
     let l = null;
-    if (s & Kn) {
+    if (s & Vn) {
       const a = t.getUint16(e);
       e += 2;
       l = new Uint8Array(t).slice(e, e + a);
@@ -21830,7 +21835,7 @@ class CompositeGlyph {
   }
   getSize() {
     let e = 4 + 2 * this.transf.length;
-    this.flags & Kn && (e += 2 + this.instructions.length);
+    this.flags & Vn && (e += 2 + this.instructions.length);
     e += 2;
     2 & this.flags
       ? (this.argument1 >= -128 &&
@@ -21875,7 +21880,7 @@ class CompositeGlyph {
       t.setUint8(e + 1, this.argument2);
       e += 2;
     }
-    if (this.flags & Kn) {
+    if (this.flags & Vn) {
       t.setUint16(e, this.instructions.length);
       e += 2;
       if (this.instructions.length) {
@@ -21946,7 +21951,7 @@ class IdentityToUnicodeMap {
 class CFFFont {
   constructor(e, t) {
     this.properties = t;
-    const a = new CFFParser(e, t, kn);
+    const a = new CFFParser(e, t, qn);
     this.cff = a.parse();
     this.cff.duplicateFirstGlyph();
     const n = new CFFCompiler(this.cff);
@@ -22102,15 +22107,15 @@ function compileGlyf(e, t, a, n = new Set()) {
   }
   n.add(e);
   function moveTo(e, a) {
-    l && t.add(Yt, l);
+    l && t.add(Qt, l);
     l = [e, a];
-    t.add($t, [e, a]);
+    t.add(Jt, [e, a]);
   }
   function lineTo(e, a) {
-    t.add(Yt, [e, a]);
+    t.add(Qt, [e, a]);
   }
   function quadraticCurveTo(e, a, n, s) {
-    t.add(Qt, [e, a, n, s]);
+    t.add(ea, [e, a, n, s]);
   }
   const s = new DataView(e.buffer, e.byteOffset, e.byteLength);
   let r = 0;
@@ -22254,15 +22259,15 @@ function compileGlyf(e, t, a, n = new Set()) {
 }
 function compileCharString(e, t, a, n) {
   function moveTo(e, a) {
-    l && t.add(Yt, l);
+    l && t.add(Qt, l);
     l = [e, a];
-    t.add($t, [e, a]);
+    t.add(Jt, [e, a]);
   }
   function lineTo(e, a) {
-    t.add(Yt, [e, a]);
+    t.add(Qt, [e, a]);
   }
   function bezierCurveTo(e, a, n, s, r, i) {
-    t.add(Jt, [e, a, n, s, r, i]);
+    t.add(Zt, [e, a, n, s, r, i]);
   }
   const s = [];
   let r = 0,
@@ -22432,11 +22437,11 @@ function compileCharString(e, t, a, n) {
             t.translate(r, i);
             let o = lookupCmap(
               a.cmap,
-              String.fromCharCode(a.glyphNameMap[cn[e]])
+              String.fromCharCode(a.glyphNameMap[un[e]])
             );
             compileCharString(a.glyphs[o.glyphId], t, a, o.glyphId);
             t.restore();
-            o = lookupCmap(a.cmap, String.fromCharCode(a.glyphNameMap[cn[n]]));
+            o = lookupCmap(a.cmap, String.fromCharCode(a.glyphNameMap[un[n]]));
             compileCharString(a.glyphs[o.glyphId], t, a, o.glyphId);
           }
           return;
@@ -22644,7 +22649,7 @@ class CompiledFont {
     const s = new Commands();
     s.transform(a.slice());
     this.compileGlyphImpl(e, s, t);
-    s.add(Zt);
+    s.add(ta);
     return s.getPath();
   }
   compileGlyphImpl() {
@@ -22675,7 +22680,7 @@ class Type2Compiled extends CompiledFont {
     this.gsubrs = e.gsubrs || [];
     this.subrs = e.subrs || [];
     this.cmap = t;
-    this.glyphNameMap = pn();
+    this.glyphNameMap = gn();
     this.gsubrsBias = getSubroutineBias(this.gsubrs);
     this.subrsBias = getSubroutineBias(this.subrs);
     this.isCFFCIDFont = e.isCFFCIDFont;
@@ -22743,7 +22748,7 @@ class FontRendererFactory {
     return new Type2Compiled(o, s, e.fontMatrix);
   }
 }
-const Vn = getLookupTableFactory(function (e) {
+const Yn = getLookupTableFactory(function (e) {
     e.Courier = 600;
     e['Courier-Bold'] = 600;
     e['Courier-BoldOblique'] = 600;
@@ -25681,7 +25686,7 @@ const Vn = getLookupTableFactory(function (e) {
       e.a191 = 918;
     });
   }),
-  $n = getLookupTableFactory(function (e) {
+  Jn = getLookupTableFactory(function (e) {
     e.Courier = { ascent: 629, descent: -157, capHeight: 562, xHeight: -426 };
     e['Courier-Bold'] = {
       ascent: 629,
@@ -25758,7 +25763,7 @@ const Vn = getLookupTableFactory(function (e) {
     };
   });
 class OpenTypeFileBuilder {
-  #ne = new Map();
+  #ie = new Map();
   constructor(e) {
     this.sfnt = e;
   }
@@ -25774,7 +25779,7 @@ class OpenTypeFileBuilder {
   }
   toArray() {
     let e = this.sfnt;
-    const t = this.#ne,
+    const t = this.#ie,
       a = [...t.keys()].sort(),
       n = a.length;
     let s = 12 + 16 * n;
@@ -25809,25 +25814,25 @@ class OpenTypeFileBuilder {
       o.setInt32(s + 12, t.get(n).length);
       s += 16;
     }
-    this.#ne.clear();
+    this.#ie.clear();
     return i;
   }
   addTable(e, t) {
-    if (this.#ne.has(e)) throw new Error(`Table ${e} already exists`);
-    this.#ne.set(e, t);
+    if (this.#ie.has(e)) throw new Error(`Table ${e} already exists`);
+    this.#ie.set(e, t);
   }
 }
-const Yn = [4],
-  Jn = [5],
-  Qn = [6],
-  Zn = [7],
-  es = [8],
-  ts = [12, 35],
-  as = [14],
-  ns = [21],
-  ss = [22],
-  rs = [30],
-  is = [31];
+const Qn = [4],
+  Zn = [5],
+  es = [6],
+  ts = [7],
+  as = [8],
+  ns = [12, 35],
+  ss = [14],
+  rs = [21],
+  is = [22],
+  os = [30],
+  ls = [31];
 class Type1CharString {
   width = 0;
   lsb = 0;
@@ -25864,19 +25869,19 @@ class Type1CharString {
               this.stack.push(0, e);
               break;
             }
-            o = this.executeCommand(1, Yn);
-            break;
-          case 5:
-            o = this.executeCommand(2, Jn);
-            break;
-          case 6:
             o = this.executeCommand(1, Qn);
             break;
+          case 5:
+            o = this.executeCommand(2, Zn);
+            break;
+          case 6:
+            o = this.executeCommand(1, es);
+            break;
           case 7:
-            o = this.executeCommand(1, Zn);
+            o = this.executeCommand(1, ts);
             break;
           case 8:
-            o = this.executeCommand(6, es);
+            o = this.executeCommand(6, as);
             break;
           case 10:
             if (this.stack.length < 1) {
@@ -25902,35 +25907,35 @@ class Type1CharString {
             this.lsb = r;
             this.width = s;
             this.stack.push(s, r);
-            o = this.executeCommand(2, ss);
+            o = this.executeCommand(2, is);
             break;
           case 14:
-            this.output.push(as[0]);
+            this.output.push(ss[0]);
             break;
           case 21:
             if (this.flexing) break;
-            o = this.executeCommand(2, ns);
+            o = this.executeCommand(2, rs);
             break;
           case 22:
             if (this.flexing) {
               this.stack.push(0);
               break;
             }
-            o = this.executeCommand(1, ss);
+            o = this.executeCommand(1, is);
             break;
           case 30:
-            o = this.executeCommand(4, rs);
+            o = this.executeCommand(4, os);
             break;
           case 31:
-            o = this.executeCommand(4, is);
+            o = this.executeCommand(4, ls);
             break;
           case 3078:
             if (a) {
               const e = this.stack.at(-5);
               this.seac = this.stack.splice(-4, 4);
               this.seac[0] += this.lsb - e;
-              o = this.executeCommand(0, as);
-            } else o = this.executeCommand(4, as);
+              o = this.executeCommand(0, ss);
+            } else o = this.executeCommand(4, ss);
             break;
           case 3079:
             if (this.stack.length < 4) {
@@ -25944,7 +25949,7 @@ class Type1CharString {
             this.lsb = r;
             this.width = s;
             this.stack.push(s, r, e);
-            o = this.executeCommand(3, ns);
+            o = this.executeCommand(3, rs);
             break;
           case 3084:
             if (this.stack.length < 2) {
@@ -25979,7 +25984,7 @@ class Type1CharString {
                 e[13],
                 e[14]
               );
-              o = this.executeCommand(13, ts, !0);
+              o = this.executeCommand(13, ns, !0);
               this.flexing = !1;
               this.stack.push(e[15], e[16]);
             } else 1 === i && 0 === c && (this.flexing = !0);
@@ -26241,17 +26246,16 @@ class Type1Parser {
       }
     for (const { encoded: t, glyph: s } of n) {
       const n = new Type1CharString(),
-        i = n.convert(t, a, this.seacAnalysisEnabled);
-      let o = n.output;
-      i && (o = [14]);
-      const l = {
-        glyphName: s,
-        charstring: o,
-        width: n.width,
-        lsb: n.lsb,
-        seac: n.seac,
-      };
-      '.notdef' === s ? r.charstrings.unshift(l) : r.charstrings.push(l);
+        i = {
+          glyphName: s,
+          charstring: n.convert(t, a, this.seacAnalysisEnabled)
+            ? [14]
+            : n.output,
+          width: n.width,
+          lsb: n.lsb,
+          seac: n.seac,
+        };
+      '.notdef' === s ? r.charstrings.unshift(i) : r.charstrings.push(i);
       if (e.builtInEncoding) {
         const t = e.builtInEncoding.indexOf(s);
         t > -1 &&
@@ -26506,7 +26510,7 @@ function findBlock(e, t, a) {
   return { found: o, length: i };
 }
 class Type1Font {
-  #se;
+  #oe;
   constructor(e, t, a) {
     let n;
     a.composite &&
@@ -26516,8 +26520,8 @@ class Type1Font {
         const a = bytesToString(t);
         return a.includes('Resource-CIDFont') || /\/CIDFontType\s+0\b/.test(a);
       })(t) &&
-      (n = this.#re(t, a));
-    n ||= this.#ie(t, a);
+      (n = this.#le(t, a));
+    n ||= this.#fe(t, a);
     for (const e in n.properties) a[e] = n.properties[e];
     const s = n.charstrings,
       r = this.getType2Charstrings(s),
@@ -26526,7 +26530,7 @@ class Type1Font {
     this.data = this.wrap(e, r, this.charstrings, i, a);
     this.seacs = this.getSeacs(n.charstrings);
   }
-  #ie(e, t) {
+  #fe(e, t) {
     let a = t.length1,
       n = t.length2,
       s = e.peekBytes(6);
@@ -26566,7 +26570,7 @@ class Type1Font {
       );
       return { stream: new Stream(e.getBytes(t)), length: t };
     })(e, a);
-    new Type1Parser(i.stream, !1, kn).extractFontHeader(t);
+    new Type1Parser(i.stream, !1, qn).extractFontHeader(t);
     if (r) {
       s = e.getBytes(6);
       n = (s[5] << 24) | (s[4] << 16) | (s[3] << 8) | s[2];
@@ -26577,20 +26581,20 @@ class Type1Font {
           throw new FormatError('getEexecBlock - no font program found.');
         return { stream: new Stream(a), length: a.length };
       })(e),
-      l = new Type1Parser(o.stream, !0, kn).extractFontProgram(t);
-    this.#se = i.length + o.length;
+      l = new Type1Parser(o.stream, !0, qn).extractFontProgram(t);
+    this.#oe = i.length + o.length;
     return l;
   }
-  #re(e, t) {
+  #le(e, t) {
     const a = e.pos,
       n = e.end - a,
-      s = new Type1Parser(e, !1, kn).extractCidKeyedFontProgram(t);
+      s = new Type1Parser(e, !1, qn).extractCidKeyedFontProgram(t);
     if (!s) {
       e.pos = a;
       warn('Type1Font: unable to parse CID-keyed Type 1 font.');
       return null;
     }
-    this.#se = n;
+    this.#oe = n;
     return s;
   }
   get numGlyphs() {
@@ -26652,7 +26656,7 @@ class Type1Font {
     return n;
   }
   wrap(e, t, a, n, s) {
-    const r = new CFF(this.#se);
+    const r = new CFF(this.#oe);
     r.header = new CFFHeader(1, 0, 4, 4);
     r.names = [e];
     const i = new CFFTopDict();
@@ -26680,7 +26684,7 @@ class Type1Font {
       f = ['.notdef'];
     for (let e = 0; e < l; e++) {
       const { glyphName: t } = a[e];
-      -1 === Tn.indexOf(t) && o.add(t);
+      -1 === Rn.indexOf(t) && o.add(t);
       f.push(t);
     }
     r.charset = new CFFCharset(!1, 0, f);
@@ -26720,12 +26724,12 @@ class Type1Font {
     return new CFFCompiler(r).compile();
   }
 }
-const os = [
+const fs = [
     [57344, 63743],
     [1048576, 1114109],
   ],
-  ls = 1e3,
-  fs = [
+  cs = 1e3,
+  hs = [
     'ascent',
     'bbox',
     'black',
@@ -26750,7 +26754,7 @@ const os = [
     'systemFontInfo',
     'vertical',
   ],
-  cs = [
+  us = [
     'cMap',
     'composite',
     'defaultEncoding',
@@ -26799,15 +26803,15 @@ class fonts_Glyph {
       this,
       'category',
       (function getCharUnicodeCategory(e) {
-        const t = jn.get(e);
+        const t = yn.get(e);
         if (t) return t;
-        const a = e.match(wn),
+        const a = e.match(kn),
           n = {
             isWhitespace: !!a?.[1],
             isZeroWidthDiacritic: !!a?.[2],
             isInvisibleFormatMark: !!a?.[3],
           };
-        jn.set(e, n);
+        yn.set(e, n);
         return n;
       })(this.unicode),
       !0
@@ -26917,22 +26921,22 @@ function adjustMapping(e, t, a, n) {
     i = [],
     o = new Set();
   let l = 0;
-  let f = os[l][0],
-    c = os[l][1];
+  let f = fs[l][0],
+    c = fs[l][1];
   const isInPrivateArea = (e) =>
-    (os[0][0] <= e && e <= os[0][1]) || (os[1][0] <= e && e <= os[1][1]);
+    (fs[0][0] <= e && e <= fs[0][1]) || (fs[1][0] <= e && e <= fs[1][1]);
   let h = null;
   for (const u in e) {
     let m = e[u];
     if (!t(m)) continue;
     if (f > c) {
       l++;
-      if (l >= os.length) {
+      if (l >= fs.length) {
         warn('Ran out of space in font private use area.');
         break;
       }
-      f = os[l][0];
-      c = os[l][1];
+      f = fs[l][0];
+      c = fs[l][1];
     }
     const p = f++;
     0 === m && (m = a);
@@ -26990,119 +26994,129 @@ function createCmapTable(e, t, a) {
       }
       return s;
     })(e, t, a),
-    s = n.at(-1)[1] > 65535 ? 2 : 1,
-    r = new DataBuilder({ exactLength: 12 });
-  r.skip(2);
-  r.setInt16(s);
-  r.setArray([0, 3]);
-  r.setArray([0, 1]);
-  r.setInt32(4 + 8 * s);
-  let i, o, l, f;
-  for (i = n.length - 1; i >= 0 && !(n[i][0] <= 65535); --i);
-  const c = i + 1;
-  n[i][0] < 65535 && 65535 === n[i][1] && (n[i][1] = 65534);
-  const h = n[i][1] < 65535 ? 1 : 0,
-    u = c + h,
-    m = OpenTypeFileBuilder.getSearchParams(u, 2),
-    p = 2 * c + 2 * h,
-    d = new DataBuilder({ exactLength: p }),
-    g = new DataBuilder({ exactLength: p }),
-    b = new DataBuilder({ exactLength: p }),
-    w = new DataBuilder({ exactLength: p }),
-    j = new DataBuilder({});
-  let k = 0;
-  for (i = 0, o = c; i < o; i++) {
-    const [e, t, a] = n[i];
-    d.setInt16(e);
-    g.setInt16(t);
+    s = n.at(-1)[1] > 65535;
+  let r, i, o, l;
+  for (r = n.length - 1; r >= 0 && !(n[r][0] <= 65535); --r);
+  const f = r + 1;
+  n[r][0] < 65535 && 65535 === n[r][1] && (n[r][1] = 65534);
+  const c = n[r][1] < 65535 ? 1 : 0,
+    h = f + c,
+    u = OpenTypeFileBuilder.getSearchParams(h, 2),
+    m = 2 * f + 2 * c,
+    p = new DataBuilder({ exactLength: m }),
+    d = new DataBuilder({ exactLength: m }),
+    g = new DataBuilder({ exactLength: m }),
+    b = new DataBuilder({ exactLength: m }),
+    w = new DataBuilder({});
+  let j = 0,
+    k = !1;
+  for (r = 0, i = f; r < i; r++) {
+    const [e, t, a] = n[r];
+    p.setInt16(e);
+    d.setInt16(t);
     let s = !0;
-    for (l = 1, f = a.length; l < f; ++l)
-      if (a[l] !== a[l - 1] + 1) {
+    for (o = 1, l = a.length; o < l; ++o)
+      if (a[o] !== a[o - 1] + 1) {
         s = !1;
         break;
       }
     if (s) {
       const t = a[0];
-      b.setInt16((t - e) & 65535);
-      w.skip(2);
-    } else {
-      const n = 2 * (u - i) + 2 * k;
-      k += t - e + 1;
+      g.setInt16((t - e) & 65535);
       b.skip(2);
-      w.setInt16(n);
-      for (l = 0, f = a.length; l < f; ++l) j.setInt16(a[l]);
+    } else {
+      const n = 2 * (h - r) + 2 * j;
+      j += t - e + 1;
+      g.skip(2);
+      if (n > 65535) {
+        k = !0;
+        b.skip(2);
+      } else b.setInt16(n);
+      for (o = 0, l = a.length; o < l; ++o) w.setInt16(a[o]);
     }
   }
-  if (h > 0) {
-    g.setArray([255, 255]);
+  if (c > 0) {
     d.setArray([255, 255]);
-    b.setArray([0, 1]);
-    w.skip(2);
+    p.setArray([255, 255]);
+    g.setArray([0, 1]);
+    b.skip(2);
   }
   const y = new DataBuilder({
-    exactLength: 12 + d.length + g.length + b.length + w.length + j.length,
+    exactLength: 12 + p.length + d.length + g.length + b.length + w.length,
   });
   y.skip(2);
-  y.setInt16(2 * u);
-  y.setInt16(m.range);
-  y.setInt16(m.entry);
-  y.setInt16(m.rangeShift);
-  y.setArray(g.data);
-  y.skip(2);
+  y.setInt16(2 * h);
+  y.setInt16(u.range);
+  y.setInt16(u.entry);
+  y.setInt16(u.rangeShift);
   y.setArray(d.data);
+  y.skip(2);
+  y.setArray(p.data);
+  y.setArray(g.data);
   y.setArray(b.data);
   y.setArray(w.data);
-  y.setArray(j.data);
-  let q = null,
-    v = null,
-    S = null;
-  if (s > 1) {
-    q = new DataBuilder({ exactLength: 8 });
-    q.setArray([0, 3]);
-    q.setArray([0, 10]);
-    q.setInt32(4 + 8 * s + 4 + y.length);
-    v = new DataBuilder({});
+  const q = !k && y.length + 4 <= 65535,
+    v = s || !q,
+    S = (q ? 1 : 0) + (v ? 1 : 0);
+  let x = null,
+    C = null;
+  if (v) {
+    x = new DataBuilder({});
     for (const e of n) {
       let t = e[0];
       const a = e[2];
       let n = a[0];
-      for (l = 1, f = a.length; l < f; ++l)
-        if (a[l] !== a[l - 1] + 1) {
-          const s = e[0] + l - 1;
-          v.setInt32(t);
-          v.setInt32(s);
-          v.setInt32(n);
+      for (o = 1, l = a.length; o < l; ++o)
+        if (a[o] !== a[o - 1] + 1) {
+          const s = e[0] + o - 1;
+          x.setInt32(t);
+          x.setInt32(s);
+          x.setInt32(n);
           t = s + 1;
-          n = a[l];
+          n = a[o];
         }
-      v.setInt32(t);
-      v.setInt32(e[1]);
-      v.setInt32(n);
+      x.setInt32(t);
+      x.setInt32(e[1]);
+      x.setInt32(n);
     }
-    S = new DataBuilder({ exactLength: 16 });
-    S.setArray([0, 12]);
-    S.skip(2);
-    S.setInt32(v.length + 16);
-    S.skip(4);
-    S.setInt32(v.length / 12);
+    C = new DataBuilder({ exactLength: 16 });
+    C.setArray([0, 12]);
+    C.skip(2);
+    C.setInt32(x.length + 16);
+    C.skip(4);
+    C.setInt32(x.length / 12);
   }
-  const x = new DataBuilder({
-    exactLength:
-      4 +
-      r.length +
-      (q?.length ?? 0) +
-      y.length +
-      (S?.length ?? 0) +
-      (v?.length ?? 0),
+  const F = 4 + 8 * S,
+    T = q ? 4 + y.length : 0,
+    O = new DataBuilder({ exactLength: F });
+  O.skip(2);
+  O.setInt16(S);
+  let R = F;
+  if (q) {
+    O.setArray([0, 3]);
+    O.setArray([0, 1]);
+    O.setInt32(R);
+    R += T;
+  }
+  if (v) {
+    O.setArray([0, 3]);
+    O.setArray([0, 10]);
+    O.setInt32(R);
+  }
+  const H = new DataBuilder({
+    exactLength: O.length + T + (C?.length ?? 0) + (x?.length ?? 0),
   });
-  x.setArray(r.data);
-  x.setArray(q?.data ?? []);
-  x.setArray([0, 4]);
-  x.setInt16(y.length + 4);
-  x.setArray(y.data);
-  x.setArray(S?.data ?? []);
-  x.setArray(v?.data ?? []);
-  return x.data;
+  H.setArray(O.data);
+  if (q) {
+    H.setArray([0, 4]);
+    H.setInt16(y.length + 4);
+    H.setArray(y.data);
+  }
+  if (v) {
+    H.setArray(C.data);
+    H.setArray(x.data);
+  }
+  return H.data;
 }
 function createOS2Table(e, t, a) {
   a ||= { unitsPerEm: 0, yMax: 0, yMin: 0, ascent: 0, descent: 0 };
@@ -27141,7 +27155,7 @@ function createOS2Table(e, t, a) {
       (e.fontMatrix
         ? 1 / Math.max(...e.fontMatrix.slice(0, 4).map(Math.abs))
         : 1e3),
-    u = e.ascentScaled ? 1 : h / ls,
+    u = e.ascentScaled ? 1 : h / cs,
     m = a.ascent || Math.round(u * (e.ascent || c[3]));
   let p = a.descent || Math.round(u * (e.descent || c[1]));
   p > 0 && e.descent > 0 && c[1] < 0 && (p = -p);
@@ -27270,8 +27284,8 @@ function createNameTable(e, t) {
   return b.data;
 }
 class Font {
-  #oe = new Map();
-  #le = new Map();
+  #ce = new Map();
+  #he = new Map();
   charProcOperatorList;
   constructor(e, t, a, n) {
     this.name = e;
@@ -27283,11 +27297,11 @@ class Font {
     this.isType3Font = a.isType3Font;
     this.missingFile = !1;
     this.cssFontInfo = a.cssFontInfo;
-    let s = !!(a.flags & qn);
+    let s = !!(a.flags & Sn);
     if (!s && !a.isSimulatedFlags) {
-      const t = Pn(),
-        a = En(),
-        n = zn();
+      const t = En(),
+        a = Ln(),
+        n = Un();
       for (const r of e.split('+')) {
         let e = normalizeFontName(r);
         e = t[e] || a[e] || e;
@@ -27299,8 +27313,8 @@ class Font {
       }
     }
     this.isSerifFont = s;
-    this.isSymbolicFont = !!(a.flags & vn);
-    this.isMonospace = !!(a.flags & yn);
+    this.isSymbolicFont = !!(a.flags & An);
+    this.isMonospace = !!(a.flags & vn);
     let { type: r, subtype: i } = a;
     this.type = r;
     this.subtype = i;
@@ -27323,9 +27337,9 @@ class Font {
     this.defaultWidth = a.defaultWidth;
     this.composite = a.composite;
     this.cMap = a.cMap;
-    this.capHeight = a.capHeight / ls;
-    this.ascent = a.ascent / ls;
-    this.descent = a.descent / ls;
+    this.capHeight = a.capHeight / cs;
+    this.ascent = a.ascent / cs;
+    this.descent = a.descent / cs;
     this.lineHeight = this.ascent - this.descent;
     this.fontMatrix = a.fontMatrix;
     this.bbox = a.bbox;
@@ -27395,9 +27409,9 @@ class Font {
     this.seacMap = a.seacMap;
   }
   get renderer() {
-    return shadow(this, 'renderer', FontRendererFactory.create(this, kn));
+    return shadow(this, 'renderer', FontRendererFactory.create(this, qn));
   }
-  #fe(e) {
+  #ue(e) {
     const t = Object.create(null);
     for (const a of e) {
       const e = this[a];
@@ -27407,25 +27421,25 @@ class Font {
   }
   exportData() {
     return {
-      buffer: compileFontInfo(this.#fe(fs)),
+      buffer: compileFontInfo(this.#ue(hs)),
       charProcOperatorList: this.charProcOperatorList,
-      extra: this.fontExtraProperties ? this.#fe(cs) : void 0,
+      extra: this.fontExtraProperties ? this.#ue(us) : void 0,
     };
   }
   fallbackToSystemFont(e) {
     this.missingFile = !0;
     const { name: t, type: a } = this;
     let n = normalizeFontName(t);
-    const s = Pn(),
-      r = En(),
+    const s = En(),
+      r = Ln(),
       i = !!s[n],
       o = !(!r[n] || !s[r[n]]);
     n = s[n] || r[n] || n;
-    const l = $n()[n];
+    const l = Jn()[n];
     if (l) {
-      isNaN(this.ascent) && (this.ascent = l.ascent / ls);
-      isNaN(this.descent) && (this.descent = l.descent / ls);
-      isNaN(this.capHeight) && (this.capHeight = l.capHeight / ls);
+      isNaN(this.ascent) && (this.ascent = l.ascent / cs);
+      isNaN(this.descent) && (this.descent = l.descent / cs);
+      isNaN(this.capHeight) && (this.capHeight = l.capHeight / cs);
     }
     this.bold = /bold/i.test(n);
     this.italic = /oblique|italic/i.test(n);
@@ -27439,10 +27453,10 @@ class Font {
     ) {
       const a = e.cidToGidMap,
         n = [];
-      applyStandardFontGlyphMap(n, Un());
+      applyStandardFontGlyphMap(n, Wn());
       /Arial-?Black/i.test(t)
-        ? applyStandardFontGlyphMap(n, Xn())
-        : /Calibri/i.test(t) && applyStandardFontGlyphMap(n, Wn());
+        ? applyStandardFontGlyphMap(n, Kn())
+        : /Calibri/i.test(t) && applyStandardFontGlyphMap(n, Gn());
       if (a) {
         for (const e in n) {
           const t = n[e];
@@ -27463,11 +27477,11 @@ class Font {
       this.toFontChar = n;
       this.toUnicode = new ToUnicodeMap(n);
     } else if (/Symbol/i.test(n))
-      this.toFontChar = buildToFontChar(un, pn(), this.differences);
+      this.toFontChar = buildToFontChar(pn, gn(), this.differences);
     else if (/Dingbats/i.test(n))
-      this.toFontChar = buildToFontChar(mn, dn(), this.differences);
+      this.toFontChar = buildToFontChar(dn, bn(), this.differences);
     else if (i || o) {
-      const e = buildToFontChar(this.defaultEncoding, pn(), this.differences);
+      const e = buildToFontChar(this.defaultEncoding, gn(), this.differences);
       'CIDFontType2' !== a ||
         this.cidEncoding.startsWith('Identity-') ||
         this.toUnicode instanceof IdentityToUnicodeMap ||
@@ -27476,7 +27490,7 @@ class Font {
         });
       this.toFontChar = e;
     } else {
-      const e = pn(),
+      const e = gn(),
         a = [];
       this.toUnicode.forEach((t, n) => {
         if (!this.composite) {
@@ -27491,7 +27505,7 @@ class Font {
       this.composite &&
         this.toUnicode instanceof IdentityToUnicodeMap &&
         /Tahoma|Verdana/i.test(t) &&
-        applyStandardFontGlyphMap(a, Un());
+        applyStandardFontGlyphMap(a, Wn());
       this.toFontChar = a;
     }
     amendFallbackToUnicode(e);
@@ -27931,7 +27945,7 @@ class Font {
       this.isOpenType = !1;
     } else {
       try {
-        f = new CFFParser(new Stream(i['CFF '].data), a, kn).parse();
+        f = new CFFParser(new Stream(i['CFF '].data), a, qn).parse();
       } catch {
         warn('Failed to parse font ' + a.loadedName);
       }
@@ -28230,9 +28244,9 @@ class Font {
             for (let e = 0; e < a; e++) {
               const a = t[e].offset,
                 r = Math.min(t[e].endOffset, n.byteLength);
-              if (r - a <= Gn || n.getInt16(a) >= 0) continue;
+              if (r - a <= $n || n.getInt16(a) >= 0) continue;
               const i = [];
-              let o = a + Gn;
+              let o = a + $n;
               for (; o + 4 <= r;) {
                 const e = n.getUint16(o),
                   t = n.getUint16(o + 2);
@@ -28285,7 +28299,7 @@ class Font {
               }
               const f = t[a].offset,
                 c = Math.min(t[a].endOffset, n.byteLength);
-              let h = f + Gn;
+              let h = f + $n;
               for (let t = 0; t < l.length; t++) {
                 const a = l[t],
                   s = t === l.length - 1;
@@ -28368,7 +28382,7 @@ class Font {
           f = !0;
         switch (i) {
           case 65536:
-            o = An;
+            o = Cn;
             break;
           case 131072:
             const e = t.getUint16();
@@ -28395,7 +28409,7 @@ class Font {
             o = [];
             for (l = 0; l < e; ++l) {
               const e = s[l];
-              e < 258 ? o.push(An[e]) : o.push(c[e - 258]);
+              e < 258 ? o.push(Cn[e]) : o.push(c[e - 258]);
             }
             break;
           case 196608:
@@ -28588,7 +28602,6 @@ class Font {
               }
             }
           }
-          h.sort((e, t) => e.charCode - t.charCode);
           const p = [],
             d = new Set();
           for (const e of h) {
@@ -28601,7 +28614,7 @@ class Font {
           return {
             platformId: o.platformId,
             encodingId: o.encodingId,
-            mappings: p,
+            mappings: p.sort((e, t) => e.charCode - t.charCode),
             hasShortCmap: c,
           };
         })(i.cmap, t, this.isSymbolicFont, a.hasEncoding),
@@ -28619,7 +28632,7 @@ class Font {
         !this.isSymbolicFont &&
         ((3 === n && 1 === s) || (1 === n && 0 === s))
       ) {
-        const e = pn();
+        const e = gn();
         for (let t = 0; t < 256; t++) {
           let i;
           i =
@@ -28627,13 +28640,13 @@ class Font {
               ? this.differences[t]
               : o.length && '' !== o[t]
                 ? o[t]
-                : cn[t];
+                : un[t];
           if (!i) continue;
           const l = recoverGlyphName(i, e);
           let f;
           3 === n && 1 === s
             ? (f = e[l])
-            : 1 === n && 0 === s && (f = fn.indexOf(l));
+            : 1 === n && 0 === s && (f = hn.indexOf(l));
           if (void 0 === f) {
             if (
               !a.glyphNames &&
@@ -28669,10 +28682,10 @@ class Font {
           const n = a.glyphNames.indexOf(t);
           n > 0 && hasGlyph(n) && (k[e] = n);
         }
+      !a.isInternalFont && void 0 === k[0] && hasGlyph(0) && (k[0] = 0);
     }
     0 === k.length && (k[0] = 0);
-    let y = m - 1;
-    p || (y = 0);
+    const y = p ? m - 1 : 0;
     if (!a.cssFontInfo) {
       const e = adjustMapping(k, hasGlyph, y, this.toUnicode);
       this.toFontChar = e.toFontChar;
@@ -28712,11 +28725,11 @@ class Font {
           if (e.toUnicode instanceof IdentityToUnicodeMap) return;
           if (!t) return;
           if (0 === a.length) return;
-          if (e.defaultEncoding === hn) return;
+          if (e.defaultEncoding === mn) return;
           for (const e of a) if (!isWinNameRecord(e)) return;
-          const n = hn,
+          const n = mn,
             s = [],
-            r = pn();
+            r = gn();
           for (const e in n) {
             const t = n[e];
             if ('' === t) continue;
@@ -28739,7 +28752,7 @@ class Font {
         if (t === e.defaultEncoding) return;
         if (e.toUnicode instanceof IdentityToUnicodeMap) return;
         const a = [],
-          n = pn();
+          n = gn();
         for (const s in t) {
           if (
             e.hasEncoding &&
@@ -28751,9 +28764,8 @@ class Font {
         }
         a.length > 0 && e.toUnicode.amend(a);
       })(a, a.builtInEncoding);
-    let s = 1;
-    t instanceof CFFFont && (s = t.numGlyphs - 1);
-    const r = t.getGlyphMapping(a);
+    const s = t instanceof CFFFont ? t.numGlyphs - 1 : 1,
+      r = t.getGlyphMapping(a);
     let i = null,
       o = r,
       l = null;
@@ -28782,8 +28794,8 @@ class Font {
       for (let t in c) {
         t |= 0;
         const a = c[t],
-          n = cn[a[2]],
-          l = cn[a[3]],
+          n = un[a[2]],
+          l = un[a[3]],
           f = s.indexOf(n),
           h = s.indexOf(l);
         if (f < 0 || h < 0) continue;
@@ -28890,7 +28902,7 @@ class Font {
         t = this.widths[a];
         break;
       }
-      const e = pn()[a];
+      const e = gn()[a];
       let n = 0;
       if (this.composite && this.cMap.contains(e)) {
         n = this.cMap.lookup(e);
@@ -28907,7 +28919,7 @@ class Font {
     let a,
       n,
       s,
-      r = this.#le.get(e);
+      r = this.#he.get(e);
     if (r?.isSpace === t) return r;
     let i = e;
     if (this.cMap?.contains(e)) {
@@ -28934,7 +28946,7 @@ class Font {
         return e >= 65520 && e <= 65535
           ? 0
           : e >= 62976 && e <= 63743
-            ? gn()[e] || e
+            ? wn()[e] || e
             : 173 === e
               ? 45
               : e;
@@ -28957,15 +28969,15 @@ class Font {
         ? (h = String.fromCodePoint(a))
         : warn(`charToGlyph - invalid fontCharCode: ${a}`));
     if (this.missingFile && this.vertical && 1 === h.length) {
-      const e = xn()[h.charCodeAt(0)];
+      const e = In()[h.charCodeAt(0)];
       e && (h = l = String.fromCharCode(e));
     }
     r = new fonts_Glyph(e, h, l, c, n, o, s, t, f);
-    this.#le.set(e, r);
+    this.#he.set(e, r);
     return r;
   }
   charsToGlyphs(e) {
-    let t = this.#oe.get(e);
+    let t = this.#ce.get(e);
     if (t) return t;
     t = [];
     if (this.cMap) {
@@ -28985,7 +28997,7 @@ class Font {
           s = this._charToGlyph(n, 32 === n);
         t.push(s);
       }
-    this.#oe.set(e, t);
+    this.#ce.set(e, t);
     return t;
   }
   getCharPositions(e) {
@@ -29003,7 +29015,7 @@ class Font {
     return t;
   }
   get glyphCacheValues() {
-    return this.#le.values();
+    return this.#he.values();
   }
   encodeString(e) {
     const t = [],
@@ -29058,7 +29070,7 @@ class ErrorFont {
     return { error: this.error };
   }
 }
-const hs = [
+const ms = [
     1.3877, 1, 1, 1, 0.97801, 0.92482, 0.89552, 0.91133, 0.81988, 0.97566,
     0.98152, 0.93548, 0.93548, 1.2798, 0.85284, 0.92794, 1, 0.96134, 1.54657,
     0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133,
@@ -29126,8 +29138,8 @@ const hs = [
     1, 1, 1.08004, 0.91027, 1, 1, 1, 0.99862, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 0.90727, 0.90727, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  us = { lineHeight: 1.2207, lineGap: 0.2207 },
-  ms = [
+  ps = { lineHeight: 1.2207, lineGap: 0.2207 },
+  ds = [
     1.3877, 1, 1, 1, 0.97801, 0.92482, 0.89552, 0.91133, 0.81988, 0.97566,
     0.98152, 0.93548, 0.93548, 1.2798, 0.85284, 0.92794, 1, 0.96134, 1.56239,
     0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133,
@@ -29196,8 +29208,8 @@ const hs = [
     1, 1, 1.08004, 0.91027, 1, 1, 1, 0.99862, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 0.90727, 0.90727, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  ps = { lineHeight: 1.2207, lineGap: 0.2207 },
-  ds = [
+  gs = { lineHeight: 1.2207, lineGap: 0.2207 },
+  bs = [
     1.3877, 1, 1, 1, 1.17223, 1.1293, 0.89552, 0.91133, 0.80395, 1.02269,
     1.15601, 0.91056, 0.91056, 1.2798, 0.85284, 0.89807, 1, 0.90861, 1.39543,
     0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133,
@@ -29265,8 +29277,8 @@ const hs = [
     0.99862, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.05859, 1.05859, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  gs = { lineHeight: 1.2207, lineGap: 0.2207 },
-  bs = [
+  ws = { lineHeight: 1.2207, lineGap: 0.2207 },
+  js = [
     1.3877, 1, 1, 1, 1.17223, 1.1293, 0.89552, 0.91133, 0.80395, 1.02269,
     1.15601, 0.91056, 0.91056, 1.2798, 0.85284, 0.89807, 1, 0.90861, 1.39016,
     0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133, 0.91133,
@@ -29335,8 +29347,8 @@ const hs = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1.05859, 1.05859, 1, 1, 1, 1.07185, 0.99413,
     0.96334, 1.08065, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  ws = { lineHeight: 1.2207, lineGap: 0.2207 },
-  js = [
+  ks = { lineHeight: 1.2207, lineGap: 0.2207 },
+  ys = [
     0.76116, 1, 1, 1.0006, 0.99998, 0.99974, 0.99973, 0.99973, 0.99982, 0.99977,
     1.00087, 0.99998, 0.99998, 0.99959, 1.00003, 1.0006, 0.99998, 1.0006,
     1.0006, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973,
@@ -29416,8 +29428,8 @@ const hs = [
     0.99977, 1.00054, 1, 1, 0.99953, 0.99962, 1.00042, 0.9995, 1, 1, 1, 1, 1, 1,
     1, 1, 0.99998, 0.99998, 0.99998, 0.99998, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  ks = { lineHeight: 1.2, lineGap: 0.2 },
-  ys = [
+  qs = { lineHeight: 1.2, lineGap: 0.2 },
+  vs = [
     0.76116, 1, 1, 1.0006, 0.99998, 0.99974, 0.99973, 0.99973, 0.99982, 0.99977,
     1.00087, 0.99998, 0.99998, 0.99959, 1.00003, 1.0006, 0.99998, 1.0006,
     1.0006, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973,
@@ -29498,8 +29510,8 @@ const hs = [
     0.9995, 1, 1, 1, 1, 1, 1, 1, 1, 0.99998, 0.99998, 0.99998, 0.99998, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  qs = { lineHeight: 1.35, lineGap: 0.2 },
-  vs = [
+  Ss = { lineHeight: 1.35, lineGap: 0.2 },
+  As = [
     0.76116, 1, 1, 1.0006, 1.0006, 1.00006, 0.99973, 0.99973, 0.99982, 1.00001,
     1.00043, 0.99998, 0.99998, 0.99959, 1.00003, 1.0006, 0.99998, 1.0006,
     1.0006, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973,
@@ -29578,8 +29590,8 @@ const hs = [
     1, 1, 1, 1, 1, 1, 0.99998, 0.99998, 0.99998, 0.99998, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1,
   ],
-  Ss = { lineHeight: 1.35, lineGap: 0.2 },
-  As = [
+  xs = { lineHeight: 1.35, lineGap: 0.2 },
+  Cs = [
     0.76116, 1, 1, 1.0006, 1.0006, 1.00006, 0.99973, 0.99973, 0.99982, 1.00001,
     1.00043, 0.99998, 0.99998, 0.99959, 1.00003, 1.0006, 0.99998, 1.0006,
     1.0006, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973, 0.99973,
@@ -29657,8 +29669,8 @@ const hs = [
     0.99962, 1.00042, 0.9995, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1,
   ],
-  xs = { lineHeight: 1.2, lineGap: 0.2 },
-  Cs = [
+  Is = { lineHeight: 1.2, lineGap: 0.2 },
+  Fs = [
     365, 0, 333, 278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584,
     278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333,
     333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278,
@@ -29705,105 +29717,6 @@ const hs = [
     604, 604, 604, 604, 354, 1021, 1052, 917, 750, 750, 531, 656, 594, 510, 500,
     750, 750, 611, 611, 333, 333, 333, 333, 333, 333, 333, 333, 222, 222, 333,
     333, 333, 333, 333, 333, 333, 333,
-  ],
-  Is = [
-    -1, -1, -1, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
-    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
-    67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-    86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103,
-    104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118,
-    119, 120, 121, 122, 123, 124, 125, 126, 161, 162, 163, 164, 165, 166, 167,
-    168, 169, 170, 171, 172, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183,
-    184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198,
-    199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213,
-    214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228,
-    229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243,
-    244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258,
-    259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273,
-    274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288,
-    289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303,
-    304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318,
-    319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333,
-    334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348,
-    349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363,
-    364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378,
-    379, 380, 381, 382, 383, 402, 506, 507, 508, 509, 510, 511, 536, 537, 538,
-    539, 710, 711, 713, 728, 729, 730, 731, 732, 733, 900, 901, 902, 903, 904,
-    905, 906, 908, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921,
-    922, 923, 924, 925, 926, 927, 928, 929, 931, 932, 933, 934, 935, 936, 937,
-    938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952,
-    953, 954, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965, 966, 967,
-    968, 969, 970, 971, 972, 973, 974, 1024, 1025, 1026, 1027, 1028, 1029, 1030,
-    1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 1041, 1042,
-    1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 1052, 1053, 1054,
-    1055, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1063, 1064, 1065, 1066,
-    1067, 1068, 1069, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078,
-    1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090,
-    1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102,
-    1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114,
-    1115, 1116, 1117, 1118, 1119, 1138, 1139, 1168, 1169, 7808, 7809, 7810,
-    7811, 7812, 7813, 7922, 7923, 8208, 8209, 8211, 8212, 8213, 8215, 8216,
-    8217, 8218, 8219, 8220, 8221, 8222, 8224, 8225, 8226, 8230, 8240, 8242,
-    8243, 8249, 8250, 8252, 8254, 8260, 8319, 8355, 8356, 8359, 8364, 8453,
-    8467, 8470, 8482, 8486, 8494, 8539, 8540, 8541, 8542, 8592, 8593, 8594,
-    8595, 8596, 8597, 8616, 8706, 8710, 8719, 8721, 8722, 8730, 8734, 8735,
-    8745, 8747, 8776, 8800, 8801, 8804, 8805, 8962, 8976, 8992, 8993, 9472,
-    9474, 9484, 9488, 9492, 9496, 9500, 9508, 9516, 9524, 9532, 9552, 9553,
-    9554, 9555, 9556, 9557, 9558, 9559, 9560, 9561, 9562, 9563, 9564, 9565,
-    9566, 9567, 9568, 9569, 9570, 9571, 9572, 9573, 9574, 9575, 9576, 9577,
-    9578, 9579, 9580, 9600, 9604, 9608, 9612, 9616, 9617, 9618, 9619, 9632,
-    9633, 9642, 9643, 9644, 9650, 9658, 9660, 9668, 9674, 9675, 9679, 9688,
-    9689, 9702, 9786, 9787, 9788, 9792, 9794, 9824, 9827, 9829, 9830, 9834,
-    9835, 9836, 61441, 61442, 61445, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1,
-  ],
-  Fs = [
-    365, 0, 333, 278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584,
-    278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333,
-    333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278,
-    556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667,
-    667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611,
-    611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556,
-    778, 556, 556, 500, 389, 280, 389, 584, 333, 556, 556, 556, 556, 280, 556,
-    333, 737, 370, 556, 584, 737, 552, 400, 549, 333, 333, 333, 576, 556, 278,
-    333, 333, 365, 556, 834, 834, 834, 611, 722, 722, 722, 722, 722, 722, 1e3,
-    722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778,
-    778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556,
-    556, 889, 556, 556, 556, 556, 556, 278, 278, 278, 278, 611, 611, 611, 611,
-    611, 611, 611, 549, 611, 611, 611, 611, 611, 556, 611, 556, 722, 556, 722,
-    556, 722, 556, 722, 556, 722, 556, 722, 556, 722, 556, 722, 740, 722, 611,
-    667, 556, 667, 556, 667, 556, 667, 556, 667, 556, 778, 611, 778, 611, 778,
-    611, 778, 611, 722, 611, 722, 611, 278, 278, 278, 278, 278, 278, 278, 278,
-    278, 278, 782, 556, 556, 278, 722, 556, 556, 611, 278, 611, 278, 611, 396,
-    611, 479, 611, 278, 722, 611, 722, 611, 722, 611, 708, 723, 611, 778, 611,
-    778, 611, 778, 611, 1e3, 944, 722, 389, 722, 389, 722, 389, 667, 556, 667,
-    556, 667, 556, 667, 556, 611, 333, 611, 479, 611, 333, 722, 611, 722, 611,
-    722, 611, 722, 611, 722, 611, 722, 611, 944, 778, 667, 556, 667, 611, 500,
-    611, 500, 611, 500, 278, 556, 722, 556, 1e3, 889, 778, 611, 667, 556, 611,
-    333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 722, 333, 854,
-    906, 473, 844, 930, 847, 278, 722, 722, 610, 671, 667, 611, 722, 778, 278,
-    722, 667, 833, 722, 657, 778, 718, 667, 590, 611, 667, 822, 667, 829, 781,
-    278, 667, 620, 479, 611, 278, 591, 620, 621, 556, 610, 479, 492, 611, 558,
-    278, 566, 556, 603, 556, 450, 611, 712, 605, 532, 664, 409, 591, 704, 578,
-    773, 834, 278, 591, 611, 591, 834, 667, 667, 886, 614, 719, 667, 278, 278,
-    556, 1094, 1042, 854, 622, 719, 677, 719, 722, 708, 722, 614, 722, 667, 927,
-    643, 719, 719, 615, 687, 833, 722, 778, 719, 667, 722, 611, 677, 781, 667,
-    729, 708, 979, 989, 854, 1e3, 708, 719, 1042, 729, 556, 619, 604, 534, 618,
-    556, 736, 510, 611, 611, 507, 622, 740, 604, 611, 611, 611, 556, 889, 556,
-    885, 556, 646, 583, 889, 935, 707, 854, 594, 552, 865, 589, 556, 556, 611,
-    469, 563, 556, 278, 278, 278, 969, 906, 611, 507, 619, 556, 611, 778, 611,
-    575, 467, 944, 778, 944, 778, 944, 778, 667, 556, 333, 333, 556, 1e3, 1e3,
-    552, 278, 278, 278, 278, 500, 500, 500, 556, 556, 350, 1e3, 1e3, 240, 479,
-    333, 333, 604, 333, 167, 396, 556, 556, 1104, 556, 885, 516, 1146, 1e3, 768,
-    600, 834, 834, 834, 834, 999, 500, 1e3, 500, 1e3, 500, 500, 494, 612, 823,
-    713, 584, 549, 713, 979, 722, 274, 549, 549, 583, 549, 549, 604, 584, 604,
-    604, 708, 625, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
-    708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
-    708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
-    708, 708, 708, 729, 604, 604, 354, 354, 1e3, 990, 990, 990, 990, 494, 604,
-    604, 604, 604, 354, 1021, 1052, 917, 750, 750, 531, 656, 594, 510, 500, 750,
-    750, 611, 611, 333, 333, 333, 333, 333, 333, 333, 333, 222, 222, 333, 333,
-    333, 333, 333, 333, 333, 333,
   ],
   Ts = [
     -1, -1, -1, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
@@ -29857,52 +29770,52 @@ const hs = [
     -1, -1, -1, -1, -1, -1,
   ],
   Os = [
-    365, 0, 333, 278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584,
-    278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278,
-    278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278,
-    500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667,
-    667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556,
-    556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500,
-    722, 500, 500, 500, 334, 260, 334, 584, 333, 556, 556, 556, 556, 260, 556,
-    333, 737, 370, 556, 584, 737, 552, 400, 549, 333, 333, 333, 576, 537, 278,
-    333, 333, 365, 556, 834, 834, 834, 611, 667, 667, 667, 667, 667, 667, 1e3,
+    365, 0, 333, 278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584,
+    278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333,
+    333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278,
+    556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667,
+    667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611,
+    611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556,
+    778, 556, 556, 500, 389, 280, 389, 584, 333, 556, 556, 556, 556, 280, 556,
+    333, 737, 370, 556, 584, 737, 552, 400, 549, 333, 333, 333, 576, 556, 278,
+    333, 333, 365, 556, 834, 834, 834, 611, 722, 722, 722, 722, 722, 722, 1e3,
     722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778,
     778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556,
-    556, 889, 500, 556, 556, 556, 556, 278, 278, 278, 278, 556, 556, 556, 556,
-    556, 556, 556, 549, 611, 556, 556, 556, 556, 500, 556, 500, 667, 556, 667,
-    556, 667, 556, 722, 500, 722, 500, 722, 500, 722, 500, 722, 625, 722, 556,
-    667, 556, 667, 556, 667, 556, 667, 556, 667, 556, 778, 556, 778, 556, 778,
-    556, 778, 556, 722, 556, 722, 556, 278, 278, 278, 278, 278, 278, 278, 222,
-    278, 278, 733, 444, 500, 222, 667, 500, 500, 556, 222, 556, 222, 556, 281,
-    556, 400, 556, 222, 722, 556, 722, 556, 722, 556, 615, 723, 556, 778, 556,
-    778, 556, 778, 556, 1e3, 944, 722, 333, 722, 333, 722, 333, 667, 500, 667,
-    500, 667, 500, 667, 500, 611, 278, 611, 354, 611, 278, 722, 556, 722, 556,
-    722, 556, 722, 556, 722, 556, 722, 556, 944, 722, 667, 500, 667, 611, 500,
-    611, 500, 611, 500, 222, 556, 667, 556, 1e3, 889, 778, 611, 667, 500, 611,
-    278, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 667, 278, 789,
-    846, 389, 794, 865, 775, 222, 667, 667, 570, 671, 667, 611, 722, 778, 278,
-    667, 667, 833, 722, 648, 778, 725, 667, 600, 611, 667, 837, 667, 831, 761,
-    278, 667, 570, 439, 555, 222, 550, 570, 571, 500, 556, 439, 463, 555, 542,
-    222, 500, 492, 548, 500, 447, 556, 670, 573, 486, 603, 374, 550, 652, 546,
-    728, 779, 222, 550, 556, 550, 779, 667, 667, 843, 544, 708, 667, 278, 278,
-    500, 1066, 982, 844, 589, 715, 639, 724, 667, 651, 667, 544, 704, 667, 917,
-    614, 715, 715, 589, 686, 833, 722, 778, 725, 667, 722, 611, 639, 795, 667,
-    727, 673, 920, 923, 805, 886, 651, 694, 1022, 682, 556, 562, 522, 493, 553,
-    556, 688, 465, 556, 556, 472, 564, 686, 550, 556, 556, 556, 500, 833, 500,
-    835, 500, 572, 518, 830, 851, 621, 736, 526, 492, 752, 534, 556, 556, 556,
-    378, 496, 500, 222, 222, 222, 910, 828, 556, 472, 565, 500, 556, 778, 556,
-    492, 339, 944, 722, 944, 722, 944, 722, 667, 500, 333, 333, 556, 1e3, 1e3,
-    552, 222, 222, 222, 222, 333, 333, 333, 556, 556, 350, 1e3, 1e3, 188, 354,
-    333, 333, 500, 333, 167, 365, 556, 556, 1094, 556, 885, 323, 1083, 1e3, 768,
-    600, 834, 834, 834, 834, 1e3, 500, 998, 500, 1e3, 500, 500, 494, 612, 823,
-    713, 584, 549, 713, 979, 719, 274, 549, 549, 584, 549, 549, 604, 584, 604,
+    556, 889, 556, 556, 556, 556, 556, 278, 278, 278, 278, 611, 611, 611, 611,
+    611, 611, 611, 549, 611, 611, 611, 611, 611, 556, 611, 556, 722, 556, 722,
+    556, 722, 556, 722, 556, 722, 556, 722, 556, 722, 556, 722, 740, 722, 611,
+    667, 556, 667, 556, 667, 556, 667, 556, 667, 556, 778, 611, 778, 611, 778,
+    611, 778, 611, 722, 611, 722, 611, 278, 278, 278, 278, 278, 278, 278, 278,
+    278, 278, 782, 556, 556, 278, 722, 556, 556, 611, 278, 611, 278, 611, 396,
+    611, 479, 611, 278, 722, 611, 722, 611, 722, 611, 708, 723, 611, 778, 611,
+    778, 611, 778, 611, 1e3, 944, 722, 389, 722, 389, 722, 389, 667, 556, 667,
+    556, 667, 556, 667, 556, 611, 333, 611, 479, 611, 333, 722, 611, 722, 611,
+    722, 611, 722, 611, 722, 611, 722, 611, 944, 778, 667, 556, 667, 611, 500,
+    611, 500, 611, 500, 278, 556, 722, 556, 1e3, 889, 778, 611, 667, 556, 611,
+    333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 722, 333, 854,
+    906, 473, 844, 930, 847, 278, 722, 722, 610, 671, 667, 611, 722, 778, 278,
+    722, 667, 833, 722, 657, 778, 718, 667, 590, 611, 667, 822, 667, 829, 781,
+    278, 667, 620, 479, 611, 278, 591, 620, 621, 556, 610, 479, 492, 611, 558,
+    278, 566, 556, 603, 556, 450, 611, 712, 605, 532, 664, 409, 591, 704, 578,
+    773, 834, 278, 591, 611, 591, 834, 667, 667, 886, 614, 719, 667, 278, 278,
+    556, 1094, 1042, 854, 622, 719, 677, 719, 722, 708, 722, 614, 722, 667, 927,
+    643, 719, 719, 615, 687, 833, 722, 778, 719, 667, 722, 611, 677, 781, 667,
+    729, 708, 979, 989, 854, 1e3, 708, 719, 1042, 729, 556, 619, 604, 534, 618,
+    556, 736, 510, 611, 611, 507, 622, 740, 604, 611, 611, 611, 556, 889, 556,
+    885, 556, 646, 583, 889, 935, 707, 854, 594, 552, 865, 589, 556, 556, 611,
+    469, 563, 556, 278, 278, 278, 969, 906, 611, 507, 619, 556, 611, 778, 611,
+    575, 467, 944, 778, 944, 778, 944, 778, 667, 556, 333, 333, 556, 1e3, 1e3,
+    552, 278, 278, 278, 278, 500, 500, 500, 556, 556, 350, 1e3, 1e3, 240, 479,
+    333, 333, 604, 333, 167, 396, 556, 556, 1104, 556, 885, 516, 1146, 1e3, 768,
+    600, 834, 834, 834, 834, 999, 500, 1e3, 500, 1e3, 500, 500, 494, 612, 823,
+    713, 584, 549, 713, 979, 722, 274, 549, 549, 583, 549, 549, 604, 584, 604,
     604, 708, 625, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
     708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
     708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
     708, 708, 708, 729, 604, 604, 354, 354, 1e3, 990, 990, 990, 990, 494, 604,
     604, 604, 604, 354, 1021, 1052, 917, 750, 750, 531, 656, 594, 510, 500, 750,
-    750, 500, 500, 333, 333, 333, 333, 333, 333, 333, 333, 222, 222, 294, 294,
-    324, 324, 316, 328, 398, 285,
+    750, 611, 611, 333, 333, 333, 333, 333, 333, 333, 333, 222, 222, 333, 333,
+    333, 333, 333, 333, 333, 333,
   ],
   Rs = [
     -1, -1, -1, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
@@ -29969,32 +29882,32 @@ const hs = [
     778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556,
     556, 889, 500, 556, 556, 556, 556, 278, 278, 278, 278, 556, 556, 556, 556,
     556, 556, 556, 549, 611, 556, 556, 556, 556, 500, 556, 500, 667, 556, 667,
-    556, 667, 556, 722, 500, 722, 500, 722, 500, 722, 500, 722, 615, 722, 556,
+    556, 667, 556, 722, 500, 722, 500, 722, 500, 722, 500, 722, 625, 722, 556,
     667, 556, 667, 556, 667, 556, 667, 556, 667, 556, 778, 556, 778, 556, 778,
     556, 778, 556, 722, 556, 722, 556, 278, 278, 278, 278, 278, 278, 278, 222,
-    278, 278, 735, 444, 500, 222, 667, 500, 500, 556, 222, 556, 222, 556, 292,
-    556, 334, 556, 222, 722, 556, 722, 556, 722, 556, 604, 723, 556, 778, 556,
+    278, 278, 733, 444, 500, 222, 667, 500, 500, 556, 222, 556, 222, 556, 281,
+    556, 400, 556, 222, 722, 556, 722, 556, 722, 556, 615, 723, 556, 778, 556,
     778, 556, 778, 556, 1e3, 944, 722, 333, 722, 333, 722, 333, 667, 500, 667,
-    500, 667, 500, 667, 500, 611, 278, 611, 375, 611, 278, 722, 556, 722, 556,
+    500, 667, 500, 667, 500, 611, 278, 611, 354, 611, 278, 722, 556, 722, 556,
     722, 556, 722, 556, 722, 556, 722, 556, 944, 722, 667, 500, 667, 611, 500,
     611, 500, 611, 500, 222, 556, 667, 556, 1e3, 889, 778, 611, 667, 500, 611,
-    278, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 667, 278, 784,
-    838, 384, 774, 855, 752, 222, 667, 667, 551, 668, 667, 611, 722, 778, 278,
-    667, 668, 833, 722, 650, 778, 722, 667, 618, 611, 667, 798, 667, 835, 748,
-    278, 667, 578, 446, 556, 222, 547, 578, 575, 500, 557, 446, 441, 556, 556,
-    222, 500, 500, 576, 500, 448, 556, 690, 569, 482, 617, 395, 547, 648, 525,
-    713, 781, 222, 547, 556, 547, 781, 667, 667, 865, 542, 719, 667, 278, 278,
-    500, 1057, 1010, 854, 583, 722, 635, 719, 667, 656, 667, 542, 677, 667, 923,
-    604, 719, 719, 583, 656, 833, 722, 778, 719, 667, 722, 611, 635, 760, 667,
-    740, 667, 917, 938, 792, 885, 656, 719, 1010, 722, 556, 573, 531, 365, 583,
-    556, 669, 458, 559, 559, 438, 583, 688, 552, 556, 542, 556, 500, 458, 500,
-    823, 500, 573, 521, 802, 823, 625, 719, 521, 510, 750, 542, 556, 556, 556,
-    365, 510, 500, 222, 278, 222, 906, 812, 556, 438, 559, 500, 552, 778, 556,
-    489, 411, 944, 722, 944, 722, 944, 722, 667, 500, 333, 333, 556, 1e3, 1e3,
+    278, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 667, 278, 789,
+    846, 389, 794, 865, 775, 222, 667, 667, 570, 671, 667, 611, 722, 778, 278,
+    667, 667, 833, 722, 648, 778, 725, 667, 600, 611, 667, 837, 667, 831, 761,
+    278, 667, 570, 439, 555, 222, 550, 570, 571, 500, 556, 439, 463, 555, 542,
+    222, 500, 492, 548, 500, 447, 556, 670, 573, 486, 603, 374, 550, 652, 546,
+    728, 779, 222, 550, 556, 550, 779, 667, 667, 843, 544, 708, 667, 278, 278,
+    500, 1066, 982, 844, 589, 715, 639, 724, 667, 651, 667, 544, 704, 667, 917,
+    614, 715, 715, 589, 686, 833, 722, 778, 725, 667, 722, 611, 639, 795, 667,
+    727, 673, 920, 923, 805, 886, 651, 694, 1022, 682, 556, 562, 522, 493, 553,
+    556, 688, 465, 556, 556, 472, 564, 686, 550, 556, 556, 556, 500, 833, 500,
+    835, 500, 572, 518, 830, 851, 621, 736, 526, 492, 752, 534, 556, 556, 556,
+    378, 496, 500, 222, 222, 222, 910, 828, 556, 472, 565, 500, 556, 778, 556,
+    492, 339, 944, 722, 944, 722, 944, 722, 667, 500, 333, 333, 556, 1e3, 1e3,
     552, 222, 222, 222, 222, 333, 333, 333, 556, 556, 350, 1e3, 1e3, 188, 354,
-    333, 333, 500, 333, 167, 365, 556, 556, 1094, 556, 885, 323, 1073, 1e3, 768,
-    600, 834, 834, 834, 834, 1e3, 500, 1e3, 500, 1e3, 500, 500, 494, 612, 823,
-    713, 584, 549, 713, 979, 719, 274, 549, 549, 583, 549, 549, 604, 584, 604,
+    333, 333, 500, 333, 167, 365, 556, 556, 1094, 556, 885, 323, 1083, 1e3, 768,
+    600, 834, 834, 834, 834, 1e3, 500, 998, 500, 1e3, 500, 500, 494, 612, 823,
+    713, 584, 549, 713, 979, 719, 274, 549, 549, 584, 549, 549, 604, 584, 604,
     604, 708, 625, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
     708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
     708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
@@ -30055,6 +29968,105 @@ const hs = [
     -1, -1, -1, -1, -1, -1,
   ],
   Ds = [
+    365, 0, 333, 278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584,
+    278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278,
+    278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278,
+    500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667,
+    667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556,
+    556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500,
+    722, 500, 500, 500, 334, 260, 334, 584, 333, 556, 556, 556, 556, 260, 556,
+    333, 737, 370, 556, 584, 737, 552, 400, 549, 333, 333, 333, 576, 537, 278,
+    333, 333, 365, 556, 834, 834, 834, 611, 667, 667, 667, 667, 667, 667, 1e3,
+    722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778,
+    778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556,
+    556, 889, 500, 556, 556, 556, 556, 278, 278, 278, 278, 556, 556, 556, 556,
+    556, 556, 556, 549, 611, 556, 556, 556, 556, 500, 556, 500, 667, 556, 667,
+    556, 667, 556, 722, 500, 722, 500, 722, 500, 722, 500, 722, 615, 722, 556,
+    667, 556, 667, 556, 667, 556, 667, 556, 667, 556, 778, 556, 778, 556, 778,
+    556, 778, 556, 722, 556, 722, 556, 278, 278, 278, 278, 278, 278, 278, 222,
+    278, 278, 735, 444, 500, 222, 667, 500, 500, 556, 222, 556, 222, 556, 292,
+    556, 334, 556, 222, 722, 556, 722, 556, 722, 556, 604, 723, 556, 778, 556,
+    778, 556, 778, 556, 1e3, 944, 722, 333, 722, 333, 722, 333, 667, 500, 667,
+    500, 667, 500, 667, 500, 611, 278, 611, 375, 611, 278, 722, 556, 722, 556,
+    722, 556, 722, 556, 722, 556, 722, 556, 944, 722, 667, 500, 667, 611, 500,
+    611, 500, 611, 500, 222, 556, 667, 556, 1e3, 889, 778, 611, 667, 500, 611,
+    278, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 333, 667, 278, 784,
+    838, 384, 774, 855, 752, 222, 667, 667, 551, 668, 667, 611, 722, 778, 278,
+    667, 668, 833, 722, 650, 778, 722, 667, 618, 611, 667, 798, 667, 835, 748,
+    278, 667, 578, 446, 556, 222, 547, 578, 575, 500, 557, 446, 441, 556, 556,
+    222, 500, 500, 576, 500, 448, 556, 690, 569, 482, 617, 395, 547, 648, 525,
+    713, 781, 222, 547, 556, 547, 781, 667, 667, 865, 542, 719, 667, 278, 278,
+    500, 1057, 1010, 854, 583, 722, 635, 719, 667, 656, 667, 542, 677, 667, 923,
+    604, 719, 719, 583, 656, 833, 722, 778, 719, 667, 722, 611, 635, 760, 667,
+    740, 667, 917, 938, 792, 885, 656, 719, 1010, 722, 556, 573, 531, 365, 583,
+    556, 669, 458, 559, 559, 438, 583, 688, 552, 556, 542, 556, 500, 458, 500,
+    823, 500, 573, 521, 802, 823, 625, 719, 521, 510, 750, 542, 556, 556, 556,
+    365, 510, 500, 222, 278, 222, 906, 812, 556, 438, 559, 500, 552, 778, 556,
+    489, 411, 944, 722, 944, 722, 944, 722, 667, 500, 333, 333, 556, 1e3, 1e3,
+    552, 222, 222, 222, 222, 333, 333, 333, 556, 556, 350, 1e3, 1e3, 188, 354,
+    333, 333, 500, 333, 167, 365, 556, 556, 1094, 556, 885, 323, 1073, 1e3, 768,
+    600, 834, 834, 834, 834, 1e3, 500, 1e3, 500, 1e3, 500, 500, 494, 612, 823,
+    713, 584, 549, 713, 979, 719, 274, 549, 549, 583, 549, 549, 604, 584, 604,
+    604, 708, 625, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
+    708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
+    708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708, 708,
+    708, 708, 708, 729, 604, 604, 354, 354, 1e3, 990, 990, 990, 990, 494, 604,
+    604, 604, 604, 354, 1021, 1052, 917, 750, 750, 531, 656, 594, 510, 500, 750,
+    750, 500, 500, 333, 333, 333, 333, 333, 333, 333, 333, 222, 222, 294, 294,
+    324, 324, 316, 328, 398, 285,
+  ],
+  Ms = [
+    -1, -1, -1, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
+    67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
+    86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103,
+    104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118,
+    119, 120, 121, 122, 123, 124, 125, 126, 161, 162, 163, 164, 165, 166, 167,
+    168, 169, 170, 171, 172, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183,
+    184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198,
+    199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213,
+    214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228,
+    229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243,
+    244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258,
+    259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273,
+    274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288,
+    289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303,
+    304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318,
+    319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333,
+    334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348,
+    349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363,
+    364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378,
+    379, 380, 381, 382, 383, 402, 506, 507, 508, 509, 510, 511, 536, 537, 538,
+    539, 710, 711, 713, 728, 729, 730, 731, 732, 733, 900, 901, 902, 903, 904,
+    905, 906, 908, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921,
+    922, 923, 924, 925, 926, 927, 928, 929, 931, 932, 933, 934, 935, 936, 937,
+    938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952,
+    953, 954, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965, 966, 967,
+    968, 969, 970, 971, 972, 973, 974, 1024, 1025, 1026, 1027, 1028, 1029, 1030,
+    1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 1041, 1042,
+    1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 1052, 1053, 1054,
+    1055, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1063, 1064, 1065, 1066,
+    1067, 1068, 1069, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078,
+    1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090,
+    1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102,
+    1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114,
+    1115, 1116, 1117, 1118, 1119, 1138, 1139, 1168, 1169, 7808, 7809, 7810,
+    7811, 7812, 7813, 7922, 7923, 8208, 8209, 8211, 8212, 8213, 8215, 8216,
+    8217, 8218, 8219, 8220, 8221, 8222, 8224, 8225, 8226, 8230, 8240, 8242,
+    8243, 8249, 8250, 8252, 8254, 8260, 8319, 8355, 8356, 8359, 8364, 8453,
+    8467, 8470, 8482, 8486, 8494, 8539, 8540, 8541, 8542, 8592, 8593, 8594,
+    8595, 8596, 8597, 8616, 8706, 8710, 8719, 8721, 8722, 8730, 8734, 8735,
+    8745, 8747, 8776, 8800, 8801, 8804, 8805, 8962, 8976, 8992, 8993, 9472,
+    9474, 9484, 9488, 9492, 9496, 9500, 9508, 9516, 9524, 9532, 9552, 9553,
+    9554, 9555, 9556, 9557, 9558, 9559, 9560, 9561, 9562, 9563, 9564, 9565,
+    9566, 9567, 9568, 9569, 9570, 9571, 9572, 9573, 9574, 9575, 9576, 9577,
+    9578, 9579, 9580, 9600, 9604, 9608, 9612, 9616, 9617, 9618, 9619, 9632,
+    9633, 9642, 9643, 9644, 9650, 9658, 9660, 9668, 9674, 9675, 9679, 9688,
+    9689, 9702, 9786, 9787, 9788, 9792, 9794, 9824, 9827, 9829, 9830, 9834,
+    9835, 9836, 61441, 61442, 61445, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1,
+  ],
+  Ns = [
     1.36898, 1, 1, 0.72706, 0.80479, 0.83734, 0.98894, 0.99793, 0.9897, 0.93884,
     0.86209, 0.94292, 0.94292, 1.16661, 1.02058, 0.93582, 0.96694, 0.93582,
     1.19137, 0.99793, 0.99793, 0.99793, 0.99793, 0.99793, 0.99793, 0.99793,
@@ -30118,8 +30130,8 @@ const hs = [
     1.16161, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  Ms = { lineHeight: 1.2, lineGap: 0.2 },
-  Ns = [
+  _s = { lineHeight: 1.2, lineGap: 0.2 },
+  Es = [
     1.36898, 1, 1, 0.66227, 0.80779, 0.81625, 0.97276, 0.97276, 0.97733,
     0.92222, 0.83266, 0.94292, 0.94292, 1.16148, 1.02058, 0.93582, 0.96694,
     0.93582, 1.17337, 0.97276, 0.97276, 0.97276, 0.97276, 0.97276, 0.97276,
@@ -30184,8 +30196,8 @@ const hs = [
     1.20006, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  _s = { lineHeight: 1.2, lineGap: 0.2 },
-  Es = [
+  zs = { lineHeight: 1.2, lineGap: 0.2 },
+  Ls = [
     1.36898, 1, 1, 0.65507, 0.84943, 0.85639, 0.88465, 0.88465, 0.86936,
     0.88307, 0.86948, 0.85283, 0.85283, 1.06383, 1.02058, 0.75945, 0.9219,
     0.75945, 1.17337, 0.88465, 0.88465, 0.88465, 0.88465, 0.88465, 0.88465,
@@ -30249,8 +30261,8 @@ const hs = [
     1, 1, 1.05233, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  zs = { lineHeight: 1.2, lineGap: 0.2 },
-  Ls = [
+  Us = { lineHeight: 1.2, lineGap: 0.2 },
+  Xs = [
     1.36898, 1, 1, 0.76305, 0.82784, 0.94935, 0.89364, 0.92241, 0.89073,
     0.90706, 0.98472, 0.85283, 0.85283, 1.0664, 1.02058, 0.74505, 0.9219,
     0.74505, 1.23456, 0.92241, 0.92241, 0.92241, 0.92241, 0.92241, 0.92241,
@@ -30314,8 +30326,8 @@ const hs = [
     1, 1.05638, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  Us = { lineHeight: 1.2, lineGap: 0.2 },
-  Xs = [
+  Ws = { lineHeight: 1.2, lineGap: 0.2 },
+  Ks = [
     1.76738, 1, 1, 0.99297, 0.9824, 1.04016, 1.06497, 1.03424, 0.97529, 1.17647,
     1.23203, 1.1085, 1.1085, 1.16939, 1.2107, 0.9754, 1.21408, 0.9754, 1.59578,
     1.03424, 1.03424, 1.03424, 1.03424, 1.03424, 1.03424, 1.03424, 1.03424,
@@ -30384,8 +30396,8 @@ const hs = [
     1, 1, 1, 1.09193, 1.09193, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1,
   ],
-  Ws = { lineHeight: 1.33008, lineGap: 0 },
-  Ks = [
+  Gs = { lineHeight: 1.33008, lineGap: 0 },
+  Vs = [
     1.76738, 1, 1, 0.98946, 1.03959, 1.04016, 1.02809, 1.036, 0.97639, 1.10953,
     1.23203, 1.11144, 1.11144, 1.16939, 1.21237, 0.9754, 1.21261, 0.9754,
     1.59754, 1.036, 1.036, 1.036, 1.036, 1.036, 1.036, 1.036, 1.036, 1.036,
@@ -30454,8 +30466,8 @@ const hs = [
     1.34163, 1, 1, 1, 1.13269, 1.13269, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1,
   ],
-  Gs = { lineHeight: 1.33008, lineGap: 0 },
-  Vs = [
+  $s = { lineHeight: 1.33008, lineGap: 0 },
+  Ys = [
     1.76738, 1, 1, 0.98946, 1.14763, 1.05365, 1.06234, 0.96927, 0.92586,
     1.15373, 1.18414, 0.91349, 0.91349, 1.07403, 1.17308, 0.78383, 1.20088,
     0.78383, 1.42531, 0.96927, 0.96927, 0.96927, 0.96927, 0.96927, 0.96927,
@@ -30524,8 +30536,8 @@ const hs = [
     1, 1, 1, 1, 1, 1.2886, 1.04315, 1.15296, 1.34163, 1, 1, 1, 1.10742, 1.10742,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  $s = { lineHeight: 1.33008, lineGap: 0 },
-  Ys = [
+  Js = { lineHeight: 1.33008, lineGap: 0 },
+  Qs = [
     1.76738, 1, 1, 0.98594, 1.02285, 1.10454, 1.06234, 0.96927, 0.92037,
     1.19985, 1.2046, 0.90616, 0.90616, 1.07152, 1.1714, 0.78032, 1.20088,
     0.78032, 1.40246, 0.96927, 0.96927, 0.96927, 0.96927, 0.96927, 0.96927,
@@ -30594,149 +30606,149 @@ const hs = [
     1, 1, 1, 1.10938, 1.10938, 1, 1, 1, 1.05425, 1.09971, 1.09971, 1.09971, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ],
-  Js = { lineHeight: 1.33008, lineGap: 0 },
-  Qs = getLookupTableFactory(function (e) {
+  Zs = { lineHeight: 1.33008, lineGap: 0 },
+  er = getLookupTableFactory(function (e) {
     e['MyriadPro-Regular'] = e['PdfJS-Fallback-Regular'] = {
       name: 'LiberationSans-Regular',
-      factors: Ls,
-      baseWidths: Hs,
-      baseMapping: Bs,
-      metrics: Us,
+      factors: Xs,
+      baseWidths: Ds,
+      baseMapping: Ms,
+      metrics: Ws,
     };
     e['MyriadPro-Bold'] = e['PdfJS-Fallback-Bold'] = {
       name: 'LiberationSans-Bold',
-      factors: Ds,
-      baseWidths: Cs,
-      baseMapping: Is,
-      metrics: Ms,
+      factors: Ns,
+      baseWidths: Fs,
+      baseMapping: Ts,
+      metrics: _s,
     };
     e['MyriadPro-It'] =
       e['MyriadPro-Italic'] =
       e['PdfJS-Fallback-Italic'] =
         {
           name: 'LiberationSans-Italic',
-          factors: Es,
-          baseWidths: Os,
-          baseMapping: Rs,
-          metrics: zs,
+          factors: Ls,
+          baseWidths: Hs,
+          baseMapping: Bs,
+          metrics: Us,
         };
     e['MyriadPro-BoldIt'] =
       e['MyriadPro-BoldItalic'] =
       e['PdfJS-Fallback-BoldItalic'] =
         {
           name: 'LiberationSans-BoldItalic',
-          factors: Ns,
-          baseWidths: Fs,
-          baseMapping: Ts,
-          metrics: _s,
+          factors: Es,
+          baseWidths: Os,
+          baseMapping: Rs,
+          metrics: zs,
         };
     e.ArialMT =
       e.Arial =
       e['Arial-Regular'] =
-        { name: 'LiberationSans-Regular', baseWidths: Hs, baseMapping: Bs };
+        { name: 'LiberationSans-Regular', baseWidths: Ds, baseMapping: Ms };
     e['Arial-BoldMT'] = e['Arial-Bold'] = {
       name: 'LiberationSans-Bold',
-      baseWidths: Cs,
-      baseMapping: Is,
-    };
-    e['Arial-ItalicMT'] = e['Arial-Italic'] = {
-      name: 'LiberationSans-Italic',
-      baseWidths: Os,
-      baseMapping: Rs,
-    };
-    e['Arial-BoldItalicMT'] = e['Arial-BoldItalic'] = {
-      name: 'LiberationSans-BoldItalic',
       baseWidths: Fs,
       baseMapping: Ts,
     };
-    e['Calibri-Regular'] = {
-      name: 'LiberationSans-Regular',
-      factors: bs,
+    e['Arial-ItalicMT'] = e['Arial-Italic'] = {
+      name: 'LiberationSans-Italic',
       baseWidths: Hs,
       baseMapping: Bs,
-      metrics: ws,
+    };
+    e['Arial-BoldItalicMT'] = e['Arial-BoldItalic'] = {
+      name: 'LiberationSans-BoldItalic',
+      baseWidths: Os,
+      baseMapping: Rs,
+    };
+    e['Calibri-Regular'] = {
+      name: 'LiberationSans-Regular',
+      factors: js,
+      baseWidths: Ds,
+      baseMapping: Ms,
+      metrics: ks,
     };
     e['Calibri-Bold'] = {
       name: 'LiberationSans-Bold',
-      factors: hs,
-      baseWidths: Cs,
-      baseMapping: Is,
-      metrics: us,
-    };
-    e['Calibri-Italic'] = {
-      name: 'LiberationSans-Italic',
-      factors: ds,
-      baseWidths: Os,
-      baseMapping: Rs,
-      metrics: gs,
-    };
-    e['Calibri-BoldItalic'] = {
-      name: 'LiberationSans-BoldItalic',
       factors: ms,
       baseWidths: Fs,
       baseMapping: Ts,
       metrics: ps,
     };
-    e['Segoeui-Regular'] = {
-      name: 'LiberationSans-Regular',
-      factors: Ys,
+    e['Calibri-Italic'] = {
+      name: 'LiberationSans-Italic',
+      factors: bs,
       baseWidths: Hs,
       baseMapping: Bs,
-      metrics: Js,
+      metrics: ws,
+    };
+    e['Calibri-BoldItalic'] = {
+      name: 'LiberationSans-BoldItalic',
+      factors: ds,
+      baseWidths: Os,
+      baseMapping: Rs,
+      metrics: gs,
+    };
+    e['Segoeui-Regular'] = {
+      name: 'LiberationSans-Regular',
+      factors: Qs,
+      baseWidths: Ds,
+      baseMapping: Ms,
+      metrics: Zs,
     };
     e['Segoeui-Bold'] = {
       name: 'LiberationSans-Bold',
-      factors: Xs,
-      baseWidths: Cs,
-      baseMapping: Is,
-      metrics: Ws,
-    };
-    e['Segoeui-Italic'] = {
-      name: 'LiberationSans-Italic',
-      factors: Vs,
-      baseWidths: Os,
-      baseMapping: Rs,
-      metrics: $s,
-    };
-    e['Segoeui-BoldItalic'] = {
-      name: 'LiberationSans-BoldItalic',
       factors: Ks,
       baseWidths: Fs,
       baseMapping: Ts,
       metrics: Gs,
     };
-    e['Helvetica-Regular'] = e.Helvetica = {
-      name: 'LiberationSans-Regular',
-      factors: As,
+    e['Segoeui-Italic'] = {
+      name: 'LiberationSans-Italic',
+      factors: Ys,
       baseWidths: Hs,
       baseMapping: Bs,
-      metrics: xs,
+      metrics: Js,
+    };
+    e['Segoeui-BoldItalic'] = {
+      name: 'LiberationSans-BoldItalic',
+      factors: Vs,
+      baseWidths: Os,
+      baseMapping: Rs,
+      metrics: $s,
+    };
+    e['Helvetica-Regular'] = e.Helvetica = {
+      name: 'LiberationSans-Regular',
+      factors: Cs,
+      baseWidths: Ds,
+      baseMapping: Ms,
+      metrics: Is,
     };
     e['Helvetica-Bold'] = {
       name: 'LiberationSans-Bold',
-      factors: js,
-      baseWidths: Cs,
-      baseMapping: Is,
-      metrics: ks,
-    };
-    e['Helvetica-Italic'] = {
-      name: 'LiberationSans-Italic',
-      factors: vs,
-      baseWidths: Os,
-      baseMapping: Rs,
-      metrics: Ss,
-    };
-    e['Helvetica-BoldItalic'] = {
-      name: 'LiberationSans-BoldItalic',
       factors: ys,
       baseWidths: Fs,
       baseMapping: Ts,
       metrics: qs,
     };
+    e['Helvetica-Italic'] = {
+      name: 'LiberationSans-Italic',
+      factors: As,
+      baseWidths: Hs,
+      baseMapping: Bs,
+      metrics: xs,
+    };
+    e['Helvetica-BoldItalic'] = {
+      name: 'LiberationSans-BoldItalic',
+      factors: vs,
+      baseWidths: Os,
+      baseMapping: Rs,
+      metrics: Ss,
+    };
   });
 function getXfaFontName(e) {
   const t = normalizeFontName(e);
-  return Qs()[t];
+  return er()[t];
 }
 function getXfaFontDict(e) {
   const t = (function getXfaFontWidths(e) {
@@ -30777,7 +30789,7 @@ function getXfaFontDict(e) {
   a.set('CIDSystemInfo', s);
   return a;
 }
-const Zs = {
+const tr = {
   number: 0,
   lbrace: 1,
   rbrace: 2,
@@ -30834,23 +30846,23 @@ class Token {
   }
 }
 class lexer_Lexer {
-  static #ce = null;
-  static #he = null;
-  static #ue() {
+  static #me = null;
+  static #pe = null;
+  static #de() {
     const e = Object.create(null),
       t = Object.create(null);
-    for (const [a, n] of Object.entries(Zs)) {
+    for (const [a, n] of Object.entries(tr)) {
       if ('number' === a) continue;
-      const s = n >= Zs.true && n <= Zs.ifelse,
+      const s = n >= tr.true && n <= tr.ifelse,
         r = new Token(n, s ? a : null);
       e[a] = r;
       s && (t[a] = r);
     }
-    this.#ce = e;
-    this.#he = t;
+    this.#me = e;
+    this.#pe = t;
   }
   constructor(e) {
-    lexer_Lexer.#ce || lexer_Lexer.#ue();
+    lexer_Lexer.#me || lexer_Lexer.#de();
     this.data = e;
     this.pos = 0;
     this.len = e.length;
@@ -30866,20 +30878,20 @@ class lexer_Lexer {
   _getNumber() {
     this._numberPattern.lastIndex = this.pos;
     const e = this._numberPattern.exec(this.data);
-    if (!e) return new Token(Zs.number, 0);
+    if (!e) return new Token(tr.number, 0);
     const t = parseFloat(e[0]);
-    if (!Number.isFinite(t)) return new Token(Zs.number, 0);
+    if (!Number.isFinite(t)) return new Token(tr.number, 0);
     this.pos = this._numberPattern.lastIndex;
-    return new Token(Zs.number, t);
+    return new Token(tr.number, t);
   }
   _getOperator() {
     this._identifierPattern.lastIndex = this.pos;
     const e = this._identifierPattern.exec(this.data);
-    if (!e) return new Token(Zs.number, 0);
+    if (!e) return new Token(tr.number, 0);
     this.pos = this._identifierPattern.lastIndex;
     const t = e[0],
-      a = lexer_Lexer.#he[t];
-    return a || new Token(Zs.number, 0);
+      a = lexer_Lexer.#pe[t];
+    return a || new Token(tr.number, 0);
   }
   next() {
     for (; this.pos < this.len;) {
@@ -30896,9 +30908,9 @@ class lexer_Lexer {
           this._skipComment();
           break;
         case 123:
-          return lexer_Lexer.#ce.lbrace;
+          return lexer_Lexer.#me.lbrace;
         case 125:
-          return lexer_Lexer.#ce.rbrace;
+          return lexer_Lexer.#me.rbrace;
         case 43:
         case 45:
         case 46:
@@ -30913,26 +30925,26 @@ class lexer_Lexer {
             this.pos--;
             return this._getOperator();
           }
-          return new Token(Zs.number, 0);
+          return new Token(tr.number, 0);
       }
     }
-    return lexer_Lexer.#ce.eof;
+    return lexer_Lexer.#me.eof;
   }
 }
-const er = 0,
-  tr = 1,
-  ar = 2,
-  nr = 0,
-  sr = 1,
-  rr = 2,
-  ir = 3,
-  or = 4,
-  lr = 5,
-  fr = 6,
-  cr = 7,
-  hr = 8,
-  ur = 9,
-  mr = 10;
+const ar = 0,
+  nr = 1,
+  sr = 2,
+  rr = 0,
+  ir = 1,
+  or = 2,
+  lr = 3,
+  fr = 4,
+  cr = 5,
+  hr = 6,
+  ur = 7,
+  mr = 8,
+  pr = 9,
+  dr = 10;
 class PsNode {
   constructor(e) {
     this.type = e;
@@ -30940,66 +30952,66 @@ class PsNode {
 }
 class PsProgram extends PsNode {
   constructor(e) {
-    super(nr);
+    super(rr);
     this.body = e;
   }
 }
 class PsBlock extends PsNode {
   constructor(e) {
-    super(sr);
+    super(ir);
     this.instructions = e;
   }
 }
 class PsNumber extends PsNode {
   constructor(e) {
-    super(rr);
+    super(or);
     this.value = e;
   }
 }
 class PsOperator extends PsNode {
   constructor(e) {
-    super(ir);
+    super(lr);
     this.op = e;
   }
 }
 class PsIf extends PsNode {
   constructor(e) {
-    super(or);
+    super(fr);
     this.then = e;
   }
 }
 class PsIfElse extends PsNode {
   constructor(e, t) {
-    super(lr);
+    super(cr);
     this.then = e;
     this.otherwise = t;
   }
 }
 class PsArgNode extends PsNode {
   constructor(e) {
-    super(fr);
+    super(hr);
     this.index = e;
-    this.valueType = er;
+    this.valueType = ar;
   }
 }
 class PsConstNode extends PsNode {
   constructor(e) {
-    super(cr);
+    super(ur);
     this.value = e;
-    this.valueType = 'boolean' == typeof e ? tr : er;
+    this.valueType = 'boolean' == typeof e ? nr : ar;
   }
 }
 class PsUnaryNode extends PsNode {
-  constructor(e, t, a = ar) {
-    super(hr);
+  constructor(e, t, a = sr) {
+    super(mr);
     this.op = e;
     this.operand = t;
     this.valueType = a;
   }
 }
 class PsBinaryNode extends PsNode {
-  constructor(e, t, a, n = ar) {
-    super(ur);
+  constructor(e, t, a, n = sr) {
+    super(pr);
     this.op = e;
     this.first = t;
     this.second = a;
@@ -31007,8 +31019,8 @@ class PsBinaryNode extends PsNode {
   }
 }
 class PsTernaryNode extends PsNode {
-  constructor(e, t, a, n = ar) {
-    super(mr);
+  constructor(e, t, a, n = sr) {
+    super(dr);
     this.cond = e;
     this.then = t;
     this.otherwise = a;
@@ -31021,7 +31033,7 @@ class ast_Parser {
     this._token = null;
   }
   static _isRegularOperator(e) {
-    return e >= Zs.true && e < Zs.if;
+    return e >= tr.true && e < tr.if;
   }
   _advance() {
     this._token = this.lexer.next();
@@ -31037,10 +31049,10 @@ class ast_Parser {
   }
   parse() {
     this._advance();
-    this._expect(Zs.lbrace);
+    this._expect(tr.lbrace);
     const e = this._parseBlock();
-    this._expect(Zs.rbrace);
-    this._token.id !== Zs.eof &&
+    this._expect(tr.rbrace);
+    this._token.id !== tr.eof &&
       warn('PostScript function: unexpected content after closing brace.');
     return new PsProgram(e);
   }
@@ -31049,37 +31061,37 @@ class ast_Parser {
     for (;;) {
       const t = this._token;
       switch (t.id) {
-        case Zs.number:
+        case tr.number:
           e.push(new PsNumber(t.value));
           this._advance();
           break;
-        case Zs.lbrace: {
+        case tr.lbrace: {
           this._advance();
           const t = this._parseBlock();
-          this._expect(Zs.rbrace);
-          if (this._token.id === Zs.if) {
+          this._expect(tr.rbrace);
+          if (this._token.id === tr.if) {
             this._advance();
             e.push(new PsIf(t));
           } else {
-            if (this._token.id !== Zs.lbrace)
+            if (this._token.id !== tr.lbrace)
               throw new FormatError(
                 "PostScript function: a procedure block must be followed by 'if' or '{…} ifelse'."
               );
             {
               this._advance();
               const a = this._parseBlock();
-              this._expect(Zs.rbrace);
-              this._expect(Zs.ifelse);
+              this._expect(tr.rbrace);
+              this._expect(tr.ifelse);
               e.push(new PsIfElse(t, a));
             }
           }
           break;
         }
-        case Zs.rbrace:
-        case Zs.eof:
+        case tr.rbrace:
+        case tr.eof:
           return new PsBlock(e);
-        case Zs.if:
-        case Zs.ifelse:
+        case tr.if:
+        case tr.ifelse:
           throw new FormatError(
             `PostScript function: unexpected '${t.value}' operator.`
           );
@@ -31103,19 +31115,19 @@ function _nodesEqual(e, t) {
   if (e === t) return !0;
   if (e.type !== t.type) return !1;
   switch (e.type) {
-    case fr:
-      return e.index === t.index;
-    case cr:
-      return e.value === t.value;
     case hr:
-      return e.op === t.op && _nodesEqual(e.operand, t.operand);
+      return e.index === t.index;
     case ur:
+      return e.value === t.value;
+    case mr:
+      return e.op === t.op && _nodesEqual(e.operand, t.operand);
+    case pr:
       return (
         e.op === t.op &&
         _nodesEqual(e.first, t.first) &&
         _nodesEqual(e.second, t.second)
       );
-    case mr:
+    case dr:
       return (
         _nodesEqual(e.cond, t.cond) &&
         _nodesEqual(e.then, t.then) &&
@@ -31125,94 +31137,94 @@ function _nodesEqual(e, t) {
       return !1;
   }
 }
-const pr = 100;
+const gr = 100;
 class PSStackToTree {
-  static #me = null;
-  static #pe = null;
-  static #de = null;
   static #ge = null;
-  static #be() {
-    this.#me = new Set([
-      Zs.add,
-      Zs.sub,
-      Zs.mul,
-      Zs.div,
-      Zs.idiv,
-      Zs.mod,
-      Zs.exp,
-      Zs.atan,
-      Zs.eq,
-      Zs.ne,
-      Zs.gt,
-      Zs.ge,
-      Zs.lt,
-      Zs.le,
-      Zs.and,
-      Zs.or,
-      Zs.xor,
-      Zs.bitshift,
+  static #be = null;
+  static #we = null;
+  static #je = null;
+  static #ke() {
+    this.#ge = new Set([
+      tr.add,
+      tr.sub,
+      tr.mul,
+      tr.div,
+      tr.idiv,
+      tr.mod,
+      tr.exp,
+      tr.atan,
+      tr.eq,
+      tr.ne,
+      tr.gt,
+      tr.ge,
+      tr.lt,
+      tr.le,
+      tr.and,
+      tr.or,
+      tr.xor,
+      tr.bitshift,
     ]);
-    this.#pe = new Set([
-      Zs.abs,
-      Zs.neg,
-      Zs.ceiling,
-      Zs.floor,
-      Zs.round,
-      Zs.truncate,
-      Zs.sqrt,
-      Zs.sin,
-      Zs.cos,
-      Zs.ln,
-      Zs.log,
-      Zs.cvi,
-      Zs.cvr,
-      Zs.not,
+    this.#be = new Set([
+      tr.abs,
+      tr.neg,
+      tr.ceiling,
+      tr.floor,
+      tr.round,
+      tr.truncate,
+      tr.sqrt,
+      tr.sin,
+      tr.cos,
+      tr.ln,
+      tr.log,
+      tr.cvi,
+      tr.cvr,
+      tr.not,
     ]);
-    this.#de = new Set([
-      Zs.abs,
-      Zs.ceiling,
-      Zs.cvi,
-      Zs.cvr,
-      Zs.floor,
-      Zs.round,
-      Zs.truncate,
+    this.#we = new Set([
+      tr.abs,
+      tr.ceiling,
+      tr.cvi,
+      tr.cvr,
+      tr.floor,
+      tr.round,
+      tr.truncate,
     ]);
-    this.#ge = new Map([
-      [Zs.eq, Zs.ne],
-      [Zs.ne, Zs.eq],
-      [Zs.lt, Zs.ge],
-      [Zs.le, Zs.gt],
-      [Zs.gt, Zs.le],
-      [Zs.ge, Zs.lt],
+    this.#je = new Map([
+      [tr.eq, tr.ne],
+      [tr.ne, tr.eq],
+      [tr.lt, tr.ge],
+      [tr.le, tr.gt],
+      [tr.gt, tr.le],
+      [tr.ge, tr.lt],
     ]);
   }
   evaluate(e, t) {
-    PSStackToTree.#me || PSStackToTree.#be();
+    PSStackToTree.#ge || PSStackToTree.#ke();
     this._failed = !1;
-    if (t > pr) return null;
+    if (t > gr) return null;
     const a = [];
     for (let e = 0; e < t; e++) a.push(new PsArgNode(e));
     this._evalBlock(e.body, a);
     if (this._failed) return null;
-    PSStackToTree.#we(a);
+    PSStackToTree.#ye(a);
     return a;
   }
-  static #we(e) {
+  static #ye(e) {
     const t = new Map(),
       visit = (e) => {
-        if (!e || e.type === fr || e.type === cr) return;
+        if (!e || e.type === hr || e.type === ur) return;
         const a = t.get(e) ?? 0;
         t.set(e, a + 1);
         if (!(a > 0))
           switch (e.type) {
-            case hr:
+            case mr:
               visit(e.operand);
               break;
-            case ur:
+            case pr:
               visit(e.first);
               visit(e.second);
               break;
-            case mr:
+            case dr:
               visit(e.cond);
               visit(e.then);
               visit(e.otherwise);
@@ -31232,14 +31244,14 @@ class PSStackToTree {
     for (let n = t; n < e.length && !this._failed; n++) {
       const t = e[n];
       switch (t.type) {
-        case rr:
+        case or:
           a.push(new PsConstNode(t.value));
-          a.length > pr && (this._failed = !0);
+          a.length > gr && (this._failed = !0);
           break;
-        case ir:
+        case lr:
           this._evalOp(t.op, a);
           break;
-        case or: {
+        case fr: {
           if (a.length < 1) {
             this._failed = !0;
             break;
@@ -31253,7 +31265,7 @@ class PSStackToTree {
               a[e] !== r[e] && (a[e] = this._makeTernary(s, a[e], r[e]));
           else {
             if (a.length > r.length) {
-              if (s.type === cr) {
+              if (s.type === ur) {
                 if (!s.value) {
                   a.length = 0;
                   a.push(...r);
@@ -31280,7 +31292,7 @@ class PSStackToTree {
           }
           break;
         }
-        case lr: {
+        case cr: {
           if (a.length < 1) {
             this._failed = !0;
             break;
@@ -31307,7 +31319,7 @@ class PSStackToTree {
     }
   }
   _evalOp(e, t) {
-    if (PSStackToTree.#me.has(e)) {
+    if (PSStackToTree.#ge.has(e)) {
       if (t.length < 2) {
         this._failed = !0;
         return;
@@ -31317,7 +31329,7 @@ class PSStackToTree {
       t.push(this._makeBinary(e, a, n));
       return;
     }
-    if (PSStackToTree.#pe.has(e)) {
+    if (PSStackToTree.#be.has(e)) {
       if (t.length < 1) {
         this._failed = !0;
         return;
@@ -31325,23 +31337,23 @@ class PSStackToTree {
       t.push(this._makeUnary(e, t.pop()));
     } else
       switch (e) {
-        case Zs.true:
+        case tr.true:
           t.push(new PsConstNode(!0));
-          t.length > pr && (this._failed = !0);
+          t.length > gr && (this._failed = !0);
           break;
-        case Zs.false:
+        case tr.false:
           t.push(new PsConstNode(!1));
-          t.length > pr && (this._failed = !0);
+          t.length > gr && (this._failed = !0);
           break;
-        case Zs.dup:
+        case tr.dup:
           if (t.length < 1) {
             this._failed = !0;
             break;
           }
           t.push(t.at(-1));
-          t.length > pr && (this._failed = !0);
+          t.length > gr && (this._failed = !0);
           break;
-        case Zs.exch: {
+        case tr.exch: {
           if (t.length < 2) {
             this._failed = !0;
             break;
@@ -31351,50 +31363,50 @@ class PSStackToTree {
           t.push(e, a);
           break;
         }
-        case Zs.pop:
+        case tr.pop:
           if (t.length < 1) {
             this._failed = !0;
             break;
           }
           t.pop();
           break;
-        case Zs.copy: {
+        case tr.copy: {
           if (t.length < 1) {
             this._failed = !0;
             break;
           }
           const e = t.pop();
-          if (e.type === cr) {
+          if (e.type === ur) {
             const a = 0 | e.value;
             if (0 === a);
             else if (a < 0 || a > t.length) this._failed = !0;
             else {
               t.push(...t.slice(-a));
-              t.length > pr && (this._failed = !0);
+              t.length > gr && (this._failed = !0);
             }
           } else this._failed = !0;
           break;
         }
-        case Zs.index: {
+        case tr.index: {
           if (t.length < 1) {
             this._failed = !0;
             break;
           }
           const e = t.pop();
-          if (e.type === cr) {
+          if (e.type === ur) {
             const a = 0 | e.value;
             a < 0 || a >= t.length ? (this._failed = !0) : t.push(t.at(-a - 1));
           } else this._failed = !0;
           break;
         }
-        case Zs.roll: {
+        case tr.roll: {
           if (t.length < 2) {
             this._failed = !0;
             break;
           }
           const e = t.pop(),
             a = t.pop();
-          if (a.type === cr && e.type === cr) {
+          if (a.type === ur && e.type === ur) {
             const n = 0 | a.value;
             if (0 === n);
             else if (n < 0 || n > t.length) this._failed = !0;
@@ -31413,53 +31425,53 @@ class PSStackToTree {
       }
   }
   _makeBinary(e, t, a) {
-    if (t.type === cr && a.type === cr) {
+    if (t.type === ur && a.type === ur) {
       const n = (function _evalBinaryConst(e, t, a) {
         switch (e) {
-          case Zs.add:
+          case tr.add:
             return t + a;
-          case Zs.sub:
+          case tr.sub:
             return t - a;
-          case Zs.mul:
+          case tr.mul:
             return t * a;
-          case Zs.div:
+          case tr.div:
             return 0 !== a ? t / a : 0;
-          case Zs.idiv:
+          case tr.idiv:
             return 0 !== a ? Math.trunc(t / a) : 0;
-          case Zs.mod:
+          case tr.mod:
             return 0 !== a ? t - Math.trunc(t / a) * a : 0;
-          case Zs.exp: {
+          case tr.exp: {
             const e = t ** a;
             return Number.isFinite(e) ? e : void 0;
           }
-          case Zs.atan: {
+          case tr.atan: {
             let e = Math.atan2(t, a) * (180 / Math.PI);
             e < 0 && (e += 360);
             return e;
           }
-          case Zs.eq:
+          case tr.eq:
             return t === a;
-          case Zs.ne:
+          case tr.ne:
             return t !== a;
-          case Zs.gt:
+          case tr.gt:
             return t > a;
-          case Zs.ge:
+          case tr.ge:
             return t >= a;
-          case Zs.lt:
+          case tr.lt:
             return t < a;
-          case Zs.le:
+          case tr.le:
             return t <= a;
-          case Zs.and:
+          case tr.and:
             return 'boolean' == typeof t ? t && a : (t & a) | 0;
-          case Zs.or:
+          case tr.or:
             return 'boolean' == typeof t ? t || a : t | a | 0;
-          case Zs.xor:
+          case tr.xor:
             return 'boolean' == typeof t ? t !== a : (t ^ a) | 0;
-          case Zs.bitshift:
+          case tr.bitshift:
             return a >= 0 ? (t << a) | 0 : (t >> -a) | 0;
-          case Zs.min:
+          case tr.min:
             return Math.min(t, a);
-          case Zs.max:
+          case tr.max:
             return Math.max(t, a);
           default:
             return;
@@ -31469,106 +31481,106 @@ class PSStackToTree {
     }
     if (_nodesEqual(t, a))
       switch (e) {
-        case Zs.sub:
+        case tr.sub:
           return new PsConstNode(0);
-        case Zs.xor:
-          return new PsConstNode(t.valueType !== tr && 0);
-        case Zs.and:
-        case Zs.or:
-        case Zs.min:
-        case Zs.max:
+        case tr.xor:
+          return new PsConstNode(t.valueType !== nr && 0);
+        case tr.and:
+        case tr.or:
+        case tr.min:
+        case tr.max:
           return t;
-        case Zs.eq:
-        case Zs.ge:
-        case Zs.le:
+        case tr.eq:
+        case tr.ge:
+        case tr.le:
           return new PsConstNode(!0);
-        case Zs.ne:
-        case Zs.gt:
-        case Zs.lt:
+        case tr.ne:
+        case tr.gt:
+        case tr.lt:
           return new PsConstNode(!1);
       }
-    if (t.type === cr) {
+    if (t.type === ur) {
       const n = t.value;
       switch (e) {
-        case Zs.add:
-        case Zs.sub:
+        case tr.add:
+        case tr.sub:
           if (0 === n) return a;
           break;
-        case Zs.mul:
+        case tr.mul:
           if (1 === n) return a;
           if (0 === n) return t;
-          if (-1 === n) return this._makeUnary(Zs.neg, a);
+          if (-1 === n) return this._makeUnary(tr.neg, a);
           break;
-        case Zs.div:
+        case tr.div:
           if (0 !== n)
-            return this._makeBinary(Zs.mul, new PsConstNode(1 / n), a);
+            return this._makeBinary(tr.mul, new PsConstNode(1 / n), a);
           break;
-        case Zs.idiv:
+        case tr.idiv:
           if (1 === n) return a;
           break;
-        case Zs.exp:
+        case tr.exp:
           if (1 === n) return a;
-          if (-1 === n) return this._makeBinary(Zs.div, a, new PsConstNode(1));
-          if (0.5 === n) return this._makeUnary(Zs.sqrt, a);
+          if (-1 === n) return this._makeBinary(tr.div, a, new PsConstNode(1));
+          if (0.5 === n) return this._makeUnary(tr.sqrt, a);
           if (0.25 === n) {
-            const e = this._makeUnary(Zs.sqrt, a);
-            return this._makeUnary(Zs.sqrt, e);
+            const e = this._makeUnary(tr.sqrt, a);
+            return this._makeUnary(tr.sqrt, e);
           }
-          if (2 === n) return this._makeBinary(Zs.mul, a, a);
+          if (2 === n) return this._makeBinary(tr.mul, a, a);
           if (3 === n)
-            return this._makeBinary(Zs.mul, this._makeBinary(Zs.mul, a, a), a);
+            return this._makeBinary(tr.mul, this._makeBinary(tr.mul, a, a), a);
           if (4 === n) {
-            const e = this._makeBinary(Zs.mul, a, a);
-            return this._makeBinary(Zs.mul, e, e);
+            const e = this._makeBinary(tr.mul, a, a);
+            return this._makeBinary(tr.mul, e, e);
           }
           if (0 === n) return new PsConstNode(1);
           break;
-        case Zs.and:
+        case tr.and:
           if (!0 === n) return a;
           if (!1 === n) return t;
           break;
-        case Zs.or:
+        case tr.or:
           if (!1 === n) return a;
           if (!0 === n) return t;
           break;
-        case Zs.min:
+        case tr.min:
           if (
-            a.type === ur &&
-            a.op === Zs.max &&
-            a.first.type === cr &&
+            a.type === pr &&
+            a.op === tr.max &&
+            a.first.type === ur &&
             a.first.value >= n
           )
             return t;
           break;
-        case Zs.max:
+        case tr.max:
           if (
-            a.type === ur &&
-            a.op === Zs.min &&
-            a.first.type === cr &&
+            a.type === pr &&
+            a.op === tr.min &&
+            a.first.type === ur &&
             a.first.value <= n
           )
             return t;
       }
     }
-    if (a.type === cr) {
+    if (a.type === ur) {
       const n = a.value;
       switch (e) {
-        case Zs.add:
+        case tr.add:
           if (0 === n) return t;
           break;
-        case Zs.sub:
-          if (0 === n) return this._makeUnary(Zs.neg, t);
+        case tr.sub:
+          if (0 === n) return this._makeUnary(tr.neg, t);
           break;
-        case Zs.mul:
+        case tr.mul:
           if (1 === n) return t;
           if (0 === n) return a;
-          if (-1 === n) return this._makeUnary(Zs.neg, t);
+          if (-1 === n) return this._makeUnary(tr.neg, t);
           break;
-        case Zs.and:
+        case tr.and:
           if (!0 === n) return t;
           if (!1 === n) return a;
           break;
-        case Zs.or:
+        case tr.or:
           if (!1 === n) return t;
           if (!0 === n) return a;
       }
@@ -31579,60 +31591,60 @@ class PSStackToTree {
       a,
       (function _binaryValueType(e, t, a) {
         switch (e) {
-          case Zs.eq:
-          case Zs.ne:
-          case Zs.gt:
-          case Zs.ge:
-          case Zs.lt:
-          case Zs.le:
-            return tr;
-          case Zs.and:
-          case Zs.or:
-          case Zs.xor:
-            return t === a && t !== ar ? t : ar;
+          case tr.eq:
+          case tr.ne:
+          case tr.gt:
+          case tr.ge:
+          case tr.lt:
+          case tr.le:
+            return nr;
+          case tr.and:
+          case tr.or:
+          case tr.xor:
+            return t === a && t !== sr ? t : sr;
           default:
-            return er;
+            return ar;
         }
       })(e, t.valueType, a.valueType)
     );
   }
   _makeUnary(e, t) {
-    if (t.type === cr) {
+    if (t.type === ur) {
       const a = (function _evalUnaryConst(e, t) {
         switch (e) {
-          case Zs.abs:
+          case tr.abs:
             return Math.abs(t);
-          case Zs.neg:
+          case tr.neg:
             return -t;
-          case Zs.ceiling:
+          case tr.ceiling:
             return Math.ceil(t);
-          case Zs.floor:
+          case tr.floor:
             return Math.floor(t);
-          case Zs.round:
+          case tr.round:
             return Math.round(t);
-          case Zs.truncate:
+          case tr.truncate:
             return Math.trunc(t);
-          case Zs.sqrt: {
+          case tr.sqrt: {
             const e = Math.sqrt(t);
             return Number.isFinite(e) ? e : void 0;
           }
-          case Zs.sin:
+          case tr.sin:
             return Math.sin(((t % 360) * Math.PI) / 180);
-          case Zs.cos:
+          case tr.cos:
             return Math.cos(((t % 360) * Math.PI) / 180);
-          case Zs.ln: {
+          case tr.ln: {
             const e = Math.log(t);
             return Number.isFinite(e) ? e : void 0;
           }
-          case Zs.log: {
+          case tr.log: {
             const e = Math.log10(t);
             return Number.isFinite(e) ? e : void 0;
           }
-          case Zs.cvi:
+          case tr.cvi:
             return Math.trunc(t);
-          case Zs.cvr:
+          case tr.cvr:
             return t;
-          case Zs.not:
+          case tr.not:
             return 'boolean' == typeof t ? !t : ~t;
           default:
             return;
@@ -31640,105 +31652,105 @@ class PSStackToTree {
       })(e, t.value);
       if (void 0 !== a) return new PsConstNode(a);
     }
-    if (e === Zs.not && t.type === ur) {
-      const e = PSStackToTree.#ge.get(t.op);
-      if (void 0 !== e) return new PsBinaryNode(e, t.first, t.second, tr);
+    if (e === tr.not && t.type === pr) {
+      const e = PSStackToTree.#je.get(t.op);
+      if (void 0 !== e) return new PsBinaryNode(e, t.first, t.second, nr);
     }
-    if (e === Zs.neg && t.type === ur && t.op === Zs.sub)
-      return this._makeBinary(Zs.sub, t.second, t.first);
-    if (t.type === hr) {
+    if (e === tr.neg && t.type === pr && t.op === tr.sub)
+      return this._makeBinary(tr.sub, t.second, t.first);
+    if (t.type === mr) {
       if (
-        (e === Zs.neg && t.op === Zs.neg) ||
-        (e === Zs.not && t.op === Zs.not)
+        (e === tr.neg && t.op === tr.neg) ||
+        (e === tr.not && t.op === tr.not)
       )
         return t.operand;
-      if (e === Zs.abs && t.op === Zs.neg)
-        return this._makeUnary(Zs.abs, t.operand);
-      if (PSStackToTree.#de.has(e) && e === t.op) return t;
+      if (e === tr.abs && t.op === tr.neg)
+        return this._makeUnary(tr.abs, t.operand);
+      if (PSStackToTree.#we.has(e) && e === t.op) return t;
     }
     return new PsUnaryNode(
       e,
       t,
       (function _unaryValueType(e, t) {
-        return e === Zs.not ? t : er;
+        return e === tr.not ? t : ar;
       })(e, t.valueType)
     );
   }
   _makeTernary(e, t, a) {
-    if (e.type === cr) return e.value ? t : a;
+    if (e.type === ur) return e.value ? t : a;
     if (_nodesEqual(t, a)) return t;
-    if (t.type === cr && a.type === cr) {
+    if (t.type === ur && a.type === ur) {
       if (!0 === t.value && !1 === a.value) return e;
-      if (!1 === t.value && !0 === a.value) return this._makeUnary(Zs.not, e);
+      if (!1 === t.value && !0 === a.value) return this._makeUnary(tr.not, e);
     }
-    if (e.type === ur) {
+    if (e.type === pr) {
       const { op: n, first: s, second: r } = e;
-      if (n === Zs.gt || n === Zs.ge) {
+      if (n === tr.gt || n === tr.ge) {
         if (_nodesEqual(t, s) && _nodesEqual(a, r))
-          return this._makeBinary(Zs.min, s, r);
+          return this._makeBinary(tr.min, s, r);
         if (_nodesEqual(t, r) && _nodesEqual(a, s))
-          return this._makeBinary(Zs.max, s, r);
-      } else if (n === Zs.lt || n === Zs.le) {
+          return this._makeBinary(tr.max, s, r);
+      } else if (n === tr.lt || n === tr.le) {
         if (_nodesEqual(t, s) && _nodesEqual(a, r))
-          return this._makeBinary(Zs.max, s, r);
+          return this._makeBinary(tr.max, s, r);
         if (_nodesEqual(t, r) && _nodesEqual(a, s))
-          return this._makeBinary(Zs.min, s, r);
+          return this._makeBinary(tr.min, s, r);
       }
     }
     return new PsTernaryNode(
       e,
       t,
       a,
-      t.valueType === a.valueType ? t.valueType : ar
+      t.valueType === a.valueType ? t.valueType : sr
     );
   }
 }
-const dr = 0,
-  gr = 1,
-  br = 2,
-  wr = 3,
-  jr = 4,
-  kr = 5,
-  yr = 6,
-  qr = 7,
-  vr = 8,
-  Sr = 9,
-  Ar = 10,
-  xr = 11,
-  Cr = 12,
-  Ir = 13,
-  Fr = 14,
-  Tr = 15,
-  Or = 16,
-  Rr = 17,
-  Hr = 18,
-  Dr = 19,
-  Mr = 20,
-  Nr = 21,
-  Pr = 22,
-  _r = 23,
-  Er = 24,
-  zr = 25,
-  Lr = 26,
-  Ur = 27,
-  Xr = 28,
-  Wr = 29,
-  Kr = 30,
-  Gr = 31,
-  Vr = 32,
-  $r = 33,
-  Yr = 34,
-  Jr = 35,
-  Qr = 36,
-  Zr = 37,
-  ei = 38,
-  ti = 39,
-  ai = 40,
-  ni = Math.PI / 180,
-  si = 180 / Math.PI;
+const br = 0,
+  wr = 1,
+  jr = 2,
+  kr = 3,
+  yr = 4,
+  qr = 5,
+  vr = 6,
+  Sr = 7,
+  Ar = 8,
+  xr = 9,
+  Cr = 10,
+  Ir = 11,
+  Fr = 12,
+  Tr = 13,
+  Or = 14,
+  Rr = 15,
+  Hr = 16,
+  Dr = 17,
+  Mr = 18,
+  Nr = 19,
+  Pr = 20,
+  _r = 21,
+  Er = 22,
+  zr = 23,
+  Lr = 24,
+  Ur = 25,
+  Xr = 26,
+  Wr = 27,
+  Kr = 28,
+  Gr = 29,
+  Vr = 30,
+  $r = 31,
+  Yr = 32,
+  Jr = 33,
+  Qr = 34,
+  Zr = 35,
+  ei = 36,
+  ti = 37,
+  ai = 38,
+  ni = 39,
+  si = 40,
+  ri = Math.PI / 180,
+  ii = 180 / Math.PI;
 class PsJsCompiler {
-  static #je = new Float64Array(64);
-  static #ke = new Float64Array(64);
+  static #qe = new Float64Array(64);
+  static #ve = new Float64Array(64);
   constructor(e, t) {
     this.nIn = e.length >> 1;
     this.nOut = t.length >> 1;
@@ -31751,32 +31763,32 @@ class PsJsCompiler {
     if (e.shared) {
       const t = this._tmpMap.get(e);
       if (void 0 !== t) {
-        this.ir.push(ai, t);
+        this.ir.push(si, t);
         return !0;
       }
       if (!this._compileNodeImpl(e)) return !1;
       const a = this._nextTmp++;
       this._tmpMap.set(e, a);
-      this.ir.push(ti, a);
+      this.ir.push(ni, a);
       return !0;
     }
     return this._compileNodeImpl(e);
   }
   _compileNodeImpl(e) {
     switch (e.type) {
-      case fr:
-        this.ir.push(dr, e.index);
+      case hr:
+        this.ir.push(br, e.index);
         return !0;
-      case cr: {
+      case ur: {
         const t = e.value;
-        this.ir.push(gr, 'boolean' == typeof t ? Number(t) : t);
+        this.ir.push(wr, 'boolean' == typeof t ? Number(t) : t);
         return !0;
       }
-      case hr:
-        return this._compileUnary(e);
-      case ur:
-        return this._compileBinary(e);
       case mr:
+        return this._compileUnary(e);
+      case pr:
+        return this._compileBinary(e);
+      case dr:
         return this._compileTernary(e);
       default:
         return !1;
@@ -31784,50 +31796,50 @@ class PsJsCompiler {
   }
   _compileUnary(e) {
     const { op: t, operand: a, valueType: n } = e;
-    if (t === Zs.cvr) return this._compileNode(a);
+    if (t === tr.cvr) return this._compileNode(a);
     if (!this._compileNode(a)) return !1;
     switch (t) {
-      case Zs.abs:
-        this.ir.push(kr);
-        break;
-      case Zs.neg:
-        this.ir.push(yr);
-        break;
-      case Zs.ceiling:
+      case tr.abs:
         this.ir.push(qr);
         break;
-      case Zs.floor:
+      case tr.neg:
         this.ir.push(vr);
         break;
-      case Zs.round:
+      case tr.ceiling:
         this.ir.push(Sr);
         break;
-      case Zs.truncate:
+      case tr.floor:
         this.ir.push(Ar);
         break;
-      case Zs.sqrt:
-        this.ir.push(Ir);
+      case tr.round:
+        this.ir.push(xr);
         break;
-      case Zs.sin:
-        this.ir.push(Fr);
+      case tr.truncate:
+        this.ir.push(Cr);
         break;
-      case Zs.cos:
+      case tr.sqrt:
         this.ir.push(Tr);
         break;
-      case Zs.ln:
+      case tr.sin:
         this.ir.push(Or);
         break;
-      case Zs.log:
+      case tr.cos:
         this.ir.push(Rr);
         break;
-      case Zs.cvi:
+      case tr.ln:
         this.ir.push(Hr);
         break;
-      case Zs.not:
-        if (n === tr) this.ir.push(xr);
+      case tr.log:
+        this.ir.push(Dr);
+        break;
+      case tr.cvi:
+        this.ir.push(Mr);
+        break;
+      case tr.not:
+        if (n === nr) this.ir.push(Ir);
         else {
-          if (n !== er) return !1;
-          this.ir.push(Cr);
+          if (n !== ar) return !1;
+          this.ir.push(Fr);
         }
         break;
       default:
@@ -31837,71 +31849,71 @@ class PsJsCompiler {
   }
   _compileBinary(e) {
     const { op: t, first: a, second: n } = e;
-    if (t === Zs.bitshift) {
-      if (a.type !== cr || !Number.isInteger(a.value)) return !1;
+    if (t === tr.bitshift) {
+      if (a.type !== ur || !Number.isInteger(a.value)) return !1;
       if (!this._compileNode(n)) return !1;
-      this.ir.push(Dr, a.value);
+      this.ir.push(Nr, a.value);
       return !0;
     }
     if (!this._compileNode(n)) return !1;
     if (!this._compileNode(a)) return !1;
     switch (t) {
-      case Zs.add:
-        this.ir.push(Mr);
-        break;
-      case Zs.sub:
-        this.ir.push(Nr);
-        break;
-      case Zs.mul:
+      case tr.add:
         this.ir.push(Pr);
         break;
-      case Zs.div:
+      case tr.sub:
         this.ir.push(_r);
         break;
-      case Zs.idiv:
+      case tr.mul:
         this.ir.push(Er);
         break;
-      case Zs.mod:
+      case tr.div:
         this.ir.push(zr);
         break;
-      case Zs.exp:
+      case tr.idiv:
         this.ir.push(Lr);
         break;
-      case Zs.eq:
+      case tr.mod:
         this.ir.push(Ur);
         break;
-      case Zs.ne:
+      case tr.exp:
         this.ir.push(Xr);
         break;
-      case Zs.gt:
+      case tr.eq:
         this.ir.push(Wr);
         break;
-      case Zs.ge:
+      case tr.ne:
         this.ir.push(Kr);
         break;
-      case Zs.lt:
+      case tr.gt:
         this.ir.push(Gr);
         break;
-      case Zs.le:
+      case tr.ge:
         this.ir.push(Vr);
         break;
-      case Zs.and:
+      case tr.lt:
         this.ir.push($r);
         break;
-      case Zs.or:
+      case tr.le:
         this.ir.push(Yr);
         break;
-      case Zs.xor:
+      case tr.and:
         this.ir.push(Jr);
         break;
-      case Zs.atan:
+      case tr.or:
         this.ir.push(Qr);
         break;
-      case Zs.min:
+      case tr.xor:
         this.ir.push(Zr);
         break;
-      case Zs.max:
+      case tr.atan:
         this.ir.push(ei);
+        break;
+      case tr.min:
+        this.ir.push(ti);
+        break;
+      case tr.max:
+        this.ir.push(ai);
         break;
       default:
         return !1;
@@ -31910,10 +31922,10 @@ class PsJsCompiler {
   }
   _compileTernary(e) {
     if (!this._compileNode(e.cond)) return !1;
-    this.ir.push(wr, 0);
+    this.ir.push(kr, 0);
     const t = this.ir.length - 1;
     if (!this._compileNode(e.then)) return !1;
-    this.ir.push(jr, 0);
+    this.ir.push(yr, 0);
     const a = this.ir.length - 1;
     this.ir[t] = this.ir.length;
     if (!this._compileNode(e.otherwise)) return !1;
@@ -31927,7 +31939,7 @@ class PsJsCompiler {
       if (!this._compileNode(t[e])) return null;
       const a = this.range[2 * e],
         n = this.range[2 * e + 1];
-      this.ir.push(br, e, a, n);
+      this.ir.push(jr, e, a, n);
     }
     return new Float64Array(this.ir);
   }
@@ -31935,375 +31947,375 @@ class PsJsCompiler {
     let r = 0,
       i = 0;
     const o = e.length,
-      l = this.#je,
-      f = this.#ke;
+      l = this.#qe,
+      f = this.#ve;
     for (; r < o;)
       switch (0 | e[r++]) {
-        case dr:
+        case br:
           l[i++] = t[a + (0 | e[r++])];
           break;
-        case gr:
+        case wr:
           l[i++] = e[r++];
           break;
-        case br: {
+        case jr: {
           const t = 0 | e[r++],
             a = e[r++],
             o = e[r++];
           n[s + t] = MathClamp(l[--i], a, o);
           break;
         }
-        case wr: {
+        case kr: {
           const t = e[r++];
           0 === l[--i] && (r = t);
           break;
         }
-        case jr:
+        case yr:
           r = e[r];
           break;
-        case kr:
+        case qr:
           l[i - 1] = Math.abs(l[i - 1]);
           break;
-        case yr:
+        case vr:
           l[i - 1] = -l[i - 1];
           break;
-        case qr:
+        case Sr:
           l[i - 1] = Math.ceil(l[i - 1]);
           break;
-        case vr:
+        case Ar:
           l[i - 1] = Math.floor(l[i - 1]);
           break;
-        case Sr:
+        case xr:
           l[i - 1] = Math.floor(l[i - 1] + 0.5);
           break;
-        case Ar:
+        case Cr:
           l[i - 1] = Math.trunc(l[i - 1]);
           break;
-        case xr:
+        case Ir:
           l[i - 1] = 0 !== l[i - 1] ? 0 : 1;
           break;
-        case Cr:
+        case Fr:
           l[i - 1] = ~l[i - 1];
           break;
-        case Ir:
+        case Tr:
           l[i - 1] = Math.sqrt(l[i - 1]);
           break;
-        case Fr:
-          l[i - 1] = Math.sin((l[i - 1] % 360) * ni);
-          break;
-        case Tr:
-          l[i - 1] = Math.cos((l[i - 1] % 360) * ni);
-          break;
         case Or:
-          l[i - 1] = Math.log(l[i - 1]);
+          l[i - 1] = Math.sin((l[i - 1] % 360) * ri);
           break;
         case Rr:
-          l[i - 1] = Math.log10(l[i - 1]);
+          l[i - 1] = Math.cos((l[i - 1] % 360) * ri);
           break;
         case Hr:
+          l[i - 1] = Math.log(l[i - 1]);
+          break;
+        case Dr:
+          l[i - 1] = Math.log10(l[i - 1]);
+          break;
+        case Mr:
           l[i - 1] = 0 | Math.trunc(l[i - 1]);
           break;
-        case Dr: {
+        case Nr: {
           const t = e[r++],
             a = 0 | l[i - 1];
           l[i - 1] = t > 0 ? a << t : t < 0 ? a >> -t : a;
           break;
         }
-        case Mr: {
+        case Pr: {
           const e = l[--i];
           l[i - 1] += e;
           break;
         }
-        case Nr: {
+        case _r: {
           const e = l[--i];
           l[i - 1] -= e;
           break;
         }
-        case Pr: {
+        case Er: {
           const e = l[--i];
           l[i - 1] *= e;
           break;
         }
-        case _r: {
+        case zr: {
           const e = l[--i];
           l[i - 1] = 0 !== e ? l[i - 1] / e : 0;
           break;
         }
-        case Er: {
+        case Lr: {
           const e = l[--i];
           l[i - 1] = 0 !== e ? Math.trunc(l[i - 1] / e) : 0;
           break;
         }
-        case zr: {
+        case Ur: {
           const e = l[--i];
           l[i - 1] = 0 !== e ? l[i - 1] % e : 0;
           break;
         }
-        case Lr: {
+        case Xr: {
           const e = l[--i];
           l[i - 1] **= e;
           break;
         }
-        case Ur: {
+        case Wr: {
           const e = l[--i];
           l[i - 1] = l[i - 1] === e ? 1 : 0;
           break;
         }
-        case Xr: {
+        case Kr: {
           const e = l[--i];
           l[i - 1] = l[i - 1] !== e ? 1 : 0;
           break;
         }
-        case Wr: {
+        case Gr: {
           const e = l[--i];
           l[i - 1] = l[i - 1] > e ? 1 : 0;
           break;
         }
-        case Kr: {
+        case Vr: {
           const e = l[--i];
           l[i - 1] = l[i - 1] >= e ? 1 : 0;
           break;
         }
-        case Gr: {
+        case $r: {
           const e = l[--i];
           l[i - 1] = l[i - 1] < e ? 1 : 0;
           break;
         }
-        case Vr: {
+        case Yr: {
           const e = l[--i];
           l[i - 1] = l[i - 1] <= e ? 1 : 0;
           break;
         }
-        case $r: {
+        case Jr: {
           const e = 0 | l[--i];
           l[i - 1] = (0 | l[i - 1]) & e;
           break;
         }
-        case Yr: {
+        case Qr: {
           const e = 0 | l[--i];
           l[i - 1] = 0 | l[i - 1] | e;
           break;
         }
-        case Jr: {
+        case Zr: {
           const e = 0 | l[--i];
           l[i - 1] = (0 | l[i - 1]) ^ e;
           break;
         }
-        case Qr: {
+        case ei: {
           const e = l[--i],
-            t = Math.atan2(l[i - 1], e) * si;
+            t = Math.atan2(l[i - 1], e) * ii;
           l[i - 1] = t < 0 ? t + 360 : t;
           break;
         }
-        case Zr: {
+        case ti: {
           const e = l[--i];
           l[i - 1] = Math.min(l[i - 1], e);
           break;
         }
-        case ei: {
+        case ai: {
           const e = l[--i];
           l[i - 1] = Math.max(l[i - 1], e);
           break;
         }
-        case ti:
+        case ni:
           f[0 | e[r++]] = l[i - 1];
           break;
-        case ai:
+        case si:
           l[i++] = f[0 | e[r++]];
       }
   }
 }
 class PSStackBasedInterpreter {
-  static #je = new Float64Array(100);
-  static #ye = 0;
-  static #qe(e) {
-    this.#ye < this.#je.length && (this.#je[this.#ye++] = e);
+  static #qe = new Float64Array(100);
+  static #Se = 0;
+  static #Ae(e) {
+    this.#Se < this.#qe.length && (this.#qe[this.#Se++] = e);
   }
-  static #ve(e) {
-    const t = this.#je;
+  static #xe(e) {
+    const t = this.#qe;
     switch (e) {
-      case Zs.true:
-        this.#qe(1);
+      case tr.true:
+        this.#Ae(1);
         break;
-      case Zs.false:
-        this.#qe(0);
+      case tr.false:
+        this.#Ae(0);
         break;
-      case Zs.abs:
-        t[this.#ye - 1] = Math.abs(t[this.#ye - 1]);
+      case tr.abs:
+        t[this.#Se - 1] = Math.abs(t[this.#Se - 1]);
         break;
-      case Zs.neg:
-        t[this.#ye - 1] = -t[this.#ye - 1];
+      case tr.neg:
+        t[this.#Se - 1] = -t[this.#Se - 1];
         break;
-      case Zs.ceiling:
-        t[this.#ye - 1] = Math.ceil(t[this.#ye - 1]);
+      case tr.ceiling:
+        t[this.#Se - 1] = Math.ceil(t[this.#Se - 1]);
         break;
-      case Zs.floor:
-        t[this.#ye - 1] = Math.floor(t[this.#ye - 1]);
+      case tr.floor:
+        t[this.#Se - 1] = Math.floor(t[this.#Se - 1]);
         break;
-      case Zs.round:
-        t[this.#ye - 1] = Math.floor(t[this.#ye - 1] + 0.5);
+      case tr.round:
+        t[this.#Se - 1] = Math.floor(t[this.#Se - 1] + 0.5);
         break;
-      case Zs.truncate:
-        t[this.#ye - 1] = Math.trunc(t[this.#ye - 1]);
+      case tr.truncate:
+        t[this.#Se - 1] = Math.trunc(t[this.#Se - 1]);
         break;
-      case Zs.sqrt:
-        t[this.#ye - 1] = Math.sqrt(t[this.#ye - 1]);
+      case tr.sqrt:
+        t[this.#Se - 1] = Math.sqrt(t[this.#Se - 1]);
         break;
-      case Zs.sin:
-        t[this.#ye - 1] = Math.sin((t[this.#ye - 1] % 360) * ni);
+      case tr.sin:
+        t[this.#Se - 1] = Math.sin((t[this.#Se - 1] % 360) * ri);
         break;
-      case Zs.cos:
-        t[this.#ye - 1] = Math.cos((t[this.#ye - 1] % 360) * ni);
+      case tr.cos:
+        t[this.#Se - 1] = Math.cos((t[this.#Se - 1] % 360) * ri);
         break;
-      case Zs.ln:
-        t[this.#ye - 1] = Math.log(t[this.#ye - 1]);
+      case tr.ln:
+        t[this.#Se - 1] = Math.log(t[this.#Se - 1]);
         break;
-      case Zs.log:
-        t[this.#ye - 1] = Math.log10(t[this.#ye - 1]);
+      case tr.log:
+        t[this.#Se - 1] = Math.log10(t[this.#Se - 1]);
         break;
-      case Zs.cvi:
-        t[this.#ye - 1] = 0 | Math.trunc(t[this.#ye - 1]);
+      case tr.cvi:
+        t[this.#Se - 1] = 0 | Math.trunc(t[this.#Se - 1]);
         break;
-      case Zs.cvr:
+      case tr.cvr:
         break;
-      case Zs.not: {
-        const e = t[this.#ye - 1];
-        t[this.#ye - 1] = 0 === e || 1 === e ? 1 - e : ~e;
-        break;
-      }
-      case Zs.add: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] += e;
+      case tr.not: {
+        const e = t[this.#Se - 1];
+        t[this.#Se - 1] = 0 === e || 1 === e ? 1 - e : ~e;
         break;
       }
-      case Zs.sub: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] -= e;
+      case tr.add: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] += e;
         break;
       }
-      case Zs.mul: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] *= e;
+      case tr.sub: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] -= e;
         break;
       }
-      case Zs.div: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = 0 !== e ? t[this.#ye - 1] / e : 0;
+      case tr.mul: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] *= e;
         break;
       }
-      case Zs.idiv: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = 0 !== e ? Math.trunc(t[this.#ye - 1] / e) : 0;
+      case tr.div: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = 0 !== e ? t[this.#Se - 1] / e : 0;
         break;
       }
-      case Zs.mod: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = 0 !== e ? t[this.#ye - 1] % e : 0;
+      case tr.idiv: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = 0 !== e ? Math.trunc(t[this.#Se - 1] / e) : 0;
         break;
       }
-      case Zs.exp: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] **= e;
+      case tr.mod: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = 0 !== e ? t[this.#Se - 1] % e : 0;
         break;
       }
-      case Zs.atan: {
-        const e = t[--this.#ye],
-          a = Math.atan2(t[this.#ye - 1], e) * si;
-        t[this.#ye - 1] = a < 0 ? a + 360 : a;
+      case tr.exp: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] **= e;
         break;
       }
-      case Zs.eq: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = t[this.#ye - 1] === e ? 1 : 0;
+      case tr.atan: {
+        const e = t[--this.#Se],
+          a = Math.atan2(t[this.#Se - 1], e) * ii;
+        t[this.#Se - 1] = a < 0 ? a + 360 : a;
         break;
       }
-      case Zs.ne: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = t[this.#ye - 1] !== e ? 1 : 0;
+      case tr.eq: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = t[this.#Se - 1] === e ? 1 : 0;
         break;
       }
-      case Zs.gt: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = t[this.#ye - 1] > e ? 1 : 0;
+      case tr.ne: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = t[this.#Se - 1] !== e ? 1 : 0;
         break;
       }
-      case Zs.ge: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = t[this.#ye - 1] >= e ? 1 : 0;
+      case tr.gt: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = t[this.#Se - 1] > e ? 1 : 0;
         break;
       }
-      case Zs.lt: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = t[this.#ye - 1] < e ? 1 : 0;
+      case tr.ge: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = t[this.#Se - 1] >= e ? 1 : 0;
         break;
       }
-      case Zs.le: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = t[this.#ye - 1] <= e ? 1 : 0;
+      case tr.lt: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = t[this.#Se - 1] < e ? 1 : 0;
         break;
       }
-      case Zs.and: {
-        const e = 0 | t[--this.#ye];
-        t[this.#ye - 1] = (0 | t[this.#ye - 1]) & e;
+      case tr.le: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = t[this.#Se - 1] <= e ? 1 : 0;
         break;
       }
-      case Zs.or: {
-        const e = 0 | t[--this.#ye];
-        t[this.#ye - 1] = 0 | t[this.#ye - 1] | e;
+      case tr.and: {
+        const e = 0 | t[--this.#Se];
+        t[this.#Se - 1] = (0 | t[this.#Se - 1]) & e;
         break;
       }
-      case Zs.xor: {
-        const e = 0 | t[--this.#ye];
-        t[this.#ye - 1] = (0 | t[this.#ye - 1]) ^ e;
+      case tr.or: {
+        const e = 0 | t[--this.#Se];
+        t[this.#Se - 1] = 0 | t[this.#Se - 1] | e;
         break;
       }
-      case Zs.bitshift: {
-        const e = 0 | t[--this.#ye],
-          a = 0 | t[this.#ye - 1];
-        t[this.#ye - 1] = e > 0 ? a << e : a >> -e;
+      case tr.xor: {
+        const e = 0 | t[--this.#Se];
+        t[this.#Se - 1] = (0 | t[this.#Se - 1]) ^ e;
         break;
       }
-      case Zs.min: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = Math.min(t[this.#ye - 1], e);
+      case tr.bitshift: {
+        const e = 0 | t[--this.#Se],
+          a = 0 | t[this.#Se - 1];
+        t[this.#Se - 1] = e > 0 ? a << e : a >> -e;
         break;
       }
-      case Zs.max: {
-        const e = t[--this.#ye];
-        t[this.#ye - 1] = Math.max(t[this.#ye - 1], e);
+      case tr.min: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = Math.min(t[this.#Se - 1], e);
         break;
       }
-      case Zs.dup:
-        this.#qe(t[this.#ye - 1]);
-        break;
-      case Zs.exch: {
-        const e = t[--this.#ye],
-          a = t[--this.#ye];
-        this.#qe(e);
-        this.#qe(a);
+      case tr.max: {
+        const e = t[--this.#Se];
+        t[this.#Se - 1] = Math.max(t[this.#Se - 1], e);
         break;
       }
-      case Zs.pop:
-        this.#ye--;
+      case tr.dup:
+        this.#Ae(t[this.#Se - 1]);
         break;
-      case Zs.copy: {
-        const e = Math.trunc(t[--this.#ye]),
-          a = this.#ye - e;
-        for (let n = 0; n < e; n++) this.#qe(t[a + n]);
-        break;
-      }
-      case Zs.index: {
-        const e = Math.trunc(t[--this.#ye]);
-        this.#qe(t[this.#ye - 1 - e]);
+      case tr.exch: {
+        const e = t[--this.#Se],
+          a = t[--this.#Se];
+        this.#Ae(e);
+        this.#Ae(a);
         break;
       }
-      case Zs.roll: {
-        const e = Math.trunc(t[--this.#ye]),
-          a = Math.trunc(t[--this.#ye]);
+      case tr.pop:
+        this.#Se--;
+        break;
+      case tr.copy: {
+        const e = Math.trunc(t[--this.#Se]),
+          a = this.#Se - e;
+        for (let n = 0; n < e; n++) this.#Ae(t[a + n]);
+        break;
+      }
+      case tr.index: {
+        const e = Math.trunc(t[--this.#Se]);
+        this.#Ae(t[this.#Se - 1 - e]);
+        break;
+      }
+      case tr.roll: {
+        const e = Math.trunc(t[--this.#Se]),
+          a = Math.trunc(t[--this.#Se]);
         if (a > 1 && 0 !== e) {
           const n = ((e % a) + a) % a;
           if (0 !== n) {
-            const e = this.#ye - a,
-              s = t.slice(e, this.#ye);
+            const e = this.#Se - a,
+              s = t.slice(e, this.#Se);
             for (let r = 0; r < a; r++) t[e + r] = s[(r - n + a) % a];
           }
         }
@@ -32311,22 +32323,22 @@ class PSStackBasedInterpreter {
       }
     }
   }
-  static #Se(e) {
+  static #Ce(e) {
     for (const t of e)
       switch (t.type) {
-        case rr:
-          this.#qe(t.value);
-          break;
-        case ir:
-          this.#ve(t.op);
-          break;
         case or:
-          0 !== this.#je[--this.#ye] && this.#Se(t.then.instructions);
+          this.#Ae(t.value);
           break;
         case lr:
-          0 !== this.#je[--this.#ye]
-            ? this.#Se(t.then.instructions)
-            : this.#Se(t.otherwise.instructions);
+          this.#xe(t.op);
+          break;
+        case fr:
+          0 !== this.#qe[--this.#Se] && this.#Ce(t.then.instructions);
+          break;
+        case cr:
+          0 !== this.#qe[--this.#Se]
+            ? this.#Ce(t.then.instructions)
+            : this.#Ce(t.otherwise.instructions);
       }
   }
   static build(e, t, a) {
@@ -32334,18 +32346,18 @@ class PSStackBasedInterpreter {
       s = a.length >> 1,
       { instructions: r } = e.body;
     return (e, t, i, o) => {
-      this.#ye = 0;
-      for (let a = 0; a < n; a++) this.#qe(e[t + a]);
-      this.#Se(r);
-      const l = this.#ye - s;
+      this.#Se = 0;
+      for (let a = 0; a < n; a++) this.#Ae(e[t + a]);
+      this.#Ce(r);
+      const l = this.#Se - s;
       for (let e = 0; e < s; e++) {
-        const t = l + e >= 0 ? this.#je[l + e] : 0;
+        const t = l + e >= 0 ? this.#qe[l + e] : 0;
         i[o + e] = MathClamp(a[2 * e + 1], a[2 * e], t);
       }
     };
   }
 }
-const ri = {
+const oi = {
     if: 4,
     else: 5,
     end: 11,
@@ -32385,13 +32397,13 @@ const ri = {
     f64_convert_i32_s: 183,
     f64_store: 57,
   },
-  ii = 124,
-  oi = 1,
-  li = 2,
-  fi = 3,
-  ci = 5,
-  hi = 7,
-  ui = 10;
+  li = 124,
+  fi = 1,
+  ci = 2,
+  hi = 3,
+  ui = 5,
+  mi = 7,
+  pi = 10;
 function unsignedLEB128(e) {
   const t = [];
   do {
@@ -32417,48 +32429,48 @@ function vec(e) {
     else t.push(a);
   return t;
 }
-const mi = [
-    ['sin', 'Math', 'sin', [ii], [ii]],
-    ['cos', 'Math', 'cos', [ii], [ii]],
-    ['atan2', 'Math', 'atan2', [ii, ii], [ii]],
-    ['log', 'Math', 'log', [ii], [ii]],
-    ['log10', 'Math', 'log10', [ii], [ii]],
-    ['pow', 'Math', 'pow', [ii, ii], [ii]],
+const di = [
+    ['sin', 'Math', 'sin', [li], [li]],
+    ['cos', 'Math', 'cos', [li], [li]],
+    ['atan2', 'Math', 'atan2', [li, li], [li]],
+    ['log', 'Math', 'log', [li], [li]],
+    ['log10', 'Math', 'log10', [li], [li]],
+    ['pow', 'Math', 'pow', [li, li], [li]],
   ],
-  pi = { Math: Object.fromEntries(mi.map(([e]) => [e, Math[e]])) };
+  gi = { Math: Object.fromEntries(di.map(([e]) => [e, Math[e]])) };
 class PsWasmCompiler {
-  static #Ae = !1;
-  static #xe = null;
-  static #Ce = null;
-  static #Ie = 0;
-  static #Fe = 0;
+  static #Ie = !1;
+  static #Fe = null;
   static #Te = null;
-  static #Oe = null;
-  static #Re = null;
+  static #Oe = 0;
+  static #Re = 0;
   static #He = null;
   static #Be = null;
   static #De = null;
   static #Me = null;
   static #Ne = null;
-  static #be() {
-    this.#xe = new Map([
-      [Zs.eq, ri.f64_eq],
-      [Zs.ne, ri.f64_ne],
-      [Zs.lt, ri.f64_lt],
-      [Zs.le, ri.f64_le],
-      [Zs.gt, ri.f64_gt],
-      [Zs.ge, ri.f64_ge],
+  static #Pe = null;
+  static #_e = null;
+  static #Ee = null;
+  static #ke() {
+    this.#Fe = new Map([
+      [tr.eq, oi.f64_eq],
+      [tr.ne, oi.f64_ne],
+      [tr.lt, oi.f64_lt],
+      [tr.le, oi.f64_le],
+      [tr.gt, oi.f64_gt],
+      [tr.ge, oi.f64_ge],
     ]);
-    this.#Ce = Object.create(null);
-    for (let e = 0; e < mi.length; e++) this.#Ce[mi[e][0]] = e;
-    this.#Ie = Math.PI / 180;
-    this.#Fe = 180 / Math.PI;
-    this.#Te = mi.map(([, , , e, t]) => [96, ...vec(e), ...vec(t)]);
-    this.#Oe = new Uint8Array(
+    this.#Te = Object.create(null);
+    for (let e = 0; e < di.length; e++) this.#Te[di[e][0]] = e;
+    this.#Oe = Math.PI / 180;
+    this.#Re = 180 / Math.PI;
+    this.#He = di.map(([, , , e, t]) => [96, ...vec(e), ...vec(t)]);
+    this.#Be = new Uint8Array(
       section(
-        li,
+        ci,
         vec(
-          mi.map(([, e, t], a) => [
+          di.map(([, e, t], a) => [
             ...encodeASCIIString(e),
             ...encodeASCIIString(t),
             0,
@@ -32467,25 +32479,25 @@ class PsWasmCompiler {
         )
       )
     );
-    this.#Re = new Uint8Array(section(fi, vec([[0]])));
-    this.#He = new Uint8Array(section(ci, vec([[0, 1]])));
-    this.#Be = new Uint8Array(
+    this.#De = new Uint8Array(section(hi, vec([[0]])));
+    this.#Me = new Uint8Array(section(ui, vec([[0, 1]])));
+    this.#Ne = new Uint8Array(
       section(
-        hi,
+        mi,
         vec([
-          [...encodeASCIIString('fn'), 0, ...unsignedLEB128(mi.length)],
+          [...encodeASCIIString('fn'), 0, ...unsignedLEB128(di.length)],
           [...encodeASCIIString('mem'), 2, 0],
         ])
       )
     );
-    this.#De = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]);
+    this.#Pe = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]);
     const e = new ArrayBuffer(8);
-    this.#Me = new DataView(e);
-    this.#Ne = new Uint8Array(e);
-    this.#Ae = !0;
+    this.#_e = new DataView(e);
+    this.#Ee = new Uint8Array(e);
+    this.#Ie = !0;
   }
   constructor(e, t) {
-    PsWasmCompiler.#Ae || PsWasmCompiler.#be();
+    PsWasmCompiler.#Ie || PsWasmCompiler.#ke();
     this._nIn = e.length >> 1;
     this._nOut = t.length >> 1;
     this._range = t;
@@ -32508,20 +32520,20 @@ class PsWasmCompiler {
     } while (0 !== e);
   }
   _emitF64Const(e) {
-    this._code.push(ri.f64_const);
-    PsWasmCompiler.#Me.setFloat64(0, e, !0);
-    for (let e = 0; e < 8; e++) this._code.push(PsWasmCompiler.#Ne[e]);
+    this._code.push(oi.f64_const);
+    PsWasmCompiler.#_e.setFloat64(0, e, !0);
+    for (let e = 0; e < 8; e++) this._code.push(PsWasmCompiler.#Ee[e]);
   }
   _emitLocalGet(e) {
-    this._code.push(ri.local_get);
+    this._code.push(oi.local_get);
     this._emitULEB128(e);
   }
   _emitLocalSet(e) {
-    this._code.push(ri.local_set);
+    this._code.push(oi.local_set);
     this._emitULEB128(e);
   }
   _emitLocalTee(e) {
-    this._code.push(ri.local_tee);
+    this._code.push(oi.local_tee);
     this._emitULEB128(e);
   }
   _compileNode(e) {
@@ -32542,20 +32554,20 @@ class PsWasmCompiler {
   }
   _compileNodeImpl(e) {
     switch (e.type) {
-      case fr:
+      case hr:
         this._emitLocalGet(e.index);
         return !0;
-      case cr: {
+      case ur: {
         let t = e.value;
         'boolean' == typeof t && (t = t ? 1 : 0);
         this._emitF64Const(t);
         return !0;
       }
-      case hr:
-        return this._compileUnaryNode(e);
-      case ur:
-        return this._compileBinaryNode(e);
       case mr:
+        return this._compileUnaryNode(e);
+      case pr:
+        return this._compileBinaryNode(e);
+      case dr:
         return this._compileTernaryNode(e);
       default:
         return !1;
@@ -32570,12 +32582,12 @@ class PsWasmCompiler {
       this._emitLocalGet(t);
       this._emitLocalGet(t);
       this._emitF64Const(360);
-      a.push(ri.f64_div, ri.f64_trunc);
+      a.push(oi.f64_div, oi.f64_trunc);
       this._emitF64Const(360);
-      a.push(ri.f64_mul, ri.f64_sub);
-      this._emitF64Const(PsWasmCompiler.#Ie);
-      a.push(ri.f64_mul, ri.call);
-      this._emitULEB128(PsWasmCompiler.#Ce[e.op === Zs.sin ? 'sin' : 'cos']);
+      a.push(oi.f64_mul, oi.f64_sub);
+      this._emitF64Const(PsWasmCompiler.#Oe);
+      a.push(oi.f64_mul, oi.call);
+      this._emitULEB128(PsWasmCompiler.#Te[e.op === tr.sin ? 'sin' : 'cos']);
       return !0;
     } finally {
       this._releaseLocal(t);
@@ -32583,21 +32595,21 @@ class PsWasmCompiler {
   }
   _compileUnaryNode(e) {
     const t = this._code;
-    if (e.op === Zs.sin || e.op === Zs.cos) return this._compileSinCosNode(e);
-    if (e.op === Zs.not) {
-      if (e.valueType === tr) {
+    if (e.op === tr.sin || e.op === tr.cos) return this._compileSinCosNode(e);
+    if (e.op === tr.not) {
+      if (e.valueType === nr) {
         if (!this._compileNodeAsBoolI32(e.operand)) return !1;
-        t.push(ri.i32_eqz, ri.f64_convert_i32_s);
+        t.push(oi.i32_eqz, oi.f64_convert_i32_s);
         return !0;
       }
-      if (e.valueType === er) {
+      if (e.valueType === ar) {
         if (!this._compileNode(e.operand)) return !1;
         t.push(
-          ri.i32_trunc_f64_s,
-          ri.i32_const,
+          oi.i32_trunc_f64_s,
+          oi.i32_const,
           127,
-          ri.i32_xor,
-          ri.f64_convert_i32_s
+          oi.i32_xor,
+          oi.f64_convert_i32_s
         );
         return !0;
       }
@@ -32605,40 +32617,40 @@ class PsWasmCompiler {
     }
     if (!this._compileNode(e.operand)) return !1;
     switch (e.op) {
-      case Zs.abs:
-        t.push(ri.f64_abs);
+      case tr.abs:
+        t.push(oi.f64_abs);
         break;
-      case Zs.neg:
-        t.push(ri.f64_neg);
+      case tr.neg:
+        t.push(oi.f64_neg);
         break;
-      case Zs.sqrt:
-        t.push(ri.f64_sqrt);
+      case tr.sqrt:
+        t.push(oi.f64_sqrt);
         break;
-      case Zs.floor:
-        t.push(ri.f64_floor);
+      case tr.floor:
+        t.push(oi.f64_floor);
         break;
-      case Zs.ceiling:
-        t.push(ri.f64_ceil);
+      case tr.ceiling:
+        t.push(oi.f64_ceil);
         break;
-      case Zs.round:
+      case tr.round:
         this._emitF64Const(0.5);
-        t.push(ri.f64_add, ri.f64_floor);
+        t.push(oi.f64_add, oi.f64_floor);
         break;
-      case Zs.truncate:
-        t.push(ri.f64_trunc);
+      case tr.truncate:
+        t.push(oi.f64_trunc);
         break;
-      case Zs.cvi:
-        t.push(ri.i32_trunc_f64_s, ri.f64_convert_i32_s);
+      case tr.cvi:
+        t.push(oi.i32_trunc_f64_s, oi.f64_convert_i32_s);
         break;
-      case Zs.cvr:
+      case tr.cvr:
         break;
-      case Zs.ln:
-        t.push(ri.call);
-        this._emitULEB128(PsWasmCompiler.#Ce.log);
+      case tr.ln:
+        t.push(oi.call);
+        this._emitULEB128(PsWasmCompiler.#Te.log);
         break;
-      case Zs.log:
-        t.push(ri.call);
-        this._emitULEB128(PsWasmCompiler.#Ce.log10);
+      case tr.log:
+        t.push(oi.call);
+        this._emitULEB128(PsWasmCompiler.#Te.log10);
         break;
       default:
         return !1;
@@ -32652,11 +32664,11 @@ class PsWasmCompiler {
       if (!this._compileNode(e)) return !1;
       const n = this._code;
       this._emitLocalTee(a);
-      n.push(ri.f64_div);
+      n.push(oi.f64_div);
       this._emitF64Const(0);
       this._emitLocalGet(a);
       this._emitF64Const(0);
-      n.push(ri.f64_ne, ri.select);
+      n.push(oi.f64_ne, oi.select);
       return !0;
     } finally {
       this._releaseLocal(a);
@@ -32669,38 +32681,38 @@ class PsWasmCompiler {
       if (!this._compileNode(e)) return !1;
       const n = this._code;
       this._emitLocalTee(a);
-      n.push(ri.f64_div, ri.f64_trunc);
+      n.push(oi.f64_div, oi.f64_trunc);
       this._emitF64Const(0);
       this._emitLocalGet(a);
       this._emitF64Const(0);
-      n.push(ri.f64_ne, ri.select);
+      n.push(oi.f64_ne, oi.select);
       return !0;
     } finally {
       this._releaseLocal(a);
     }
   }
   _compileBitshiftNode(e, t) {
-    if (e.type !== cr || !Number.isInteger(e.value)) return !1;
+    if (e.type !== ur || !Number.isInteger(e.value)) return !1;
     if (!this._compileNode(t)) return !1;
     const a = this._code;
-    a.push(ri.i32_trunc_f64_s);
+    a.push(oi.i32_trunc_f64_s);
     const n = e.value;
     if (n > 0) {
-      a.push(ri.i32_const);
+      a.push(oi.i32_const);
       this._emitULEB128(n);
-      a.push(ri.i32_shl);
+      a.push(oi.i32_shl);
     } else if (n < 0) {
-      a.push(ri.i32_const);
+      a.push(oi.i32_const);
       this._emitULEB128(-n);
-      a.push(ri.i32_shr_s);
+      a.push(oi.i32_shr_s);
     }
-    a.push(ri.f64_convert_i32_s);
+    a.push(oi.f64_convert_i32_s);
     return !0;
   }
   _compileModNode(e, t) {
-    if (e.type === cr && 0 === e.value) {
+    if (e.type === ur && 0 === e.value) {
       if (!this._compileNode(t)) return !1;
-      this._code.push(ri.drop);
+      this._code.push(oi.drop);
       this._emitF64Const(0);
       return !0;
     }
@@ -32709,12 +32721,12 @@ class PsWasmCompiler {
       if (!this._compileNode(t)) return !1;
       this._emitLocalTee(a);
       const n = this._code;
-      if (e.type === cr) {
+      if (e.type === ur) {
         this._emitLocalGet(a);
         this._emitF64Const(e.value);
-        n.push(ri.f64_div, ri.f64_trunc);
+        n.push(oi.f64_div, oi.f64_trunc);
         this._emitF64Const(e.value);
-        n.push(ri.f64_mul, ri.f64_sub);
+        n.push(oi.f64_mul, oi.f64_sub);
       } else {
         const t = this._allocLocal();
         try {
@@ -32722,13 +32734,13 @@ class PsWasmCompiler {
           this._emitLocalSet(t);
           this._emitLocalGet(a);
           this._emitLocalGet(t);
-          n.push(ri.f64_div, ri.f64_trunc);
+          n.push(oi.f64_div, oi.f64_trunc);
           this._emitLocalGet(t);
-          n.push(ri.f64_mul, ri.f64_sub);
+          n.push(oi.f64_mul, oi.f64_sub);
           this._emitF64Const(0);
           this._emitLocalGet(t);
           this._emitF64Const(0);
-          n.push(ri.f64_ne, ri.select);
+          n.push(oi.f64_ne, oi.select);
         } finally {
           this._releaseLocal(t);
         }
@@ -32744,18 +32756,18 @@ class PsWasmCompiler {
       if (!this._compileNode(t)) return !1;
       if (!this._compileNode(e)) return !1;
       const n = this._code;
-      n.push(ri.call);
-      this._emitULEB128(PsWasmCompiler.#Ce.atan2);
-      this._emitF64Const(PsWasmCompiler.#Fe);
-      n.push(ri.f64_mul);
+      n.push(oi.call);
+      this._emitULEB128(PsWasmCompiler.#Te.atan2);
+      this._emitF64Const(PsWasmCompiler.#Re);
+      n.push(oi.f64_mul);
       this._emitLocalTee(a);
       this._emitF64Const(0);
-      n.push(ri.f64_lt, ri.if, ii);
+      n.push(oi.f64_lt, oi.if, li);
       this._emitLocalGet(a);
       this._emitF64Const(360);
-      n.push(ri.f64_add, ri.else);
+      n.push(oi.f64_add, oi.else);
       this._emitLocalGet(a);
-      n.push(ri.end);
+      n.push(oi.end);
       return !0;
     } finally {
       this._releaseLocal(a);
@@ -32766,29 +32778,29 @@ class PsWasmCompiler {
     if (!this._compileBitwiseOperandI32(t)) return !1;
     const n = this._code;
     switch (e) {
-      case Zs.and:
-        n.push(ri.i32_and);
+      case tr.and:
+        n.push(oi.i32_and);
         break;
-      case Zs.or:
-        n.push(ri.i32_or);
+      case tr.or:
+        n.push(oi.i32_or);
         break;
-      case Zs.xor:
-        n.push(ri.i32_xor);
+      case tr.xor:
+        n.push(oi.i32_xor);
         break;
       default:
         return !1;
     }
-    n.push(ri.f64_convert_i32_s);
+    n.push(oi.f64_convert_i32_s);
     return !0;
   }
   _compileBitwiseOperandI32(e) {
-    if (e.valueType === tr) return this._compileNodeAsBoolI32(e);
+    if (e.valueType === nr) return this._compileNodeAsBoolI32(e);
     if (!this._compileNode(e)) return !1;
-    this._code.push(ri.i32_trunc_f64_s);
+    this._code.push(oi.i32_trunc_f64_s);
     return !0;
   }
   _compileStandardBinaryNode(e, t, a) {
-    if (t !== a || t.type === fr || t.type === cr || t.shared) {
+    if (t !== a || t.type === hr || t.type === ur || t.shared) {
       if (!this._compileNode(a)) return !1;
       if (!this._compileNode(t)) return !1;
     } else {
@@ -32803,42 +32815,42 @@ class PsWasmCompiler {
     }
     const n = this._code;
     switch (e) {
-      case Zs.add:
-        n.push(ri.f64_add);
+      case tr.add:
+        n.push(oi.f64_add);
         break;
-      case Zs.sub:
-        n.push(ri.f64_sub);
+      case tr.sub:
+        n.push(oi.f64_sub);
         break;
-      case Zs.mul:
-        n.push(ri.f64_mul);
+      case tr.mul:
+        n.push(oi.f64_mul);
         break;
-      case Zs.exp:
-        n.push(ri.call);
-        this._emitULEB128(PsWasmCompiler.#Ce.pow);
+      case tr.exp:
+        n.push(oi.call);
+        this._emitULEB128(PsWasmCompiler.#Te.pow);
         break;
-      case Zs.eq:
-        n.push(ri.f64_eq, ri.f64_convert_i32_s);
+      case tr.eq:
+        n.push(oi.f64_eq, oi.f64_convert_i32_s);
         break;
-      case Zs.ne:
-        n.push(ri.f64_ne, ri.f64_convert_i32_s);
+      case tr.ne:
+        n.push(oi.f64_ne, oi.f64_convert_i32_s);
         break;
-      case Zs.lt:
-        n.push(ri.f64_lt, ri.f64_convert_i32_s);
+      case tr.lt:
+        n.push(oi.f64_lt, oi.f64_convert_i32_s);
         break;
-      case Zs.le:
-        n.push(ri.f64_le, ri.f64_convert_i32_s);
+      case tr.le:
+        n.push(oi.f64_le, oi.f64_convert_i32_s);
         break;
-      case Zs.gt:
-        n.push(ri.f64_gt, ri.f64_convert_i32_s);
+      case tr.gt:
+        n.push(oi.f64_gt, oi.f64_convert_i32_s);
         break;
-      case Zs.ge:
-        n.push(ri.f64_ge, ri.f64_convert_i32_s);
+      case tr.ge:
+        n.push(oi.f64_ge, oi.f64_convert_i32_s);
         break;
-      case Zs.min:
-        n.push(ri.f64_min);
+      case tr.min:
+        n.push(oi.f64_min);
         break;
-      case Zs.max:
-        n.push(ri.f64_max);
+      case tr.max:
+        n.push(oi.f64_max);
         break;
       default:
         return !1;
@@ -32847,23 +32859,23 @@ class PsWasmCompiler {
   }
   _compileBinaryNode(e) {
     const { op: t, first: a, second: n } = e;
-    return t === Zs.bitshift
+    return t === tr.bitshift
       ? this._compileBitshiftNode(a, n)
-      : t === Zs.div
+      : t === tr.div
         ? this._compileSafeDivNode(a, n)
-        : t === Zs.idiv
+        : t === tr.idiv
           ? this._compileSafeIdivNode(a, n)
-          : t === Zs.mod
+          : t === tr.mod
             ? this._compileModNode(a, n)
-            : t === Zs.atan
+            : t === tr.atan
               ? this._compileAtanNode(a, n)
-              : t === Zs.and || t === Zs.or || t === Zs.xor
+              : t === tr.and || t === tr.or || t === tr.xor
                 ? this._compileBitwiseNode(t, a, n)
                 : this._compileStandardBinaryNode(t, a, n);
   }
   _compileNodeAsBoolI32(e) {
-    if (e.type === ur) {
-      const t = PsWasmCompiler.#xe.get(e.op);
+    if (e.type === pr) {
+      const t = PsWasmCompiler.#Fe.get(e.op);
       if (void 0 !== t) {
         if (!this._compileNode(e.second)) return !1;
         if (!this._compileNode(e.first)) return !1;
@@ -32871,44 +32883,44 @@ class PsWasmCompiler {
         return !0;
       }
       if (
-        e.valueType === tr &&
-        (e.op === Zs.and || e.op === Zs.or || e.op === Zs.xor)
+        e.valueType === nr &&
+        (e.op === tr.and || e.op === tr.or || e.op === tr.xor)
       ) {
         if (!this._compileNodeAsBoolI32(e.second)) return !1;
         if (!this._compileNodeAsBoolI32(e.first)) return !1;
         switch (e.op) {
-          case Zs.and:
-            this._code.push(ri.i32_and);
+          case tr.and:
+            this._code.push(oi.i32_and);
             break;
-          case Zs.or:
-            this._code.push(ri.i32_or);
+          case tr.or:
+            this._code.push(oi.i32_or);
             break;
-          case Zs.xor:
-            this._code.push(ri.i32_xor);
+          case tr.xor:
+            this._code.push(oi.i32_xor);
         }
         return !0;
       }
     }
-    if (e.type === hr && e.op === Zs.not && e.valueType === tr) {
+    if (e.type === mr && e.op === tr.not && e.valueType === nr) {
       if (!this._compileNodeAsBoolI32(e.operand)) return !1;
-      this._code.push(ri.i32_eqz);
+      this._code.push(oi.i32_eqz);
       return !0;
     }
     if (!this._compileNode(e)) return !1;
-    if (e.valueType === tr) this._code.push(ri.i32_trunc_f64_s);
+    if (e.valueType === nr) this._code.push(oi.i32_trunc_f64_s);
     else {
       this._emitF64Const(0);
-      this._code.push(ri.f64_ne);
+      this._code.push(oi.f64_ne);
     }
     return !0;
   }
   _compileTernaryNode(e) {
     if (!this._compileNodeAsBoolI32(e.cond)) return !1;
-    this._code.push(ri.if, ii);
+    this._code.push(oi.if, li);
     if (!this._compileNode(e.then)) return !1;
-    this._code.push(ri.else);
+    this._code.push(oi.else);
     if (!this._compileNode(e.otherwise)) return !1;
-    this._code.push(ri.end);
+    this._code.push(oi.end);
     return !0;
   }
   compile(e) {
@@ -32918,29 +32930,29 @@ class PsWasmCompiler {
     for (let e = 0; e < this._nOut; e++) {
       const n = this._range[2 * e],
         s = this._range[2 * e + 1];
-      a.push(ri.i32_const);
+      a.push(oi.i32_const);
       this._emitULEB128(8 * e);
       if (!this._compileNode(t[e])) return null;
       this._emitF64Const(s);
-      a.push(ri.f64_min);
+      a.push(oi.f64_min);
       this._emitF64Const(n);
-      a.push(ri.f64_max, ri.f64_store, 3, 0);
+      a.push(oi.f64_max, oi.f64_store, 3, 0);
     }
-    a.push(ri.end);
+    a.push(oi.end);
     const n = this._nIn,
       s = this._nextLocal - n,
-      r = [96, ...vec(Array(n).fill(ii)), ...vec([])],
-      i = new Uint8Array(section(oi, vec([r, ...PsWasmCompiler.#Te]))),
-      o = vec(s > 0 ? [[...unsignedLEB128(s), ii]] : []),
+      r = [96, ...vec(Array(n).fill(li)), ...vec([])],
+      i = new Uint8Array(section(fi, vec([r, ...PsWasmCompiler.#He]))),
+      o = vec(s > 0 ? [[...unsignedLEB128(s), li]] : []),
       l = o.length + a.length,
       f = new Uint8Array(
-        section(ui, vec([[...unsignedLEB128(l), ...o, ...a]]))
+        section(pi, vec([[...unsignedLEB128(l), ...o, ...a]]))
       ),
-      c = PsWasmCompiler.#De,
-      h = PsWasmCompiler.#Oe,
-      u = PsWasmCompiler.#Re,
-      m = PsWasmCompiler.#He,
-      p = PsWasmCompiler.#Be,
+      c = PsWasmCompiler.#Pe,
+      h = PsWasmCompiler.#Be,
+      u = PsWasmCompiler.#De,
+      m = PsWasmCompiler.#Me,
+      p = PsWasmCompiler.#Ne,
       d =
         c.length +
         i.length +
@@ -33040,7 +33052,7 @@ function buildPostScriptWasmFunction(e, t, a) {
         }
       }
     })(
-      new WebAssembly.Instance(new WebAssembly.Module(n), pi).exports,
+      new WebAssembly.Instance(new WebAssembly.Module(n), gi).exports,
       t.length >> 1,
       a.length >> 1
     );
@@ -33151,20 +33163,20 @@ class GlobalImageCache {
   static NUM_PAGES_THRESHOLD = 2;
   static MIN_IMAGES_TO_CACHE = 10;
   static MAX_BYTE_SIZE = 5e7;
-  #Pe = new RefSet();
+  #ze = new RefSet();
   constructor() {
     this._refCache = new RefSetCache();
     this._imageCache = new RefSetCache();
   }
-  get #_e() {
+  get #Le() {
     let e = 0;
     for (const t of this._imageCache) e += t.byteSize;
     return e;
   }
-  get #Ee() {
+  get #Ue() {
     return (
       !(this._imageCache.size < GlobalImageCache.MIN_IMAGES_TO_CACHE) &&
-      !(this.#_e < GlobalImageCache.MAX_BYTE_SIZE)
+      !(this.#Le < GlobalImageCache.MAX_BYTE_SIZE)
     );
   }
   shouldCache(e, t) {
@@ -33176,14 +33188,14 @@ class GlobalImageCache {
     a.add(t);
     return (
       !(a.size < GlobalImageCache.NUM_PAGES_THRESHOLD) &&
-      !(!this._imageCache.has(e) && this.#Ee)
+      !(!this._imageCache.has(e) && this.#Ue)
     );
   }
   addDecodeFailed(e) {
-    this.#Pe.put(e);
+    this.#ze.put(e);
   }
   hasDecodeFailed(e) {
-    return this.#Pe.has(e);
+    return this.#ze.has(e);
   }
   addByteSize(e, t) {
     const a = this._imageCache.get(e);
@@ -33204,22 +33216,22 @@ class GlobalImageCache {
         'GlobalImageCache.setData - expected "shouldCache" to have been called.'
       );
     this._imageCache.has(e) ||
-      (this.#Ee
+      (this.#Ue
         ? warn('GlobalImageCache.setData - cache limit reached.')
         : this._imageCache.put(e, t));
   }
   clear(e = !1) {
     if (!e) {
-      this.#Pe.clear();
+      this.#ze.clear();
       this._refCache.clear();
     }
     this._imageCache.clear();
   }
 }
-const di = 0,
-  gi = 2,
-  bi = 3,
-  wi = 4;
+const bi = 0,
+  wi = 2,
+  ji = 3,
+  ki = 4;
 class PDFFunctionFactory {
   static #C = !0;
   static setOptions({ useWasm: e }) {
@@ -33290,13 +33302,13 @@ class PDFFunction {
     const a = t.dict || t,
       n = a.get('FunctionType');
     switch (n) {
-      case di:
-        return this.constructSampled(e, t, a);
-      case gi:
-        return this.constructInterpolated(e, a);
       case bi:
-        return this.constructStiched(e, a);
+        return this.constructSampled(e, t, a);
       case wi:
+        return this.constructInterpolated(e, a);
+      case ji:
+        return this.constructStiched(e, a);
+      case ki:
         return this.constructPostScript(e, t, a);
     }
     throw new FormatError(`Unknown function type: ${n}`);
@@ -33442,7 +33454,87 @@ function isPDFFunction(e) {
   }
   return t.has('FunctionType');
 }
-const ji = [
+function textSinkWrapper(e) {
+  const t = e ? null : Promise.resolve();
+  return {
+    enqueueInvoked: !1,
+    enqueue(t, a) {
+      this.enqueueInvoked = !0;
+      e?.enqueue(t, a);
+    },
+    get desiredSize() {
+      return e?.desiredSize ?? 100;
+    },
+    get ready() {
+      return e?.ready ?? t;
+    },
+  };
+}
+function _parseVisibilityExpression(e, t, a, n) {
+  if (++a > 10) {
+    warn('Visibility expression is too deeply nested');
+    return;
+  }
+  const s = t.length,
+    r = e.fetchIfRef(t[0]);
+  if (!(s < 2) && r instanceof Name) {
+    switch (r.name) {
+      case 'And':
+      case 'Or':
+      case 'Not':
+        n.push(r.name);
+        break;
+      default:
+        warn(`Invalid operator ${r.name} in visibility expression`);
+        return;
+    }
+    for (let r = 1; r < s; r++) {
+      const s = t[r],
+        i = e.fetchIfRef(s);
+      if (Array.isArray(i)) {
+        const t = [];
+        n.push(t);
+        _parseVisibilityExpression(e, i, a, t);
+      } else s instanceof Ref && n.push(s.toString());
+    }
+  } else warn('Invalid visibility expression');
+}
+function parseMarkedContentProps(e, t, a) {
+  let n;
+  if (t instanceof Name) {
+    n = a.get('Properties').get(t.name);
+  } else {
+    if (!(t instanceof Dict))
+      throw new FormatError('Optional content properties malformed.');
+    n = t;
+  }
+  const s = n.get('Type')?.name;
+  if ('OCG' === s) return { type: s, id: n.objId };
+  if ('OCMD' === s) {
+    const t = n.get('VE');
+    if (Array.isArray(t)) {
+      const a = [];
+      _parseVisibilityExpression(e, t, 0, a);
+      if (a.length > 0) return { type: 'OCMD', expression: a };
+    }
+    const a = n.get('OCGs');
+    if (Array.isArray(a) || a instanceof Dict) {
+      const e = [];
+      if (Array.isArray(a)) for (const t of a) e.push(t.toString());
+      else e.push(a.objId);
+      const t = n.get('P');
+      return {
+        type: s,
+        ids: e,
+        policy: t instanceof Name ? t.name : null,
+        expression: null,
+      };
+    }
+    if (a instanceof Ref) return { type: s, id: a.toString() };
+  }
+  return null;
+}
+const yi = [
     'BN',
     'BN',
     'BN',
@@ -33700,7 +33792,7 @@ const ji = [
     'L',
     'L',
   ],
-  ki = [
+  qi = [
     'AN',
     'AN',
     'AN',
@@ -33981,25 +34073,25 @@ function createBidiText(e, t, a = !1) {
   a ? (n = 'ttb') : t || (n = 'rtl');
   return { str: e, dir: n };
 }
-const yi = [],
-  qi = [];
+const vi = [],
+  Si = [];
 function bidi(e, t = -1, a = !1) {
   let n = !0;
   const s = e.length;
   if (0 === s || a) return createBidiText(e, n, a);
-  yi.length = s;
-  qi.length = s;
+  vi.length = s;
+  Si.length = s;
   let r,
     i,
     o = 0;
   for (r = 0; r < s; ++r) {
-    yi[r] = e.charAt(r);
+    vi[r] = e.charAt(r);
     const t = e.charCodeAt(r);
     let a = 'L';
-    if (t <= 255) a = ji[t];
+    if (t <= 255) a = yi[t];
     else if (1424 <= t && t <= 1524) a = 'R';
     else if (1536 <= t && t <= 1791) {
-      a = ki[255 & t];
+      a = qi[255 & t];
       a || warn('Bidi: invalid Unicode character ' + t.toString(16));
     } else
       ((1792 <= t && t <= 2220) ||
@@ -34007,7 +34099,7 @@ function bidi(e, t = -1, a = !1) {
         (65136 <= t && t <= 65279)) &&
         (a = 'AL');
     ('R' !== a && 'AL' !== a && 'AN' !== a) || o++;
-    qi[r] = a;
+    Si[r] = a;
   }
   if (0 === o) {
     n = !0;
@@ -34028,50 +34120,50 @@ function bidi(e, t = -1, a = !1) {
     h = c;
   let u,
     m = c;
-  for (r = 0; r < s; ++r) 'NSM' === qi[r] ? (qi[r] = m) : (m = qi[r]);
+  for (r = 0; r < s; ++r) 'NSM' === Si[r] ? (Si[r] = m) : (m = Si[r]);
   m = c;
   for (r = 0; r < s; ++r) {
-    u = qi[r];
+    u = Si[r];
     'EN' === u
-      ? (qi[r] = 'AL' === m ? 'AN' : 'EN')
+      ? (Si[r] = 'AL' === m ? 'AN' : 'EN')
       : ('R' !== u && 'L' !== u && 'AL' !== u) || (m = u);
   }
   for (r = 0; r < s; ++r) {
-    u = qi[r];
-    'AL' === u && (qi[r] = 'R');
+    u = Si[r];
+    'AL' === u && (Si[r] = 'R');
   }
   for (r = 1; r < s - 1; ++r) {
-    'ES' === qi[r] &&
-      'EN' === qi[r - 1] &&
-      'EN' === qi[r + 1] &&
-      (qi[r] = 'EN');
-    'CS' !== qi[r] ||
-      ('EN' !== qi[r - 1] && 'AN' !== qi[r - 1]) ||
-      qi[r + 1] !== qi[r - 1] ||
-      (qi[r] = qi[r - 1]);
+    'ES' === Si[r] &&
+      'EN' === Si[r - 1] &&
+      'EN' === Si[r + 1] &&
+      (Si[r] = 'EN');
+    'CS' !== Si[r] ||
+      ('EN' !== Si[r - 1] && 'AN' !== Si[r - 1]) ||
+      Si[r + 1] !== Si[r - 1] ||
+      (Si[r] = Si[r - 1]);
   }
   for (r = 0; r < s; ++r)
-    if ('EN' === qi[r]) {
-      for (let e = r - 1; e >= 0 && 'ET' === qi[e]; --e) qi[e] = 'EN';
-      for (let e = r + 1; e < s && 'ET' === qi[e]; ++e) qi[e] = 'EN';
+    if ('EN' === Si[r]) {
+      for (let e = r - 1; e >= 0 && 'ET' === Si[e]; --e) Si[e] = 'EN';
+      for (let e = r + 1; e < s && 'ET' === Si[e]; ++e) Si[e] = 'EN';
     }
   for (r = 0; r < s; ++r) {
-    u = qi[r];
-    ('WS' !== u && 'ES' !== u && 'ET' !== u && 'CS' !== u) || (qi[r] = 'ON');
+    u = Si[r];
+    ('WS' !== u && 'ES' !== u && 'ET' !== u && 'CS' !== u) || (Si[r] = 'ON');
   }
   m = c;
   for (r = 0; r < s; ++r) {
-    u = qi[r];
+    u = Si[r];
     'EN' === u
-      ? (qi[r] = 'L' === m ? 'L' : 'EN')
+      ? (Si[r] = 'L' === m ? 'L' : 'EN')
       : ('R' !== u && 'L' !== u) || (m = u);
   }
   for (r = 0; r < s; ++r)
-    if ('ON' === qi[r]) {
-      const e = findUnequal(qi, r + 1, 'ON');
+    if ('ON' === Si[r]) {
+      const e = findUnequal(Si, r + 1, 'ON');
       let t = c;
       for (let e = r - 1; e >= 0; e--) {
-        const a = qi[e];
+        const a = Si[e];
         if ('L' === a) {
           t = 'L';
           break;
@@ -34083,7 +34175,7 @@ function bidi(e, t = -1, a = !1) {
       }
       let a = h;
       for (let t = e; t < s; t++) {
-        const e = qi[t];
+        const e = Si[t];
         if ('L' === e) {
           a = 'L';
           break;
@@ -34093,12 +34185,12 @@ function bidi(e, t = -1, a = !1) {
           break;
         }
       }
-      t === a && qi.fill(t, r, e);
+      t === a && Si.fill(t, r, e);
       r = e - 1;
     }
-  for (r = 0; r < s; ++r) 'ON' === qi[r] && (qi[r] = f);
+  for (r = 0; r < s; ++r) 'ON' === Si[r] && (Si[r] = f);
   for (r = 0; r < s; ++r) {
-    u = qi[r];
+    u = Si[r];
     isEven(l[r])
       ? 'R' === u
         ? (l[r] += 1)
@@ -34118,24 +34210,24 @@ function bidi(e, t = -1, a = !1) {
     for (r = 0, i = l.length; r < i; ++r)
       if (l[r] < p) {
         if (e >= 0) {
-          reverseValues(yi, e, r);
+          reverseValues(vi, e, r);
           e = -1;
         }
       } else e < 0 && (e = r);
-    e >= 0 && reverseValues(yi, e, l.length);
+    e >= 0 && reverseValues(vi, e, l.length);
   }
-  for (r = 0, i = yi.length; r < i; ++r) {
-    const e = yi[r];
-    ('<' !== e && '>' !== e) || (yi[r] = '');
+  for (r = 0, i = vi.length; r < i; ++r) {
+    const e = vi[r];
+    ('<' !== e && '>' !== e) || (vi[r] = '');
   }
-  return createBidiText(yi.join(''), n);
+  return createBidiText(vi.join(''), n);
 }
-const vi = { style: 'normal', weight: 'normal' },
-  Si = { style: 'normal', weight: '500' },
-  Ai = { style: 'normal', weight: 'bold' },
-  xi = { style: 'italic', weight: 'normal' },
-  Ci = { style: 'italic', weight: 'bold' },
-  Ii = new Map([
+const Ai = { style: 'normal', weight: 'normal' },
+  xi = { style: 'normal', weight: '500' },
+  Ci = { style: 'normal', weight: 'bold' },
+  Ii = { style: 'italic', weight: 'normal' },
+  Fi = { style: 'italic', weight: 'bold' },
+  Ti = new Map([
     [
       'Times-Roman',
       {
@@ -34157,15 +34249,15 @@ const vi = { style: 'normal', weight: 'normal' },
           'Bitstream Vera Serif',
           'Ubuntu',
         ],
-        style: vi,
+        style: Ai,
         ultimate: 'serif',
       },
     ],
-    ['Times-Bold', { alias: 'Times-Roman', style: Ai, ultimate: 'serif' }],
-    ['Times-Italic', { alias: 'Times-Roman', style: xi, ultimate: 'serif' }],
+    ['Times-Bold', { alias: 'Times-Roman', style: Ci, ultimate: 'serif' }],
+    ['Times-Italic', { alias: 'Times-Roman', style: Ii, ultimate: 'serif' }],
     [
       'Times-BoldItalic',
-      { alias: 'Times-Roman', style: Ci, ultimate: 'serif' },
+      { alias: 'Times-Roman', style: Fi, ultimate: 'serif' },
     ],
     [
       'Helvetica',
@@ -34191,7 +34283,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'Cantarell',
         ],
         path: 'LiberationSans-Regular.ttf',
-        style: vi,
+        style: Ai,
         ultimate: 'sans-serif',
       },
     ],
@@ -34200,7 +34292,7 @@ const vi = { style: 'normal', weight: 'normal' },
       {
         alias: 'Helvetica',
         path: 'LiberationSans-Bold.ttf',
-        style: Ai,
+        style: Ci,
         ultimate: 'sans-serif',
       },
     ],
@@ -34209,7 +34301,7 @@ const vi = { style: 'normal', weight: 'normal' },
       {
         alias: 'Helvetica',
         path: 'LiberationSans-Italic.ttf',
-        style: xi,
+        style: Ii,
         ultimate: 'sans-serif',
       },
     ],
@@ -34218,7 +34310,7 @@ const vi = { style: 'normal', weight: 'normal' },
       {
         alias: 'Helvetica',
         path: 'LiberationSans-BoldItalic.ttf',
-        style: Ci,
+        style: Fi,
         ultimate: 'sans-serif',
       },
     ],
@@ -34238,15 +34330,15 @@ const vi = { style: 'normal', weight: 'normal' },
           'Linux Libertine Mono O',
           'Libertinus Mono',
         ],
-        style: vi,
+        style: Ai,
         ultimate: 'monospace',
       },
     ],
-    ['Courier-Bold', { alias: 'Courier', style: Ai, ultimate: 'monospace' }],
-    ['Courier-Oblique', { alias: 'Courier', style: xi, ultimate: 'monospace' }],
+    ['Courier-Bold', { alias: 'Courier', style: Ci, ultimate: 'monospace' }],
+    ['Courier-Oblique', { alias: 'Courier', style: Ii, ultimate: 'monospace' }],
     [
       'Courier-BoldOblique',
-      { alias: 'Courier', style: Ci, ultimate: 'monospace' },
+      { alias: 'Courier', style: Fi, ultimate: 'monospace' },
     ],
     [
       'ArialBlack',
@@ -34276,46 +34368,46 @@ const vi = { style: 'normal', weight: 'normal' },
           'Nimbus Sans Narrow',
           'TeX Gyre Heros Cn',
         ],
-        style: vi,
+        style: Ai,
         fallback: 'Helvetica',
       },
     ],
     [
       'ArialNarrow-Bold',
-      { alias: 'ArialNarrow', style: Ai, fallback: 'Helvetica-Bold' },
+      { alias: 'ArialNarrow', style: Ci, fallback: 'Helvetica-Bold' },
     ],
     [
       'ArialNarrow-Italic',
-      { alias: 'ArialNarrow', style: xi, fallback: 'Helvetica-Oblique' },
+      { alias: 'ArialNarrow', style: Ii, fallback: 'Helvetica-Oblique' },
     ],
     [
       'ArialNarrow-BoldItalic',
-      { alias: 'ArialNarrow', style: Ci, fallback: 'Helvetica-BoldOblique' },
+      { alias: 'ArialNarrow', style: Fi, fallback: 'Helvetica-BoldOblique' },
     ],
     [
       'Calibri',
-      { local: ['Calibri', 'Carlito'], style: vi, fallback: 'Helvetica' },
+      { local: ['Calibri', 'Carlito'], style: Ai, fallback: 'Helvetica' },
     ],
     [
       'Calibri-Bold',
-      { alias: 'Calibri', style: Ai, fallback: 'Helvetica-Bold' },
+      { alias: 'Calibri', style: Ci, fallback: 'Helvetica-Bold' },
     ],
     [
       'Calibri-Italic',
-      { alias: 'Calibri', style: xi, fallback: 'Helvetica-Oblique' },
+      { alias: 'Calibri', style: Ii, fallback: 'Helvetica-Oblique' },
     ],
     [
       'Calibri-BoldItalic',
-      { alias: 'Calibri', style: Ci, fallback: 'Helvetica-BoldOblique' },
+      { alias: 'Calibri', style: Fi, fallback: 'Helvetica-BoldOblique' },
     ],
-    ['Wingdings', { local: ['Wingdings', 'URW Dingbats'], style: vi }],
+    ['Wingdings', { local: ['Wingdings', 'URW Dingbats'], style: Ai }],
     ['Wingdings-Regular', { alias: 'Wingdings' }],
     ['Wingdings-Bold', { alias: 'Wingdings' }],
     [
       'ËÎÌå',
       {
         local: ['SimSun', 'SimSun Regular', 'NSimSun'],
-        style: vi,
+        style: Ai,
         ultimate: 'serif',
       },
     ],
@@ -34323,7 +34415,7 @@ const vi = { style: 'normal', weight: 'normal' },
       'ºÚÌå',
       {
         local: ['SimHei', 'SimHei Regular'],
-        style: vi,
+        style: Ai,
         ultimate: 'sans-serif',
       },
     ],
@@ -34331,7 +34423,7 @@ const vi = { style: 'normal', weight: 'normal' },
       '¿¬Ìå',
       {
         local: ['KaiTi', 'SimKai', 'SimKai Regular'],
-        style: vi,
+        style: Ai,
         ultimate: 'sans-serif',
       },
     ],
@@ -34339,7 +34431,7 @@ const vi = { style: 'normal', weight: 'normal' },
       '·ÂËÎ',
       {
         local: ['FangSong', 'SimFang', 'SimFang Regular'],
-        style: vi,
+        style: Ai,
         ultimate: 'serif',
       },
     ],
@@ -34347,7 +34439,7 @@ const vi = { style: 'normal', weight: 'normal' },
     ['·ÂËÎ_GB2312', { alias: '·ÂËÎ' }],
     [
       'Á¥Êé',
-      { local: ['SimLi', 'SimLi Regular'], style: vi, ultimate: 'serif' },
+      { local: ['SimLi', 'SimLi Regular'], style: Ai, ultimate: 'serif' },
     ],
     ['ÐÂËÎ', { alias: 'ËÎÌå' }],
     [
@@ -34367,7 +34459,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'MS Mincho',
           'MS PMincho',
         ],
-        style: vi,
+        style: Ai,
         ultimate: 'serif',
       },
     ],
@@ -34390,7 +34482,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'MS Gothic',
           'MS PGothic',
         ],
-        style: Si,
+        style: xi,
         ultimate: 'sans-serif',
       },
     ],
@@ -34416,7 +34508,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'SimSun',
           'NSimSun',
         ],
-        style: vi,
+        style: Ai,
         ultimate: 'serif',
       },
     ],
@@ -34435,7 +34527,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'SimHei',
           'WenQuanYi Zen Hei',
         ],
-        style: vi,
+        style: Ai,
         ultimate: 'sans-serif',
       },
     ],
@@ -34459,7 +34551,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'MingLiU',
           'MingLiU_HKSCS',
         ],
-        style: vi,
+        style: Ai,
         ultimate: 'serif',
       },
     ],
@@ -34476,7 +34568,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'PingFang TC',
           'Microsoft JhengHei',
         ],
-        style: Si,
+        style: xi,
         ultimate: 'sans-serif',
       },
     ],
@@ -34493,7 +34585,7 @@ const vi = { style: 'normal', weight: 'normal' },
           'Nanum Myeongjo',
           'Batang',
         ],
-        style: Si,
+        style: xi,
         ultimate: 'serif',
       },
     ],
@@ -34511,16 +34603,16 @@ const vi = { style: 'normal', weight: 'normal' },
           'Dotum',
           'Gulim',
         ],
-        style: Si,
+        style: xi,
         ultimate: 'sans-serif',
       },
     ],
     ['HYSMyeongJoStd-Medium', { alias: 'HYSMyeongJo-Medium' }],
     ['AdobeMyungjoStd-Medium', { alias: 'HYSMyeongJo-Medium' }],
-    ['HYGoThic-Bold', { alias: 'HYGoThic-Medium', style: Ai }],
-    ['AdobeGothicStd-Bold', { alias: 'HYGoThic-Medium', style: Ai }],
+    ['HYGoThic-Bold', { alias: 'HYGoThic-Medium', style: Ci }],
+    ['AdobeGothicStd-Bold', { alias: 'HYGoThic-Medium', style: Ci }],
   ]),
-  Fi = new Map([['Arial-Black', 'ArialBlack']]);
+  Oi = new Map([['Arial-Black', 'ArialBlack']]);
 function getFamilyName(e) {
   const t = new Set([
     'thin',
@@ -34575,16 +34667,16 @@ function generateFont(
     for (const a of t) i.push(`local(${a}${e})`);
   }
   if (e) {
-    const t = Ii.get(e),
+    const t = Ti.get(e),
       r =
         c ||
         (function getStyleToAppend(e) {
           switch (e) {
-            case Ai:
-              return 'Bold';
-            case xi:
-              return 'Italic';
             case Ci:
+              return 'Bold';
+            case Ii:
+              return 'Italic';
+            case Fi:
               return 'Bold Italic';
             default:
               if ('bold' === e?.weight) return 'Bold';
@@ -34597,7 +34689,7 @@ function generateFont(
   s && (h.style = s);
   r && (h.ultimate = r);
   if (l && n) {
-    const e = Ii.get(n),
+    const e = Ti.get(n),
       { ultimate: t } = generateFont(e, i, o, l, f && !a, c);
     h.ultimate ||= t;
   }
@@ -34612,17 +34704,17 @@ function getFontSubstitution(e, t, a, n, s, r) {
   const i = (n = normalizeFontName(n));
   let o = e.get(i);
   if (o) return o;
-  let l = Ii.get(n);
+  let l = Ti.get(n);
   if (!l)
-    for (const [e, t] of Fi)
+    for (const [e, t] of Oi)
       if (n.startsWith(e)) {
         n = `${t}${n.substring(e.length)}`;
-        l = Ii.get(n);
+        l = Ti.get(n);
         break;
       }
   let f = !1;
   if (!l) {
-    l = Ii.get(s);
+    l = Ti.get(s);
     f = !0;
   }
   const c = `${t.getDocId()}_s${t.createFontId()}`;
@@ -34634,7 +34726,7 @@ function getFontSubstitution(e, t, a, n, s, r) {
     }
     const t = /bold/i.test(n),
       a = /oblique|italic/i.test(n),
-      s = (t && a && Ci) || (t && Ai) || (a && xi) || vi;
+      s = (t && a && Fi) || (t && Ci) || (a && Ii) || Ai;
     o = {
       css: `"${getFamilyName(n)}",${c}`,
       guessFallback: !0,
@@ -34662,13 +34754,13 @@ function getFontSubstitution(e, t, a, n, s, r) {
   e.set(i, o);
   return o;
 }
-const Ti = 3285377520,
-  Oi = 4294901760,
-  Ri = 65535;
+const Ri = 3285377520,
+  Hi = 4294901760,
+  Bi = 65535;
 class MurmurHash3_64 {
   constructor(e) {
-    this.h1 = e ? 4294967295 & e : Ti;
-    this.h2 = e ? 4294967295 & e : Ti;
+    this.h1 = e ? 4294967295 & e : Ri;
+    this.h2 = e ? 4294967295 & e : Ri;
   }
   update(e) {
     let t, a;
@@ -34703,17 +34795,17 @@ class MurmurHash3_64 {
     for (let e = 0; e < n; e++)
       if (1 & e) {
         i = r[e];
-        i = ((i * c) & Oi) | ((i * u) & Ri);
+        i = ((i * c) & Hi) | ((i * u) & Bi);
         i = (i << 15) | (i >>> 17);
-        i = ((i * h) & Oi) | ((i * m) & Ri);
+        i = ((i * h) & Hi) | ((i * m) & Bi);
         l ^= i;
         l = (l << 13) | (l >>> 19);
         l = 5 * l + 3864292196;
       } else {
         o = r[e];
-        o = ((o * c) & Oi) | ((o * u) & Ri);
+        o = ((o * c) & Hi) | ((o * u) & Bi);
         o = (o << 15) | (o >>> 17);
-        o = ((o * h) & Oi) | ((o * m) & Ri);
+        o = ((o * h) & Hi) | ((o * m) & Bi);
         f ^= o;
         f = (f << 13) | (f >>> 19);
         f = 5 * f + 3864292196;
@@ -34726,9 +34818,9 @@ class MurmurHash3_64 {
         i ^= t[4 * n + 1] << 8;
       case 1:
         i ^= t[4 * n];
-        i = ((i * c) & Oi) | ((i * u) & Ri);
+        i = ((i * c) & Hi) | ((i * u) & Bi);
         i = (i << 15) | (i >>> 17);
-        i = ((i * h) & Oi) | ((i * m) & Ri);
+        i = ((i * h) & Hi) | ((i * m) & Bi);
         1 & n ? (l ^= i) : (f ^= i);
     }
     this.h1 = l;
@@ -34738,85 +34830,21 @@ class MurmurHash3_64 {
     let e = this.h1,
       t = this.h2;
     e ^= t >>> 1;
-    e = ((3981806797 * e) & Oi) | ((36045 * e) & Ri);
+    e = ((3981806797 * e) & Hi) | ((36045 * e) & Bi);
     t =
-      ((4283543511 * t) & Oi) |
-      (((2950163797 * ((t << 16) | (e >>> 16))) & Oi) >>> 16);
+      ((4283543511 * t) & Hi) |
+      (((2950163797 * ((t << 16) | (e >>> 16))) & Hi) >>> 16);
     e ^= t >>> 1;
-    e = ((444984403 * e) & Oi) | ((60499 * e) & Ri);
+    e = ((444984403 * e) & Hi) | ((60499 * e) & Bi);
     t =
-      ((3301882366 * t) & Oi) |
-      (((3120437893 * ((t << 16) | (e >>> 16))) & Oi) >>> 16);
+      ((3301882366 * t) & Hi) |
+      (((3120437893 * ((t << 16) | (e >>> 16))) & Hi) >>> 16);
     e ^= t >>> 1;
     return (
       (e >>> 0).toString(16).padStart(8, '0') +
       (t >>> 0).toString(16).padStart(8, '0')
     );
   }
-}
-function _parseVisibilityExpression(e, t, a, n) {
-  if (++a > 10) {
-    warn('Visibility expression is too deeply nested');
-    return;
-  }
-  const s = t.length,
-    r = e.fetchIfRef(t[0]);
-  if (!(s < 2) && r instanceof Name) {
-    switch (r.name) {
-      case 'And':
-      case 'Or':
-      case 'Not':
-        n.push(r.name);
-        break;
-      default:
-        warn(`Invalid operator ${r.name} in visibility expression`);
-        return;
-    }
-    for (let r = 1; r < s; r++) {
-      const s = t[r],
-        i = e.fetchIfRef(s);
-      if (Array.isArray(i)) {
-        const t = [];
-        n.push(t);
-        _parseVisibilityExpression(e, i, a, t);
-      } else s instanceof Ref && n.push(s.toString());
-    }
-  } else warn('Invalid visibility expression');
-}
-function parseMarkedContentProps(e, t, a) {
-  let n;
-  if (t instanceof Name) {
-    n = a.get('Properties').get(t.name);
-  } else {
-    if (!(t instanceof Dict))
-      throw new FormatError('Optional content properties malformed.');
-    n = t;
-  }
-  const s = n.get('Type')?.name;
-  if ('OCG' === s) return { type: s, id: n.objId };
-  if ('OCMD' === s) {
-    const t = n.get('VE');
-    if (Array.isArray(t)) {
-      const a = [];
-      _parseVisibilityExpression(e, t, 0, a);
-      if (a.length > 0) return { type: 'OCMD', expression: a };
-    }
-    const a = n.get('OCGs');
-    if (Array.isArray(a) || a instanceof Dict) {
-      const e = [];
-      if (Array.isArray(a)) for (const t of a) e.push(t.toString());
-      else e.push(a.objId);
-      const t = n.get('P');
-      return {
-        type: s,
-        ids: e,
-        policy: t instanceof Name ? t.name : null,
-        expression: null,
-      };
-    }
-    if (a instanceof Ref) return { type: s, id: a.toString() };
-  }
-  return null;
 }
 class PDFImage {
   constructor({
@@ -35287,7 +35315,7 @@ class PDFImage {
           this.needsDecode ||
           (e = O);
       if (e && !this.smask && !this.mask && a === i && n === o) {
-        const r = await this.#ze(i, o);
+        const r = await this.#Xe(i, o);
         if (r) return r;
         const l = await this.getImageBytes(o * f, { internal: t && c });
         if (t)
@@ -35337,7 +35365,7 @@ class PDFImage {
               t = !0;
           }
           if (t) {
-            const t = await this.#ze(a, n);
+            const t = await this.#Xe(a, n);
             if (t) return t;
             const s = await this.getImageBytes(e, {
               drawWidth: a,
@@ -35514,7 +35542,7 @@ class PDFImage {
       interpolate: this.interpolate,
     };
   }
-  async #ze(e, t) {
+  async #Xe(e, t) {
     const a = await this.image.getTransferableImage();
     return a
       ? {
@@ -35550,7 +35578,7 @@ class PDFImage {
     return new Uint8Array(i);
   }
 }
-const Hi = Object.freeze({
+const Di = Object.freeze({
     maxImageSize: -1,
     disableFontFace: !1,
     ignoreErrors: !1,
@@ -35568,9 +35596,9 @@ const Hi = Object.freeze({
     wasmUrl: null,
     hasGPU: !1,
   }),
-  Bi = 1,
-  Di = 2,
-  Mi = Promise.resolve();
+  Mi = 1,
+  Ni = 2,
+  Pi = Promise.resolve();
 function normalizeBlendMode(e, t = !1) {
   if (Array.isArray(e)) {
     for (const t of e) {
@@ -35626,7 +35654,7 @@ function addCachedImageOps(
 ) {
   t && e.addDependency(t);
   e.addImageOps(a, n, s, r);
-  a === Nt && n[0]?.count > 0 && n[0].count++;
+  a === _t && n[0]?.count > 0 && n[0].count++;
 }
 class TimeSlotManager {
   static TIME_SLOT_DURATION_MS = 20;
@@ -35668,7 +35696,7 @@ class PartialEvaluator {
     this.globalColorSpaceCache = o;
     this.globalImageCache = l;
     this.systemFontCache = f;
-    this.options = c || Hi;
+    this.options = c || Di;
     this.type3FontRefs = null;
     this._regionalImageCache = new RegionalImageCache();
     this._fetchBuiltInCMapBound = this.fetchBuiltInCMap.bind(this);
@@ -35768,7 +35796,7 @@ class PartialEvaluator {
     if (t) return new Stream(t);
     if (this.options.useSystemFonts && 'Symbol' !== e && 'ZapfDingbats' !== e)
       return null;
-    const a = _n()[e];
+    const a = zn()[e];
     let n;
     try {
       n = this.options.useWorkerFetch
@@ -35793,7 +35821,7 @@ class PartialEvaluator {
       m = c && new Float32Array(c);
     m?.some((e) => !isFinite(e)) && (m = null);
     l.has('OC') && (h = await this.parseMarkedContentProps(l.get('OC'), e));
-    void 0 !== h && n.addOp(Ct, ['OC', h]);
+    void 0 !== h && n.addOp(Ft, ['OC', h]);
     const p = l.get('Group');
     let d;
     const g = [f && new Float32Array(f), (!p && m) || null],
@@ -35806,6 +35834,8 @@ class PartialEvaluator {
         isolated: !1,
         knockout: !1,
         needsIsolation: !1,
+        hasSoftMask: !1,
+        isGray: !1,
       };
       let t = null;
       if (isName(p.get('S'), 'Transparency')) {
@@ -35816,6 +35846,7 @@ class PartialEvaluator {
           t = a instanceof ColorSpace ? a : await this._handleColorSpace(a);
         }
       }
+      u.isGray = 1 === t?.numComps;
       if (a?.backdrop) {
         t ||= ColorSpaceUtils.rgb;
         a.backdrop = t.getRgbHex(a.backdrop, 0);
@@ -35823,7 +35854,7 @@ class PartialEvaluator {
       d = new CheckedOperatorList();
     } else {
       d = n;
-      n.addOp(Ot, g);
+      n.addOp(Ht, g);
     }
     await this.getOperatorList({
       stream: t,
@@ -35835,13 +35866,14 @@ class PartialEvaluator {
     });
     if (p) {
       u.needsIsolation = d.needsIsolation || !!a;
-      n.addOp(Ht, [u]);
-      n.addOp(Ot, g);
+      u.hasSoftMask = d.hasSoftMask || !!a;
+      n.addOp(Dt, [u]);
+      n.addOp(Ht, g);
       n.addOpList(d);
-      n.addOp(Rt, []);
-      n.addOp(Bt, [u]);
-    } else n.addOp(Rt, []);
-    void 0 !== h && n.addOp(It, []);
+      n.addOp(Bt, []);
+      n.addOp(Mt, [u]);
+    } else n.addOp(Bt, []);
+    void 0 !== h && n.addOp(Tt, []);
   }
   _sendImgData(e, t, a = !1) {
     const n = t ? [t.bitmap || t.data.buffer] : null;
@@ -35886,7 +35918,7 @@ class PartialEvaluator {
         isOffscreenCanvasSupported: f && !this.parsingType3Font,
       });
       if (d.isSingleOpaquePixel) {
-        g = Xt;
+        g = Kt;
         b = [];
         n.addImageOps(g, b, p);
         if (s) {
@@ -35989,7 +36021,7 @@ class PartialEvaluator {
             if (e === a) continue;
             let n = e % s,
               o = i;
-            p.push($t, d * n + b * o + j, g * n + w * o + k);
+            p.push(Jt, d * n + b * o + j, g * n + w * o + k);
             const l = e;
             let f = r[e];
             do {
@@ -36007,26 +36039,26 @@ class PartialEvaluator {
               }
               n = e % s;
               o = (e / s) | 0;
-              p.push(Yt, d * n + b * o + j, g * n + w * o + k);
+              p.push(Qt, d * n + b * o + j, g * n + w * o + k);
               r[e] || --u;
             } while (l !== e);
             --i;
           }
-          return [Vt, [new Float32Array(p)], new Float32Array([0, 0, t, a])];
+          return [Yt, [new Float32Array(p)], new Float32Array([0, 0, t, a])];
         })(d);
         if (b) {
-          n.addImageOps(Wt, b, p);
+          n.addImageOps(Gt, b, p);
           return;
         }
         warn('Cannot compile Type3 glyph.');
-        n.addImageOps(Nt, [d], p);
+        n.addImageOps(_t, [d], p);
         return;
       }
       const e = `mask_${this.idFactory.createObjId()}`;
       n.addDependency(e);
       d.dataLen = d.bitmap ? d.width * d.height * 4 : d.data.length;
       this._sendImgData(e, d);
-      g = Nt;
+      g = _t;
       b = [
         {
           data: e,
@@ -36057,7 +36089,7 @@ class PartialEvaluator {
           localColorSpaceCache: i,
         });
         d = await s.createImageData(!0, !1);
-        n.addImageOps(Et, [d], p);
+        n.addImageOps(Lt, [d], p);
       } catch (e) {
         const t = `Unable to decode inline image: "${e}".`;
         if (!l) throw new Error(t);
@@ -36077,7 +36109,7 @@ class PartialEvaluator {
       }
     }
     n.addDependency(j);
-    g = _t;
+    g = zt;
     b = [j, u, m];
     n.addImageOps(g, b, p, w);
     if (k) {
@@ -36327,9 +36359,12 @@ class PartialEvaluator {
           } else warn('Unsupported SMask type');
           break;
         case 'TR':
-          const t = this.handleTransferFunction(i);
-          h.push([n, t]);
+        case 'TR2': {
+          if ('TR' === n && t.has('TR2')) break;
+          const e = this.handleTransferFunction(i);
+          h.push(['TR', e]);
           break;
+        }
         case 'OP':
         case 'op':
         case 'OPM':
@@ -36337,7 +36372,6 @@ class PartialEvaluator {
         case 'BG2':
         case 'UCR':
         case 'UCR2':
-        case 'TR2':
         case 'HT':
         case 'SM':
         case 'SA':
@@ -36349,7 +36383,7 @@ class PartialEvaluator {
           info('Unknown graphic state operator ' + n);
       }
     await u;
-    h.length > 0 && a.addOp(ke, [h]);
+    h.length > 0 && a.addOp(qe, [h]);
     c && i.set(n, f, h);
   }
   loadFont(e, t, a, n, s = null, r = null, i = null) {
@@ -36447,7 +36481,7 @@ class PartialEvaluator {
   buildPath(e, t, a) {
     const { pathMinMax: n, pathBuffer: s } = a;
     switch (0 | e) {
-      case Te: {
+      case Re: {
         const e = (a.currentPointX = t[0]),
           r = (a.currentPointY = t[1]),
           i = t[2],
@@ -36455,57 +36489,57 @@ class PartialEvaluator {
           l = e + i,
           f = r + o;
         0 === i || 0 === o
-          ? s.push($t, e, r, Yt, l, f, Zt)
-          : s.push($t, e, r, Yt, l, r, Yt, l, f, Yt, e, f, Zt);
+          ? s.push(Jt, e, r, Qt, l, f, ta)
+          : s.push(Jt, e, r, Qt, l, r, Qt, l, f, Qt, e, f, ta);
         Util.rectBoundingBox(e, r, l, f, n);
         break;
       }
-      case Se: {
-        const e = (a.currentPointX = t[0]),
-          r = (a.currentPointY = t[1]);
-        s.push($t, e, r);
-        Util.pointBoundingBox(e, r, n);
-        break;
-      }
-      case Ae: {
-        const e = (a.currentPointX = t[0]),
-          r = (a.currentPointY = t[1]);
-        s.push(Yt, e, r);
-        Util.pointBoundingBox(e, r, n);
-        break;
-      }
       case xe: {
-        const e = a.currentPointX,
-          r = a.currentPointY,
-          [i, o, l, f, c, h] = t;
-        a.currentPointX = c;
-        a.currentPointY = h;
-        s.push(Jt, i, o, l, f, c, h);
-        Util.bezierBoundingBox(e, r, i, o, l, f, c, h, n);
+        const e = (a.currentPointX = t[0]),
+          r = (a.currentPointY = t[1]);
+        s.push(Jt, e, r);
+        Util.pointBoundingBox(e, r, n);
         break;
       }
       case Ce: {
-        const e = a.currentPointX,
-          r = a.currentPointY,
-          [i, o, l, f] = t;
-        a.currentPointX = l;
-        a.currentPointY = f;
-        s.push(Jt, e, r, i, o, l, f);
-        Util.bezierBoundingBox(e, r, e, r, i, o, l, f, n);
+        const e = (a.currentPointX = t[0]),
+          r = (a.currentPointY = t[1]);
+        s.push(Qt, e, r);
+        Util.pointBoundingBox(e, r, n);
         break;
       }
       case Ie: {
         const e = a.currentPointX,
           r = a.currentPointY,
+          [i, o, l, f, c, h] = t;
+        a.currentPointX = c;
+        a.currentPointY = h;
+        s.push(Zt, i, o, l, f, c, h);
+        Util.bezierBoundingBox(e, r, i, o, l, f, c, h, n);
+        break;
+      }
+      case Fe: {
+        const e = a.currentPointX,
+          r = a.currentPointY,
           [i, o, l, f] = t;
         a.currentPointX = l;
         a.currentPointY = f;
-        s.push(Jt, i, o, l, f, l, f);
+        s.push(Zt, e, r, i, o, l, f);
+        Util.bezierBoundingBox(e, r, e, r, i, o, l, f, n);
+        break;
+      }
+      case Te: {
+        const e = a.currentPointX,
+          r = a.currentPointY,
+          [i, o, l, f] = t;
+        a.currentPointX = l;
+        a.currentPointY = f;
+        s.push(Zt, i, o, l, f, l, f);
         Util.bezierBoundingBox(e, r, i, o, l, f, l, f, n);
         break;
       }
-      case Fe:
-        s.push(Zt);
+      case Oe:
+        s.push(ta);
     }
   }
   _getColorSpace(e, t, a) {
@@ -36650,11 +36684,11 @@ class PartialEvaluator {
       if (p) {
         const s = p instanceof BaseStream ? p.dict : p,
           h = s.get('PatternType');
-        if (h === Bi) {
+        if (h === Mi) {
           const o = n.base ? n.base.getRgbHex(a, 0) : null;
           return this.handleTilingType(t, o, r, p, s, e, i, l, c);
         }
-        if (h === Di) {
+        if (h === Ni) {
           const a = s.get('Shading'),
             n = this.parseShading({
               shading: a,
@@ -36713,7 +36747,7 @@ class PartialEvaluator {
       k = new EvaluatorPreprocessor(e, h, j),
       y = new TimeSlotManager();
     function closePendingRestoreOPS(e) {
-      for (let e = 0, t = k.savedStatesDepth; e < t; e++) s.addOp(qe, []);
+      for (let e = 0, t = k.savedStatesDepth; e < t; e++) s.addOp(Se, []);
     }
     return new Promise(function promiseBody(e, r) {
       const next = function (t) {
@@ -36735,7 +36769,7 @@ class PartialEvaluator {
         let e = o.args,
           r = o.fn;
         switch (0 | r) {
-          case vt:
+          case At:
             C = e[0] instanceof Name;
             x = e[0].name;
             if (C) {
@@ -36809,18 +36843,18 @@ class PartialEvaluator {
               })
             );
             return;
-          case Ve:
+          case Ye:
             const o = e[1];
             next(
               c
                 .handleSetFont(n, e, null, s, a, j.state, i, null, f)
                 .then(function (e) {
                   s.addDependency(e);
-                  s.addOp(Ve, [e, o]);
+                  s.addOp(Ye, [e, o]);
                 })
             );
             return;
-          case qt:
+          case St:
             const l = e[0].cacheKey;
             if (l) {
               const t = u.getByName(l);
@@ -36842,14 +36876,14 @@ class PartialEvaluator {
               })
             );
             return;
-          case tt:
+          case nt:
             if (!j.state.font) {
               c.ensureStateFont(j.state);
               continue;
             }
             e[0] = c.handleText(e[0], j.state);
             break;
-          case at:
+          case st:
             if (!j.state.font) {
               c.ensureStateFont(j.state);
               continue;
@@ -36861,32 +36895,32 @@ class PartialEvaluator {
                 ? k.push(...c.handleText(t, y))
                 : 'number' == typeof t && k.push(t);
             e[0] = k;
-            r = tt;
+            r = nt;
             break;
-          case nt:
+          case rt:
             if (!j.state.font) {
               c.ensureStateFont(j.state);
               continue;
             }
-            s.addOp(et);
+            s.addOp(at);
             e[0] = c.handleText(e[0], j.state);
-            r = tt;
+            r = nt;
             break;
-          case st:
+          case it:
             if (!j.state.font) {
               c.ensureStateFont(j.state);
               continue;
             }
-            s.addOp(et);
-            s.addOp(We, [e.shift()]);
-            s.addOp(Xe, [e.shift()]);
+            s.addOp(at);
+            s.addOp(Ge, [e.shift()]);
+            s.addOp(Ke, [e.shift()]);
             e[0] = c.handleText(e[0], j.state);
-            r = tt;
+            r = nt;
             break;
-          case $e:
+          case Je:
             j.state.textRenderingMode = e[0];
             break;
-          case lt: {
+          case ct: {
             const t = c._getColorSpace(e[0], n, m);
             if (t instanceof ColorSpace) {
               j.state.fillColorSpace = t;
@@ -36899,7 +36933,7 @@ class PartialEvaluator {
             );
             return;
           }
-          case ot: {
+          case ft: {
             const t = c._getColorSpace(e[0], n, m);
             if (t instanceof ColorSpace) {
               j.state.strokeColorSpace = t;
@@ -36912,54 +36946,73 @@ class PartialEvaluator {
             );
             return;
           }
-          case ht:
+          case mt:
             S = j.state.fillColorSpace;
             e = [S.getRgbHex(e, 0)];
-            r = gt;
+            r = wt;
             break;
-          case ft:
+          case ht:
             S = j.state.strokeColorSpace;
             e = [S.getRgbHex(e, 0)];
-            r = dt;
-            break;
-          case pt:
-            j.state.fillColorSpace = ColorSpaceUtils.gray;
-            e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
-            r = gt;
-            break;
-          case mt:
-            j.state.strokeColorSpace = ColorSpaceUtils.gray;
-            e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
-            r = dt;
-            break;
-          case wt:
-            j.state.fillColorSpace = ColorSpaceUtils.cmyk;
-            e = [ColorSpaceUtils.cmyk.getRgbHex(e, 0)];
-            r = gt;
-            break;
-          case bt:
-            j.state.strokeColorSpace = ColorSpaceUtils.cmyk;
-            e = [ColorSpaceUtils.cmyk.getRgbHex(e, 0)];
-            r = dt;
+            r = bt;
             break;
           case gt:
+            j.state.fillColorSpace = ColorSpaceUtils.gray;
+            e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
+            r = wt;
+            break;
+          case dt:
+            j.state.strokeColorSpace = ColorSpaceUtils.gray;
+            e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
+            r = bt;
+            break;
+          case kt:
+            j.state.fillColorSpace = ColorSpaceUtils.cmyk;
+            e = [ColorSpaceUtils.cmyk.getRgbHex(e, 0)];
+            r = wt;
+            break;
+          case jt:
+            j.state.strokeColorSpace = ColorSpaceUtils.cmyk;
+            e = [ColorSpaceUtils.cmyk.getRgbHex(e, 0)];
+            r = bt;
+            break;
+          case wt:
             j.state.fillColorSpace = ColorSpaceUtils.rgb;
             e = [ColorSpaceUtils.rgb.getRgbHex(e, 0)];
             break;
-          case dt:
+          case bt:
             j.state.strokeColorSpace = ColorSpaceUtils.rgb;
             e = [ColorSpaceUtils.rgb.getRgbHex(e, 0)];
             break;
-          case ut:
+          case pt:
             S = j.state.patternFillColorSpace;
             if (!S) {
               if (isNumberArray(e, null)) {
                 e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
-                r = gt;
+                r = wt;
                 break;
               }
               e = [];
-              r = Gt;
+              r = $t;
+              break;
+            }
+            if ('Pattern' === S.name) {
+              next(c.handleColorN(s, pt, e, S, w, n, a, m, d, g, f));
+              return;
+            }
+            e = [S.getRgbHex(e, 0)];
+            r = wt;
+            break;
+          case ut:
+            S = j.state.patternStrokeColorSpace;
+            if (!S) {
+              if (isNumberArray(e, null)) {
+                e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
+                r = bt;
+                break;
+              }
+              e = [];
+              r = Vt;
               break;
             }
             if ('Pattern' === S.name) {
@@ -36967,28 +37020,9 @@ class PartialEvaluator {
               return;
             }
             e = [S.getRgbHex(e, 0)];
-            r = gt;
+            r = bt;
             break;
-          case ct:
-            S = j.state.patternStrokeColorSpace;
-            if (!S) {
-              if (isNumberArray(e, null)) {
-                e = [ColorSpaceUtils.gray.getRgbHex(e, 0)];
-                r = dt;
-                break;
-              }
-              e = [];
-              r = Kt;
-              break;
-            }
-            if ('Pattern' === S.name) {
-              next(c.handleColorN(s, ct, e, S, w, n, a, m, d, g, f));
-              return;
-            }
-            e = [S.getRgbHex(e, 0)];
-            r = dt;
-            break;
-          case jt:
+          case yt:
             let F;
             try {
               const t = n.get('Shading');
@@ -37011,15 +37045,15 @@ class PartialEvaluator {
             });
             if (!T) continue;
             e = [T];
-            r = jt;
+            r = yt;
             break;
-          case ke:
+          case qe:
             C = e[0] instanceof Name;
             x = e[0].name;
             if (C) {
               const t = p.getByName(x);
               if (t) {
-                t.length > 0 && s.addOp(ke, [t]);
+                t.length > 0 && s.addOp(qe, [t]);
                 e = null;
                 continue;
               }
@@ -37053,7 +37087,7 @@ class PartialEvaluator {
               })
             );
             return;
-          case me: {
+          case de: {
             const [t] = e;
             if ('number' != typeof t) {
               warn(`Invalid setLineWidth: ${t}`);
@@ -37062,7 +37096,7 @@ class PartialEvaluator {
             e[0] = Math.abs(t);
             break;
           }
-          case be: {
+          case je: {
             const t = e[1];
             if ('number' != typeof t) {
               warn(`Invalid setDash: ${t}`);
@@ -37077,48 +37111,48 @@ class PartialEvaluator {
               (e[0] = a.filter((e) => 'number' == typeof e));
             break;
           }
-          case Se:
-          case Ae:
           case xe:
           case Ce:
           case Ie:
           case Fe:
           case Te:
-            c.buildPath(r, e, j.state);
-            continue;
           case Oe:
           case Re:
+            c.buildPath(r, e, j.state);
+            continue;
           case He:
           case Be:
           case De:
           case Me:
           case Ne:
           case Pe:
-          case _e: {
+          case _e:
+          case Ee:
+          case ze: {
             const {
               state: { pathBuffer: e, pathMinMax: a },
             } = j;
-            (r !== Re && r !== Ne && r !== Pe) || e.push(Zt);
-            if (0 === e.length) s.addOp(Wt, [r, [null], null]);
+            (r !== Be && r !== _e && r !== Ee) || e.push(ta);
+            if (0 === e.length) s.addOp(Gt, [r, [null], null]);
             else {
-              s.addOp(Wt, [r, [new Float32Array(e)], a.slice()]);
+              s.addOp(Gt, [r, [new Float32Array(e)], a.slice()]);
               e.length = 0;
               a.set(t, 0);
             }
             continue;
           }
-          case Ze:
+          case tt:
             s.addOp(r, [new Float32Array(e)]);
             continue;
-          case St:
-          case At:
-          case Ft:
-          case Tt:
-            continue;
+          case xt:
           case Ct:
+          case Ot:
+          case Rt:
+            continue;
+          case Ft:
             if (!(e[0] instanceof Name)) {
               warn(`Expected name for beginMarkedContentProps arg0=${e[0]}`);
-              s.addOp(Ct, ['OC', null]);
+              s.addOp(Ft, ['OC', null]);
               continue;
             }
             if ('OC' === e[0].name) {
@@ -37126,7 +37160,7 @@ class PartialEvaluator {
                 c
                   .parseMarkedContentProps(e[1], n)
                   .then((e) => {
-                    s.addOp(Ct, ['OC', e]);
+                    s.addOp(Ft, ['OC', e]);
                   })
                   .catch((e) => {
                     if (!(e instanceof AbortException)) {
@@ -37134,7 +37168,7 @@ class PartialEvaluator {
                       warn(
                         `getOperatorList - ignoring beginMarkedContentProps: "${e}".`
                       );
-                      s.addOp(Ct, ['OC', null]);
+                      s.addOp(Ft, ['OC', null]);
                     }
                   })
               );
@@ -37153,7 +37187,7 @@ class PartialEvaluator {
         }
         s.addOp(r, e);
       }
-      if (l) next(Mi);
+      if (l) next(Pi);
       else {
         closePendingRestoreOPS();
         e();
@@ -37188,6 +37222,7 @@ class PartialEvaluator {
       const t = await e.asyncGetBytes();
       t && (e = new Stream(t, 0, t.length, e.dict));
     }
+    i ??= textSinkWrapper(null);
     const d = e.dict?.objId,
       g = new RefSet(m);
     if (d) {
@@ -37333,13 +37368,13 @@ class PartialEvaluator {
       let t = e.str.join('');
       h ||
         (t = (function normalizeUnicode(e) {
-          if (!sa) {
-            sa =
+          if (!ia) {
+            ia =
               /([\u00a0\u00b5\u037e\u0eb3\u2000-\u200a\u202f\u2126\ufb00-\ufb04\ufb06\ufb20-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufba1\ufba4-\ufba9\ufbae-\ufbb1\ufbd3-\ufbdc\ufbde-\ufbe7\ufbea-\ufbf8\ufbfc\ufbfd\ufc00-\ufc5d\ufc64-\ufcf1\ufcf5-\ufd3d\ufd88\ufdf4\ufdfa\ufdfb\ufe71\ufe77\ufe79\ufe7b\ufe7d]+)|(\ufb05+)/gu;
-            ra = new Map([['ﬅ', 'ſt']]);
+            oa = new Map([['ﬅ', 'ſt']]);
           }
-          return e.replaceAll(sa, (e, t, a) =>
-            t ? t.normalize('NFKC') : ra.get(a)
+          return e.replaceAll(ia, (e, t, a) =>
+            t ? t.normalize('NFKC') : oa.get(a)
           );
         })(t));
       const a = bidi(t, -1, e.vertical);
@@ -37595,7 +37630,7 @@ class PartialEvaluator {
     function enqueueChunk(e = !1) {
       const t = b.items.length;
       if (0 !== t && !(e && t < 10)) {
-        i?.enqueue(b, t);
+        i.enqueue(b, t);
         b.items = [];
         b.styles = Object.create(null);
       }
@@ -37604,7 +37639,7 @@ class PartialEvaluator {
     return new Promise(function promiseBody(e, n) {
       const next = function (t) {
         enqueueChunk(!0);
-        Promise.all([t, i?.ready]).then(function () {
+        Promise.all([t, i.ready]).then(function () {
           try {
             promiseBody(e, n);
           } catch (e) {
@@ -37628,7 +37663,7 @@ class PartialEvaluator {
         const e = m.fn;
         j = m.args;
         switch (0 | e) {
-          case Ve:
+          case Ye:
             const e = j[0].name,
               n = j[1];
             if (T.font && e === T.fontName && n === T.fontSize) break;
@@ -37636,43 +37671,43 @@ class PartialEvaluator {
             T.fontSize = n;
             next(handleSetFont(e, null));
             return;
-          case Ye:
+          case Qe:
             T.textRise = j[0];
             break;
-          case Ke:
+          case Ve:
             T.textHScale = j[0] / 100;
             break;
-          case Ge:
+          case $e:
             T.leading = j[0];
             break;
-          case Je:
-            T.translateTextLineMatrix(j[0], j[1]);
-            T.textMatrix = T.textLineMatrix.slice();
-            break;
-          case Qe:
-            T.leading = -j[1];
+          case Ze:
             T.translateTextLineMatrix(j[0], j[1]);
             T.textMatrix = T.textLineMatrix.slice();
             break;
           case et:
+            T.leading = -j[1];
+            T.translateTextLineMatrix(j[0], j[1]);
+            T.textMatrix = T.textLineMatrix.slice();
+            break;
+          case at:
             T.carriageReturn();
             break;
-          case Ze:
+          case tt:
             T.setTextMatrix(j[0], j[1], j[2], j[3], j[4], j[5]);
             T.setTextLineMatrix(j[0], j[1], j[2], j[3], j[4], j[5]);
             updateAdvanceScale();
             break;
-          case Xe:
+          case Ke:
             T.charSpacing = j[0];
             break;
-          case We:
+          case Ge:
             T.wordSpacing = j[0];
             break;
-          case Le:
-            T.textMatrix = da.slice();
-            T.textLineMatrix = da.slice();
+          case Xe:
+            T.textMatrix = ba.slice();
+            T.textLineMatrix = ba.slice();
             break;
-          case at:
+          case st:
             if (!s.state.font) {
               y.ensureStateFont(s.state);
               continue;
@@ -37694,14 +37729,14 @@ class PartialEvaluator {
               buildTextContentItem({ chars: e, extraSpacing: 0 });
             }
             break;
-          case tt:
+          case nt:
             if (!s.state.font) {
               y.ensureStateFont(s.state);
               continue;
             }
             buildTextContentItem({ chars: j[0], extraSpacing: 0 });
             break;
-          case nt:
+          case rt:
             if (!s.state.font) {
               y.ensureStateFont(s.state);
               continue;
@@ -37709,7 +37744,7 @@ class PartialEvaluator {
             T.carriageReturn();
             buildTextContentItem({ chars: j[0], extraSpacing: 0 });
             break;
-          case st:
+          case it:
             if (!s.state.font) {
               y.ensureStateFont(s.state);
               continue;
@@ -37719,7 +37754,7 @@ class PartialEvaluator {
             T.carriageReturn();
             buildTextContentItem({ chars: j[2], extraSpacing: 0 });
             break;
-          case vt:
+          case At:
             flushTextContentItem();
             S ??= a.get('XObject') || Dict.empty;
             w = j[0] instanceof Name;
@@ -37758,26 +37793,14 @@ class PartialEvaluator {
                 v && k.transform(v);
                 const C = p.get('Resources');
                 enqueueChunk();
-                const F = {
-                  enqueueInvoked: !1,
-                  enqueue(e, t) {
-                    this.enqueueInvoked = !0;
-                    i.enqueue(e, t);
-                  },
-                  get desiredSize() {
-                    return i.desiredSize ?? 0;
-                  },
-                  get ready() {
-                    return i.ready;
-                  },
-                };
+                const F = textSinkWrapper(i);
                 y.getTextContent({
                   stream: m,
                   task: t,
                   resources: C instanceof Dict ? C : a,
                   stateManager: k,
                   includeMarkedContent: r,
-                  sink: i && F,
+                  sink: F,
                   seenStyles: o,
                   viewBox: l,
                   lang: f,
@@ -37797,7 +37820,7 @@ class PartialEvaluator {
               })
             );
             return;
-          case ke:
+          case qe:
             w = j[0] instanceof Name;
             d = j[0].name;
             if (w && C.getByName(d)) break;
@@ -37829,7 +37852,7 @@ class PartialEvaluator {
               })
             );
             return;
-          case xt:
+          case It:
             flushTextContentItem();
             if (r) {
               c.level++;
@@ -37839,12 +37862,11 @@ class PartialEvaluator {
               });
             }
             break;
-          case Ct:
+          case Ft:
             flushTextContentItem();
             if (r) {
               c.level++;
-              let e = null;
-              j[1] instanceof Dict && (e = j[1].get('MCID'));
+              const e = j[1] instanceof Dict ? j[1].get('MCID') : null;
               b.items.push({
                 type: 'beginMarkedContentProps',
                 id: Number.isInteger(e)
@@ -37854,7 +37876,7 @@ class PartialEvaluator {
               });
             }
             break;
-          case It:
+          case Tt:
             flushTextContentItem();
             if (r) {
               if (0 === c.level) break;
@@ -37862,12 +37884,12 @@ class PartialEvaluator {
               b.items.push({ type: 'endMarkedContent' });
             }
         }
-        if (b.items.length >= (i?.desiredSize ?? 1)) {
+        if (b.items.length >= i.desiredSize) {
           p = !0;
           break;
         }
       }
-      if (p) next(Mi);
+      if (p) next(Pi);
       else {
         flushTextContentItem();
         enqueueChunk();
@@ -37940,7 +37962,7 @@ class PartialEvaluator {
         (o = null);
     }
     const l = !t.file || t.isInternalFont,
-      f = Ln()[t.name];
+      f = Xn()[t.name];
     o && l && f && (o = null);
     if ('WinAnsiEncoding' === o && l && t.name?.charCodeAt(0) >= 183) {
       const e = t.name;
@@ -37974,22 +37996,22 @@ class PartialEvaluator {
     }
     if (o) t.defaultEncoding = getEncoding(o);
     else {
-      let e = !!(t.flags & vn);
-      const a = !!(t.flags & Sn);
+      let e = !!(t.flags & An);
+      const a = !!(t.flags & xn);
       if ('TrueType' === t.type && e && a && 0 !== r.length) {
-        t.flags &= ~vn;
+        t.flags &= ~An;
         e = !1;
       }
-      i = cn;
-      'TrueType' !== t.type || a || (i = hn);
+      i = un;
+      'TrueType' !== t.type || a || (i = mn);
       if (e || f) {
-        i = fn;
+        i = hn;
         l &&
           (/Symbol/i.test(t.name)
-            ? (i = un)
+            ? (i = pn)
             : /Dingbats/i.test(t.name)
-              ? (i = mn)
-              : /Wingdings/i.test(t.name) && (i = hn));
+              ? (i = dn)
+              : /Wingdings/i.test(t.name) && (i = mn));
       }
       t.defaultEncoding = i;
     }
@@ -38013,7 +38035,7 @@ class PartialEvaluator {
       const t = r[e];
       '.notdef' !== t && (n[e] = t);
     }
-    const i = pn();
+    const i = gn();
     for (const r in n) {
       let o = n[r];
       if ('' === o) continue;
@@ -38267,7 +38289,7 @@ class PartialEvaluator {
           }
         } else f = t;
     }
-    l ? (a.flags |= yn) : (a.flags &= ~yn);
+    l ? (a.flags |= vn) : (a.flags &= ~vn);
     a.defaultWidth = r;
     a.widths = s;
     a.defaultVMetrics = o;
@@ -38275,15 +38297,15 @@ class PartialEvaluator {
   }
   isSerifFont(e) {
     const t = e.split('-', 1)[0];
-    return t in zn() || /serif/i.test(t);
+    return t in Un() || /serif/i.test(t);
   }
   getBaseFontMetrics(e) {
     let t = 0,
       a = Object.create(null),
       n = !1,
       s = normalizeFontName(e);
-    s = Pn()[s] || s;
-    const r = Vn(),
+    s = En()[s] || s;
+    const r = Yn(),
       i = r[s] ?? r[this.isSerifFont(e) ? 'Times-Roman' : 'Helvetica'];
     if ('number' == typeof i) {
       t = i;
@@ -38428,9 +38450,9 @@ class PartialEvaluator {
           const n = this.getBaseFontMetrics(e),
             s = e.split('-', 1)[0],
             f =
-              (this.isSerifFont(s) ? qn : 0) |
-              (n.monospace ? yn : 0) |
-              (Ln()[s] ? vn : Sn),
+              (this.isSerifFont(s) ? Sn : 0) |
+              (n.monospace ? vn : 0) |
+              (Xn()[s] ? An : xn),
             h = {
               type: r,
               name: e,
@@ -38678,8 +38700,8 @@ class PartialEvaluator {
   }
 }
 class TranslatedFont {
-  #Le = !1;
-  #Ue = null;
+  #We = !1;
+  #Ke = null;
   constructor({ loadedName: e, font: t, dict: a }) {
     this.loadedName = e;
     this.font = t;
@@ -38687,8 +38709,8 @@ class TranslatedFont {
     this.type3Dependencies = t.isType3Font ? new Set() : null;
   }
   send(e) {
-    if (this.#Le) return;
-    this.#Le = !0;
+    if (this.#We) return;
+    this.#We = !0;
     const t = this.font.exportData(),
       a = t.buffer ? [t.buffer] : null;
     e.send('commonobj', [this.loadedName, 'Font', t], a);
@@ -38705,7 +38727,7 @@ class TranslatedFont {
     }
   }
   loadType3Data(e, t, a, n = null) {
-    if (this.#Ue) return this.#Ue;
+    if (this.#Ke) return this.#Ke;
     const { font: s, type3Dependencies: r } = this;
     assert(s.isType3Font, 'Must be a Type3 font.');
     const i = e.clone({ ignoreErrors: !1 }),
@@ -38734,11 +38756,11 @@ class TranslatedFont {
           })
           .then(() => {
             switch (s.fnArray[0]) {
-              case it:
-                this.#Xe(s, w);
+              case lt:
+                this.#Ge(s, w);
                 break;
-              case rt:
-                w || this.#We(s);
+              case ot:
+                w || this.#Ve(s);
             }
             h[e] = s.getIR();
             for (const e of s.dependencies) r.add(e);
@@ -38749,16 +38771,16 @@ class TranslatedFont {
             h[e] = a.getIR();
           });
       });
-    this.#Ue = l.then(() => {
+    this.#Ke = l.then(() => {
       s.charProcOperatorList = h;
       if (this._bbox) {
         s.isCharBBox = !0;
         s.bbox = this._bbox;
       }
     });
-    return this.#Ue;
+    return this.#Ke;
   }
-  #Xe(e, a = NaN) {
+  #Ge(e, a = NaN) {
     const n = Util.normalizeRect(e.argsArray[0].slice(2)),
       s = n[2] - n[0],
       r = n[3] - n[1],
@@ -38774,10 +38796,8 @@ class TranslatedFont {
       l = e.length;
     for (; o < l;) {
       switch (e.fnArray[o]) {
-        case it:
-          break;
-        case ot:
         case lt:
+          break;
         case ft:
         case ct:
         case ht:
@@ -38789,12 +38809,14 @@ class TranslatedFont {
         case bt:
         case wt:
         case jt:
-        case we:
+        case kt:
+        case yt:
+        case ke:
           e.fnArray.splice(o, 1);
           e.argsArray.splice(o, 1);
           l--;
           continue;
-        case ke:
+        case qe:
           const [t] = e.argsArray[o];
           let a = 0,
             n = t.length;
@@ -38818,11 +38840,11 @@ class TranslatedFont {
       o++;
     }
   }
-  #We(e) {
+  #Ve(e) {
     let a = 1;
     const n = e.length;
     for (; a < n;) {
-      if (e.fnArray[a] === Wt) {
+      if (e.fnArray[a] === Gt) {
         const n = e.argsArray[a][2];
         this._bbox ??= t.slice();
         Util.rectBoundingBox(...n, this._bbox);
@@ -38850,14 +38872,14 @@ class StateManager {
   }
 }
 class TextState {
-  ctm = new Float32Array(da);
+  ctm = new Float32Array(ba);
   fontName = null;
   fontSize = 0;
   loadedName = null;
   font = null;
   fontMatrix = n;
-  textMatrix = da.slice();
-  textLineMatrix = da.slice();
+  textMatrix = ba.slice();
+  textLineMatrix = ba.slice();
   charSpacing = 0;
   wordSpacing = 0;
   leading = 0;
@@ -38904,7 +38926,7 @@ class TextState {
   }
 }
 class EvalState {
-  ctm = new Float32Array(da);
+  ctm = new Float32Array(ba);
   font = null;
   textRenderingMode = C;
   _fillColorSpace = ColorSpaceUtils.gray;
@@ -38942,79 +38964,79 @@ class EvaluatorPreprocessor {
       this,
       'opMap',
       Object.assign(Object.create(null), {
-        w: { id: me, numArgs: 1, variableArgs: !1 },
-        J: { id: pe, numArgs: 1, variableArgs: !1 },
-        j: { id: de, numArgs: 1, variableArgs: !1 },
-        M: { id: ge, numArgs: 1, variableArgs: !1 },
-        d: { id: be, numArgs: 2, variableArgs: !1 },
-        ri: { id: we, numArgs: 1, variableArgs: !1 },
-        i: { id: je, numArgs: 1, variableArgs: !1 },
-        gs: { id: ke, numArgs: 1, variableArgs: !1 },
-        q: { id: ye, numArgs: 0, variableArgs: !1 },
-        Q: { id: qe, numArgs: 0, variableArgs: !1 },
-        cm: { id: ve, numArgs: 6, variableArgs: !1 },
-        m: { id: Se, numArgs: 2, variableArgs: !1 },
-        l: { id: Ae, numArgs: 2, variableArgs: !1 },
-        c: { id: xe, numArgs: 6, variableArgs: !1 },
-        v: { id: Ce, numArgs: 4, variableArgs: !1 },
-        y: { id: Ie, numArgs: 4, variableArgs: !1 },
-        h: { id: Fe, numArgs: 0, variableArgs: !1 },
-        re: { id: Te, numArgs: 4, variableArgs: !1 },
-        S: { id: Oe, numArgs: 0, variableArgs: !1 },
-        s: { id: Re, numArgs: 0, variableArgs: !1 },
-        f: { id: He, numArgs: 0, variableArgs: !1 },
-        F: { id: He, numArgs: 0, variableArgs: !1 },
-        'f*': { id: Be, numArgs: 0, variableArgs: !1 },
-        B: { id: De, numArgs: 0, variableArgs: !1 },
-        'B*': { id: Me, numArgs: 0, variableArgs: !1 },
-        b: { id: Ne, numArgs: 0, variableArgs: !1 },
-        'b*': { id: Pe, numArgs: 0, variableArgs: !1 },
-        n: { id: _e, numArgs: 0, variableArgs: !1 },
-        W: { id: Ee, numArgs: 0, variableArgs: !1 },
-        'W*': { id: ze, numArgs: 0, variableArgs: !1 },
-        BT: { id: Le, numArgs: 0, variableArgs: !1 },
-        ET: { id: Ue, numArgs: 0, variableArgs: !1 },
-        Tc: { id: Xe, numArgs: 1, variableArgs: !1 },
-        Tw: { id: We, numArgs: 1, variableArgs: !1 },
-        Tz: { id: Ke, numArgs: 1, variableArgs: !1 },
-        TL: { id: Ge, numArgs: 1, variableArgs: !1 },
-        Tf: { id: Ve, numArgs: 2, variableArgs: !1 },
-        Tr: { id: $e, numArgs: 1, variableArgs: !1 },
-        Ts: { id: Ye, numArgs: 1, variableArgs: !1 },
-        Td: { id: Je, numArgs: 2, variableArgs: !1 },
-        TD: { id: Qe, numArgs: 2, variableArgs: !1 },
-        Tm: { id: Ze, numArgs: 6, variableArgs: !1 },
-        'T*': { id: et, numArgs: 0, variableArgs: !1 },
-        Tj: { id: tt, numArgs: 1, variableArgs: !1 },
-        TJ: { id: at, numArgs: 1, variableArgs: !1 },
-        "'": { id: nt, numArgs: 1, variableArgs: !1 },
-        '"': { id: st, numArgs: 3, variableArgs: !1 },
-        d0: { id: rt, numArgs: 2, variableArgs: !1 },
-        d1: { id: it, numArgs: 6, variableArgs: !1 },
-        CS: { id: ot, numArgs: 1, variableArgs: !1 },
-        cs: { id: lt, numArgs: 1, variableArgs: !1 },
-        SC: { id: ft, numArgs: 4, variableArgs: !0 },
-        SCN: { id: ct, numArgs: 33, variableArgs: !0 },
-        sc: { id: ht, numArgs: 4, variableArgs: !0 },
-        scn: { id: ut, numArgs: 33, variableArgs: !0 },
-        G: { id: mt, numArgs: 1, variableArgs: !1 },
-        g: { id: pt, numArgs: 1, variableArgs: !1 },
-        RG: { id: dt, numArgs: 3, variableArgs: !1 },
-        rg: { id: gt, numArgs: 3, variableArgs: !1 },
-        K: { id: bt, numArgs: 4, variableArgs: !1 },
-        k: { id: wt, numArgs: 4, variableArgs: !1 },
-        sh: { id: jt, numArgs: 1, variableArgs: !1 },
-        BI: { id: kt, numArgs: 0, variableArgs: !1 },
-        ID: { id: yt, numArgs: 0, variableArgs: !1 },
-        EI: { id: qt, numArgs: 1, variableArgs: !1 },
-        Do: { id: vt, numArgs: 1, variableArgs: !1 },
-        MP: { id: St, numArgs: 1, variableArgs: !1 },
-        DP: { id: At, numArgs: 2, variableArgs: !1 },
-        BMC: { id: xt, numArgs: 1, variableArgs: !1 },
-        BDC: { id: Ct, numArgs: 2, variableArgs: !1 },
-        EMC: { id: It, numArgs: 0, variableArgs: !1 },
-        BX: { id: Ft, numArgs: 0, variableArgs: !1 },
-        EX: { id: Tt, numArgs: 0, variableArgs: !1 },
+        w: { id: de, numArgs: 1, variableArgs: !1 },
+        J: { id: ge, numArgs: 1, variableArgs: !1 },
+        j: { id: be, numArgs: 1, variableArgs: !1 },
+        M: { id: we, numArgs: 1, variableArgs: !1 },
+        d: { id: je, numArgs: 2, variableArgs: !1 },
+        ri: { id: ke, numArgs: 1, variableArgs: !1 },
+        i: { id: ye, numArgs: 1, variableArgs: !1 },
+        gs: { id: qe, numArgs: 1, variableArgs: !1 },
+        q: { id: ve, numArgs: 0, variableArgs: !1 },
+        Q: { id: Se, numArgs: 0, variableArgs: !1 },
+        cm: { id: Ae, numArgs: 6, variableArgs: !1 },
+        m: { id: xe, numArgs: 2, variableArgs: !1 },
+        l: { id: Ce, numArgs: 2, variableArgs: !1 },
+        c: { id: Ie, numArgs: 6, variableArgs: !1 },
+        v: { id: Fe, numArgs: 4, variableArgs: !1 },
+        y: { id: Te, numArgs: 4, variableArgs: !1 },
+        h: { id: Oe, numArgs: 0, variableArgs: !1 },
+        re: { id: Re, numArgs: 4, variableArgs: !1 },
+        S: { id: He, numArgs: 0, variableArgs: !1 },
+        s: { id: Be, numArgs: 0, variableArgs: !1 },
+        f: { id: De, numArgs: 0, variableArgs: !1 },
+        F: { id: De, numArgs: 0, variableArgs: !1 },
+        'f*': { id: Me, numArgs: 0, variableArgs: !1 },
+        B: { id: Ne, numArgs: 0, variableArgs: !1 },
+        'B*': { id: Pe, numArgs: 0, variableArgs: !1 },
+        b: { id: _e, numArgs: 0, variableArgs: !1 },
+        'b*': { id: Ee, numArgs: 0, variableArgs: !1 },
+        n: { id: ze, numArgs: 0, variableArgs: !1 },
+        W: { id: Le, numArgs: 0, variableArgs: !1 },
+        'W*': { id: Ue, numArgs: 0, variableArgs: !1 },
+        BT: { id: Xe, numArgs: 0, variableArgs: !1 },
+        ET: { id: We, numArgs: 0, variableArgs: !1 },
+        Tc: { id: Ke, numArgs: 1, variableArgs: !1 },
+        Tw: { id: Ge, numArgs: 1, variableArgs: !1 },
+        Tz: { id: Ve, numArgs: 1, variableArgs: !1 },
+        TL: { id: $e, numArgs: 1, variableArgs: !1 },
+        Tf: { id: Ye, numArgs: 2, variableArgs: !1 },
+        Tr: { id: Je, numArgs: 1, variableArgs: !1 },
+        Ts: { id: Qe, numArgs: 1, variableArgs: !1 },
+        Td: { id: Ze, numArgs: 2, variableArgs: !1 },
+        TD: { id: et, numArgs: 2, variableArgs: !1 },
+        Tm: { id: tt, numArgs: 6, variableArgs: !1 },
+        'T*': { id: at, numArgs: 0, variableArgs: !1 },
+        Tj: { id: nt, numArgs: 1, variableArgs: !1 },
+        TJ: { id: st, numArgs: 1, variableArgs: !1 },
+        "'": { id: rt, numArgs: 1, variableArgs: !1 },
+        '"': { id: it, numArgs: 3, variableArgs: !1 },
+        d0: { id: ot, numArgs: 2, variableArgs: !1 },
+        d1: { id: lt, numArgs: 6, variableArgs: !1 },
+        CS: { id: ft, numArgs: 1, variableArgs: !1 },
+        cs: { id: ct, numArgs: 1, variableArgs: !1 },
+        SC: { id: ht, numArgs: 4, variableArgs: !0 },
+        SCN: { id: ut, numArgs: 33, variableArgs: !0 },
+        sc: { id: mt, numArgs: 4, variableArgs: !0 },
+        scn: { id: pt, numArgs: 33, variableArgs: !0 },
+        G: { id: dt, numArgs: 1, variableArgs: !1 },
+        g: { id: gt, numArgs: 1, variableArgs: !1 },
+        RG: { id: bt, numArgs: 3, variableArgs: !1 },
+        rg: { id: wt, numArgs: 3, variableArgs: !1 },
+        K: { id: jt, numArgs: 4, variableArgs: !1 },
+        k: { id: kt, numArgs: 4, variableArgs: !1 },
+        sh: { id: yt, numArgs: 1, variableArgs: !1 },
+        BI: { id: qt, numArgs: 0, variableArgs: !1 },
+        ID: { id: vt, numArgs: 0, variableArgs: !1 },
+        EI: { id: St, numArgs: 1, variableArgs: !1 },
+        Do: { id: At, numArgs: 1, variableArgs: !1 },
+        MP: { id: xt, numArgs: 1, variableArgs: !1 },
+        DP: { id: Ct, numArgs: 2, variableArgs: !1 },
+        BMC: { id: It, numArgs: 1, variableArgs: !1 },
+        BDC: { id: Ft, numArgs: 2, variableArgs: !1 },
+        EMC: { id: Tt, numArgs: 0, variableArgs: !1 },
+        BX: { id: Ot, numArgs: 0, variableArgs: !1 },
+        EX: { id: Rt, numArgs: 0, variableArgs: !1 },
         BM: null,
         BD: null,
         true: null,
@@ -39057,7 +39079,7 @@ class EvaluatorPreprocessor {
           i = s.numArgs;
         let o = null !== t ? t.length : 0;
         this._isPathOp || (this._numInvalidPathOPS = 0);
-        this._isPathOp = r >= Se && r <= _e;
+        this._isPathOp = r >= xe && r <= ze;
         if (s.variableArgs)
           o > i &&
             info(
@@ -39094,7 +39116,7 @@ class EvaluatorPreprocessor {
         e.args = t;
         return !0;
       }
-      if (a === oa) return !1;
+      if (a === fa) return !1;
       if (null !== a) {
         null === t && (t = []);
         t.push(a);
@@ -39104,13 +39126,13 @@ class EvaluatorPreprocessor {
   }
   preprocessCommand(e, t) {
     switch (0 | e) {
-      case ye:
+      case ve:
         this.stateManager.save();
         break;
-      case qe:
+      case Se:
         this.stateManager.restore();
         break;
-      case ve:
+      case Ae:
         this.stateManager.transform(t);
     }
   }
@@ -39129,18 +39151,18 @@ class DefaultAppearanceEvaluator extends EvaluatorPreprocessor {
         if (0 !== this.savedStatesDepth) continue;
         const { fn: a, args: n } = e;
         switch (0 | a) {
-          case Ve:
+          case Ye:
             const [e, a] = n;
             e instanceof Name && (t.fontName = e.name);
             'number' == typeof a && a > 0 && (t.fontSize = a);
             break;
-          case gt:
+          case wt:
             ColorSpaceUtils.rgb.getRgbItem(n, 0, t.fontColor, 0);
             break;
-          case pt:
+          case gt:
             ColorSpaceUtils.gray.getRgbItem(n, 0, t.fontColor, 0);
             break;
-          case wt:
+          case kt:
             ColorSpaceUtils.cmyk.getRgbItem(n, 0, t.fontColor, 0);
         }
       }
@@ -39178,7 +39200,7 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
         if (a || !this.read(e)) break;
         const { fn: s, args: r } = e;
         switch (0 | s) {
-          case ye:
+          case ve:
             n.push({
               scaleFactor: t.scaleFactor,
               fontSize: t.fontSize,
@@ -39187,18 +39209,18 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
               fillColorSpace: t.fillColorSpace,
             });
             break;
-          case qe:
+          case Se:
             t = n.pop() || t;
             break;
-          case Ze:
+          case tt:
             t.scaleFactor *= Math.hypot(r[0], r[1]);
             break;
-          case Ve:
+          case Ye:
             const [e, s] = r;
             e instanceof Name && (t.fontName = e.name);
             'number' == typeof s && s > 0 && (t.fontSize = s * t.scaleFactor);
             break;
-          case lt:
+          case ct:
             t.fillColorSpace = ColorSpaceUtils.parse({
               cs: r[0],
               xref: this.xref,
@@ -39208,22 +39230,22 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
               localColorSpaceCache: this._localColorSpaceCache,
             });
             break;
-          case ht:
+          case mt:
             t.fillColorSpace.getRgbItem(r, 0, t.fontColor, 0);
             break;
-          case gt:
+          case wt:
             ColorSpaceUtils.rgb.getRgbItem(r, 0, t.fontColor, 0);
             break;
-          case pt:
+          case gt:
             ColorSpaceUtils.gray.getRgbItem(r, 0, t.fontColor, 0);
             break;
-          case wt:
+          case kt:
             ColorSpaceUtils.cmyk.getRgbItem(r, 0, t.fontColor, 0);
             break;
-          case tt:
-          case at:
           case nt:
           case st:
+          case rt:
+          case it:
             a = !0;
         }
       }
@@ -39257,7 +39279,7 @@ function getPdfColor(e, t) {
   );
 }
 class FakeUnicodeFont {
-  static #Ke = 1;
+  static #$e = 1;
   constructor(e, t) {
     this.xref = e;
     this.widths = null;
@@ -39266,7 +39288,7 @@ class FakeUnicodeFont {
     this.fontFamily = t;
     const a = new OffscreenCanvas(1, 1);
     this.ctxMeasure = a.getContext('2d', { willReadFrequently: !0 });
-    this.fontName = Name.get(`InvalidPDFjsFont_${t}_${FakeUnicodeFont.#Ke++}`);
+    this.fontName = Name.get(`InvalidPDFjsFont_${t}_${FakeUnicodeFont.#$e++}`);
   }
   get fontDescriptorRef() {
     if (!FakeUnicodeFont._fontDescriptorRef) {
@@ -39390,8 +39412,7 @@ class FakeUnicodeFont {
     let d = m - h,
       g = p - u;
     a % 180 != 0 && ([d, g] = [g, d]);
-    let b = 1;
-    c > d && (b = d / c);
+    const b = c > d ? d / c : 1;
     let w = 1;
     const j = s * n,
       k = r * n,
@@ -39430,12 +39451,10 @@ class FakeUnicodeFont {
       const e = getRotationMatrix(a, d, g);
       F.set('Matrix', e);
     }
-    const T = new StringStream(C);
-    T.dict = F;
-    return T;
+    return new StringStream(C, F);
   }
 }
-const Ni = [
+const _i = [
     'm/d',
     'm/d/yy',
     'mm/dd/yy',
@@ -39451,7 +39470,7 @@ const Ni = [
     'm/d/yy h:MM tt',
     'm/d/yy HH:MM',
   ],
-  Pi = ['HH:MM', 'h:MM tt', 'HH:MM:ss', 'h:MM:ss tt'];
+  Ei = ['HH:MM', 'h:MM tt', 'HH:MM:ss', 'h:MM:ss tt'];
 class NameOrNumberTree {
   constructor(e, t, a) {
     this.root = e;
@@ -39484,7 +39503,10 @@ class NameOrNumberTree {
       const o = i.get(this._type);
       if (Array.isArray(o))
         for (let n = 0, s = o.length; n < s; n += 2)
-          t.set(a.fetchIfRef(o[n]), e ? o[n + 1] : a.fetchIfRef(o[n + 1]));
+          t.set(
+            e ? o[n] : a.fetchIfRef(o[n]),
+            e ? o[n + 1] : a.fetchIfRef(o[n + 1])
+          );
     }
     return t;
   }
@@ -39550,39 +39572,28 @@ class NumberTree extends NameOrNumberTree {
 }
 function clearGlobalCaches() {
   !(function clearPatternCaches() {
-    Ga = Object.create(null);
+    $a = Object.create(null);
   })();
   !(function clearPrimitiveCaches() {
-    la = Object.create(null);
-    fa = Object.create(null);
     ca = Object.create(null);
+    ha = Object.create(null);
+    ua = Object.create(null);
   })();
   !(function clearUnicodeCaches() {
-    jn.clear();
+    yn.clear();
   })();
   WasmImage.cleanup();
 }
-function pickPlatformItem(e) {
-  if (e instanceof Dict)
-    for (const t of ['UF', 'F', 'Unix', 'Mac', 'DOS'])
-      if (e.has(t)) return e.get(t);
-  return null;
-}
 class FileSpec {
-  #Ge = !1;
-  constructor(e, t = !1) {
+  constructor(e) {
     if (e instanceof Dict) {
       this.root = e;
       e.has('FS') && (this.fs = e.get('FS'));
       e.has('RF') && warn('Related file specifications are not supported');
-      t ||
-        (e.has('EF')
-          ? (this.#Ge = !0)
-          : warn('Non-embedded file specifications are not supported'));
     }
   }
   get filename() {
-    const e = pickPlatformItem(this.root);
+    const e = FileSpec.pickPlatformItem(this.root);
     return e && 'string' == typeof e
       ? stringToPDFString(e, !0)
           .replaceAll('\\\\', '\\')
@@ -39590,47 +39601,66 @@ class FileSpec {
           .replaceAll('\\', '/')
       : '';
   }
-  get content() {
-    if (!this.#Ge) return null;
-    const e = pickPlatformItem(this.root?.get('EF'));
-    if (e instanceof BaseStream) return e.getBytes();
-    warn('Embedded file specification points to non-existing/invalid content');
-    return null;
-  }
   get description() {
     const e = this.root?.get('Desc');
     return e && 'string' == typeof e ? stringToPDFString(e) : '';
   }
   get serializable() {
-    const { filename: e, content: t, description: a } = this;
+    const { filename: e, description: t } = this;
     return {
       rawFilename: e,
-      filename: ((n = e), n.substring(n.lastIndexOf('/') + 1)) || 'unnamed',
-      content: t,
-      description: a,
+      filename: ((a = e), a.substring(a.lastIndexOf('/') + 1)) || 'unnamed',
+      description: t,
     };
-    var n;
+    var a;
+  }
+  static pickPlatformItem(e, t = !1) {
+    if (e instanceof Dict)
+      for (const a of ['UF', 'F', 'Unix', 'Mac', 'DOS'])
+        if (e.has(a)) return t ? e.getRaw(a) : e.get(a);
+    return null;
+  }
+  static hasEmbeddedFile(e) {
+    return this.pickPlatformItem(e.get('EF')) instanceof BaseStream;
+  }
+  static readContent(e) {
+    if (!(e instanceof Dict)) return null;
+    const t = this.pickPlatformItem(e.get('EF'));
+    if (!(t instanceof BaseStream)) {
+      warn(
+        'Embedded file specification points to non-existing/invalid content'
+      );
+      return null;
+    }
+    return this.readStreamContent(t);
+  }
+  static readStreamContent(e) {
+    const t = e.dict?.xref?.encrypt;
+    if (null === t?.encryptionKey)
+      throw new PasswordException('No password given', aa);
+    return e.getBytes();
   }
 }
-const _i = 0,
-  Ei = -2,
-  zi = -3,
-  Xi = -4,
-  Wi = -5,
-  Ki = -6,
-  Gi = -9;
+const zi = 0,
+  Xi = -2,
+  Wi = -3,
+  Ki = -4,
+  Gi = -5,
+  Vi = -6,
+  $i = -9;
 function isWhitespace(e, t) {
   const a = e[t];
   return ' ' === a || '\n' === a || '\r' === a || '\t' === a;
 }
 class XMLParserBase {
+  static get _entityRegex() {
+    return shadow(this, '_entityRegex', /&(?:#x([^;]+)|#([^;]+)|([^;]+));/g);
+  }
   _resolveEntities(e) {
-    return e.replaceAll(/&([^;]+);/g, (e, t) => {
-      if ('#x' === t.substring(0, 2))
-        return String.fromCodePoint(parseInt(t.substring(2), 16));
-      if ('#' === t.substring(0, 1))
-        return String.fromCodePoint(parseInt(t.substring(1), 10));
-      switch (t) {
+    return e.replaceAll(XMLParserBase._entityRegex, (e, t, a, n) => {
+      if (t) return String.fromCodePoint(parseInt(t, 16));
+      if (a) return String.fromCodePoint(parseInt(a, 10));
+      switch (n) {
         case 'lt':
           return '<';
         case 'gt':
@@ -39642,7 +39672,7 @@ class XMLParserBase {
         case 'apos':
           return "'";
       }
-      return this.onResolveEntity(t);
+      return this.onResolveEntity(n);
     });
   }
   _parseContent(e, t) {
@@ -39709,7 +39739,7 @@ class XMLParserBase {
             ++a;
             t = e.indexOf('>', a);
             if (t < 0) {
-              this.onError(Gi);
+              this.onError($i);
               return;
             }
             this.onEndElement(e.substring(a, t));
@@ -39719,7 +39749,7 @@ class XMLParserBase {
             ++a;
             const n = this._parseProcessingInstruction(e, a);
             if ('?>' !== e.substring(a + n.parsed, a + n.parsed + 2)) {
-              this.onError(zi);
+              this.onError(Wi);
               return;
             }
             this.onPi(n.name, n.value);
@@ -39729,7 +39759,7 @@ class XMLParserBase {
             if ('--' === e.substring(a + 1, a + 3)) {
               t = e.indexOf('--\x3e', a + 3);
               if (t < 0) {
-                this.onError(Wi);
+                this.onError(Gi);
                 return;
               }
               this.onComment(e.substring(a + 3, t));
@@ -39737,14 +39767,14 @@ class XMLParserBase {
             } else if ('[CDATA[' === e.substring(a + 1, a + 8)) {
               t = e.indexOf(']]>', a + 8);
               if (t < 0) {
-                this.onError(Ei);
+                this.onError(Xi);
                 return;
               }
               this.onCdata(e.substring(a + 8, t));
               a = t + 3;
             } else {
               if ('DOCTYPE' !== e.substring(a + 1, a + 8)) {
-                this.onError(Ki);
+                this.onError(Vi);
                 return;
               }
               {
@@ -39752,13 +39782,13 @@ class XMLParserBase {
                 let s = !1;
                 t = e.indexOf('>', a + 8);
                 if (t < 0) {
-                  this.onError(Xi);
+                  this.onError(Ki);
                   return;
                 }
                 if (n > 0 && t > n) {
                   t = e.indexOf(']>', a + 8);
                   if (t < 0) {
-                    this.onError(Xi);
+                    this.onError(Ki);
                     return;
                   }
                   s = !0;
@@ -39772,13 +39802,13 @@ class XMLParserBase {
           default:
             const s = this._parseContent(e, a);
             if (null === s) {
-              this.onError(Ki);
+              this.onError(Vi);
               return;
             }
             let r = !1;
             if ('/>' === e.substring(a + s.parsed, a + s.parsed + 2)) r = !0;
             else if ('>' !== e.substring(a + s.parsed, a + s.parsed + 1)) {
-              this.onError(Gi);
+              this.onError($i);
               return;
             }
             this.onBeginElement(s.name, s.attributes, r);
@@ -39897,16 +39927,16 @@ class SimpleXMLParser extends XMLParserBase {
     super();
     this._currentFragment = null;
     this._stack = null;
-    this._errorCode = _i;
+    this._errorCode = zi;
     this._hasAttributes = e;
     this._lowerCaseName = t;
   }
   parseFromString(e) {
     this._currentFragment = [];
     this._stack = [];
-    this._errorCode = _i;
+    this._errorCode = zi;
     this.parseXml(e);
-    if (this._errorCode !== _i) return;
+    if (this._errorCode !== zi) return;
     const [t] = this._currentFragment;
     return t ? { documentElement: t } : void 0;
   }
@@ -40030,20 +40060,25 @@ class MetadataParser {
     return { parsedData: this._metadataMap, rawData: this._data };
   }
 }
-const Vi = 1,
-  $i = 2,
-  Yi = 3,
-  Ji = 4,
-  Qi = 5;
+const Yi = 1,
+  Ji = 2,
+  Qi = 3,
+  Zi = 4,
+  eo = 5;
 class StructTreeRoot {
+  kidRefToPosition = void 0;
+  parentTree = null;
+  roleMap = new Map();
+  structParentIds = null;
   constructor(e, t, a) {
     this.xref = e;
     this.dict = t;
     this.ref = a instanceof Ref ? a : null;
-    this.roleMap = new Map();
-    this.structParentIds = null;
-    this.kidRefToPosition = void 0;
-    this.parentTree = null;
+    const n = t.get('RoleMap');
+    if (n instanceof Dict)
+      for (const [e, t] of n) t instanceof Name && this.roleMap.set(e, t.name);
+    const s = t.getRaw('ParentTree');
+    s && (this.parentTree = new NumberTree(s, e));
   }
   getKidPosition(e) {
     if (void 0 === this.kidRefToPosition) {
@@ -40060,12 +40095,7 @@ class StructTreeRoot {
     }
     return this.kidRefToPosition ? (this.kidRefToPosition.get(e) ?? NaN) : -1;
   }
-  init() {
-    this.readRoleMap();
-    const e = this.dict.get('ParentTree');
-    e && (this.parentTree = new NumberTree(e, this.xref));
-  }
-  #Ve(e, t, a) {
+  #Ye(e, t, a) {
     if (!(e instanceof Ref) || t < 0) return;
     this.structParentIds ||= new RefSetCache();
     let n = this.structParentIds.get(e);
@@ -40076,12 +40106,7 @@ class StructTreeRoot {
     n.push([t, a]);
   }
   addAnnotationIdToPage(e, t) {
-    this.#Ve(e, t, Ji);
-  }
-  readRoleMap() {
-    const e = this.dict.get('RoleMap');
-    if (e instanceof Dict)
-      for (const [t, a] of e) a instanceof Name && this.roleMap.set(t, a.name);
+    this.#Ye(e, t, Zi);
   }
   static async canCreateStructureTree({
     catalogRef: e,
@@ -40135,7 +40160,7 @@ class StructTreeRoot {
     const h = new Dict(t),
       u = [];
     h.set('Nums', u);
-    const m = await this.#$e({
+    const m = await this.#Je({
       newAnnotationsByPage: e,
       structTreeRootRef: o,
       structTreeRoot: null,
@@ -40183,7 +40208,7 @@ class StructTreeRoot {
     let i = !0;
     for (const [n, s] of t) {
       const { pageDict: t } = await e.getPage(n);
-      StructTreeRoot.#Ye({
+      StructTreeRoot.#Qe({
         elements: s,
         xref: this.xref,
         pageDict: t,
@@ -40232,7 +40257,7 @@ class StructTreeRoot {
     }
     f = f.slice();
     c || o.set('Nums', f);
-    const h = await StructTreeRoot.#$e({
+    const h = await StructTreeRoot.#Je({
       newAnnotationsByPage: e,
       structTreeRootRef: n,
       structTreeRoot: this,
@@ -40249,7 +40274,7 @@ class StructTreeRoot {
       for (const [e, t] of i.items()) a.put(e, { data: t });
     }
   }
-  static async #$e({
+  static async #Je({
     newAnnotationsByPage: e,
     structTreeRootRef: t,
     structTreeRoot: a,
@@ -40284,7 +40309,7 @@ class StructTreeRoot {
           const n = t?.get(m);
           if (n) {
             const e = r.fetch(n).clone();
-            StructTreeRoot.#Je(e, i);
+            StructTreeRoot.#Ze(e, i);
             o.put(n, { data: e });
             continue;
           }
@@ -40292,8 +40317,8 @@ class StructTreeRoot {
         h = Math.max(h, b);
         const j = r.getNewTemporaryRef(),
           k = new Dict(r);
-        StructTreeRoot.#Je(k, i);
-        await this.#Qe({
+        StructTreeRoot.#Ze(k, i);
+        await this.#et({
           structTreeParent: w,
           tagDict: k,
           newTagRef: j,
@@ -40313,7 +40338,7 @@ class StructTreeRoot {
     }
     return h + 1;
   }
-  static #Je(
+  static #Ze(
     e,
     { type: t, title: a, lang: n, alt: s, expanded: r, actualText: i }
   ) {
@@ -40324,7 +40349,7 @@ class StructTreeRoot {
     r && e.set('E', stringToAsciiOrUTF16BE(r));
     i && e.set('ActualText', stringToAsciiOrUTF16BE(i));
   }
-  static #Ye({ elements: e, xref: t, pageDict: a, numberTree: n }) {
+  static #Qe({ elements: e, xref: t, pageDict: a, numberTree: n }) {
     const s = new Map();
     for (const t of e)
       if (t.structTreeParentId) {
@@ -40363,7 +40388,7 @@ class StructTreeRoot {
         }
     }
   }
-  static async #Qe({
+  static async #et({
     structTreeParent: e,
     tagDict: t,
     newTagRef: a,
@@ -40421,18 +40446,18 @@ class StructElementNode {
     Array.isArray(e) || (e = [e]);
     for (let t of e) {
       t = this.xref.fetchIfRef(t);
-      if (!(t instanceof Dict)) continue;
-      if (!isName(t.get('Type'), 'Filespec')) continue;
-      if (!isName(t.get('AFRelationship'), 'Supplement')) continue;
-      const e = t.get('EF');
-      if (!(e instanceof Dict)) continue;
-      const a = e.get('UF') || e.get('F');
       if (
-        a instanceof BaseStream &&
-        isName(a.dict.get('Type'), 'EmbeddedFile') &&
-        isName(a.dict.get('Subtype'), 'application/mathml+xml')
+        !isDict(t, 'Filespec') ||
+        !isName(t.get('AFRelationship'), 'Supplement')
       )
-        return stringToUTF8String(a.getString());
+        continue;
+      const e = FileSpec.pickPlatformItem(t.get('EF'));
+      if (
+        e instanceof BaseStream &&
+        isDict(e.dict, 'EmbeddedFile') &&
+        isName(e.dict.get('Subtype'), 'application/mathml+xml')
+      )
+        return stringToUTF8String(e.getString());
     }
     const t = this.dict.get('A');
     if (t instanceof Dict) {
@@ -40462,7 +40487,7 @@ class StructElementNode {
     if (Number.isInteger(t))
       return this.tree.pageDict.objId !== e
         ? null
-        : new StructElement({ type: Vi, mcid: t, pageObjId: e });
+        : new StructElement({ type: Yi, mcid: t, pageObjId: e });
     if (!(t instanceof Dict)) return null;
     const a = t.getRaw('Pg');
     a instanceof Ref && (e = a.toString());
@@ -40471,7 +40496,7 @@ class StructElementNode {
       if (this.tree.pageDict.objId !== e) return null;
       const a = t.getRaw('Stm');
       return new StructElement({
-        type: $i,
+        type: Ji,
         refObjId: a instanceof Ref ? a.toString() : null,
         pageObjId: e,
         mcid: t.get('MCID'),
@@ -40481,12 +40506,12 @@ class StructElementNode {
       if (this.tree.pageDict.objId !== e) return null;
       const a = t.getRaw('Obj');
       return new StructElement({
-        type: Yi,
+        type: Qi,
         refObjId: a instanceof Ref ? a.toString() : null,
         pageObjId: e,
       });
     }
-    return new StructElement({ type: Qi, dict: t });
+    return new StructElement({ type: eo, dict: t });
   }
 }
 class StructElement {
@@ -40547,7 +40572,7 @@ class StructTreePage {
         if (n) {
           const e = this.addNode(this.xref.fetchIfRef(n), s);
           1 === e?.kids?.length &&
-            e.kids[0].type === Yi &&
+            e.kids[0].type === Qi &&
             (e.kids[0].type = a);
         }
       }
@@ -40570,7 +40595,7 @@ class StructTreePage {
       case 'TBody':
       case 'TFoot':
       case 'TR':
-        for (const e of n.kids) e.type === Qi && this.addNode(e.dict, t, a - 1);
+        for (const e of n.kids) e.type === eo && this.addNode(e.dict, t, a - 1);
     }
     const s = e.get('P');
     if (!(s instanceof Dict) || isName(s.get('Type'), 'StructTreeRoot')) {
@@ -40581,7 +40606,7 @@ class StructTreePage {
     if (!r) return n;
     let i = !1;
     for (const t of r.kids)
-      if (t.type === Qi && t.dict === e) {
+      if (t.type === eo && t.dict === e) {
         t.parentNode = n;
         i = !0;
       }
@@ -40607,10 +40632,14 @@ class StructTreePage {
       let s = e.dict.get('Alt');
       'string' != typeof s && (s = e.dict.get('ActualText'));
       'string' == typeof s && (n.alt = stringToPDFString(s));
-      if ('Formula' === n.role) {
-        const { mathML: t } = e;
-        t && (n.mathML = t);
-      }
+      if ('Formula' === n.role)
+        try {
+          const { mathML: t } = e;
+          t && (n.mathML = t);
+        } catch (e) {
+          if (e instanceof MissingDataException) throw e;
+          warn(`Ignoring mathML: "${e}".`);
+        }
       const r = e.dict.get('A');
       if (r instanceof Dict) {
         const e = lookupNormalRect(r.getArray('BBox'), null);
@@ -40628,17 +40657,17 @@ class StructTreePage {
       const i = e.dict.get('Lang');
       'string' == typeof i && (n.lang = stringToPDFString(i));
       for (const t of e.kids) {
-        const e = t.type === Qi ? t.parentNode : null;
+        const e = t.type === eo ? t.parentNode : null;
         e
           ? nodeToSerializable(e, n, a + 1)
-          : t.type === Vi || t.type === $i
+          : t.type === Yi || t.type === Ji
             ? n.children.push({
                 type: 'content',
                 id: `p${t.pageObjId}_mc${t.mcid}`,
               })
-            : t.type === Yi
+            : t.type === Qi
               ? n.children.push({ type: 'object', id: t.refObjId })
-              : t.type === Ji &&
+              : t.type === Zi &&
                 n.children.push({
                   type: 'annotation',
                   id: `pdfjs_internal_id_${t.refObjId}`,
@@ -40652,7 +40681,7 @@ class StructTreePage {
     return e;
   }
 }
-const Zi = function _isValidExplicitDest(e, t, a) {
+const to = function _isValidExplicitDest(e, t, a) {
   if (!Array.isArray(a) || a.length < 2) return !1;
   const [n, s, ...r] = a;
   if (!e(n) && !Number.isInteger(n)) return !1;
@@ -40685,20 +40714,22 @@ const Zi = function _isValidExplicitDest(e, t, a) {
 }.bind(null, (e) => e instanceof Ref, isName);
 function fetchDest(e) {
   e instanceof Dict && (e = e.get('D'));
-  return Zi(e) ? e : null;
+  return to(e) ? e : null;
 }
 function fetchRemoteDest(e) {
   let t = e.get('D');
   if (t) {
     t instanceof Name && (t = t.name);
     if ('string' == typeof t) return stringToPDFString(t, !0);
-    if (Zi(t)) return JSON.stringify(t);
+    if (to(t)) return JSON.stringify(t);
   }
   return null;
 }
 class Catalog {
-  #Ze = null;
-  #et = null;
+  #tt = null;
+  #at = new RefSetCache();
+  #nt = new Map();
+  #st = null;
   builtInCMapCache = new Map();
   fontCache = new RefSetCache();
   globalColorSpaceCache = new GlobalColorSpaceCache();
@@ -40712,24 +40743,35 @@ class Catalog {
   constructor(e, t) {
     this.pdfManager = e;
     this.xref = t;
-    this.#et = t.getCatalogObj();
-    if (!(this.#et instanceof Dict))
+    this.#st = t.getCatalogObj();
+    if (!(this.#st instanceof Dict))
       throw new FormatError('Catalog object is not a dictionary.');
     this.toplevelPagesDict;
   }
   cloneDict() {
-    return this.#et.clone();
+    return this.#st.clone();
+  }
+  getAttachmentIdForAnnotation(e) {
+    let t = this.#at.get(e);
+    if (t) return t;
+    const a = `attachmentRef:${e.toString()}`;
+    t = a;
+    let n = 1;
+    for (; this.#nt.has(t) || this.attachments?.has(t);) t = `${a}-${n++}`;
+    this.#at.put(e, t);
+    this.#nt.set(t, e);
+    return t;
   }
   get version() {
-    const e = this.#et.get('Version');
+    const e = this.#st.get('Version');
     if (e instanceof Name) {
-      if (ma.test(e.name)) return shadow(this, 'version', e.name);
+      if (da.test(e.name)) return shadow(this, 'version', e.name);
       warn(`Invalid PDF catalog version: ${e.name}`);
     }
     return shadow(this, 'version', null);
   }
   get lang() {
-    const e = this.#et.get('Lang');
+    const e = this.#st.get('Lang');
     return shadow(
       this,
       'lang',
@@ -40737,13 +40779,13 @@ class Catalog {
     );
   }
   get needsRendering() {
-    const e = this.#et.get('NeedsRendering');
+    const e = this.#st.get('NeedsRendering');
     return shadow(this, 'needsRendering', 'boolean' == typeof e && e);
   }
   get collection() {
     let e = null;
     try {
-      const t = this.#et.get('Collection');
+      const t = this.#st.get('Collection');
       t instanceof Dict && t.size > 0 && (e = t);
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
@@ -40754,7 +40796,7 @@ class Catalog {
   get acroForm() {
     let e = null;
     try {
-      const t = this.#et.get('AcroForm');
+      const t = this.#st.get('AcroForm');
       t instanceof Dict && t.size > 0 && (e = t);
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
@@ -40763,22 +40805,22 @@ class Catalog {
     return shadow(this, 'acroForm', e);
   }
   get acroFormRef() {
-    const e = this.#et.getRaw('AcroForm');
+    const e = this.#st.getRaw('AcroForm');
     return shadow(this, 'acroFormRef', e instanceof Ref ? e : null);
   }
   get metadata() {
-    const e = this.#et.getRaw('Metadata');
+    const e = this.#st.getRaw('Metadata');
     if (!(e instanceof Ref)) return shadow(this, 'metadata', null);
     let t = null;
     try {
       const a = this.xref.fetch(e, !this.xref.encrypt?.encryptMetadata);
-      if (a instanceof BaseStream && a.dict instanceof Dict) {
-        const e = a.dict.get('Type'),
-          n = a.dict.get('Subtype');
-        if (isName(e, 'Metadata') && isName(n, 'XML')) {
-          const e = stringToUTF8String(a.getString());
-          e && (t = new MetadataParser(e).serializable);
-        }
+      if (
+        a instanceof BaseStream &&
+        isDict(a.dict, 'Metadata') &&
+        isName(a.dict.get('Subtype'), 'XML')
+      ) {
+        const e = stringToUTF8String(a.getString());
+        e && (t = new MetadataParser(e).serializable);
       }
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
@@ -40789,15 +40831,15 @@ class Catalog {
   get markInfo() {
     let e = null;
     try {
-      e = this.#tt();
+      e = this.#rt();
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn('Unable to read mark info.');
     }
     return shadow(this, 'markInfo', e);
   }
-  #tt() {
-    const e = this.#et.get('MarkInfo');
+  #rt() {
+    const e = this.#st.get('MarkInfo');
     if (!(e instanceof Dict)) return null;
     const t = { Marked: !1, UserProperties: !1, Suspects: !1 };
     for (const a in t) {
@@ -40807,28 +40849,25 @@ class Catalog {
     return t;
   }
   get hasStructTree() {
-    return this.#et.has('StructTreeRoot');
+    return this.#st.has('StructTreeRoot');
   }
   get structTreeRoot() {
     let e = null;
     try {
-      e = this.#at();
+      e = this.#it();
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn('Unable read to structTreeRoot info.');
     }
     return shadow(this, 'structTreeRoot', e);
   }
-  #at() {
-    const e = this.#et.getRaw('StructTreeRoot'),
+  #it() {
+    const e = this.#st.getRaw('StructTreeRoot'),
       t = this.xref.fetchIfRef(e);
-    if (!(t instanceof Dict)) return null;
-    const a = new StructTreeRoot(this.xref, t, e);
-    a.init();
-    return a;
+    return t instanceof Dict ? new StructTreeRoot(this.xref, t, e) : null;
   }
   get toplevelPagesDict() {
-    const e = this.#et.get('Pages');
+    const e = this.#st.get('Pages');
     if (!(e instanceof Dict))
       throw new FormatError('Invalid top-level pages dictionary.');
     return shadow(this, 'toplevelPagesDict', e);
@@ -40836,15 +40875,15 @@ class Catalog {
   get documentOutline() {
     let e = null;
     try {
-      e = this.#nt();
+      e = this.#ot();
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn('Unable to read document outline.');
     }
     return shadow(this, 'documentOutline', e);
   }
-  #nt(e = {}) {
-    let t = this.#et.get('Outlines');
+  #ot(e = {}) {
+    let t = this.#st.get('Outlines');
     if (!(t instanceof Dict)) return null;
     t = t.getRaw('First');
     if (!(t instanceof Ref)) return null;
@@ -40876,6 +40915,7 @@ class Catalog {
         (m = ColorSpaceUtils.rgb.getRgb(h, 0));
       const p = {
         action: l.action,
+        attachmentId: l.attachmentId,
         attachment: l.attachment,
         dest: l.dest,
         url: l.url,
@@ -40907,7 +40947,7 @@ class Catalog {
   get documentOutlineForEditor() {
     let e = null;
     try {
-      e = this.#nt({ keepRawDict: !0 });
+      e = this.#ot({ keepRawDict: !0 });
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn('Unable to read document outline.');
@@ -40917,14 +40957,14 @@ class Catalog {
   get permissions() {
     let e = null;
     try {
-      e = this.#st();
+      e = this.#lt();
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn('Unable to read permissions.');
     }
     return shadow(this, 'permissions', e);
   }
-  #st() {
+  #lt() {
     const e = this.xref.trailer.get('Encrypt');
     if (!(e instanceof Dict)) return null;
     let t = e.get('P');
@@ -40940,22 +40980,22 @@ class Catalog {
   get optionalContentConfig() {
     let e = null;
     try {
-      const t = this.#et.get('OCProperties');
+      const t = this.#st.get('OCProperties');
       if (!t) return shadow(this, 'optionalContentConfig', null);
       const a = t.get('D');
       if (!a) return shadow(this, 'optionalContentConfig', null);
       const n = t.get('OCGs');
       if (!Array.isArray(n)) return shadow(this, 'optionalContentConfig', null);
       const s = new RefSetCache();
-      for (const e of n) e instanceof Ref && !s.has(e) && s.put(e, this.#rt(e));
-      e = this.#it(a, s);
+      for (const e of n) e instanceof Ref && !s.has(e) && s.put(e, this.#ft(e));
+      e = this.#ct(a, s);
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn(`Unable to read optional content config: ${e}`);
     }
     return shadow(this, 'optionalContentConfig', e);
   }
-  #rt(e) {
+  #ft(e) {
     const t = this.xref.fetch(e),
       a = {
         id: e.toString(),
@@ -40994,7 +41034,7 @@ class Catalog {
     }
     return a;
   }
-  #it(e, t) {
+  #ct(e, t) {
     function parseOnOff(e) {
       const a = [];
       if (Array.isArray(e))
@@ -41065,10 +41105,10 @@ class Catalog {
     };
   }
   setActualNumPages(e = null) {
-    this.#Ze = e;
+    this.#tt = e;
   }
   get hasActualNumPages() {
-    return null !== this.#Ze;
+    return null !== this.#tt;
   }
   get _pagesCount() {
     const e = this.toplevelPagesDict.get('Count');
@@ -41079,10 +41119,10 @@ class Catalog {
     return shadow(this, '_pagesCount', e);
   }
   get numPages() {
-    return this.#Ze ?? this._pagesCount;
+    return this.#tt ?? this._pagesCount;
   }
   get destinations() {
-    const e = this.#ot(),
+    const e = this.#ht(),
       t = Object.create(null);
     for (const a of e)
       if (a instanceof NameTree)
@@ -41100,7 +41140,7 @@ class Catalog {
   getDestination(e) {
     if (Object.hasOwn(this, 'destinations'))
       return this.destinations[e] ?? null;
-    const t = this.#ot();
+    const t = this.#ht();
     for (const a of t)
       if (a instanceof NameTree || a instanceof Dict) {
         const t = fetchDest(a.get(e));
@@ -41112,29 +41152,29 @@ class Catalog {
     }
     return null;
   }
-  #ot() {
-    const e = this.#et.get('Names'),
+  #ht() {
+    const e = this.#st.get('Names'),
       t = [];
     e?.has('Dests') && t.push(new NameTree(e.getRaw('Dests'), this.xref));
-    this.#et.has('Dests') && t.push(this.#et.get('Dests'));
+    this.#st.has('Dests') && t.push(this.#st.get('Dests'));
     return t;
   }
   get rawPageLabels() {
-    const e = this.#et.getRaw('PageLabels');
+    const e = this.#st.getRaw('PageLabels');
     if (!e) return null;
     return new NumberTree(e, this.xref).getAll();
   }
   get pageLabels() {
     let e = null;
     try {
-      e = this.#lt();
+      e = this.#ut();
     } catch (e) {
       if (e instanceof MissingDataException) throw e;
       warn('Unable to read page labels.');
     }
     return shadow(this, 'pageLabels', e);
   }
-  #lt() {
+  #ut() {
     const e = this.rawPageLabels;
     if (!e) return null;
     const t = new Array(this.numPages);
@@ -41196,7 +41236,7 @@ class Catalog {
     return t;
   }
   get pageLayout() {
-    const e = this.#et.get('PageLayout');
+    const e = this.#st.get('PageLayout');
     let t = '';
     if (e instanceof Name)
       switch (e.name) {
@@ -41211,7 +41251,7 @@ class Catalog {
     return shadow(this, 'pageLayout', t);
   }
   get pageMode() {
-    const e = this.#et.get('PageMode');
+    const e = this.#st.get('PageMode');
     let t = 'UseNone';
     if (e instanceof Name)
       switch (e.name) {
@@ -41226,7 +41266,7 @@ class Catalog {
     return shadow(this, 'pageMode', t);
   }
   get viewerPreferences() {
-    const e = this.#et.get('ViewerPreferences');
+    const e = this.#st.get('ViewerPreferences');
     if (!(e instanceof Dict)) return shadow(this, 'viewerPreferences', null);
     let t = null;
     for (const [a, n] of e) {
@@ -41331,7 +41371,7 @@ class Catalog {
     return shadow(this, 'viewerPreferences', t);
   }
   get openAction() {
-    const e = this.#et.get('OpenAction'),
+    const e = this.#st.get('OpenAction'),
       t = Object.create(null);
     if (e instanceof Dict) {
       const a = new Dict(this.xref);
@@ -41341,29 +41381,51 @@ class Catalog {
       Array.isArray(n.dest)
         ? (t.dest = n.dest)
         : n.action && (t.action = n.action);
-    } else Zi(e) && (t.dest = e);
+    } else to(e) && (t.dest = e);
     return shadow(this, 'openAction', objectSize(t) > 0 ? t : null);
   }
   get attachments() {
-    const e = this.#et.get('Names');
+    const e = this.#st.get('Names');
     let t = null;
     if (e instanceof Dict && e.has('EmbeddedFiles')) {
       const a = new NameTree(e.getRaw('EmbeddedFiles'), this.xref);
-      for (const [e, n] of a.getAll()) {
-        const a = new FileSpec(n);
-        t ??= Object.create(null);
-        t[stringToPDFString(e, !0)] = a.serializable;
-      }
+      for (const [e, n] of a.getAll())
+        (t ??= new Map()).set(
+          stringToPDFString(e, !0),
+          new FileSpec(n).serializable
+        );
     }
     return shadow(this, 'attachments', t);
   }
+  #mt(e) {
+    const t = this.#st.get('Names');
+    if (t instanceof Dict && t.has('EmbeddedFiles')) {
+      const a = new NameTree(t.getRaw('EmbeddedFiles'), this.xref);
+      for (const [t, n] of a.getAll())
+        if (stringToPDFString(t, !0) === e) return FileSpec.readContent(n);
+    }
+  }
+  attachmentContent(e) {
+    const t = this.#mt(e);
+    if (void 0 !== t) return t;
+    const a = this.#nt.get(e);
+    if (a) {
+      const e = this.xref.fetch(a);
+      return e instanceof BaseStream
+        ? FileSpec.readStreamContent(e)
+        : e instanceof Dict
+          ? FileSpec.readContent(e)
+          : null;
+    }
+    return null;
+  }
   get rawEmbeddedFiles() {
-    const e = this.#et.get('Names');
+    const e = this.#st.get('Names');
     if (!(e instanceof Dict && e.has('EmbeddedFiles'))) return null;
     return new NameTree(e.getRaw('EmbeddedFiles'), this.xref).getAll(!0);
   }
   get xfaImages() {
-    const e = this.#et.get('Names');
+    const e = this.#st.get('Names');
     let t = null;
     if (e instanceof Dict && e.has('XFAImages')) {
       const a = new NameTree(e.getRaw('XFAImages'), this.xref);
@@ -41375,8 +41437,8 @@ class Catalog {
     }
     return shadow(this, 'xfaImages', t);
   }
-  #ft() {
-    const e = this.#et.get('Names');
+  #pt() {
+    const e = this.#st.get('Names');
     let t = null;
     function appendIfJavaScriptDict(e, a) {
       if (!(a instanceof Dict)) return;
@@ -41392,13 +41454,13 @@ class Catalog {
       for (const [e, a] of t.getAll())
         appendIfJavaScriptDict(stringToPDFString(e, !0), a);
     }
-    const a = this.#et.get('OpenAction');
+    const a = this.#st.get('OpenAction');
     a && appendIfJavaScriptDict('OpenAction', a);
     return t;
   }
   get jsActions() {
-    const e = this.#ft();
-    let t = collectActions(this.xref, this.#et, le);
+    const e = this.#pt();
+    let t = collectActions(this.xref, this.#st, ce);
     if (e) {
       t ||= Object.create(null);
       for (const [a, n] of e) a in t ? t[a].push(n) : (t[a] = [n]);
@@ -41423,7 +41485,7 @@ class Catalog {
   async getPageDict(e) {
     const t = [this.toplevelPagesDict],
       a = new RefSet(),
-      n = this.#et.getRaw('Pages');
+      n = this.#st.getRaw('Pages');
     n instanceof Ref && a.put(n);
     const s = this.xref,
       r = this.pageKidsCountCache,
@@ -41497,7 +41559,7 @@ class Catalog {
     const { ignoreErrors: t } = this.pdfManager.evaluatorOptions,
       a = [{ currentNode: this.toplevelPagesDict, posInKids: 0 }],
       n = new RefSet(),
-      s = this.#et.getRaw('Pages');
+      s = this.#st.getRaw('Pages');
     s instanceof Ref && n.put(s);
     const r = new Map(),
       i = this.xref,
@@ -41527,6 +41589,18 @@ class Catalog {
           break;
         }
       if (!Array.isArray(r)) {
+        let e = t.getRaw('Type');
+        if (e instanceof Ref)
+          try {
+            e = await i.fetchAsync(e);
+          } catch (e) {
+            addPageError(e);
+            break;
+          }
+        if (isName(e, 'Page') || !t.has('Kids')) {
+          addPageDict(t, null);
+          break;
+        }
         addPageError(
           new FormatError('Page dictionary kids object is not an array.')
         );
@@ -41637,7 +41711,7 @@ class Catalog {
     return n;
   }
   get baseUrl() {
-    const e = this.#et.get('URI');
+    const e = this.#st.get('URI');
     if (e instanceof Dict) {
       const t = e.get('Base');
       if ('string' == typeof t) {
@@ -41647,7 +41721,7 @@ class Catalog {
     }
     return shadow(this, 'baseUrl', this.pdfManager.docBaseUrl);
   }
-  static #ct(e, t) {
+  static #dt(e, t) {
     const a = e.fetchIfRef(t);
     if (!(a instanceof Dict)) return null;
     let n = null;
@@ -41754,10 +41828,8 @@ class Catalog {
         case 'Launch':
         case 'GoToR':
           const c = i.get('F');
-          if (c instanceof Dict) {
-            const e = new FileSpec(c, !0);
-            ({ rawFilename: s } = e.serializable);
-          } else {
+          if (c instanceof Dict) s = new FileSpec(c).filename;
+          else {
             if ('string' != typeof c) break;
             s = c;
           }
@@ -41768,16 +41840,17 @@ class Catalog {
           break;
         case 'GoToE':
           const m = i.get('T');
-          let p;
-          if (n && m instanceof Dict) {
+          let p = null;
+          if (m instanceof Dict) {
             const e = m.get('R'),
               t = m.get('N');
             isName(e, 'C') &&
               'string' == typeof t &&
-              (p = n[stringToPDFString(t, !0)]);
+              (p = stringToPDFString(t, !0));
           }
-          if (p) {
-            t.attachment = p;
+          if (n && p) {
+            t.attachmentId = p;
+            t.attachment = n.get(p);
             const e = fetchRemoteDest(i);
             e && (t.attachmentDest = e);
           } else warn('parseDestDictionary - unimplemented "GoToE" action.');
@@ -41832,7 +41905,7 @@ class Catalog {
       r instanceof Name && (r = r.name);
       'string' == typeof r
         ? (t.dest = stringToPDFString(r, !0))
-        : Zi(r) && (t.dest = r);
+        : to(r) && (t.dest = r);
     }
     if (!(
       t.dest ||
@@ -41845,7 +41918,7 @@ class Catalog {
       const a = e.getRaw('SE');
       if (a instanceof Ref)
         try {
-          const n = Catalog.#ct(e.xref, a);
+          const n = Catalog.#dt(e.xref, a);
           n && (t.dest = n);
         } catch (e) {
           if (e instanceof MissingDataException) throw e;
@@ -42052,10 +42125,10 @@ class ObjectLoader {
       const e = t.getRaw(n);
       void 0 !== e && a.push(e);
     }
-    await this.#ht(a);
+    await this.#gt(a);
     this.refSet = null;
   }
-  async #ht(e) {
+  async #gt(e) {
     const t = [],
       a = [];
     for (; e.length;) {
@@ -42092,7 +42165,7 @@ class ObjectLoader {
     if (a.length) {
       await this.xref.stream.manager.requestRanges(a);
       for (const e of t) e instanceof Ref && this.refSet.remove(e);
-      await this.#ht(t);
+      await this.#gt(t);
     }
   }
   static async load(e, t, a) {
@@ -42101,21 +42174,19 @@ class ObjectLoader {
     await n.load();
   }
 }
-const eo = Symbol(),
-  to = Symbol(),
-  ao = Symbol(),
+const ao = Symbol(),
   no = Symbol(),
   so = Symbol(),
   ro = Symbol(),
   io = Symbol(),
   oo = Symbol(),
   lo = Symbol(),
-  fo = Symbol('content'),
-  co = Symbol('data'),
-  ho = Symbol(),
-  uo = Symbol('extra'),
+  fo = Symbol(),
+  co = Symbol(),
+  ho = Symbol('content'),
+  uo = Symbol('data'),
   mo = Symbol(),
-  po = Symbol(),
+  po = Symbol('extra'),
   go = Symbol(),
   bo = Symbol(),
   wo = Symbol(),
@@ -42146,19 +42217,19 @@ const eo = Symbol(),
   Xo = Symbol(),
   Wo = Symbol(),
   Ko = Symbol(),
-  Go = Symbol('namespaceId'),
-  Vo = Symbol('nodeName'),
-  $o = Symbol(),
-  Yo = Symbol(),
+  Go = Symbol(),
+  Vo = Symbol(),
+  $o = Symbol('namespaceId'),
+  Yo = Symbol('nodeName'),
   Jo = Symbol(),
   Qo = Symbol(),
   Zo = Symbol(),
   el = Symbol(),
   tl = Symbol(),
   al = Symbol(),
-  nl = Symbol('root'),
+  nl = Symbol(),
   sl = Symbol(),
-  rl = Symbol(),
+  rl = Symbol('root'),
   il = Symbol(),
   ol = Symbol(),
   ll = Symbol(),
@@ -42168,9 +42239,11 @@ const eo = Symbol(),
   ul = Symbol(),
   ml = Symbol(),
   pl = Symbol(),
-  dl = Symbol('uid'),
+  dl = Symbol(),
   gl = Symbol(),
-  bl = {
+  bl = Symbol('uid'),
+  wl = Symbol(),
+  jl = {
     config: {
       id: 0,
       check: (e) => e.startsWith('http://www.xfa.org/schema/xci/'),
@@ -42218,14 +42291,14 @@ const eo = Symbol(),
     xhtml: { id: 13, check: (e) => 'http://www.w3.org/1999/xhtml' === e },
     xmpmeta: { id: 14, check: (e) => 'http://ns.adobe.com/xmpmeta/' === e },
   },
-  wl = {
+  kl = {
     pt: (e) => e,
     cm: (e) => (e / 2.54) * 72,
     mm: (e) => (e / 25.4) * 72,
     in: (e) => 72 * e,
     px: (e) => e,
   },
-  jl = /([+-]?\d+\.?\d*)(.*)/;
+  yl = /([+-]?\d+\.?\d*)(.*)/;
 function stripQuotes(e) {
   return e.startsWith("'") || e.startsWith('"') ? e.slice(1, -1) : e;
 }
@@ -42254,13 +42327,13 @@ function getStringOption(e, t) {
 function getMeasurement(e, t = '0') {
   t ||= '0';
   if (!e) return getMeasurement(t);
-  const a = e.trim().match(jl);
+  const a = e.trim().match(yl);
   if (!a) return getMeasurement(t);
   const [, n, s] = a,
     r = parseFloat(n);
   if (isNaN(r)) return getMeasurement(t);
   if (0 === r) return 0;
-  const i = wl[s];
+  const i = kl[s];
   return i ? i(r) : r;
 }
 function getRatio(e) {
@@ -42578,16 +42651,16 @@ class TextMeasure {
     return { width: 1.02 * n, height: s, isBroken: o };
   }
 }
-const kl = /^[^.[]+/,
-  yl = /^[^\]]+/,
-  ql = 0,
-  vl = 1,
-  Sl = 2,
-  Al = 3,
-  xl = 4,
-  Cl = new Map([
+const ql = /^[^.[]+/,
+  vl = /^[^\]]+/,
+  Sl = 0,
+  Al = 1,
+  xl = 2,
+  Cl = 3,
+  Il = 4,
+  Fl = new Map([
     ['$data', (e, t) => (e.datasets ? e.datasets.data : e)],
-    ['$record', (e, t) => (e.datasets ? e.datasets.data : e)[Ao]()[0]],
+    ['$record', (e, t) => (e.datasets ? e.datasets.data : e)[Co]()[0]],
     ['$template', (e, t) => e.template],
     ['$connectionSet', (e, t) => e.connectionSet],
     ['$form', (e, t) => e.form],
@@ -42600,12 +42673,12 @@ const kl = /^[^.[]+/,
     ['xfa', (e, t) => e],
     ['$', (e, t) => t],
   ]),
-  Il = new WeakMap();
+  Tl = new WeakMap();
 function parseIndex(e) {
   return '*' === (e = e.trim()) ? 1 / 0 : parseInt(e, 10) || 0;
 }
 function parseExpression(e, t, a = !0) {
-  let n = e.match(kl);
+  let n = e.match(ql);
   if (!n) return null;
   let [s] = n;
   const r = [
@@ -42615,14 +42688,14 @@ function parseExpression(e, t, a = !0) {
       index: 0,
       js: null,
       formCalc: null,
-      operator: ql,
+      operator: Sl,
     },
   ];
   let i = s.length;
   for (; i < e.length;) {
     const o = i;
     if ('[' === e.charAt(i++)) {
-      n = e.slice(i).match(yl);
+      n = e.slice(i).match(vl);
       if (!n) {
         warn('XFA - Invalid index in SOM expression');
         return null;
@@ -42636,11 +42709,11 @@ function parseExpression(e, t, a = !0) {
       case '.':
         if (!t) return null;
         i++;
-        l = vl;
+        l = Al;
         break;
       case '#':
         i++;
-        l = Sl;
+        l = xl;
         break;
       case '[':
         if (a) {
@@ -42649,7 +42722,7 @@ function parseExpression(e, t, a = !0) {
           );
           return null;
         }
-        l = Al;
+        l = Cl;
         break;
       case '(':
         if (a) {
@@ -42658,12 +42731,12 @@ function parseExpression(e, t, a = !0) {
           );
           return null;
         }
-        l = xl;
+        l = Il;
         break;
       default:
-        l = ql;
+        l = Sl;
     }
-    n = e.slice(i).match(kl);
+    n = e.slice(i).match(ql);
     if (!n) break;
     [s] = n;
     i += s.length;
@@ -42681,7 +42754,7 @@ function parseExpression(e, t, a = !0) {
 function searchNode(e, t, a, n = !0, s = !0) {
   const r = parseExpression(a, n);
   if (!r) return null;
-  const i = Cl.get(r[0].name);
+  const i = Fl.get(r[0].name);
   let o,
     l = 0;
   if (i) {
@@ -42699,19 +42772,19 @@ function searchNode(e, t, a, n = !0, s = !0) {
       if (!t.isXFAObject) continue;
       let e, r;
       if (s) {
-        r = Il.getOrInsertComputed(t, makeMap);
+        r = Tl.getOrInsertComputed(t, makeMap);
         e = r.get(n);
       }
       if (!e) {
         switch (i) {
-          case ql:
-            e = t[ko](a, !1);
-            break;
-          case vl:
-            e = t[ko](a, !0);
-            break;
           case Sl:
-            e = t[jo](a);
+            e = t[qo](a, !1);
+            break;
+          case Al:
+            e = t[qo](a, !0);
+            break;
+          case xl:
+            e = t[yo](a);
             e = e.isXFAObjectArray ? e.children : [e];
         }
         s && r.set(n, e);
@@ -42719,7 +42792,7 @@ function searchNode(e, t, a, n = !0, s = !0) {
       e.length > 0 && c.push(e);
     }
     if (0 === c.length && !o && 0 === l) {
-      const a = t[Fo]();
+      const a = t[Ro]();
       if (!(t = a)) return null;
       l = -1;
       e = [t];
@@ -42732,8 +42805,8 @@ function searchNode(e, t, a, n = !0, s = !0) {
 function createDataNode(e, t, a) {
   const n = parseExpression(a);
   if (!n) return null;
-  if (n.some((e) => e.operator === vl)) return null;
-  const s = Cl.get(n[0].name);
+  if (n.some((e) => e.operator === Al)) return null;
+  const s = Fl.get(n[0].name);
   let r = 0;
   if (s) {
     e = s(e, t);
@@ -42747,14 +42820,14 @@ function createDataNode(e, t, a) {
     }
     let i;
     switch (a) {
-      case ql:
-        i = e[ko](t, !1);
-        break;
-      case vl:
-        i = e[ko](t, !0);
-        break;
       case Sl:
-        i = e[jo](t);
+        i = e[qo](t, !1);
+        break;
+      case Al:
+        i = e[qo](t, !0);
+        break;
+      case xl:
+        i = e[yo](t);
         i = i.isXFAObjectArray ? i.children : [i];
     }
     if (0 === i.length) return e.createNodes(n.slice(r));
@@ -42773,12 +42846,10 @@ function createDataNode(e, t, a) {
   }
   return null;
 }
-const Fl = Symbol(),
-  Tl = Symbol(),
-  Rl = Symbol(),
-  Hl = Symbol('_children'),
+const Rl = Symbol(),
+  Hl = Symbol(),
   Bl = Symbol(),
-  Dl = Symbol(),
+  Dl = Symbol('_children'),
   Ml = Symbol(),
   Nl = Symbol(),
   Pl = Symbol(),
@@ -42786,21 +42857,23 @@ const Fl = Symbol(),
   El = Symbol(),
   zl = Symbol(),
   Ll = Symbol(),
-  Xl = Symbol('parent'),
+  Xl = Symbol(),
   Wl = Symbol(),
-  Kl = Symbol(),
-  Gl = Symbol();
-let Vl = 0;
-const $l = bl.datasets.id;
+  Kl = Symbol('parent'),
+  Gl = Symbol(),
+  Vl = Symbol(),
+  $l = Symbol();
+let Yl = 0;
+const Jl = jl.datasets.id;
 class XFAObject {
   constructor(e, t, a = !1) {
-    this[Go] = e;
-    this[Vo] = t;
-    this[El] = a;
-    this[Xl] = null;
-    this[Hl] = [];
-    this[dl] = `${t}${Vl++}`;
-    this[Ro] = null;
+    this[$o] = e;
+    this[Yo] = t;
+    this[Ll] = a;
+    this[Kl] = null;
+    this[Dl] = [];
+    this[bl] = `${t}${Yl++}`;
+    this[Bo] = null;
   }
   get isXFAObject() {
     return !0;
@@ -42813,110 +42886,110 @@ class XFAObject {
       a = null;
     for (const { name: n, index: s } of e) {
       for (let e = 0, r = isFinite(s) ? s : 0; e <= r; e++) {
-        const e = t[Go] === $l ? -1 : t[Go];
+        const e = t[$o] === Jl ? -1 : t[$o];
         a = new XmlObject(e, n);
-        t[ao](a);
+        t[so](a);
       }
       t = a;
     }
     return a;
   }
-  [Yo](e) {
-    if (!this[El] || !this[Jo](e)) return !1;
-    const t = e[Vo],
+  [Qo](e) {
+    if (!this[Ll] || !this[Zo](e)) return !1;
+    const t = e[Yo],
       a = this[t];
     if (!(a instanceof XFAObjectArray)) {
-      null !== a && this[al](a);
+      null !== a && this[sl](a);
       this[t] = e;
-      this[ao](e);
+      this[so](e);
       return !0;
     }
     if (a.push(e)) {
-      this[ao](e);
+      this[so](e);
       return !0;
     }
     let n = '';
     this.id
       ? (n = ` (id: ${this.id})`)
       : this.name && (n = ` (name: ${this.name} ${this.h.value})`);
-    warn(`XFA - node "${this[Vo]}"${n} has already enough "${t}"!`);
+    warn(`XFA - node "${this[Yo]}"${n} has already enough "${t}"!`);
     return !1;
   }
-  [Jo](e) {
-    return Object.hasOwn(this, e[Vo]) && e[Go] === this[Go];
-  }
-  [zo]() {
-    return !1;
-  }
-  [eo]() {
-    return !1;
-  }
-  [No]() {
-    return !1;
-  }
-  [Po]() {
-    return !1;
-  }
-  [el]() {
-    this.para && this[Oo]()[uo].paraStack.pop();
-  }
-  [tl]() {
-    this[Oo]()[uo].paraStack.push(this.para);
-  }
-  [il](e) {
-    this.id && this[Go] === bl.template.id && e.set(this.id, this);
-  }
-  [Oo]() {
-    return this[Ro].template;
-  }
-  [Lo]() {
-    return !1;
+  [Zo](e) {
+    return Object.hasOwn(this, e[Yo]) && e[$o] === this[$o];
   }
   [Uo]() {
     return !1;
   }
-  [ao](e) {
-    e[Xl] = this;
-    this[Hl].push(e);
-    !e[Ro] && this[Ro] && (e[Ro] = this[Ro]);
+  [ao]() {
+    return !1;
   }
-  [al](e) {
-    const t = this[Hl].indexOf(e);
-    this[Hl].splice(t, 1);
+  [_o]() {
+    return !1;
+  }
+  [Eo]() {
+    return !1;
+  }
+  [al]() {
+    this.para && this[Ho]()[po].paraStack.pop();
+  }
+  [nl]() {
+    this[Ho]()[po].paraStack.push(this.para);
+  }
+  [ll](e) {
+    this.id && this[$o] === jl.template.id && e.set(this.id, this);
   }
   [Ho]() {
-    return Object.hasOwn(this, 'value');
-  }
-  [ll](e) {}
-  [Qo](e) {}
-  [mo]() {}
-  [so](e) {
-    delete this[El];
-    if (this[io]) {
-      e.clean(this[io]);
-      delete this[io];
-    }
-  }
-  [Do](e) {
-    return this[Hl].indexOf(e);
-  }
-  [Mo](e, t) {
-    t[Xl] = this;
-    this[Hl].splice(e, 0, t);
-    !t[Ro] && this[Ro] && (t[Ro] = this[Ro]);
+    return this[Bo].template;
   }
   [Xo]() {
-    return !this.name;
+    return !1;
+  }
+  [Wo]() {
+    return !1;
+  }
+  [so](e) {
+    e[Kl] = this;
+    this[Dl].push(e);
+    !e[Bo] && this[Bo] && (e[Bo] = this[Bo]);
+  }
+  [sl](e) {
+    const t = this[Dl].indexOf(e);
+    this[Dl].splice(t, 1);
+  }
+  [Do]() {
+    return Object.hasOwn(this, 'value');
+  }
+  [cl](e) {}
+  [el](e) {}
+  [go]() {}
+  [io](e) {
+    delete this[Ll];
+    if (this[lo]) {
+      e.clean(this[lo]);
+      delete this[lo];
+    }
+  }
+  [No](e) {
+    return this[Dl].indexOf(e);
+  }
+  [Po](e, t) {
+    t[Kl] = this;
+    this[Dl].splice(e, 0, t);
+    !t[Bo] && this[Bo] && (t[Bo] = this[Bo]);
   }
   [Ko]() {
+    return !this.name;
+  }
+  [Vo]() {
     return '';
   }
-  [cl]() {
-    return 0 === this[Hl].length
-      ? this[fo]
-      : this[Hl].map((e) => e[cl]()).join('');
+  [ul]() {
+    return 0 === this[Dl].length
+      ? this[ho]
+      : this[Dl].map((e) => e[ul]()).join('');
   }
-  get [Rl]() {
+  get [Bl]() {
     const e = Object.getPrototypeOf(this);
     if (!e._attributes) {
       const t = (e._attributes = new Set());
@@ -42930,98 +43003,98 @@ class XFAObject {
         t.add(e);
       }
     }
-    return shadow(this, Rl, e._attributes);
+    return shadow(this, Bl, e._attributes);
   }
-  [Eo](e) {
+  [Lo](e) {
     let t = this;
     for (; t;) {
       if (t === e) return !0;
-      t = t[Fo]();
+      t = t[Ro]();
     }
     return !1;
   }
-  [Fo]() {
-    return this[Xl];
+  [Ro]() {
+    return this[Kl];
   }
-  [Io]() {
-    return this[Fo]();
+  [Oo]() {
+    return this[Ro]();
   }
-  [Ao](e = null) {
-    return e ? this[e] : this[Hl];
+  [Co](e = null) {
+    return e ? this[e] : this[Dl];
   }
-  [ho]() {
+  [mo]() {
     const e = Object.create(null);
-    this[fo] && (e.$content = this[fo]);
+    this[ho] && (e.$content = this[ho]);
     for (const t of Object.getOwnPropertyNames(this)) {
       const a = this[t];
       null !== a &&
         (a instanceof XFAObject
-          ? (e[t] = a[ho]())
+          ? (e[t] = a[mo]())
           : a instanceof XFAObjectArray
             ? a.isEmpty() || (e[t] = a.dump())
             : (e[t] = a));
     }
     return e;
   }
-  [pl]() {
+  [gl]() {
     return null;
   }
-  [ul]() {
+  [pl]() {
     return HTMLResult.EMPTY;
   }
-  *[xo]() {
-    for (const e of this[Ao]()) yield e;
+  *[Io]() {
+    for (const e of this[Co]()) yield e;
   }
-  *[Nl](e, t) {
-    for (const a of this[xo]())
-      if (!e || t === e.has(a[Vo])) {
-        const e = this[wo](),
-          t = a[ul](e);
-        t.success || (this[uo].failingNode = a);
+  *[_l](e, t) {
+    for (const a of this[Io]())
+      if (!e || t === e.has(a[Yo])) {
+        const e = this[ko](),
+          t = a[pl](e);
+        t.success || (this[po].failingNode = a);
         yield t;
       }
   }
-  [po]() {
+  [bo]() {
     return null;
   }
-  [to](e, t) {
-    this[uo].children.push(e);
+  [no](e, t) {
+    this[po].children.push(e);
   }
-  [wo]() {}
-  [no]({ filter: e = null, include: t = !0 }) {
-    if (this[uo].generator) {
-      const e = this[wo](),
-        t = this[uo].failingNode[ul](e);
+  [ko]() {}
+  [ro]({ filter: e = null, include: t = !0 }) {
+    if (this[po].generator) {
+      const e = this[ko](),
+        t = this[po].failingNode[pl](e);
       if (!t.success) return t;
-      t.html && this[to](t.html, t.bbox);
-      delete this[uo].failingNode;
-    } else this[uo].generator = this[Nl](e, t);
+      t.html && this[no](t.html, t.bbox);
+      delete this[po].failingNode;
+    } else this[po].generator = this[_l](e, t);
     for (;;) {
-      const e = this[uo].generator.next();
+      const e = this[po].generator.next();
       if (e.done) break;
       const t = e.value;
       if (!t.success) return t;
-      t.html && this[to](t.html, t.bbox);
+      t.html && this[no](t.html, t.bbox);
     }
-    this[uo].generator = null;
+    this[po].generator = null;
     return HTMLResult.EMPTY;
   }
-  [ol](e) {
-    this[Kl] = new Set(Object.keys(e));
+  [fl](e) {
+    this[Vl] = new Set(Object.keys(e));
   }
-  [_l](e) {
-    const t = this[Rl],
-      a = this[Kl];
+  [zl](e) {
+    const t = this[Bl],
+      a = this[Vl];
     return [...e].filter((e) => t.has(e) && !a.has(e));
   }
-  [sl](e, t = new Set()) {
-    for (const a of this[Hl]) a[Wl](e, t);
+  [il](e, t = new Set()) {
+    for (const a of this[Dl]) a[Gl](e, t);
   }
-  [Wl](e, t) {
-    const a = this[Pl](e, t);
-    a ? this[Fl](a, e, t) : this[sl](e, t);
+  [Gl](e, t) {
+    const a = this[El](e, t);
+    a ? this[Rl](a, e, t) : this[il](e, t);
   }
-  [Pl](e, t) {
+  [El](e, t) {
     const { use: a, usehref: n } = this;
     if (!a && !n) return null;
     let s = null,
@@ -43041,15 +43114,15 @@ class XFAObject {
     this.use = this.usehref = '';
     if (i) s = e.get(i);
     else {
-      s = searchNode(e.get(nl), this, r, !0, !1);
+      s = searchNode(e.get(rl), this, r, !0, !1);
       s && (s = s[0]);
     }
     if (!s) {
       warn(`XFA - Invalid prototype reference: ${o}.`);
       return null;
     }
-    if (s[Vo] !== this[Vo]) {
-      warn(`XFA - Incompatible prototype: ${s[Vo]} !== ${this[Vo]}.`);
+    if (s[Yo] !== this[Yo]) {
+      warn(`XFA - Incompatible prototype: ${s[Yo]} !== ${this[Yo]}.`);
       return null;
     }
     if (t.has(s)) {
@@ -43057,58 +43130,58 @@ class XFAObject {
       return null;
     }
     t.add(s);
-    const l = s[Pl](e, t);
-    l && s[Fl](l, e, t);
-    s[sl](e, t);
+    const l = s[El](e, t);
+    l && s[Rl](l, e, t);
+    s[il](e, t);
     t.delete(s);
     return s;
   }
-  [Fl](e, t, a) {
+  [Rl](e, t, a) {
     if (a.has(e)) {
       warn('XFA - Cycle detected in prototypes use.');
       return;
     }
-    !this[fo] && e[fo] && (this[fo] = e[fo]);
+    !this[ho] && e[ho] && (this[ho] = e[ho]);
     new Set(a).add(e);
-    for (const t of this[_l](e[Kl])) {
+    for (const t of this[zl](e[Vl])) {
       this[t] = e[t];
-      this[Kl] && this[Kl].add(t);
+      this[Vl] && this[Vl].add(t);
     }
     for (const n of Object.getOwnPropertyNames(this)) {
-      if (this[Rl].has(n)) continue;
+      if (this[Bl].has(n)) continue;
       const s = this[n],
         r = e[n];
       if (s instanceof XFAObjectArray) {
-        for (const e of s[Hl]) e[Wl](t, a);
-        for (let n = s[Hl].length, i = r[Hl].length; n < i; n++) {
-          const r = e[Hl][n][oo]();
+        for (const e of s[Dl]) e[Gl](t, a);
+        for (let n = s[Dl].length, i = r[Dl].length; n < i; n++) {
+          const r = e[Dl][n][fo]();
           if (!s.push(r)) break;
-          r[Xl] = this;
-          this[Hl].push(r);
-          r[Wl](t, a);
+          r[Kl] = this;
+          this[Dl].push(r);
+          r[Gl](t, a);
         }
       } else if (null === s) {
         if (null !== r) {
-          const e = r[oo]();
-          e[Xl] = this;
+          const e = r[fo]();
+          e[Kl] = this;
           this[n] = e;
-          this[Hl].push(e);
-          e[Wl](t, a);
+          this[Dl].push(e);
+          e[Gl](t, a);
         }
       } else {
-        s[sl](t, a);
-        r && s[Fl](r, t, a);
+        s[il](t, a);
+        r && s[Rl](r, t, a);
       }
     }
   }
-  static [Bl](e) {
+  static [Ml](e) {
     return Array.isArray(e)
-      ? e.map((e) => XFAObject[Bl](e))
+      ? e.map((e) => XFAObject[Ml](e))
       : 'object' == typeof e && null !== e
         ? Object.assign({}, e)
         : e;
   }
-  [oo]() {
+  [fo]() {
     const e = Object.create(Object.getPrototypeOf(this));
     for (const t of Object.getOwnPropertySymbols(this))
       try {
@@ -43116,49 +43189,49 @@ class XFAObject {
       } catch {
         shadow(e, t, this[t]);
       }
-    e[dl] = `${e[Vo]}${Vl++}`;
-    e[Hl] = [];
+    e[bl] = `${e[Yo]}${Yl++}`;
+    e[Dl] = [];
     for (const t of Object.getOwnPropertyNames(this)) {
-      if (this[Rl].has(t)) {
-        e[t] = XFAObject[Bl](this[t]);
+      if (this[Bl].has(t)) {
+        e[t] = XFAObject[Ml](this[t]);
         continue;
       }
       const a = this[t];
-      e[t] = a instanceof XFAObjectArray ? new XFAObjectArray(a[zl]) : null;
+      e[t] = a instanceof XFAObjectArray ? new XFAObjectArray(a[Xl]) : null;
     }
-    for (const t of this[Hl]) {
-      const a = t[Vo],
-        n = t[oo]();
-      e[Hl].push(n);
-      n[Xl] = e;
-      null === e[a] ? (e[a] = n) : e[a][Hl].push(n);
+    for (const t of this[Dl]) {
+      const a = t[Yo],
+        n = t[fo]();
+      e[Dl].push(n);
+      n[Kl] = e;
+      null === e[a] ? (e[a] = n) : e[a][Dl].push(n);
     }
     return e;
   }
-  [Ao](e = null) {
-    return e ? this[Hl].filter((t) => t[Vo] === e) : this[Hl];
+  [Co](e = null) {
+    return e ? this[Dl].filter((t) => t[Yo] === e) : this[Dl];
   }
-  [jo](e) {
+  [yo](e) {
     return this[e];
   }
-  [ko](e, t, a = !0) {
-    return Array.from(this[yo](e, t, a));
+  [qo](e, t, a = !0) {
+    return Array.from(this[vo](e, t, a));
   }
-  *[yo](e, t, a = !0) {
+  *[vo](e, t, a = !0) {
     if ('parent' !== e) {
-      for (const a of this[Hl]) {
-        a[Vo] === e && (yield a);
+      for (const a of this[Dl]) {
+        a[Yo] === e && (yield a);
         a.name === e && (yield a);
-        (t || a[Xo]()) && (yield* a[yo](e, t, !1));
+        (t || a[Ko]()) && (yield* a[vo](e, t, !1));
       }
-      a && this[Rl].has(e) && (yield new XFAAttribute(this, e, this[e]));
-    } else yield this[Xl];
+      a && this[Bl].has(e) && (yield new XFAAttribute(this, e, this[e]));
+    } else yield this[Kl];
   }
 }
 class XFAObjectArray {
   constructor(e = 1 / 0) {
-    this[zl] = e;
-    this[Hl] = [];
+    this[Xl] = e;
+    this[Dl] = [];
   }
   get isXFAObject() {
     return !1;
@@ -43167,242 +43240,242 @@ class XFAObjectArray {
     return !0;
   }
   push(e) {
-    if (this[Hl].length <= this[zl]) {
-      this[Hl].push(e);
+    if (this[Dl].length <= this[Xl]) {
+      this[Dl].push(e);
       return !0;
     }
-    warn(`XFA - node "${e[Vo]}" accepts no more than ${this[zl]} children`);
+    warn(`XFA - node "${e[Yo]}" accepts no more than ${this[Xl]} children`);
     return !1;
   }
   isEmpty() {
-    return 0 === this[Hl].length;
+    return 0 === this[Dl].length;
   }
   dump() {
-    return 1 === this[Hl].length
-      ? this[Hl][0][ho]()
-      : this[Hl].map((e) => e[ho]());
+    return 1 === this[Dl].length
+      ? this[Dl][0][mo]()
+      : this[Dl].map((e) => e[mo]());
   }
-  [oo]() {
-    const e = new XFAObjectArray(this[zl]);
-    e[Hl] = this[Hl].map((e) => e[oo]());
+  [fo]() {
+    const e = new XFAObjectArray(this[Xl]);
+    e[Dl] = this[Dl].map((e) => e[fo]());
     return e;
   }
   get children() {
-    return this[Hl];
+    return this[Dl];
   }
   clear() {
-    this[Hl].length = 0;
+    this[Dl].length = 0;
   }
 }
 class XFAAttribute {
   constructor(e, t, a) {
-    this[Xl] = e;
-    this[Vo] = t;
-    this[fo] = a;
-    this[lo] = !1;
-    this[dl] = 'attribute' + Vl++;
+    this[Kl] = e;
+    this[Yo] = t;
+    this[ho] = a;
+    this[co] = !1;
+    this[bl] = 'attribute' + Yl++;
   }
-  [Fo]() {
-    return this[Xl];
+  [Ro]() {
+    return this[Kl];
   }
-  [_o]() {
+  [zo]() {
     return !0;
   }
-  [qo]() {
-    return this[fo].trim();
+  [So]() {
+    return this[ho].trim();
   }
-  [ll](e) {
+  [cl](e) {
     e = e.value || '';
-    this[fo] = e.toString();
+    this[ho] = e.toString();
   }
-  [cl]() {
-    return this[fo];
+  [ul]() {
+    return this[ho];
   }
-  [Eo](e) {
-    return this[Xl] === e || this[Xl][Eo](e);
+  [Lo](e) {
+    return this[Kl] === e || this[Kl][Lo](e);
   }
 }
 class XmlObject extends XFAObject {
   constructor(e, t, a = {}) {
     super(e, t);
-    this[fo] = '';
-    this[Dl] = null;
+    this[ho] = '';
+    this[Nl] = null;
     if ('#text' !== t) {
       const e = new Map();
-      this[Tl] = e;
+      this[Hl] = e;
       for (const [t, n] of Object.entries(a))
         e.set(t, new XFAAttribute(this, t, n));
-      if (Object.hasOwn(a, $o)) {
-        const e = a[$o].xfa.dataNode;
+      if (Object.hasOwn(a, Jo)) {
+        const e = a[Jo].xfa.dataNode;
         void 0 !== e &&
           ('dataGroup' === e
-            ? (this[Dl] = !1)
-            : 'dataValue' === e && (this[Dl] = !0));
+            ? (this[Nl] = !1)
+            : 'dataValue' === e && (this[Nl] = !0));
       }
     }
-    this[lo] = !1;
+    this[co] = !1;
   }
-  [ml](e) {
-    const t = this[Vo];
+  [dl](e) {
+    const t = this[Yo];
     if ('#text' === t) {
-      e.push(encodeToXmlString(this[fo]));
+      e.push(encodeToXmlString(this[ho]));
       return;
     }
     const a = utf8StringToString(t),
-      n = this[Go] === $l ? 'xfa:' : '';
+      n = this[$o] === Jl ? 'xfa:' : '';
     e.push(`<${n}${a}`);
-    for (const [t, a] of this[Tl]) {
+    for (const [t, a] of this[Hl]) {
       const n = utf8StringToString(t);
-      e.push(` ${n}="${encodeToXmlString(a[fo])}"`);
+      e.push(` ${n}="${encodeToXmlString(a[ho])}"`);
     }
-    null !== this[Dl] &&
-      (this[Dl]
+    null !== this[Nl] &&
+      (this[Nl]
         ? e.push(' xfa:dataNode="dataValue"')
         : e.push(' xfa:dataNode="dataGroup"'));
-    if (this[fo] || 0 !== this[Hl].length) {
+    if (this[ho] || 0 !== this[Dl].length) {
       e.push('>');
-      if (this[fo])
-        'string' == typeof this[fo]
-          ? e.push(encodeToXmlString(this[fo]))
-          : this[fo][ml](e);
-      else for (const t of this[Hl]) t[ml](e);
+      if (this[ho])
+        'string' == typeof this[ho]
+          ? e.push(encodeToXmlString(this[ho]))
+          : this[ho][dl](e);
+      else for (const t of this[Dl]) t[dl](e);
       e.push(`</${n}${a}>`);
     } else e.push('/>');
   }
-  [Yo](e) {
-    if (this[fo]) {
-      const e = new XmlObject(this[Go], '#text');
-      this[ao](e);
-      e[fo] = this[fo];
-      this[fo] = '';
+  [Qo](e) {
+    if (this[ho]) {
+      const e = new XmlObject(this[$o], '#text');
+      this[so](e);
+      e[ho] = this[ho];
+      this[ho] = '';
     }
-    this[ao](e);
+    this[so](e);
     return !0;
   }
-  [Qo](e) {
-    this[fo] += e;
+  [el](e) {
+    this[ho] += e;
   }
-  [mo]() {
-    if (this[fo] && this[Hl].length > 0) {
-      const e = new XmlObject(this[Go], '#text');
-      this[ao](e);
-      e[fo] = this[fo];
-      delete this[fo];
+  [go]() {
+    if (this[ho] && this[Dl].length > 0) {
+      const e = new XmlObject(this[$o], '#text');
+      this[so](e);
+      e[ho] = this[ho];
+      delete this[ho];
     }
   }
-  [ul]() {
-    return '#text' === this[Vo]
-      ? HTMLResult.success({ name: '#text', value: this[fo] })
+  [pl]() {
+    return '#text' === this[Yo]
+      ? HTMLResult.success({ name: '#text', value: this[ho] })
       : HTMLResult.EMPTY;
   }
-  [Ao](e = null) {
-    return e ? this[Hl].filter((t) => t[Vo] === e) : this[Hl];
+  [Co](e = null) {
+    return e ? this[Dl].filter((t) => t[Yo] === e) : this[Dl];
   }
-  [bo]() {
-    return this[Tl];
+  [jo]() {
+    return this[Hl];
   }
-  [jo](e) {
-    const t = this[Tl].get(e);
-    return void 0 !== t ? t : this[Ao](e);
+  [yo](e) {
+    const t = this[Hl].get(e);
+    return void 0 !== t ? t : this[Co](e);
   }
-  *[yo](e, t) {
-    const a = this[Tl].get(e);
+  *[vo](e, t) {
+    const a = this[Hl].get(e);
     a && (yield a);
-    for (const a of this[Hl]) {
-      a[Vo] === e && (yield a);
-      t && (yield* a[yo](e, t));
+    for (const a of this[Dl]) {
+      a[Yo] === e && (yield a);
+      t && (yield* a[vo](e, t));
     }
   }
-  *[go](e, t) {
-    const a = this[Tl].get(e);
-    !a || (t && a[lo]) || (yield a);
-    for (const a of this[Hl]) yield* a[go](e, t);
+  *[wo](e, t) {
+    const a = this[Hl].get(e);
+    !a || (t && a[co]) || (yield a);
+    for (const a of this[Dl]) yield* a[wo](e, t);
   }
-  *[So](e, t, a) {
-    for (const n of this[Hl]) {
-      n[Vo] !== e || (a && n[lo]) || (yield n);
-      t && (yield* n[So](e, t, a));
+  *[xo](e, t, a) {
+    for (const n of this[Dl]) {
+      n[Yo] !== e || (a && n[co]) || (yield n);
+      t && (yield* n[xo](e, t, a));
     }
   }
-  [_o]() {
-    return null === this[Dl]
-      ? 0 === this[Hl].length || this[Hl][0][Go] === bl.xhtml.id
-      : this[Dl];
+  [zo]() {
+    return null === this[Nl]
+      ? 0 === this[Dl].length || this[Dl][0][$o] === jl.xhtml.id
+      : this[Nl];
   }
-  [qo]() {
-    return null === this[Dl]
-      ? 0 === this[Hl].length
-        ? this[fo].trim()
-        : this[Hl][0][Go] === bl.xhtml.id
-          ? this[Hl][0][cl]().trim()
+  [So]() {
+    return null === this[Nl]
+      ? 0 === this[Dl].length
+        ? this[ho].trim()
+        : this[Dl][0][$o] === jl.xhtml.id
+          ? this[Dl][0][ul]().trim()
           : null
-      : this[fo].trim();
+      : this[ho].trim();
   }
-  [ll](e) {
+  [cl](e) {
     e = e.value || '';
-    this[fo] = e.toString();
+    this[ho] = e.toString();
   }
-  [ho](e = !1) {
+  [mo](e = !1) {
     const t = Object.create(null);
-    e && (t.$ns = this[Go]);
-    this[fo] && (t.$content = this[fo]);
-    t.$name = this[Vo];
+    e && (t.$ns = this[$o]);
+    this[ho] && (t.$content = this[ho]);
+    t.$name = this[Yo];
     t.children = [];
-    for (const a of this[Hl]) t.children.push(a[ho](e));
+    for (const a of this[Dl]) t.children.push(a[mo](e));
     t.attributes = Object.create(null);
-    for (const [e, a] of this[Tl]) t.attributes[e] = a[fo];
+    for (const [e, a] of this[Hl]) t.attributes[e] = a[ho];
     return t;
   }
 }
 class ContentObject extends XFAObject {
   constructor(e, t) {
     super(e, t);
-    this[fo] = '';
+    this[ho] = '';
   }
-  [Qo](e) {
-    this[fo] += e;
+  [el](e) {
+    this[ho] += e;
   }
-  [mo]() {}
+  [go]() {}
 }
 class OptionObject extends ContentObject {
   constructor(e, t, a) {
     super(e, t);
-    this[Ll] = a;
+    this[Wl] = a;
   }
-  [mo]() {
-    this[fo] = getKeyword({
-      data: this[fo],
-      defaultValue: this[Ll][0],
-      validate: (e) => this[Ll].includes(e),
+  [go]() {
+    this[ho] = getKeyword({
+      data: this[ho],
+      defaultValue: this[Wl][0],
+      validate: (e) => this[Wl].includes(e),
     });
   }
-  [so](e) {
-    super[so](e);
-    delete this[Ll];
+  [io](e) {
+    super[io](e);
+    delete this[Wl];
   }
 }
 class StringObject extends ContentObject {
-  [mo]() {
-    this[fo] = this[fo].trim();
+  [go]() {
+    this[ho] = this[ho].trim();
   }
 }
 class IntegerObject extends ContentObject {
   constructor(e, t, a, n) {
     super(e, t);
-    this[Ml] = a;
-    this[Gl] = n;
+    this[Pl] = a;
+    this[$l] = n;
   }
-  [mo]() {
-    this[fo] = getInteger({
-      data: this[fo],
-      defaultValue: this[Ml],
-      validate: this[Gl],
+  [go]() {
+    this[ho] = getInteger({
+      data: this[ho],
+      defaultValue: this[Pl],
+      validate: this[$l],
     });
   }
-  [so](e) {
-    super[so](e);
-    delete this[Ml];
-    delete this[Gl];
+  [io](e) {
+    super[io](e);
+    delete this[Pl];
+    delete this[$l];
   }
 }
 class Option01 extends IntegerObject {
@@ -43422,9 +43495,9 @@ function measureToString(e) {
       ? `${e}px`
       : `${e.toFixed(2)}px`;
 }
-const Yl = {
+const Ql = {
   anchorType(e, t) {
-    const a = e[Io]();
+    const a = e[Oo]();
     if (a && (!a.layout || 'position' === a.layout)) {
       'transform' in t || (t.transform = '');
       switch (e.anchorType) {
@@ -43455,11 +43528,11 @@ const Yl = {
     }
   },
   dimensions(e, t) {
-    const a = e[Io]();
+    const a = e[Oo]();
     let n = e.w;
     const s = e.h;
     if (a.layout?.includes('row')) {
-      const t = a[uo],
+      const t = a[po],
         s = e.colSpan;
       let r;
       if (-1 === s) {
@@ -43477,7 +43550,7 @@ const Yl = {
     t.height = '' !== s ? measureToString(s) : 'auto';
   },
   position(e, t) {
-    const a = e[Io]();
+    const a = e[Oo]();
     if (!a?.layout || 'position' === a.layout) {
       t.position = 'absolute';
       t.left = measureToString(e.x);
@@ -43502,7 +43575,7 @@ const Yl = {
     }
   },
   hAlign(e, t) {
-    if ('para' === e[Vo])
+    if ('para' === e[Yo])
       switch (e.hAlign) {
         case 'justifyAll':
           t.textAlign = 'justify-all';
@@ -43526,11 +43599,11 @@ const Yl = {
       }
   },
   margin(e, t) {
-    e.margin && (t.margin = e.margin[pl]().margin);
+    e.margin && (t.margin = e.margin[gl]().margin);
   },
 };
 function setMinMaxDimensions(e, t) {
-  if ('position' === e[Io]().layout) {
+  if ('position' === e[Oo]().layout) {
     e.minW > 0 && (t.minWidth = measureToString(e.minW));
     e.maxW > 0 && (t.maxWidth = measureToString(e.maxW));
     e.minH > 0 && (t.minHeight = measureToString(e.minH));
@@ -43539,7 +43612,7 @@ function setMinMaxDimensions(e, t) {
 }
 function layoutText(e, t, a, n, s, r) {
   const i = new TextMeasure(t, a, n, s);
-  'string' == typeof e ? i.addString(e) : e[Zo](i);
+  'string' == typeof e ? i.addString(e) : e[tl](i);
   return i.compute(r);
 }
 function layoutNode(e, t) {
@@ -43565,29 +43638,29 @@ function layoutNode(e, t) {
     }
     let f = e.font;
     if (!f) {
-      const t = e[Oo]();
-      let a = e[Fo]();
+      const t = e[Ho]();
+      let a = e[Ro]();
       for (; a && a !== t;) {
         if (a.font) {
           f = a.font;
           break;
         }
-        a = a[Fo]();
+        a = a[Ro]();
       }
     }
     const c = (e.w || t.width) - r,
-      h = e[Ro].fontFinder;
+      h = e[Bo].fontFinder;
     if (
       e.value.exData &&
-      e.value.exData[fo] &&
+      e.value.exData[ho] &&
       'text/html' === e.value.exData.contentType
     ) {
-      const t = layoutText(e.value.exData[fo], f, l, o, h, c);
+      const t = layoutText(e.value.exData[ho], f, l, o, h, c);
       n = t.width;
       a = t.height;
       s = t.isBroken;
     } else {
-      const t = e.value[cl]();
+      const t = e.value[ul]();
       if (t) {
         const e = layoutText(t, f, l, o, h, c);
         n = e.width;
@@ -43608,7 +43681,7 @@ function computeBbox(e, t, a) {
     let s = e.w;
     if ('' === s) {
       if (0 === e.maxW) {
-        const t = e[Io]();
+        const t = e[Oo]();
         s = 'position' === t.layout && '' !== t.w ? 0 : e.minW;
       } else s = Math.min(e.maxW, a.width);
       t.attributes.style.width = measureToString(s);
@@ -43616,7 +43689,7 @@ function computeBbox(e, t, a) {
     let r = e.h;
     if ('' === r) {
       if (0 === e.maxH) {
-        const t = e[Io]();
+        const t = e[Oo]();
         r = 'position' === t.layout && '' !== t.h ? 0 : e.minH;
       } else r = Math.min(e.maxH, a.height);
       t.attributes.style.height = measureToString(r);
@@ -43626,9 +43699,9 @@ function computeBbox(e, t, a) {
   return n;
 }
 function fixDimensions(e) {
-  const t = e[Io]();
+  const t = e[Oo]();
   if (t.layout?.includes('row')) {
-    const a = t[uo],
+    const a = t[po],
       n = e.colSpan;
     let s;
     s =
@@ -43669,9 +43742,9 @@ function toStyle(e, ...t) {
   for (const n of t) {
     const t = e[n];
     if (null !== t)
-      if (Object.hasOwn(Yl, n)) Yl[n](e, a);
+      if (Object.hasOwn(Ql, n)) Ql[n](e, a);
       else if (t instanceof XFAObject) {
-        const e = t[pl]();
+        const e = t[gl]();
         e
           ? Object.assign(a, e)
           : warn(`(DEBUG) - XFA - style for ${n} not implemented yet`);
@@ -43689,7 +43762,7 @@ function createWrapper(e, t) {
     };
   a.class.push('xfaWrapped');
   if (e.border) {
-    const { widths: a, insets: r } = e.border[uo];
+    const { widths: a, insets: r } = e.border[po];
     let i,
       o,
       l = r[0],
@@ -43795,7 +43868,7 @@ function isPrintOnly(e) {
   );
 }
 function getCurrentPara(e) {
-  const t = e[Oo]()[uo].paraStack;
+  const t = e[Ho]()[po].paraStack;
   return t.length ? t.at(-1) : null;
 }
 function setPara(e, t, a) {
@@ -43819,7 +43892,7 @@ function setPara(e, t, a) {
         case 'middle':
           e.justifyContent = 'center';
       }
-      const t = n[pl]();
+      const t = n[gl]();
       for (const [a, n] of Object.entries(t)) a in e || (e[a] = n);
     }
   }
@@ -43857,14 +43930,14 @@ function createLine(e, t) {
   };
 }
 function flushHTML(e) {
-  if (!e[uo]) return null;
+  if (!e[po]) return null;
   const t = {
     name: 'div',
-    attributes: e[uo].attributes,
-    children: e[uo].children,
+    attributes: e[po].attributes,
+    children: e[po].children,
   };
-  if (e[uo].failingNode) {
-    const a = e[uo].failingNode[po]();
+  if (e[po].failingNode) {
+    const a = e[po].failingNode[bo]();
     a &&
       (e.layout.endsWith('-tb')
         ? t.children.push(createLine(e, [a]))
@@ -43873,7 +43946,7 @@ function flushHTML(e) {
   return 0 === t.children.length ? null : t;
 }
 function addHTML(e, t, a) {
-  const n = e[uo],
+  const n = e[po],
     s = n.availableSpace,
     [r, i, o, l] = a;
   switch (e.layout) {
@@ -43919,36 +43992,36 @@ function addHTML(e, t, a) {
   }
 }
 function getAvailableSpace(e) {
-  const t = e[uo].availableSpace,
+  const t = e[po].availableSpace,
     a = e.margin ? e.margin.topInset + e.margin.bottomInset : 0,
     n = e.margin ? e.margin.leftInset + e.margin.rightInset : 0;
   switch (e.layout) {
     case 'lr-tb':
     case 'rl-tb':
-      return 0 === e[uo].attempt
+      return 0 === e[po].attempt
         ? {
-            width: t.width - n - e[uo].currentWidth,
-            height: t.height - a - e[uo].prevHeight,
+            width: t.width - n - e[po].currentWidth,
+            height: t.height - a - e[po].prevHeight,
           }
-        : { width: t.width - n, height: t.height - a - e[uo].height };
+        : { width: t.width - n, height: t.height - a - e[po].height };
     case 'rl-row':
     case 'row':
       return {
-        width: Math.sumPrecise(e[uo].columnWidths.slice(e[uo].currentColumn)),
+        width: Math.sumPrecise(e[po].columnWidths.slice(e[po].currentColumn)),
         height: t.height - n,
       };
     case 'table':
     case 'tb':
-      return { width: t.width - n, height: t.height - a - e[uo].height };
+      return { width: t.width - n, height: t.height - a - e[po].height };
     default:
       return t;
   }
 }
 function checkDimensions(e, t) {
-  if (null === e[Oo]()[uo].firstUnsplittable) return !0;
+  if (null === e[Ho]()[po].firstUnsplittable) return !0;
   if (0 === e.w || 0 === e.h) return !0;
-  const a = e[Io](),
-    n = a[uo]?.attempt || 0,
+  const a = e[Oo](),
+    n = a[po]?.attempt || 0,
     [, s, r, i] = (function getTransformedBBox(e) {
       let t,
         a,
@@ -44007,36 +44080,36 @@ function checkDimensions(e, t) {
     case 'lr-tb':
     case 'rl-tb':
       return 0 === n
-        ? e[Oo]()[uo].noLayoutFailure
+        ? e[Ho]()[po].noLayoutFailure
           ? '' !== e.w
             ? Math.round(r - t.width) <= 2
             : t.width > 2
           : !('' !== e.h && Math.round(i - t.height) > 2) &&
             ('' !== e.w
               ? Math.round(r - t.width) <= 2 ||
-                (0 === a[uo].numberInLine && t.height > 2)
+                (0 === a[po].numberInLine && t.height > 2)
               : t.width > 2)
-        : !!e[Oo]()[uo].noLayoutFailure ||
+        : !!e[Ho]()[po].noLayoutFailure ||
             (!('' !== e.h && Math.round(i - t.height) > 2) &&
-              ('' === e.w || Math.round(r - t.width) <= 2 || !a[Uo]()) &&
+              ('' === e.w || Math.round(r - t.width) <= 2 || !a[Wo]()) &&
               t.height > 2);
     case 'table':
     case 'tb':
       return (
-        !!e[Oo]()[uo].noLayoutFailure ||
-        ('' === e.h || e[Lo]()
-          ? ('' === e.w || Math.round(r - t.width) <= 2 || !a[Uo]()) &&
+        !!e[Ho]()[po].noLayoutFailure ||
+        ('' === e.h || e[Xo]()
+          ? ('' === e.w || Math.round(r - t.width) <= 2 || !a[Wo]()) &&
             t.height > 2
           : Math.round(i - t.height) <= 2)
       );
     case 'position':
-      if (e[Oo]()[uo].noLayoutFailure) return !0;
+      if (e[Ho]()[po].noLayoutFailure) return !0;
       if ('' === e.h || Math.round(i + s - t.height) <= 2) return !0;
-      return i + s > e[Oo]()[uo].currentContentArea.h;
+      return i + s > e[Ho]()[po].currentContentArea.h;
     case 'rl-row':
     case 'row':
       return (
-        !!e[Oo]()[uo].noLayoutFailure ||
+        !!e[Ho]()[po].noLayoutFailure ||
         '' === e.h ||
         Math.round(i - t.height) <= 2
       );
@@ -44044,9 +44117,9 @@ function checkDimensions(e, t) {
       return !0;
   }
 }
-const Jl = bl.template.id,
-  Ql = /^H(\d+)$/,
-  Zl = new Set([
+const Zl = jl.template.id,
+  ef = /^H(\d+)$/,
+  tf = new Set([
     'image/gif',
     'image/jpeg',
     'image/jpg',
@@ -44060,7 +44133,7 @@ const Jl = bl.template.id,
     'image/tif',
     'application/octet-stream',
   ]),
-  ef = [
+  af = [
     [[66, 77], 'image/bmp'],
     [[255, 216, 255], 'image/jpeg'],
     [[73, 73, 42, 0], 'image/tiff'],
@@ -44070,7 +44143,7 @@ const Jl = bl.template.id,
   ];
 function getBorderDims(e) {
   if (!e || !e.border) return { w: 0, h: 0 };
-  const t = e.border[vo]();
+  const t = e.border[Ao]();
   return t
     ? {
         w: t.widths[0] + t.widths[2] + t.insets[0] + t.insets[2],
@@ -44090,13 +44163,13 @@ function hasMargin(e) {
 function _setValue(e, t) {
   if (!e.value) {
     const t = new Value({});
-    e[ao](t);
+    e[so](t);
     e.value = t;
   }
-  e.value[ll](t);
+  e.value[cl](t);
 }
 function* getContainedChildren(e) {
-  for (const t of e[Ao]()) t instanceof SubformSet ? yield* t[xo]() : yield t;
+  for (const t of e[Co]()) t instanceof SubformSet ? yield* t[Io]() : yield t;
 }
 function isRequired(e) {
   return 'error' === e.validate?.nullTest;
@@ -44104,23 +44177,23 @@ function isRequired(e) {
 function setTabIndex(e) {
   for (; e;) {
     if (!e.traversal) {
-      e[fl] = e[Fo]()[fl];
+      e[hl] = e[Ro]()[hl];
       return;
     }
-    if (e[fl]) return;
+    if (e[hl]) return;
     let t = null;
-    for (const a of e.traversal[Ao]())
+    for (const a of e.traversal[Co]())
       if ('next' === a.operation) {
         t = a;
         break;
       }
     if (!t || !t.ref) {
-      e[fl] = e[Fo]()[fl];
+      e[hl] = e[Ro]()[hl];
       return;
     }
-    const a = e[Oo]();
-    e[fl] = ++a[fl];
-    const n = a[rl](t.ref, e);
+    const a = e[Ho]();
+    e[hl] = ++a[hl];
+    const n = a[ol](t.ref, e);
     if (!n) return;
     e = n[0];
   }
@@ -44128,9 +44201,9 @@ function setTabIndex(e) {
 function applyAssist(e, t) {
   const a = e.assist;
   if (a) {
-    const e = a[ul]();
+    const e = a[pl]();
     e && (t.title = e);
-    const n = a.role.match(Ql);
+    const n = a.role.match(ef);
     if (n) {
       const e = 'heading',
         a = n[1];
@@ -44141,7 +44214,7 @@ function applyAssist(e, t) {
   if ('table' === e.layout) t.role = 'table';
   else if ('row' === e.layout) t.role = 'row';
   else {
-    const a = e[Fo]();
+    const a = e[Ro]();
     'row' === a.layout &&
       (t.role = 'TH' === a.assist?.role ? 'columnheader' : 'cell');
   }
@@ -44149,10 +44222,10 @@ function applyAssist(e, t) {
 function ariaLabel(e) {
   if (!e.assist) return null;
   const t = e.assist;
-  return t.speak && '' !== t.speak[fo]
-    ? t.speak[fo]
+  return t.speak && '' !== t.speak[ho]
+    ? t.speak[ho]
     : t.toolTip
-      ? t.toolTip[fo]
+      ? t.toolTip[ho]
       : null;
 }
 function valueToHtml(e) {
@@ -44165,42 +44238,42 @@ function valueToHtml(e) {
   });
 }
 function setFirstUnsplittable(e) {
-  const t = e[Oo]();
-  if (null === t[uo].firstUnsplittable) {
-    t[uo].firstUnsplittable = e;
-    t[uo].noLayoutFailure = !0;
+  const t = e[Ho]();
+  if (null === t[po].firstUnsplittable) {
+    t[po].firstUnsplittable = e;
+    t[po].noLayoutFailure = !0;
   }
 }
 function unsetFirstUnsplittable(e) {
-  const t = e[Oo]();
-  t[uo].firstUnsplittable === e && (t[uo].noLayoutFailure = !1);
+  const t = e[Ho]();
+  t[po].firstUnsplittable === e && (t[po].noLayoutFailure = !1);
 }
 function handleBreak(e) {
-  if (e[uo]) return !1;
-  e[uo] = Object.create(null);
+  if (e[po]) return !1;
+  e[po] = Object.create(null);
   if ('auto' === e.targetType) return !1;
-  const t = e[Oo]();
+  const t = e[Ho]();
   let a = null;
   if (e.target) {
-    a = t[rl](e.target, e[Fo]());
+    a = t[ol](e.target, e[Ro]());
     if (!a) return !1;
     a = a[0];
   }
-  const { currentPageArea: n, currentContentArea: s } = t[uo];
+  const { currentPageArea: n, currentContentArea: s } = t[po];
   if ('pageArea' === e.targetType) {
     a instanceof PageArea || (a = null);
     if (e.startNew) {
-      e[uo].target = a || n;
+      e[po].target = a || n;
       return !0;
     }
     if (a && a !== n) {
-      e[uo].target = a;
+      e[po].target = a;
       return !0;
     }
     return !1;
   }
   a instanceof ContentArea || (a = null);
-  const r = a && a[Fo]();
+  const r = a && a[Ro]();
   let i,
     o = r;
   if (e.startNew)
@@ -44216,24 +44289,24 @@ function handleBreak(e) {
     i = r.contentArea.children.indexOf(a) - 1;
     o = r === n ? null : r;
   }
-  e[uo].target = o;
-  e[uo].index = i;
+  e[po].target = o;
+  e[po].index = i;
   return !0;
 }
 function handleOverflow(e, t, a) {
-  const n = e[Oo](),
-    s = n[uo].noLayoutFailure,
-    r = t[Io];
-  t[Io] = () => e;
-  n[uo].noLayoutFailure = !0;
-  const i = t[ul](a);
-  e[to](i.html, i.bbox);
-  n[uo].noLayoutFailure = s;
-  t[Io] = r;
+  const n = e[Ho](),
+    s = n[po].noLayoutFailure,
+    r = t[Oo];
+  t[Oo] = () => e;
+  n[po].noLayoutFailure = !0;
+  const i = t[pl](a);
+  e[no](i.html, i.bbox);
+  n[po].noLayoutFailure = s;
+  t[Oo] = r;
 }
 class AppearanceFilter extends StringObject {
   constructor(e) {
-    super(Jl, 'appearanceFilter');
+    super(Zl, 'appearanceFilter');
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -44242,7 +44315,7 @@ class AppearanceFilter extends StringObject {
 }
 class Arc extends XFAObject {
   constructor(e) {
-    super(Jl, 'arc', !0);
+    super(Zl, 'arc', !0);
     this.circular = getInteger({
       data: e.circular,
       defaultValue: 0,
@@ -44265,12 +44338,12 @@ class Arc extends XFAObject {
     this.edge = null;
     this.fill = null;
   }
-  [ul]() {
+  [pl]() {
     const e = this.edge || new Edge({}),
-      t = e[pl](),
+      t = e[gl](),
       a = Object.create(null);
     'visible' === this.fill?.presence
-      ? Object.assign(a, this.fill[pl]())
+      ? Object.assign(a, this.fill[gl]())
       : (a.fill = 'transparent');
     a.strokeWidth = measureToString('visible' === e.presence ? e.thickness : 0);
     a.stroke = t.color;
@@ -44313,7 +44386,7 @@ class Arc extends XFAObject {
       Object.assign(s, { viewBox: '0 0 100 100', preserveAspectRatio: 'none' });
     }
     const r = { name: 'svg', children: [n], attributes: s };
-    if (hasMargin(this[Fo]()[Fo]()))
+    if (hasMargin(this[Ro]()[Ro]()))
       return HTMLResult.success({
         name: 'div',
         attributes: {
@@ -44327,7 +44400,7 @@ class Arc extends XFAObject {
 }
 class Area extends XFAObject {
   constructor(e) {
-    super(Jl, 'area', !0);
+    super(Zl, 'area', !0);
     this.colSpan = getInteger({
       data: e.colSpan,
       defaultValue: 1,
@@ -44350,32 +44423,32 @@ class Area extends XFAObject {
     this.subform = new XFAObjectArray();
     this.subformSet = new XFAObjectArray();
   }
-  *[xo]() {
+  *[Io]() {
     yield* getContainedChildren(this);
   }
-  [Xo]() {
+  [Ko]() {
     return !0;
   }
-  [Po]() {
+  [Eo]() {
     return !0;
   }
-  [to](e, t) {
+  [no](e, t) {
     const [a, n, s, r] = t;
-    this[uo].width = Math.max(this[uo].width, a + s);
-    this[uo].height = Math.max(this[uo].height, n + r);
-    this[uo].children.push(e);
+    this[po].width = Math.max(this[po].width, a + s);
+    this[po].height = Math.max(this[po].height, n + r);
+    this[po].children.push(e);
   }
-  [wo]() {
-    return this[uo].availableSpace;
+  [ko]() {
+    return this[po].availableSpace;
   }
-  [ul](e) {
+  [pl](e) {
     const t = toStyle(this, 'position'),
-      a = { style: t, id: this[dl], class: ['xfaArea'] };
+      a = { style: t, id: this[bl], class: ['xfaArea'] };
     isPrintOnly(this) && a.class.push('xfaPrintOnly');
     this.name && (a.xfaName = this.name);
     const n = [];
-    this[uo] = { children: n, width: 0, height: 0, availableSpace: e };
-    const s = this[no]({
+    this[po] = { children: n, width: 0, height: 0, availableSpace: e };
+    const s = this[ro]({
       filter: new Set([
         'area',
         'draw',
@@ -44388,20 +44461,20 @@ class Area extends XFAObject {
     });
     if (!s.success) {
       if (s.isBreak()) return s;
-      delete this[uo];
+      delete this[po];
       return HTMLResult.FAILURE;
     }
-    t.width = measureToString(this[uo].width);
-    t.height = measureToString(this[uo].height);
+    t.width = measureToString(this[po].width);
+    t.height = measureToString(this[po].height);
     const r = { name: 'div', attributes: a, children: n },
-      i = [this.x, this.y, this[uo].width, this[uo].height];
-    delete this[uo];
+      i = [this.x, this.y, this[po].width, this[po].height];
+    delete this[po];
     return HTMLResult.success(r, i);
   }
 }
 class Assist extends XFAObject {
   constructor(e) {
-    super(Jl, 'assist', !0);
+    super(Zl, 'assist', !0);
     this.id = e.id || '';
     this.role = e.role || '';
     this.use = e.use || '';
@@ -44409,13 +44482,13 @@ class Assist extends XFAObject {
     this.speak = null;
     this.toolTip = null;
   }
-  [ul]() {
-    return this.toolTip?.[fo] || null;
+  [pl]() {
+    return this.toolTip?.[ho] || null;
   }
 }
 class Barcode extends XFAObject {
   constructor(e) {
-    super(Jl, 'barcode', !0);
+    super(Zl, 'barcode', !0);
     this.charEncoding = getKeyword({
       data: e.charEncoding ? e.charEncoding.toLowerCase() : '',
       defaultValue: '',
@@ -44564,7 +44637,7 @@ class Barcode extends XFAObject {
 }
 class Bind extends XFAObject {
   constructor(e) {
-    super(Jl, 'bind', !0);
+    super(Zl, 'bind', !0);
     this.match = getStringOption(e.match, [
       'once',
       'dataRef',
@@ -44577,7 +44650,7 @@ class Bind extends XFAObject {
 }
 class BindItems extends XFAObject {
   constructor(e) {
-    super(Jl, 'bindItems');
+    super(Zl, 'bindItems');
     this.connection = e.connection || '';
     this.labelRef = e.labelRef || '';
     this.ref = e.ref || '';
@@ -44586,7 +44659,7 @@ class BindItems extends XFAObject {
 }
 class Bookend extends XFAObject {
   constructor(e) {
-    super(Jl, 'bookend');
+    super(Zl, 'bookend');
     this.id = e.id || '';
     this.leader = e.leader || '';
     this.trailer = e.trailer || '';
@@ -44596,19 +44669,19 @@ class Bookend extends XFAObject {
 }
 class BooleanElement extends Option01 {
   constructor(e) {
-    super(Jl, 'boolean');
+    super(Zl, 'boolean');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [ul](e) {
-    return valueToHtml(1 === this[fo] ? '1' : '0');
+  [pl](e) {
+    return valueToHtml(1 === this[ho] ? '1' : '0');
   }
 }
 class Border extends XFAObject {
   constructor(e) {
-    super(Jl, 'border', !0);
+    super(Zl, 'border', !0);
     this.break = getStringOption(e.break, ['close', 'open']);
     this.hand = getStringOption(e.hand, ['even', 'left', 'right']);
     this.id = e.id || '';
@@ -44627,8 +44700,8 @@ class Border extends XFAObject {
     this.fill = null;
     this.margin = null;
   }
-  [vo]() {
-    if (!this[uo]) {
+  [Ao]() {
+    if (!this[po]) {
       const e = this.edge.children.slice();
       if (e.length < 4) {
         const t = e.at(-1) || new Edge({});
@@ -44642,22 +44715,22 @@ class Border extends XFAObject {
         a[2] = this.margin.bottomInset;
         a[3] = this.margin.leftInset;
       }
-      this[uo] = { widths: t, insets: a, edges: e };
+      this[po] = { widths: t, insets: a, edges: e };
     }
-    return this[uo];
+    return this[po];
   }
-  [pl]() {
-    const { edges: e } = this[vo](),
+  [gl]() {
+    const { edges: e } = this[Ao](),
       t = e.map((e) => {
-        const t = e[pl]();
+        const t = e[gl]();
         t.color ||= '#000000';
         return t;
       }),
       a = Object.create(null);
-    this.margin && Object.assign(a, this.margin[pl]());
-    'visible' === this.fill?.presence && Object.assign(a, this.fill[pl]());
+    this.margin && Object.assign(a, this.margin[gl]());
+    'visible' === this.fill?.presence && Object.assign(a, this.fill[gl]());
     if (this.corner.children.some((e) => 0 !== e.radius)) {
-      const e = this.corner.children.map((e) => e[pl]());
+      const e = this.corner.children.map((e) => e[gl]());
       if (2 === e.length || 3 === e.length) {
         const t = e.at(-1);
         for (let a = e.length; a < 4; a++) e.push(t);
@@ -44682,7 +44755,7 @@ class Border extends XFAObject {
 }
 class Break extends XFAObject {
   constructor(e) {
-    super(Jl, 'break', !0);
+    super(Zl, 'break', !0);
     this.after = getStringOption(e.after, [
       'auto',
       'contentArea',
@@ -44717,7 +44790,7 @@ class Break extends XFAObject {
 }
 class BreakAfter extends XFAObject {
   constructor(e) {
-    super(Jl, 'breakAfter', !0);
+    super(Zl, 'breakAfter', !0);
     this.id = e.id || '';
     this.leader = e.leader || '';
     this.startNew = getInteger({
@@ -44739,7 +44812,7 @@ class BreakAfter extends XFAObject {
 }
 class BreakBefore extends XFAObject {
   constructor(e) {
-    super(Jl, 'breakBefore', !0);
+    super(Zl, 'breakBefore', !0);
     this.id = e.id || '';
     this.leader = e.leader || '';
     this.startNew = getInteger({
@@ -44758,14 +44831,14 @@ class BreakBefore extends XFAObject {
     this.usehref = e.usehref || '';
     this.script = null;
   }
-  [ul](e) {
-    this[uo] = {};
+  [pl](e) {
+    this[po] = {};
     return HTMLResult.FAILURE;
   }
 }
 class Button extends XFAObject {
   constructor(e) {
-    super(Jl, 'button', !0);
+    super(Zl, 'button', !0);
     this.highlight = getStringOption(e.highlight, [
       'inverted',
       'none',
@@ -44777,23 +44850,23 @@ class Button extends XFAObject {
     this.usehref = e.usehref || '';
     this.extras = null;
   }
-  [ul](e) {
-    const t = this[Fo]()[Fo](),
+  [pl](e) {
+    const t = this[Ro]()[Ro](),
       a = {
         name: 'button',
-        attributes: { id: this[dl], class: ['xfaButton'], style: {} },
+        attributes: { id: this[bl], class: ['xfaButton'], style: {} },
         children: [],
       };
     for (const e of t.event.children) {
       if ('click' !== e.activity || !e.script) continue;
-      const t = recoverJsURL(e.script[fo]);
+      const t = recoverJsURL(e.script[ho]);
       if (!t) continue;
       const n = fixURL(t.url);
       n &&
         a.children.push({
           name: 'a',
           attributes: {
-            id: 'link' + this[dl],
+            id: 'link' + this[bl],
             href: n,
             newWindow: t.newWindow,
             class: ['xfaLink'],
@@ -44807,7 +44880,7 @@ class Button extends XFAObject {
 }
 class Calculate extends XFAObject {
   constructor(e) {
-    super(Jl, 'calculate', !0);
+    super(Zl, 'calculate', !0);
     this.id = e.id || '';
     this.override = getStringOption(e.override, [
       'disabled',
@@ -44824,7 +44897,7 @@ class Calculate extends XFAObject {
 }
 class Caption extends XFAObject {
   constructor(e) {
-    super(Jl, 'caption', !0);
+    super(Zl, 'caption', !0);
     this.id = e.id || '';
     this.placement = getStringOption(e.placement, [
       'left',
@@ -44848,11 +44921,11 @@ class Caption extends XFAObject {
     this.para = null;
     this.value = null;
   }
-  [ll](e) {
+  [cl](e) {
     _setValue(this, e);
   }
-  [vo](e) {
-    if (!this[uo]) {
+  [Ao](e) {
+    if (!this[po]) {
       let { width: t, height: a } = e;
       switch (this.placement) {
         case 'left':
@@ -44864,21 +44937,21 @@ class Caption extends XFAObject {
         case 'bottom':
           a = this.reserve <= 0 ? a : this.reserve;
       }
-      this[uo] = layoutNode(this, { width: t, height: a });
+      this[po] = layoutNode(this, { width: t, height: a });
     }
-    return this[uo];
+    return this[po];
   }
-  [ul](e) {
+  [pl](e) {
     if (!this.value) return HTMLResult.EMPTY;
-    this[tl]();
-    const t = this.value[ul](e).html;
+    this[nl]();
+    const t = this.value[pl](e).html;
     if (!t) {
-      this[el]();
+      this[al]();
       return HTMLResult.EMPTY;
     }
     const a = this.reserve;
     if (this.reserve <= 0) {
-      const { w: t, h: a } = this[vo](e);
+      const { w: t, h: a } = this[Ao](e);
       switch (this.placement) {
         case 'left':
         case 'right':
@@ -44903,7 +44976,7 @@ class Caption extends XFAObject {
         this.reserve > 0 && (s.height = measureToString(this.reserve));
     }
     setPara(this, null, t);
-    this[el]();
+    this[al]();
     this.reserve = a;
     return HTMLResult.success({
       name: 'div',
@@ -44914,7 +44987,7 @@ class Caption extends XFAObject {
 }
 class Certificate extends StringObject {
   constructor(e) {
-    super(Jl, 'certificate');
+    super(Zl, 'certificate');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -44923,7 +44996,7 @@ class Certificate extends StringObject {
 }
 class Certificates extends XFAObject {
   constructor(e) {
-    super(Jl, 'certificates', !0);
+    super(Zl, 'certificates', !0);
     this.credentialServerPolicy = getStringOption(e.credentialServerPolicy, [
       'optional',
       'required',
@@ -44943,7 +45016,7 @@ class Certificates extends XFAObject {
 }
 class CheckButton extends XFAObject {
   constructor(e) {
-    super(Jl, 'checkButton', !0);
+    super(Zl, 'checkButton', !0);
     this.id = e.id || '';
     this.mark = getStringOption(e.mark, [
       'default',
@@ -44962,30 +45035,30 @@ class CheckButton extends XFAObject {
     this.extras = null;
     this.margin = null;
   }
-  [ul](e) {
+  [pl](e) {
     const t = toStyle(this, 'margin'),
       a = measureToString(this.size);
     t.width = t.height = a;
     let n, s, r;
-    const i = this[Fo]()[Fo](),
-      o = (i.items.children.length && i.items.children[0][ul]().html) || [],
+    const i = this[Ro]()[Ro](),
+      o = (i.items.children.length && i.items.children[0][pl]().html) || [],
       l = {
         on: (void 0 !== o[0] ? o[0] : 'on').toString(),
         off: (void 0 !== o[1] ? o[1] : 'off').toString(),
       },
-      f = (i.value?.[cl]() || 'off') === l.on || void 0,
-      c = i[Io](),
-      h = i[dl];
+      f = (i.value?.[ul]() || 'off') === l.on || void 0,
+      c = i[Oo](),
+      h = i[bl];
     let u;
     if (c instanceof ExclGroup) {
-      r = c[dl];
+      r = c[bl];
       n = 'radio';
       s = 'xfaRadio';
-      u = c[co]?.[dl] || c[dl];
+      u = c[uo]?.[bl] || c[bl];
     } else {
       n = 'checkbox';
       s = 'xfaCheckbox';
-      u = i[co]?.[dl] || i[dl];
+      u = i[uo]?.[bl] || i[bl];
     }
     const m = {
       name: 'input',
@@ -45016,7 +45089,7 @@ class CheckButton extends XFAObject {
 }
 class ChoiceList extends XFAObject {
   constructor(e) {
-    super(Jl, 'choiceList', !0);
+    super(Zl, 'choiceList', !0);
     this.commitOn = getStringOption(e.commitOn, ['select', 'exit']);
     this.id = e.id || '';
     this.open = getStringOption(e.open, [
@@ -45036,9 +45109,9 @@ class ChoiceList extends XFAObject {
     this.extras = null;
     this.margin = null;
   }
-  [ul](e) {
+  [pl](e) {
     const t = toStyle(this, 'border', 'margin'),
-      a = this[Fo]()[Fo](),
+      a = this[Ro]()[Ro](),
       n = {
         fontSize: `calc(${a.font?.size || 10}px * var(--total-scale-factor))`,
       },
@@ -45051,10 +45124,10 @@ class ChoiceList extends XFAObject {
         t = e.children[0].save;
         r = 1 - t;
       }
-      const i = e.children[t][ul]().html,
-        o = e.children[r][ul]().html;
+      const i = e.children[t][pl]().html,
+        o = e.children[r][pl]().html;
       let l = !1;
-      const f = a.value?.[cl]() || '';
+      const f = a.value?.[ul]() || '';
       for (let e = 0, t = i.length; e < t; e++) {
         const t = {
           name: 'option',
@@ -45073,8 +45146,8 @@ class ChoiceList extends XFAObject {
     }
     const r = {
       class: ['xfaSelect'],
-      fieldId: a[dl],
-      dataId: a[co]?.[dl] || a[dl],
+      fieldId: a[bl],
+      dataId: a[uo]?.[bl] || a[bl],
       style: t,
       'aria-label': ariaLabel(a),
       'aria-required': !1,
@@ -45093,7 +45166,7 @@ class ChoiceList extends XFAObject {
 }
 class Color extends XFAObject {
   constructor(e) {
-    super(Jl, 'color', !0);
+    super(Zl, 'color', !0);
     this.cSpace = getStringOption(e.cSpace, ['SRGB']);
     this.id = e.id || '';
     this.use = e.use || '';
@@ -45113,10 +45186,10 @@ class Color extends XFAObject {
       : '';
     this.extras = null;
   }
-  [Ho]() {
+  [Do]() {
     return !1;
   }
-  [pl]() {
+  [gl]() {
     return this.value
       ? Util.makeHexColor(this.value.r, this.value.g, this.value.b)
       : null;
@@ -45124,7 +45197,7 @@ class Color extends XFAObject {
 }
 class Comb extends XFAObject {
   constructor(e) {
-    super(Jl, 'comb');
+    super(Zl, 'comb');
     this.id = e.id || '';
     this.numberOfCells = getInteger({
       data: e.numberOfCells,
@@ -45137,7 +45210,7 @@ class Comb extends XFAObject {
 }
 class Connect extends XFAObject {
   constructor(e) {
-    super(Jl, 'connect', !0);
+    super(Zl, 'connect', !0);
     this.connection = e.connection || '';
     this.id = e.id || '';
     this.ref = e.ref || '';
@@ -45153,7 +45226,7 @@ class Connect extends XFAObject {
 }
 class ContentArea extends XFAObject {
   constructor(e) {
-    super(Jl, 'contentArea', !0);
+    super(Zl, 'contentArea', !0);
     this.h = getMeasurement(e.h);
     this.id = e.id || '';
     this.name = e.name || '';
@@ -45166,7 +45239,7 @@ class ContentArea extends XFAObject {
     this.desc = null;
     this.extras = null;
   }
-  [ul](e) {
+  [pl](e) {
     const t = {
         left: measureToString(this.x),
         top: measureToString(this.y),
@@ -45178,13 +45251,13 @@ class ContentArea extends XFAObject {
     return HTMLResult.success({
       name: 'div',
       children: [],
-      attributes: { style: t, class: a, id: this[dl] },
+      attributes: { style: t, class: a, id: this[bl] },
     });
   }
 }
 class Corner extends XFAObject {
   constructor(e) {
-    super(Jl, 'corner', !0);
+    super(Zl, 'corner', !0);
     this.id = e.id || '';
     this.inverted = getInteger({
       data: e.inverted,
@@ -45216,7 +45289,7 @@ class Corner extends XFAObject {
     this.color = null;
     this.extras = null;
   }
-  [pl]() {
+  [gl]() {
     const e = toStyle(this, 'visibility');
     e.radius = measureToString('square' === this.join ? 0 : this.radius);
     return e;
@@ -45224,39 +45297,39 @@ class Corner extends XFAObject {
 }
 class DateElement extends ContentObject {
   constructor(e) {
-    super(Jl, 'date');
+    super(Zl, 'date');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    const e = this[fo].trim();
-    this[fo] = e ? new Date(e) : null;
+  [go]() {
+    const e = this[ho].trim();
+    this[ho] = e ? new Date(e) : null;
   }
-  [ul](e) {
-    return valueToHtml(this[fo] ? this[fo].toString() : '');
+  [pl](e) {
+    return valueToHtml(this[ho] ? this[ho].toString() : '');
   }
 }
 class DateTime extends ContentObject {
   constructor(e) {
-    super(Jl, 'dateTime');
+    super(Zl, 'dateTime');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    const e = this[fo].trim();
-    this[fo] = e ? new Date(e) : null;
+  [go]() {
+    const e = this[ho].trim();
+    this[ho] = e ? new Date(e) : null;
   }
-  [ul](e) {
-    return valueToHtml(this[fo] ? this[fo].toString() : '');
+  [pl](e) {
+    return valueToHtml(this[ho] ? this[ho].toString() : '');
   }
 }
 class DateTimeEdit extends XFAObject {
   constructor(e) {
-    super(Jl, 'dateTimeEdit', !0);
+    super(Zl, 'dateTimeEdit', !0);
     this.hScrollPolicy = getStringOption(e.hScrollPolicy, [
       'auto',
       'off',
@@ -45271,15 +45344,15 @@ class DateTimeEdit extends XFAObject {
     this.extras = null;
     this.margin = null;
   }
-  [ul](e) {
+  [pl](e) {
     const t = toStyle(this, 'border', 'font', 'margin'),
-      a = this[Fo]()[Fo](),
+      a = this[Ro]()[Ro](),
       n = {
         name: 'input',
         attributes: {
           type: 'text',
-          fieldId: a[dl],
-          dataId: a[co]?.[dl] || a[dl],
+          fieldId: a[bl],
+          dataId: a[uo]?.[bl] || a[bl],
           class: ['xfaTextfield'],
           style: t,
           'aria-label': ariaLabel(a),
@@ -45299,7 +45372,7 @@ class DateTimeEdit extends XFAObject {
 }
 class Decimal extends ContentObject {
   constructor(e) {
-    super(Jl, 'decimal');
+    super(Zl, 'decimal');
     this.fracDigits = getInteger({
       data: e.fracDigits,
       defaultValue: 2,
@@ -45315,17 +45388,17 @@ class Decimal extends ContentObject {
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    const e = parseFloat(this[fo].trim());
-    this[fo] = isNaN(e) ? null : e;
+  [go]() {
+    const e = parseFloat(this[ho].trim());
+    this[ho] = isNaN(e) ? null : e;
   }
-  [ul](e) {
-    return valueToHtml(null !== this[fo] ? this[fo].toString() : '');
+  [pl](e) {
+    return valueToHtml(null !== this[ho] ? this[ho].toString() : '');
   }
 }
 class DefaultUi extends XFAObject {
   constructor(e) {
-    super(Jl, 'defaultUi', !0);
+    super(Zl, 'defaultUi', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -45334,7 +45407,7 @@ class DefaultUi extends XFAObject {
 }
 class Desc extends XFAObject {
   constructor(e) {
-    super(Jl, 'desc', !0);
+    super(Zl, 'desc', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -45352,7 +45425,7 @@ class Desc extends XFAObject {
 }
 class DigestMethod extends OptionObject {
   constructor(e) {
-    super(Jl, 'digestMethod', ['', 'SHA1', 'SHA256', 'SHA512', 'RIPEMD160']);
+    super(Zl, 'digestMethod', ['', 'SHA1', 'SHA256', 'SHA512', 'RIPEMD160']);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -45360,7 +45433,7 @@ class DigestMethod extends OptionObject {
 }
 class DigestMethods extends XFAObject {
   constructor(e) {
-    super(Jl, 'digestMethods', !0);
+    super(Zl, 'digestMethods', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -45370,7 +45443,7 @@ class DigestMethods extends XFAObject {
 }
 class Draw extends XFAObject {
   constructor(e) {
-    super(Jl, 'draw', !0);
+    super(Zl, 'draw', !0);
     this.anchorType = getStringOption(e.anchorType, [
       'topLeft',
       'bottomCenter',
@@ -45434,21 +45507,21 @@ class Draw extends XFAObject {
     this.value = null;
     this.setProperty = new XFAObjectArray();
   }
-  [ll](e) {
+  [cl](e) {
     _setValue(this, e);
   }
-  [ul](e) {
+  [pl](e) {
     setTabIndex(this);
     if ('hidden' === this.presence || 'inactive' === this.presence)
       return HTMLResult.EMPTY;
     fixDimensions(this);
-    this[tl]();
+    this[nl]();
     const t = this.w,
       a = this.h,
       { w: n, h: s, isBroken: r } = layoutNode(this, e);
     if (n && '' === this.w) {
-      if (r && this[Io]()[Uo]()) {
-        this[el]();
+      if (r && this[Oo]()[Wo]()) {
+        this[al]();
         return HTMLResult.FAILURE;
       }
       this.w = n;
@@ -45458,7 +45531,7 @@ class Draw extends XFAObject {
     if (!checkDimensions(this, e)) {
       this.w = t;
       this.h = a;
-      this[el]();
+      this[al]();
       return HTMLResult.FAILURE;
     }
     unsetFirstUnsplittable(this);
@@ -45482,29 +45555,29 @@ class Draw extends XFAObject {
     const o = ['xfaDraw'];
     this.font && o.push('xfaFont');
     isPrintOnly(this) && o.push('xfaPrintOnly');
-    const l = { style: i, id: this[dl], class: o };
+    const l = { style: i, id: this[bl], class: o };
     this.name && (l.xfaName = this.name);
     const f = { name: 'div', attributes: l, children: [] };
     applyAssist(this, l);
     const c = computeBbox(this, f, e),
-      h = this.value ? this.value[ul](e).html : null;
+      h = this.value ? this.value[pl](e).html : null;
     if (null === h) {
       this.w = t;
       this.h = a;
-      this[el]();
+      this[al]();
       return HTMLResult.success(createWrapper(this, f), c);
     }
     f.children.push(h);
     setPara(this, i, h);
     this.w = t;
     this.h = a;
-    this[el]();
+    this[al]();
     return HTMLResult.success(createWrapper(this, f), c);
   }
 }
 class Edge extends XFAObject {
   constructor(e) {
-    super(Jl, 'edge', !0);
+    super(Zl, 'edge', !0);
     this.cap = getStringOption(e.cap, ['square', 'butt', 'round']);
     this.id = e.id || '';
     this.presence = getStringOption(e.presence, [
@@ -45530,12 +45603,12 @@ class Edge extends XFAObject {
     this.color = null;
     this.extras = null;
   }
-  [pl]() {
+  [gl]() {
     const e = toStyle(this, 'visibility');
     Object.assign(e, {
       linecap: this.cap,
       width: measureToString(this.thickness),
-      color: this.color ? this.color[pl]() : '#000000',
+      color: this.color ? this.color[gl]() : '#000000',
       style: '',
     });
     if ('visible' !== this.presence) e.style = 'none';
@@ -45569,7 +45642,7 @@ class Edge extends XFAObject {
 }
 class Encoding extends OptionObject {
   constructor(e) {
-    super(Jl, 'encoding', [
+    super(Zl, 'encoding', [
       'adbe.x509.rsa_sha1',
       'adbe.pkcs7.detached',
       'adbe.pkcs7.sha1',
@@ -45581,7 +45654,7 @@ class Encoding extends OptionObject {
 }
 class Encodings extends XFAObject {
   constructor(e) {
-    super(Jl, 'encodings', !0);
+    super(Zl, 'encodings', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -45591,7 +45664,7 @@ class Encodings extends XFAObject {
 }
 class Encrypt extends XFAObject {
   constructor(e) {
-    super(Jl, 'encrypt', !0);
+    super(Zl, 'encrypt', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -45600,7 +45673,7 @@ class Encrypt extends XFAObject {
 }
 class EncryptData extends XFAObject {
   constructor(e) {
-    super(Jl, 'encryptData', !0);
+    super(Zl, 'encryptData', !0);
     this.id = e.id || '';
     this.operation = getStringOption(e.operation, ['encrypt', 'decrypt']);
     this.target = e.target || '';
@@ -45612,7 +45685,7 @@ class EncryptData extends XFAObject {
 }
 class Encryption extends XFAObject {
   constructor(e) {
-    super(Jl, 'encryption', !0);
+    super(Zl, 'encryption', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -45622,7 +45695,7 @@ class Encryption extends XFAObject {
 }
 class EncryptionMethod extends OptionObject {
   constructor(e) {
-    super(Jl, 'encryptionMethod', [
+    super(Zl, 'encryptionMethod', [
       '',
       'AES256-CBC',
       'TRIPLEDES-CBC',
@@ -45636,7 +45709,7 @@ class EncryptionMethod extends OptionObject {
 }
 class EncryptionMethods extends XFAObject {
   constructor(e) {
-    super(Jl, 'encryptionMethods', !0);
+    super(Zl, 'encryptionMethods', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -45646,7 +45719,7 @@ class EncryptionMethods extends XFAObject {
 }
 class Event extends XFAObject {
   constructor(e) {
-    super(Jl, 'event', !0);
+    super(Zl, 'event', !0);
     this.activity = getStringOption(e.activity, [
       'click',
       'change',
@@ -45692,7 +45765,7 @@ class Event extends XFAObject {
 }
 class ExData extends ContentObject {
   constructor(e) {
-    super(Jl, 'exData');
+    super(Zl, 'exData');
     this.contentType = e.contentType || '';
     this.href = e.href || '';
     this.id = e.id || '';
@@ -45711,29 +45784,29 @@ class ExData extends ContentObject {
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [No]() {
+  [_o]() {
     return 'text/html' === this.contentType;
   }
-  [Yo](e) {
-    if ('text/html' === this.contentType && e[Go] === bl.xhtml.id) {
-      this[fo] = e;
+  [Qo](e) {
+    if ('text/html' === this.contentType && e[$o] === jl.xhtml.id) {
+      this[ho] = e;
       return !0;
     }
     if ('text/xml' === this.contentType) {
-      this[fo] = e;
+      this[ho] = e;
       return !0;
     }
     return !1;
   }
-  [ul](e) {
-    return 'text/html' === this.contentType && this[fo]
-      ? this[fo][ul](e)
+  [pl](e) {
+    return 'text/html' === this.contentType && this[ho]
+      ? this[ho][pl](e)
       : HTMLResult.EMPTY;
   }
 }
 class ExObject extends XFAObject {
   constructor(e) {
-    super(Jl, 'exObject', !0);
+    super(Zl, 'exObject', !0);
     this.archive = e.archive || '';
     this.classId = e.classId || '';
     this.codeBase = e.codeBase || '';
@@ -45758,7 +45831,7 @@ class ExObject extends XFAObject {
 }
 class ExclGroup extends XFAObject {
   constructor(e) {
-    super(Jl, 'exclGroup', !0);
+    super(Zl, 'exclGroup', !0);
     this.access = getStringOption(e.access, [
       'open',
       'nonInteractive',
@@ -45834,52 +45907,52 @@ class ExclGroup extends XFAObject {
     this.field = new XFAObjectArray();
     this.setProperty = new XFAObjectArray();
   }
-  [Po]() {
+  [Eo]() {
     return !0;
   }
-  [Ho]() {
+  [Do]() {
     return !0;
   }
-  [ll](e) {
+  [cl](e) {
     for (const t of this.field.children) {
       if (!t.value) {
         const e = new Value({});
-        t[ao](e);
+        t[so](e);
         t.value = e;
       }
-      t.value[ll](e);
+      t.value[cl](e);
     }
   }
-  [Uo]() {
+  [Wo]() {
     return (
       (this.layout.endsWith('-tb') &&
-        0 === this[uo].attempt &&
-        this[uo].numberInLine > 0) ||
-      this[Fo]()[Uo]()
+        0 === this[po].attempt &&
+        this[po].numberInLine > 0) ||
+      this[Ro]()[Wo]()
     );
   }
-  [Lo]() {
-    const e = this[Io]();
-    if (!e[Lo]()) return !1;
-    if (void 0 !== this[uo]._isSplittable) return this[uo]._isSplittable;
+  [Xo]() {
+    const e = this[Oo]();
+    if (!e[Xo]()) return !1;
+    if (void 0 !== this[po]._isSplittable) return this[po]._isSplittable;
     if ('position' === this.layout || this.layout.includes('row')) {
-      this[uo]._isSplittable = !1;
+      this[po]._isSplittable = !1;
       return !1;
     }
-    if (e.layout?.endsWith('-tb') && 0 !== e[uo].numberInLine) return !1;
-    this[uo]._isSplittable = !0;
+    if (e.layout?.endsWith('-tb') && 0 !== e[po].numberInLine) return !1;
+    this[po]._isSplittable = !0;
     return !0;
   }
-  [po]() {
+  [bo]() {
     return flushHTML(this);
   }
-  [to](e, t) {
+  [no](e, t) {
     addHTML(this, e, t);
   }
-  [wo]() {
+  [ko]() {
     return getAvailableSpace(this);
   }
-  [ul](e) {
+  [pl](e) {
     setTabIndex(this);
     if (
       'hidden' === this.presence ||
@@ -45890,10 +45963,10 @@ class ExclGroup extends XFAObject {
       return HTMLResult.EMPTY;
     fixDimensions(this);
     const t = [],
-      a = { id: this[dl], class: [] };
+      a = { id: this[bl], class: [] };
     setAccess(this, a.class);
-    this[uo] ||= Object.create(null);
-    Object.assign(this[uo], {
+    this[po] ||= Object.create(null);
+    Object.assign(this[po], {
       children: t,
       attributes: a,
       attempt: 0,
@@ -45908,15 +45981,15 @@ class ExclGroup extends XFAObject {
       prevHeight: 0,
       currentWidth: 0,
     });
-    const n = this[Lo]();
+    const n = this[Xo]();
     n || setFirstUnsplittable(this);
     if (!checkDimensions(this, e)) return HTMLResult.FAILURE;
     const s = new Set(['field']);
     if (this.layout.includes('row')) {
-      const e = this[Io]().columnWidths;
+      const e = this[Oo]().columnWidths;
       if (Array.isArray(e) && e.length > 0) {
-        this[uo].columnWidths = e;
-        this[uo].currentColumn = 0;
+        this[po].columnWidths = e;
+        this[po].currentColumn = 0;
       }
     }
     const r = toStyle(
@@ -45936,31 +46009,31 @@ class ExclGroup extends XFAObject {
     a.style = r;
     a.class = i;
     this.name && (a.xfaName = this.name);
-    this[tl]();
+    this[nl]();
     const l = 'lr-tb' === this.layout || 'rl-tb' === this.layout,
       f = l ? 2 : 1;
-    for (; this[uo].attempt < f; this[uo].attempt++) {
-      l && 1 === this[uo].attempt && (this[uo].numberInLine = 0);
-      const e = this[no]({ filter: s, include: !0 });
+    for (; this[po].attempt < f; this[po].attempt++) {
+      l && 1 === this[po].attempt && (this[po].numberInLine = 0);
+      const e = this[ro]({ filter: s, include: !0 });
       if (e.success) break;
       if (e.isBreak()) {
-        this[el]();
+        this[al]();
         return e;
       }
       if (
         l &&
-        0 === this[uo].attempt &&
-        0 === this[uo].numberInLine &&
-        !this[Oo]()[uo].noLayoutFailure
+        0 === this[po].attempt &&
+        0 === this[po].numberInLine &&
+        !this[Ho]()[po].noLayoutFailure
       ) {
-        this[uo].attempt = f;
+        this[po].attempt = f;
         break;
       }
     }
-    this[el]();
+    this[al]();
     n || unsetFirstUnsplittable(this);
-    if (this[uo].attempt === f) {
-      n || delete this[uo];
+    if (this[po].attempt === f) {
+      n || delete this[po];
       return HTMLResult.FAILURE;
     }
     let c = 0,
@@ -45969,20 +46042,20 @@ class ExclGroup extends XFAObject {
       c = this.margin.leftInset + this.margin.rightInset;
       h = this.margin.topInset + this.margin.bottomInset;
     }
-    const u = Math.max(this[uo].width + c, this.w || 0),
-      m = Math.max(this[uo].height + h, this.h || 0),
+    const u = Math.max(this[po].width + c, this.w || 0),
+      m = Math.max(this[po].height + h, this.h || 0),
       p = [this.x, this.y, u, m];
     '' === this.w && (r.width = measureToString(u));
     '' === this.h && (r.height = measureToString(m));
     const d = { name: 'div', attributes: a, children: t };
     applyAssist(this, a);
-    delete this[uo];
+    delete this[po];
     return HTMLResult.success(createWrapper(this, d), p);
   }
 }
 class Execute extends XFAObject {
   constructor(e) {
-    super(Jl, 'execute');
+    super(Zl, 'execute');
     this.connection = e.connection || '';
     this.executeType = getStringOption(e.executeType, ['import', 'remerge']);
     this.id = e.id || '';
@@ -45993,7 +46066,7 @@ class Execute extends XFAObject {
 }
 class Extras extends XFAObject {
   constructor(e) {
-    super(Jl, 'extras', !0);
+    super(Zl, 'extras', !0);
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -46013,7 +46086,7 @@ class Extras extends XFAObject {
 }
 class Field extends XFAObject {
   constructor(e) {
-    super(Jl, 'field', !0);
+    super(Zl, 'field', !0);
     this.access = getStringOption(e.access, [
       'open',
       'nonInteractive',
@@ -46092,18 +46165,18 @@ class Field extends XFAObject {
     this.event = new XFAObjectArray();
     this.setProperty = new XFAObjectArray();
   }
-  [Po]() {
+  [Eo]() {
     return !0;
   }
-  [ll](e) {
+  [cl](e) {
     _setValue(this, e);
   }
-  [ul](e) {
+  [pl](e) {
     setTabIndex(this);
     if (!this.ui) {
       this.ui = new Ui({});
-      this.ui[Ro] = this[Ro];
-      this[ao](this.ui);
+      this.ui[Bo] = this[Bo];
+      this[so](this.ui);
       let e;
       switch (this.items.children.length) {
         case 0:
@@ -46118,7 +46191,7 @@ class Field extends XFAObject {
           e = new ChoiceList({});
           this.ui.choiceList = e;
       }
-      this.ui[ao](e);
+      this.ui[so](e);
     }
     if (
       !this.ui ||
@@ -46128,9 +46201,9 @@ class Field extends XFAObject {
       0 === this.w
     )
       return HTMLResult.EMPTY;
-    this.caption && delete this.caption[uo];
-    this[tl]();
-    const t = this.caption ? this.caption[ul](e).html : null,
+    this.caption && delete this.caption[po];
+    this[nl]();
+    const t = this.caption ? this.caption[pl](e).html : null,
       a = this.w,
       n = this.h;
     let s = 0,
@@ -46156,7 +46229,7 @@ class Field extends XFAObject {
             let a = null;
             if (e) {
               const t = stripQuotes(e.typeface),
-                n = e[Ro].fontFinder.find(t);
+                n = e[Bo].fontFinder.find(t);
               a = selectFont(e, n);
             }
             if (!a) return { lineHeight: 12, lineGap: 2, lineNoGap: 10 };
@@ -46170,13 +46243,13 @@ class Field extends XFAObject {
             };
           })(this.font, !0).lineNoGap;
       }
-      i = getBorderDims(this.ui[vo]());
+      i = getBorderDims(this.ui[Ao]());
       n += i.w;
       o += i.h;
       if (this.caption) {
-        const { w: s, h: r, isBroken: i } = this.caption[vo](e);
-        if (i && this[Io]()[Uo]()) {
-          this[el]();
+        const { w: s, h: r, isBroken: i } = this.caption[Ao](e);
+        if (i && this[Oo]()[Wo]()) {
+          this[al]();
           return HTMLResult.FAILURE;
         }
         t = s;
@@ -46210,13 +46283,13 @@ class Field extends XFAObject {
         );
       }
     }
-    this[el]();
+    this[al]();
     fixDimensions(this);
     setFirstUnsplittable(this);
     if (!checkDimensions(this, e)) {
       this.w = a;
       this.h = n;
-      this[el]();
+      this[al]();
       return HTMLResult.FAILURE;
     }
     unsetFirstUnsplittable(this);
@@ -46235,7 +46308,7 @@ class Field extends XFAObject {
     const l = ['xfaField'];
     this.font && l.push('xfaFont');
     isPrintOnly(this) && l.push('xfaPrintOnly');
-    const f = { style: o, id: this[dl], class: l };
+    const f = { style: o, id: this[bl], class: l };
     if (o.margin) {
       o.padding = o.margin;
       delete o.margin;
@@ -46245,17 +46318,17 @@ class Field extends XFAObject {
     const c = [],
       h = { name: 'div', attributes: f, children: c };
     applyAssist(this, f);
-    const u = this.border ? this.border[pl]() : null,
+    const u = this.border ? this.border[gl]() : null,
       m = computeBbox(this, h, e),
-      p = this.ui[ul]().html;
+      p = this.ui[pl]().html;
     if (!p) {
       Object.assign(o, u);
       return HTMLResult.success(createWrapper(this, h), m);
     }
-    this[fl] &&
+    this[hl] &&
       (p.children?.[0]
-        ? (p.children[0].attributes.tabindex = this[fl])
-        : (p.attributes.tabindex = this[fl]));
+        ? (p.children[0].attributes.tabindex = this[hl])
+        : (p.attributes.tabindex = this[hl]));
     p.attributes.style ||= Object.create(null);
     let d = null;
     if (this.ui.button) {
@@ -46264,13 +46337,13 @@ class Field extends XFAObject {
     } else Object.assign(o, u);
     c.push(p);
     if (this.value)
-      if (this.ui.imageEdit) p.children.push(this.value[ul]().html);
+      if (this.ui.imageEdit) p.children.push(this.value[pl]().html);
       else if (!this.ui.button) {
         let e = '';
-        if (this.value.exData) e = this.value.exData[cl]();
-        else if (this.value.text) e = this.value.text[vo]();
+        if (this.value.exData) e = this.value.exData[ul]();
+        else if (this.value.text) e = this.value.text[Ao]();
         else {
-          const t = this.value[ul]().html;
+          const t = this.value[pl]().html;
           null !== t && (e = t.children[0].value);
         }
         this.ui.textEdit &&
@@ -46287,11 +46360,11 @@ class Field extends XFAObject {
         }
       }
     if (!this.ui.imageEdit && p.children?.[0] && this.h) {
-      i = i || getBorderDims(this.ui[vo]());
+      i = i || getBorderDims(this.ui[Ao]());
       let t = 0;
       if (this.caption && ['top', 'bottom'].includes(this.caption.placement)) {
         t = this.caption.reserve;
-        t <= 0 && (t = this.caption[vo](e).h);
+        t <= 0 && (t = this.caption[Ao](e).h);
         const a = this.h - t - r - i.h;
         p.children[0].attributes.style.height = measureToString(a);
       } else p.children[0].attributes.style.height = '100%';
@@ -46333,7 +46406,7 @@ class Field extends XFAObject {
 }
 class Fill extends XFAObject {
   constructor(e) {
-    super(Jl, 'fill', !0);
+    super(Zl, 'fill', !0);
     this.id = e.id || '';
     this.presence = getStringOption(e.presence, [
       'visible',
@@ -46351,9 +46424,9 @@ class Fill extends XFAObject {
     this.solid = null;
     this.stipple = null;
   }
-  [pl]() {
-    const e = this[Fo](),
-      t = e[Fo]()[Fo](),
+  [gl]() {
+    const e = this[Ro](),
+      t = e[Ro]()[Ro](),
       a = Object.create(null);
     let n = 'color',
       s = n;
@@ -46370,12 +46443,12 @@ class Fill extends XFAObject {
       if ('extras' === e || 'color' === e) continue;
       const t = this[e];
       if (!(t instanceof XFAObject)) continue;
-      const r = t[pl](this.color);
+      const r = t[gl](this.color);
       r && (a[r.startsWith('#') ? n : s] = r);
       return a;
     }
     if (this.color?.value) {
-      const e = this.color[pl]();
+      const e = this.color[gl]();
       a[e.startsWith('#') ? n : s] = e;
     }
     return a;
@@ -46383,7 +46456,7 @@ class Fill extends XFAObject {
 }
 class Filter extends XFAObject {
   constructor(e) {
-    super(Jl, 'filter', !0);
+    super(Zl, 'filter', !0);
     this.addRevocationInfo = getStringOption(e.addRevocationInfo, [
       '',
       'required',
@@ -46413,23 +46486,23 @@ class Filter extends XFAObject {
 }
 class Float extends ContentObject {
   constructor(e) {
-    super(Jl, 'float');
+    super(Zl, 'float');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    const e = parseFloat(this[fo].trim());
-    this[fo] = isNaN(e) ? null : e;
+  [go]() {
+    const e = parseFloat(this[ho].trim());
+    this[ho] = isNaN(e) ? null : e;
   }
-  [ul](e) {
-    return valueToHtml(null !== this[fo] ? this[fo].toString() : '');
+  [pl](e) {
+    return valueToHtml(null !== this[ho] ? this[ho].toString() : '');
   }
 }
 class template_Font extends XFAObject {
   constructor(e) {
-    super(Jl, 'font', !0);
+    super(Zl, 'font', !0);
     this.baselineShift = getMeasurement(e.baselineShift);
     this.fontHorizontalScale = getFloat({
       data: e.fontHorizontalScale,
@@ -46474,11 +46547,11 @@ class template_Font extends XFAObject {
     this.extras = null;
     this.fill = null;
   }
-  [so](e) {
-    super[so](e);
-    this[Ro].usedTypefaces.add(this.typeface);
+  [io](e) {
+    super[io](e);
+    this[Bo].usedTypefaces.add(this.typeface);
   }
-  [pl]() {
+  [gl]() {
     const e = toStyle(this, 'fill'),
       t = e.color;
     if (t)
@@ -46502,7 +46575,7 @@ class template_Font extends XFAObject {
     }
     e.fontStyle = this.posture;
     e.fontSize = measureToString(0.99 * this.size);
-    setFontFamily(this, this, this[Ro].fontFinder, e);
+    setFontFamily(this, this, this[Bo].fontFinder, e);
     if (0 !== this.underline) {
       e.textDecoration = 'underline';
       2 === this.underline && (e.textDecorationStyle = 'double');
@@ -46513,7 +46586,7 @@ class template_Font extends XFAObject {
 }
 class Format extends XFAObject {
   constructor(e) {
-    super(Jl, 'format', !0);
+    super(Zl, 'format', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -46523,7 +46596,7 @@ class Format extends XFAObject {
 }
 class Handler extends StringObject {
   constructor(e) {
-    super(Jl, 'handler');
+    super(Zl, 'handler');
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -46532,7 +46605,7 @@ class Handler extends StringObject {
 }
 class Hyphenation extends XFAObject {
   constructor(e) {
-    super(Jl, 'hyphenation');
+    super(Zl, 'hyphenation');
     this.excludeAllCaps = getInteger({
       data: e.excludeAllCaps,
       defaultValue: 0,
@@ -46570,7 +46643,7 @@ class Hyphenation extends XFAObject {
 }
 class Image extends StringObject {
   constructor(e) {
-    super(Jl, 'image');
+    super(Zl, 'image');
     this.aspect = getStringOption(e.aspect, [
       'fit',
       'actual',
@@ -46590,17 +46663,17 @@ class Image extends StringObject {
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [ul]() {
-    if (this.contentType && !Zl.has(this.contentType.toLowerCase()))
+  [pl]() {
+    if (this.contentType && !tf.has(this.contentType.toLowerCase()))
       return HTMLResult.EMPTY;
-    let e = this[Ro].images?.get(this.href);
-    if (!e && (this.href || !this[fo])) return HTMLResult.EMPTY;
+    let e = this[Bo].images?.get(this.href);
+    if (!e && (this.href || !this[ho])) return HTMLResult.EMPTY;
     e ||
       'base64' !== this.transferEncoding ||
-      (e = Uint8Array.fromBase64(this[fo]));
+      (e = Uint8Array.fromBase64(this[ho]));
     if (!e) return HTMLResult.EMPTY;
     if (!this.contentType) {
-      for (const [t, a] of ef)
+      for (const [t, a] of af)
         if (e.length > t.length && t.every((t, a) => t === e[a])) {
           this.contentType = a;
           break;
@@ -46622,21 +46695,21 @@ class Image extends StringObject {
       case 'width':
         a = { width: '100%', objectFit: 'fill' };
     }
-    const n = this[Fo]();
+    const n = this[Ro]();
     return HTMLResult.success({
       name: 'img',
       attributes: {
         class: ['xfaImage'],
         style: a,
         src: URL.createObjectURL(t),
-        alt: n ? ariaLabel(n[Fo]()) : null,
+        alt: n ? ariaLabel(n[Ro]()) : null,
       },
     });
   }
 }
 class ImageEdit extends XFAObject {
   constructor(e) {
-    super(Jl, 'imageEdit', !0);
+    super(Zl, 'imageEdit', !0);
     this.data = getStringOption(e.data, ['link', 'embed']);
     this.id = e.id || '';
     this.use = e.use || '';
@@ -46645,7 +46718,7 @@ class ImageEdit extends XFAObject {
     this.extras = null;
     this.margin = null;
   }
-  [ul](e) {
+  [pl](e) {
     return 'embed' === this.data
       ? HTMLResult.success({ name: 'div', children: [], attributes: {} })
       : HTMLResult.EMPTY;
@@ -46653,23 +46726,23 @@ class ImageEdit extends XFAObject {
 }
 class Integer extends ContentObject {
   constructor(e) {
-    super(Jl, 'integer');
+    super(Zl, 'integer');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    const e = parseInt(this[fo].trim(), 10);
-    this[fo] = isNaN(e) ? null : e;
+  [go]() {
+    const e = parseInt(this[ho].trim(), 10);
+    this[ho] = isNaN(e) ? null : e;
   }
-  [ul](e) {
-    return valueToHtml(null !== this[fo] ? this[fo].toString() : '');
+  [pl](e) {
+    return valueToHtml(null !== this[ho] ? this[ho].toString() : '');
   }
 }
 class Issuers extends XFAObject {
   constructor(e) {
-    super(Jl, 'issuers', !0);
+    super(Zl, 'issuers', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -46679,7 +46752,7 @@ class Issuers extends XFAObject {
 }
 class Items extends XFAObject {
   constructor(e) {
-    super(Jl, 'items', !0);
+    super(Zl, 'items', !0);
     this.id = e.id || '';
     this.name = e.name || '';
     this.presence = getStringOption(e.presence, [
@@ -46707,15 +46780,15 @@ class Items extends XFAObject {
     this.text = new XFAObjectArray();
     this.time = new XFAObjectArray();
   }
-  [ul]() {
+  [pl]() {
     const e = [];
-    for (const t of this[Ao]()) e.push(t[cl]());
+    for (const t of this[Co]()) e.push(t[ul]());
     return HTMLResult.success(e);
   }
 }
 class Keep extends XFAObject {
   constructor(e) {
-    super(Jl, 'keep', !0);
+    super(Zl, 'keep', !0);
     this.id = e.id || '';
     const t = ['none', 'contentArea', 'pageArea'];
     this.intact = getStringOption(e.intact, t);
@@ -46728,7 +46801,7 @@ class Keep extends XFAObject {
 }
 class KeyUsage extends XFAObject {
   constructor(e) {
-    super(Jl, 'keyUsage');
+    super(Zl, 'keyUsage');
     const t = ['', 'yes', 'no'];
     this.crlSign = getStringOption(e.crlSign, t);
     this.dataEncipherment = getStringOption(e.dataEncipherment, t);
@@ -46747,7 +46820,7 @@ class KeyUsage extends XFAObject {
 }
 class Line extends XFAObject {
   constructor(e) {
-    super(Jl, 'line', !0);
+    super(Zl, 'line', !0);
     this.hand = getStringOption(e.hand, ['even', 'left', 'right']);
     this.id = e.id || '';
     this.slope = getStringOption(e.slope, ['\\', '/']);
@@ -46755,10 +46828,10 @@ class Line extends XFAObject {
     this.usehref = e.usehref || '';
     this.edge = null;
   }
-  [ul]() {
-    const e = this[Fo]()[Fo](),
+  [pl]() {
+    const e = this[Ro]()[Ro](),
       t = this.edge || new Edge({}),
-      a = t[pl](),
+      a = t[gl](),
       n = Object.create(null),
       s = 'visible' === t.presence ? t.thickness : 0;
     n.strokeWidth = measureToString(s);
@@ -46808,7 +46881,7 @@ class Line extends XFAObject {
 }
 class Linear extends XFAObject {
   constructor(e) {
-    super(Jl, 'linear', !0);
+    super(Zl, 'linear', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, [
       'toRight',
@@ -46821,26 +46894,26 @@ class Linear extends XFAObject {
     this.color = null;
     this.extras = null;
   }
-  [pl](e) {
-    e = e ? e[pl]() : '#FFFFFF';
-    return `linear-gradient(${this.type.replace(/([RBLT])/, ' $1').toLowerCase()}, ${e}, ${this.color ? this.color[pl]() : '#000000'})`;
+  [gl](e) {
+    e = e ? e[gl]() : '#FFFFFF';
+    return `linear-gradient(${this.type.replace(/([RBLT])/, ' $1').toLowerCase()}, ${e}, ${this.color ? this.color[gl]() : '#000000'})`;
   }
 }
 class LockDocument extends ContentObject {
   constructor(e) {
-    super(Jl, 'lockDocument');
+    super(Zl, 'lockDocument');
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    this[fo] = getStringOption(this[fo], ['auto', '0', '1']);
+  [go]() {
+    this[ho] = getStringOption(this[ho], ['auto', '0', '1']);
   }
 }
 class Manifest extends XFAObject {
   constructor(e) {
-    super(Jl, 'manifest', !0);
+    super(Zl, 'manifest', !0);
     this.action = getStringOption(e.action, ['include', 'all', 'exclude']);
     this.id = e.id || '';
     this.name = e.name || '';
@@ -46852,7 +46925,7 @@ class Manifest extends XFAObject {
 }
 class Margin extends XFAObject {
   constructor(e) {
-    super(Jl, 'margin', !0);
+    super(Zl, 'margin', !0);
     this.bottomInset = getMeasurement(e.bottomInset, '0');
     this.id = e.id || '';
     this.leftInset = getMeasurement(e.leftInset, '0');
@@ -46862,7 +46935,7 @@ class Margin extends XFAObject {
     this.usehref = e.usehref || '';
     this.extras = null;
   }
-  [pl]() {
+  [gl]() {
     return {
       margin:
         measureToString(this.topInset) +
@@ -46877,7 +46950,7 @@ class Margin extends XFAObject {
 }
 class Mdp extends XFAObject {
   constructor(e) {
-    super(Jl, 'mdp');
+    super(Zl, 'mdp');
     this.id = e.id || '';
     this.permissions = getInteger({
       data: e.permissions,
@@ -46891,7 +46964,7 @@ class Mdp extends XFAObject {
 }
 class Medium extends XFAObject {
   constructor(e) {
-    super(Jl, 'medium');
+    super(Zl, 'medium');
     this.id = e.id || '';
     this.imagingBBox = (function getBBox(e) {
       const t = -1;
@@ -46917,7 +46990,7 @@ class Medium extends XFAObject {
 }
 class Message extends XFAObject {
   constructor(e) {
-    super(Jl, 'message', !0);
+    super(Zl, 'message', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -46926,7 +46999,7 @@ class Message extends XFAObject {
 }
 class NumericEdit extends XFAObject {
   constructor(e) {
-    super(Jl, 'numericEdit', !0);
+    super(Zl, 'numericEdit', !0);
     this.hScrollPolicy = getStringOption(e.hScrollPolicy, [
       'auto',
       'off',
@@ -46940,15 +47013,15 @@ class NumericEdit extends XFAObject {
     this.extras = null;
     this.margin = null;
   }
-  [ul](e) {
+  [pl](e) {
     const t = toStyle(this, 'border', 'font', 'margin'),
-      a = this[Fo]()[Fo](),
+      a = this[Ro]()[Ro](),
       n = {
         name: 'input',
         attributes: {
           type: 'text',
-          fieldId: a[dl],
-          dataId: a[co]?.[dl] || a[dl],
+          fieldId: a[bl],
+          dataId: a[uo]?.[bl] || a[bl],
           class: ['xfaTextfield'],
           style: t,
           'aria-label': ariaLabel(a),
@@ -46968,7 +47041,7 @@ class NumericEdit extends XFAObject {
 }
 class Occur extends XFAObject {
   constructor(e) {
-    super(Jl, 'occur', !0);
+    super(Zl, 'occur', !0);
     this.id = e.id || '';
     this.initial =
       '' !== e.initial
@@ -46986,8 +47059,8 @@ class Occur extends XFAObject {
     this.usehref = e.usehref || '';
     this.extras = null;
   }
-  [so]() {
-    const e = this[Fo](),
+  [io]() {
+    const e = this[Ro](),
       t = this.min;
     '' === this.min &&
       (this.min = e instanceof PageArea || e instanceof PageSet ? 0 : 1);
@@ -47005,7 +47078,7 @@ class Occur extends XFAObject {
 }
 class Oid extends StringObject {
   constructor(e) {
-    super(Jl, 'oid');
+    super(Zl, 'oid');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -47014,7 +47087,7 @@ class Oid extends StringObject {
 }
 class Oids extends XFAObject {
   constructor(e) {
-    super(Jl, 'oids', !0);
+    super(Zl, 'oids', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -47024,7 +47097,7 @@ class Oids extends XFAObject {
 }
 class Overflow extends XFAObject {
   constructor(e) {
-    super(Jl, 'overflow');
+    super(Zl, 'overflow');
     this.id = e.id || '';
     this.leader = e.leader || '';
     this.target = e.target || '';
@@ -47032,14 +47105,14 @@ class Overflow extends XFAObject {
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [vo]() {
-    if (!this[uo]) {
-      const e = this[Fo](),
-        t = this[Oo](),
-        a = t[rl](this.target, e),
-        n = t[rl](this.leader, e),
-        s = t[rl](this.trailer, e);
-      this[uo] = {
+  [Ao]() {
+    if (!this[po]) {
+      const e = this[Ro](),
+        t = this[Ho](),
+        a = t[ol](this.target, e),
+        n = t[ol](this.leader, e),
+        s = t[ol](this.trailer, e);
+      this[po] = {
         target: a?.[0] || null,
         leader: n?.[0] || null,
         trailer: s?.[0] || null,
@@ -47047,12 +47120,12 @@ class Overflow extends XFAObject {
         addTrailer: !1,
       };
     }
-    return this[uo];
+    return this[po];
   }
 }
 class PageArea extends XFAObject {
   constructor(e) {
-    super(Jl, 'pageArea', !0);
+    super(Zl, 'pageArea', !0);
     this.blankOrNotBlank = getStringOption(e.blankOrNotBlank, [
       'any',
       'blank',
@@ -47092,59 +47165,59 @@ class PageArea extends XFAObject {
     this.field = new XFAObjectArray();
     this.subform = new XFAObjectArray();
   }
-  [Wo]() {
-    if (!this[uo]) {
-      this[uo] = { numberOfUse: 0 };
+  [Go]() {
+    if (!this[po]) {
+      this[po] = { numberOfUse: 0 };
       return !0;
     }
     return (
       !this.occur ||
       -1 === this.occur.max ||
-      this[uo].numberOfUse < this.occur.max
+      this[po].numberOfUse < this.occur.max
     );
   }
-  [ro]() {
-    delete this[uo];
+  [oo]() {
+    delete this[po];
   }
-  [Co]() {
-    this[uo] ||= { numberOfUse: 0 };
-    const e = this[Fo]();
-    if ('orderedOccurrence' === e.relation && this[Wo]()) {
-      this[uo].numberOfUse += 1;
+  [Fo]() {
+    this[po] ||= { numberOfUse: 0 };
+    const e = this[Ro]();
+    if ('orderedOccurrence' === e.relation && this[Go]()) {
+      this[po].numberOfUse += 1;
       return this;
     }
-    return e[Co]();
+    return e[Fo]();
   }
-  [wo]() {
-    return this[uo].space || { width: 0, height: 0 };
+  [ko]() {
+    return this[po].space || { width: 0, height: 0 };
   }
-  [ul]() {
-    this[uo] ||= { numberOfUse: 1 };
+  [pl]() {
+    this[po] ||= { numberOfUse: 1 };
     const e = [];
-    this[uo].children = e;
+    this[po].children = e;
     const t = Object.create(null);
     if (this.medium && this.medium.short && this.medium.long) {
       t.width = measureToString(this.medium.short);
       t.height = measureToString(this.medium.long);
-      this[uo].space = { width: this.medium.short, height: this.medium.long };
+      this[po].space = { width: this.medium.short, height: this.medium.long };
       if ('landscape' === this.medium.orientation) {
         const e = t.width;
         t.width = t.height;
         t.height = e;
-        this[uo].space = { width: this.medium.long, height: this.medium.short };
+        this[po].space = { width: this.medium.long, height: this.medium.short };
       }
     } else warn('XFA - No medium specified in pageArea: please file a bug.');
-    this[no]({
+    this[ro]({
       filter: new Set(['area', 'draw', 'field', 'subform']),
       include: !0,
     });
-    this[no]({ filter: new Set(['contentArea']), include: !0 });
+    this[ro]({ filter: new Set(['contentArea']), include: !0 });
     return HTMLResult.success({
       name: 'div',
       children: e,
       attributes: {
         class: ['xfaPage'],
-        id: this[dl],
+        id: this[bl],
         style: t,
         xfaName: this.name,
       },
@@ -47153,7 +47226,7 @@ class PageArea extends XFAObject {
 }
 class PageSet extends XFAObject {
   constructor(e) {
-    super(Jl, 'pageSet', !0);
+    super(Zl, 'pageSet', !0);
     this.duplexImposition = getStringOption(e.duplexImposition, [
       'longEdge',
       'shortEdge',
@@ -47173,40 +47246,40 @@ class PageSet extends XFAObject {
     this.pageArea = new XFAObjectArray();
     this.pageSet = new XFAObjectArray();
   }
-  [ro]() {
-    for (const e of this.pageArea.children) e[ro]();
-    for (const e of this.pageSet.children) e[ro]();
+  [oo]() {
+    for (const e of this.pageArea.children) e[oo]();
+    for (const e of this.pageSet.children) e[oo]();
   }
-  [Wo]() {
+  [Go]() {
     return (
       !this.occur ||
       -1 === this.occur.max ||
-      this[uo].numberOfUse < this.occur.max
+      this[po].numberOfUse < this.occur.max
     );
   }
-  [Co]() {
-    this[uo] ||= { numberOfUse: 1, pageIndex: -1, pageSetIndex: -1 };
+  [Fo]() {
+    this[po] ||= { numberOfUse: 1, pageIndex: -1, pageSetIndex: -1 };
     if ('orderedOccurrence' === this.relation) {
-      if (this[uo].pageIndex + 1 < this.pageArea.children.length) {
-        this[uo].pageIndex += 1;
-        return this.pageArea.children[this[uo].pageIndex][Co]();
+      if (this[po].pageIndex + 1 < this.pageArea.children.length) {
+        this[po].pageIndex += 1;
+        return this.pageArea.children[this[po].pageIndex][Fo]();
       }
-      if (this[uo].pageSetIndex + 1 < this.pageSet.children.length) {
-        this[uo].pageSetIndex += 1;
-        return this.pageSet.children[this[uo].pageSetIndex][Co]();
+      if (this[po].pageSetIndex + 1 < this.pageSet.children.length) {
+        this[po].pageSetIndex += 1;
+        return this.pageSet.children[this[po].pageSetIndex][Fo]();
       }
-      if (this[Wo]()) {
-        this[uo].numberOfUse += 1;
-        this[uo].pageIndex = -1;
-        this[uo].pageSetIndex = -1;
-        return this[Co]();
+      if (this[Go]()) {
+        this[po].numberOfUse += 1;
+        this[po].pageIndex = -1;
+        this[po].pageSetIndex = -1;
+        return this[Fo]();
       }
-      const e = this[Fo]();
-      if (e instanceof PageSet) return e[Co]();
-      this[ro]();
-      return this[Co]();
+      const e = this[Ro]();
+      if (e instanceof PageSet) return e[Fo]();
+      this[oo]();
+      return this[Fo]();
     }
-    const e = this[Oo]()[uo].pageNumber,
+    const e = this[Ho]()[po].pageNumber,
       t = e % 2 == 0 ? 'even' : 'odd',
       a = 0 === e ? 'first' : 'rest';
     let n = this.pageArea.children.find(
@@ -47225,7 +47298,7 @@ class PageSet extends XFAObject {
 }
 class Para extends XFAObject {
   constructor(e) {
-    super(Jl, 'para', !0);
+    super(Zl, 'para', !0);
     this.hAlign = getStringOption(e.hAlign, [
       'left',
       'center',
@@ -47267,7 +47340,7 @@ class Para extends XFAObject {
     });
     this.hyphenation = null;
   }
-  [pl]() {
+  [gl]() {
     const e = toStyle(this, 'hAlign');
     '' !== this.marginLeft &&
       (e.paddingLeft = measureToString(this.marginLeft));
@@ -47283,13 +47356,13 @@ class Para extends XFAObject {
     this.lineHeight > 0 && (e.lineHeight = measureToString(this.lineHeight));
     '' !== this.tabDefault && (e.tabSize = measureToString(this.tabDefault));
     this.tabStops.length;
-    this.hyphenatation && Object.assign(e, this.hyphenatation[pl]());
+    this.hyphenatation && Object.assign(e, this.hyphenatation[gl]());
     return e;
   }
 }
 class PasswordEdit extends XFAObject {
   constructor(e) {
-    super(Jl, 'passwordEdit', !0);
+    super(Zl, 'passwordEdit', !0);
     this.hScrollPolicy = getStringOption(e.hScrollPolicy, [
       'auto',
       'off',
@@ -47306,7 +47379,7 @@ class PasswordEdit extends XFAObject {
 }
 class template_Pattern extends XFAObject {
   constructor(e) {
-    super(Jl, 'pattern', !0);
+    super(Zl, 'pattern', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, [
       'crossHatch',
@@ -47321,9 +47394,9 @@ class template_Pattern extends XFAObject {
     this.color = null;
     this.extras = null;
   }
-  [pl](e) {
-    e = e ? e[pl]() : '#FFFFFF';
-    const t = this.color ? this.color[pl]() : '#000000',
+  [gl](e) {
+    e = e ? e[gl]() : '#FFFFFF';
+    const t = this.color ? this.color[gl]() : '#000000',
       a = 'repeating-linear-gradient',
       n = `${e},${e} 5px,${t} 5px,${t} 10px`;
     switch (this.type) {
@@ -47345,7 +47418,7 @@ class template_Pattern extends XFAObject {
 }
 class Picture extends StringObject {
   constructor(e) {
-    super(Jl, 'picture');
+    super(Zl, 'picture');
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -47353,7 +47426,7 @@ class Picture extends StringObject {
 }
 class Proto extends XFAObject {
   constructor(e) {
-    super(Jl, 'proto', !0);
+    super(Zl, 'proto', !0);
     this.appearanceFilter = new XFAObjectArray();
     this.arc = new XFAObjectArray();
     this.area = new XFAObjectArray();
@@ -47468,7 +47541,7 @@ class Proto extends XFAObject {
 }
 class Radial extends XFAObject {
   constructor(e) {
-    super(Jl, 'radial', !0);
+    super(Zl, 'radial', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['toEdge', 'toCenter']);
     this.use = e.use || '';
@@ -47476,15 +47549,15 @@ class Radial extends XFAObject {
     this.color = null;
     this.extras = null;
   }
-  [pl](e) {
-    e = e ? e[pl]() : '#FFFFFF';
-    const t = this.color ? this.color[pl]() : '#000000';
+  [gl](e) {
+    e = e ? e[gl]() : '#FFFFFF';
+    const t = this.color ? this.color[gl]() : '#000000';
     return `radial-gradient(circle at center, ${'toEdge' === this.type ? `${e},${t}` : `${t},${e}`})`;
   }
 }
 class Reason extends StringObject {
   constructor(e) {
-    super(Jl, 'reason');
+    super(Zl, 'reason');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -47493,7 +47566,7 @@ class Reason extends StringObject {
 }
 class Reasons extends XFAObject {
   constructor(e) {
-    super(Jl, 'reasons', !0);
+    super(Zl, 'reasons', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -47503,7 +47576,7 @@ class Reasons extends XFAObject {
 }
 class Rectangle extends XFAObject {
   constructor(e) {
-    super(Jl, 'rectangle', !0);
+    super(Zl, 'rectangle', !0);
     this.hand = getStringOption(e.hand, ['even', 'left', 'right']);
     this.id = e.id || '';
     this.use = e.use || '';
@@ -47512,18 +47585,18 @@ class Rectangle extends XFAObject {
     this.edge = new XFAObjectArray(4);
     this.fill = null;
   }
-  [ul]() {
+  [pl]() {
     const e = this.edge.children.length ? this.edge.children[0] : new Edge({}),
-      t = e[pl](),
+      t = e[gl](),
       a = Object.create(null);
     'visible' === this.fill?.presence
-      ? Object.assign(a, this.fill[pl]())
+      ? Object.assign(a, this.fill[gl]())
       : (a.fill = 'transparent');
     a.strokeWidth = measureToString('visible' === e.presence ? e.thickness : 0);
     a.stroke = t.color;
     const n = (
         this.corner.children.length ? this.corner.children[0] : new Corner({})
-      )[pl](),
+      )[gl](),
       s = {
         name: 'svg',
         children: [
@@ -47548,7 +47621,7 @@ class Rectangle extends XFAObject {
           height: '100%',
         },
       };
-    if (hasMargin(this[Fo]()[Fo]()))
+    if (hasMargin(this[Ro]()[Ro]()))
       return HTMLResult.success({
         name: 'div',
         attributes: {
@@ -47562,7 +47635,7 @@ class Rectangle extends XFAObject {
 }
 class RefElement extends StringObject {
   constructor(e) {
-    super(Jl, 'ref');
+    super(Zl, 'ref');
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -47570,7 +47643,7 @@ class RefElement extends StringObject {
 }
 class Script extends StringObject {
   constructor(e) {
-    super(Jl, 'script');
+    super(Zl, 'script');
     this.binding = e.binding || '';
     this.contentType = e.contentType || '';
     this.id = e.id || '';
@@ -47582,7 +47655,7 @@ class Script extends StringObject {
 }
 class SetProperty extends XFAObject {
   constructor(e) {
-    super(Jl, 'setProperty');
+    super(Zl, 'setProperty');
     this.connection = e.connection || '';
     this.ref = e.ref || '';
     this.target = e.target || '';
@@ -47590,7 +47663,7 @@ class SetProperty extends XFAObject {
 }
 class SignData extends XFAObject {
   constructor(e) {
-    super(Jl, 'signData', !0);
+    super(Zl, 'signData', !0);
     this.id = e.id || '';
     this.operation = getStringOption(e.operation, ['sign', 'clear', 'verify']);
     this.ref = e.ref || '';
@@ -47603,7 +47676,7 @@ class SignData extends XFAObject {
 }
 class Signature extends XFAObject {
   constructor(e) {
-    super(Jl, 'signature', !0);
+    super(Zl, 'signature', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['PDF1.3', 'PDF1.6']);
     this.use = e.use || '';
@@ -47617,7 +47690,7 @@ class Signature extends XFAObject {
 }
 class Signing extends XFAObject {
   constructor(e) {
-    super(Jl, 'signing', !0);
+    super(Zl, 'signing', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -47627,19 +47700,19 @@ class Signing extends XFAObject {
 }
 class Solid extends XFAObject {
   constructor(e) {
-    super(Jl, 'solid', !0);
+    super(Zl, 'solid', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
     this.extras = null;
   }
-  [pl](e) {
-    return e ? e[pl]() : '#FFFFFF';
+  [gl](e) {
+    return e ? e[gl]() : '#FFFFFF';
   }
 }
 class Speak extends StringObject {
   constructor(e) {
-    super(Jl, 'speak');
+    super(Zl, 'speak');
     this.disable = getInteger({
       data: e.disable,
       defaultValue: 0,
@@ -47659,7 +47732,7 @@ class Speak extends StringObject {
 }
 class Stipple extends XFAObject {
   constructor(e) {
-    super(Jl, 'stipple', !0);
+    super(Zl, 'stipple', !0);
     this.id = e.id || '';
     this.rate = getInteger({
       data: e.rate,
@@ -47671,7 +47744,7 @@ class Stipple extends XFAObject {
     this.color = null;
     this.extras = null;
   }
-  [pl](e) {
+  [gl](e) {
     const t = this.rate / 100;
     return Util.makeHexColor(
       Math.round(e.value.r * (1 - t) + this.value.r * t),
@@ -47682,7 +47755,7 @@ class Stipple extends XFAObject {
 }
 class Subform extends XFAObject {
   constructor(e) {
-    super(Jl, 'subform', !0);
+    super(Zl, 'subform', !0);
     this.access = getStringOption(e.access, [
       'open',
       'nonInteractive',
@@ -47788,50 +47861,50 @@ class Subform extends XFAObject {
     this.subform = new XFAObjectArray();
     this.subformSet = new XFAObjectArray();
   }
-  [Io]() {
-    const e = this[Fo]();
-    return e instanceof SubformSet ? e[Io]() : e;
+  [Oo]() {
+    const e = this[Ro]();
+    return e instanceof SubformSet ? e[Oo]() : e;
   }
-  [Po]() {
+  [Eo]() {
     return !0;
   }
-  [Uo]() {
+  [Wo]() {
     return (
       (this.layout.endsWith('-tb') &&
-        0 === this[uo].attempt &&
-        this[uo].numberInLine > 0) ||
-      this[Fo]()[Uo]()
+        0 === this[po].attempt &&
+        this[po].numberInLine > 0) ||
+      this[Ro]()[Wo]()
     );
   }
-  *[xo]() {
+  *[Io]() {
     yield* getContainedChildren(this);
   }
-  [po]() {
+  [bo]() {
     return flushHTML(this);
   }
-  [to](e, t) {
+  [no](e, t) {
     addHTML(this, e, t);
   }
-  [wo]() {
+  [ko]() {
     return getAvailableSpace(this);
   }
-  [Lo]() {
-    const e = this[Io]();
-    if (!e[Lo]()) return !1;
-    if (void 0 !== this[uo]._isSplittable) return this[uo]._isSplittable;
+  [Xo]() {
+    const e = this[Oo]();
+    if (!e[Xo]()) return !1;
+    if (void 0 !== this[po]._isSplittable) return this[po]._isSplittable;
     if ('position' === this.layout || this.layout.includes('row')) {
-      this[uo]._isSplittable = !1;
+      this[po]._isSplittable = !1;
       return !1;
     }
     if (this.keep && 'none' !== this.keep.intact) {
-      this[uo]._isSplittable = !1;
+      this[po]._isSplittable = !1;
       return !1;
     }
-    if (e.layout?.endsWith('-tb') && 0 !== e[uo].numberInLine) return !1;
-    this[uo]._isSplittable = !0;
+    if (e.layout?.endsWith('-tb') && 0 !== e[po].numberInLine) return !1;
+    this[po]._isSplittable = !0;
     return !0;
   }
-  [ul](e) {
+  [pl](e) {
     setTabIndex(this);
     if (this.break) {
       if ('auto' !== this.break.after || '' !== this.break.afterTarget) {
@@ -47840,8 +47913,8 @@ class Subform extends XFAObject {
           target: this.break.afterTarget,
           startNew: this.break.startNew.toString(),
         });
-        e[Ro] = this[Ro];
-        this[ao](e);
+        e[Bo] = this[Bo];
+        this[so](e);
         this.breakAfter.push(e);
       }
       if ('auto' !== this.break.before || '' !== this.break.beforeTarget) {
@@ -47850,8 +47923,8 @@ class Subform extends XFAObject {
           target: this.break.beforeTarget,
           startNew: this.break.startNew.toString(),
         });
-        e[Ro] = this[Ro];
-        this[ao](e);
+        e[Bo] = this[Bo];
+        this[so](e);
         this.breakBefore.push(e);
       }
       if ('' !== this.break.overflowTarget) {
@@ -47860,11 +47933,11 @@ class Subform extends XFAObject {
           leader: this.break.overflowLeader,
           trailer: this.break.overflowTrailer,
         });
-        e[Ro] = this[Ro];
-        this[ao](e);
+        e[Bo] = this[Bo];
+        this[so](e);
         this.overflow.push(e);
       }
-      this[al](this.break);
+      this[sl](this.break);
       this.break = null;
     }
     if ('hidden' === this.presence || 'inactive' === this.presence)
@@ -47878,13 +47951,13 @@ class Subform extends XFAObject {
       const e = this.breakBefore.children[0];
       if (handleBreak(e)) return HTMLResult.breakNode(e);
     }
-    if (this[uo]?.afterBreakAfter) return HTMLResult.EMPTY;
+    if (this[po]?.afterBreakAfter) return HTMLResult.EMPTY;
     fixDimensions(this);
     const t = [],
-      a = { id: this[dl], class: [] };
+      a = { id: this[bl], class: [] };
     setAccess(this, a.class);
-    this[uo] ||= Object.create(null);
-    Object.assign(this[uo], {
+    this[po] ||= Object.create(null);
+    Object.assign(this[po], {
       children: t,
       line: null,
       attributes: a,
@@ -47899,9 +47972,9 @@ class Subform extends XFAObject {
       prevHeight: 0,
       currentWidth: 0,
     });
-    const n = this[Oo](),
-      s = n[uo].noLayoutFailure,
-      r = this[Lo]();
+    const n = this[Ho](),
+      s = n[po].noLayoutFailure,
+      r = this[Xo]();
     r || setFirstUnsplittable(this);
     if (!checkDimensions(this, e)) return HTMLResult.FAILURE;
     const i = new Set([
@@ -47913,10 +47986,10 @@ class Subform extends XFAObject {
       'subformSet',
     ]);
     if (this.layout.includes('row')) {
-      const e = this[Io]().columnWidths;
+      const e = this[Oo]().columnWidths;
       if (Array.isArray(e) && e.length > 0) {
-        this[uo].columnWidths = e;
-        this[uo].currentColumn = 0;
+        this[po].columnWidths = e;
+        this[po].currentColumn = 0;
       }
     }
     const o = toStyle(
@@ -47936,43 +48009,43 @@ class Subform extends XFAObject {
     a.class = l;
     this.name && (a.xfaName = this.name);
     if (this.overflow) {
-      const t = this.overflow[vo]();
+      const t = this.overflow[Ao]();
       if (t.addLeader) {
         t.addLeader = !1;
         handleOverflow(this, t.leader, e);
       }
     }
-    this[tl]();
+    this[nl]();
     const c = 'lr-tb' === this.layout || 'rl-tb' === this.layout,
       h = c ? 2 : 1;
-    for (; this[uo].attempt < h; this[uo].attempt++) {
-      c && 1 === this[uo].attempt && (this[uo].numberInLine = 0);
-      const e = this[no]({ filter: i, include: !0 });
+    for (; this[po].attempt < h; this[po].attempt++) {
+      c && 1 === this[po].attempt && (this[po].numberInLine = 0);
+      const e = this[ro]({ filter: i, include: !0 });
       if (e.success) break;
       if (e.isBreak()) {
-        this[el]();
+        this[al]();
         return e;
       }
       if (
         c &&
-        0 === this[uo].attempt &&
-        0 === this[uo].numberInLine &&
-        !n[uo].noLayoutFailure
+        0 === this[po].attempt &&
+        0 === this[po].numberInLine &&
+        !n[po].noLayoutFailure
       ) {
-        this[uo].attempt = h;
+        this[po].attempt = h;
         break;
       }
     }
-    this[el]();
+    this[al]();
     r || unsetFirstUnsplittable(this);
-    n[uo].noLayoutFailure = s;
-    if (this[uo].attempt === h) {
-      this.overflow && (this[Oo]()[uo].overflowNode = this.overflow);
-      r || delete this[uo];
+    n[po].noLayoutFailure = s;
+    if (this[po].attempt === h) {
+      this.overflow && (this[Ho]()[po].overflowNode = this.overflow);
+      r || delete this[po];
       return HTMLResult.FAILURE;
     }
     if (this.overflow) {
-      const t = this.overflow[vo]();
+      const t = this.overflow[Ao]();
       if (t.addTrailer) {
         t.addTrailer = !1;
         handleOverflow(this, t.trailer, e);
@@ -47984,8 +48057,8 @@ class Subform extends XFAObject {
       u = this.margin.leftInset + this.margin.rightInset;
       m = this.margin.topInset + this.margin.bottomInset;
     }
-    const p = Math.max(this[uo].width + u, this.w || 0),
-      d = Math.max(this[uo].height + m, this.h || 0),
+    const p = Math.max(this[po].width + u, this.w || 0),
+      d = Math.max(this[po].height + m, this.h || 0),
       g = [this.x, this.y, p, d];
     '' === this.w && (o.width = measureToString(p));
     '' === this.h && (o.height = measureToString(d));
@@ -47997,17 +48070,17 @@ class Subform extends XFAObject {
     if (this.breakAfter.children.length >= 1) {
       const e = this.breakAfter.children[0];
       if (handleBreak(e)) {
-        this[uo].afterBreakAfter = w;
+        this[po].afterBreakAfter = w;
         return HTMLResult.breakNode(e);
       }
     }
-    delete this[uo];
+    delete this[po];
     return w;
   }
 }
 class SubformSet extends XFAObject {
   constructor(e) {
-    super(Jl, 'subformSet', !0);
+    super(Zl, 'subformSet', !0);
     this.id = e.id || '';
     this.name = e.name || '';
     this.relation = getStringOption(e.relation, [
@@ -48029,30 +48102,30 @@ class SubformSet extends XFAObject {
     this.subform = new XFAObjectArray();
     this.subformSet = new XFAObjectArray();
   }
-  *[xo]() {
+  *[Io]() {
     yield* getContainedChildren(this);
   }
-  [Io]() {
-    let e = this[Fo]();
-    for (; !(e instanceof Subform);) e = e[Fo]();
+  [Oo]() {
+    let e = this[Ro]();
+    for (; !(e instanceof Subform);) e = e[Ro]();
     return e;
   }
-  [Po]() {
+  [Eo]() {
     return !0;
   }
 }
 class SubjectDN extends ContentObject {
   constructor(e) {
-    super(Jl, 'subjectDN');
+    super(Zl, 'subjectDN');
     this.delimiter = e.delimiter || ',';
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    this[fo] = new Map(
-      this[fo].split(this.delimiter).map((e) => {
+  [go]() {
+    this[ho] = new Map(
+      this[ho].split(this.delimiter).map((e) => {
         (e = e.split('=', 2))[0] = e[0].trim();
         return e;
       })
@@ -48061,7 +48134,7 @@ class SubjectDN extends ContentObject {
 }
 class SubjectDNs extends XFAObject {
   constructor(e) {
-    super(Jl, 'subjectDNs', !0);
+    super(Zl, 'subjectDNs', !0);
     this.id = e.id || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
     this.use = e.use || '';
@@ -48071,7 +48144,7 @@ class SubjectDNs extends XFAObject {
 }
 class Submit extends XFAObject {
   constructor(e) {
-    super(Jl, 'submit', !0);
+    super(Zl, 'submit', !0);
     this.embedPDF = getInteger({
       data: e.embedPDF,
       defaultValue: 0,
@@ -48115,7 +48188,7 @@ class Submit extends XFAObject {
 }
 class Template extends XFAObject {
   constructor(e) {
-    super(Jl, 'template', !0);
+    super(Zl, 'template', !0);
     this.baseProfile = getStringOption(e.baseProfile, [
       'full',
       'interactiveForms',
@@ -48123,25 +48196,25 @@ class Template extends XFAObject {
     this.extras = null;
     this.subform = new XFAObjectArray();
   }
-  [mo]() {
+  [go]() {
     0 === this.subform.children.length &&
       warn('XFA - No subforms in template node.');
     this.subform.children.length >= 2 &&
       warn('XFA - Several subforms in template node: please file a bug.');
-    this[fl] = 5e3;
+    this[hl] = 5e3;
   }
-  [Lo]() {
+  [Xo]() {
     return !0;
   }
-  [rl](e, t) {
+  [ol](e, t) {
     return e.startsWith('#')
-      ? [this[Bo].get(e.slice(1))]
+      ? [this[Mo].get(e.slice(1))]
       : searchNode(this, t, e, !0, !0);
   }
-  *[hl]() {
+  *[ml]() {
     if (!this.subform.children.length)
       return HTMLResult.success({ name: 'div', children: [] });
-    this[uo] = {
+    this[po] = {
       overflowNode: null,
       firstUnsplittable: null,
       currentContentArea: null,
@@ -48154,7 +48227,7 @@ class Template extends XFAObject {
       paraStack: [],
     };
     const e = this.subform.children[0];
-    e.pageSet[ro]();
+    e.pageSet[oo]();
     const t = e.pageSet.pageArea.children,
       a = { name: 'div', children: [] };
     let n = null,
@@ -48180,16 +48253,16 @@ class Template extends XFAObject {
       r = s.beforeTarget;
     }
     if (s) {
-      const e = this[rl](r, s[Fo]());
+      const e = this[ol](r, s[Ro]());
       if (e instanceof PageArea) {
         n = e;
-        s[uo] = {};
+        s[po] = {};
       }
     }
     n ||= t[0];
-    n[uo] = { numberOfUse: 1 };
-    const i = n[Fo]();
-    i[uo] = {
+    n[po] = { numberOfUse: 1 };
+    const i = n[Ro]();
+    i[po] = {
       numberOfUse: 1,
       pageIndex: i.pageArea.children.indexOf(n),
       pageSetIndex: 0,
@@ -48210,17 +48283,17 @@ class Template extends XFAObject {
         }
       }
       o = null;
-      this[uo].currentPageArea = n;
-      const t = n[ul]().html;
+      this[po].currentPageArea = n;
+      const t = n[pl]().html;
       a.children.push(t);
       if (l) {
-        this[uo].noLayoutFailure = !0;
-        t.children.push(l[ul](n[uo].space).html);
+        this[po].noLayoutFailure = !0;
+        t.children.push(l[pl](n[po].space).html);
         l = null;
       }
       if (f) {
-        this[uo].noLayoutFailure = !0;
-        t.children.push(f[ul](n[uo].space).html);
+        this[po].noLayoutFailure = !0;
+        t.children.push(f[pl](n[po].space).html);
         f = null;
       }
       const s = n.contentArea.children,
@@ -48228,28 +48301,28 @@ class Template extends XFAObject {
           e.attributes.class.includes('xfaContentarea')
         );
       c = !1;
-      this[uo].firstUnsplittable = null;
-      this[uo].noLayoutFailure = !1;
+      this[po].firstUnsplittable = null;
+      this[po].noLayoutFailure = !1;
       const flush = (t) => {
-        const a = e[po]();
+        const a = e[bo]();
         if (a) {
           c ||= a.children?.length > 0;
           r[t].children.push(a);
         }
       };
       for (let t = u, n = s.length; t < n; t++) {
-        const n = (this[uo].currentContentArea = s[t]),
+        const n = (this[po].currentContentArea = s[t]),
           i = { width: n.w, height: n.h };
         u = 0;
         if (l) {
-          r[t].children.push(l[ul](i).html);
+          r[t].children.push(l[pl](i).html);
           l = null;
         }
         if (f) {
-          r[t].children.push(f[ul](i).html);
+          r[t].children.push(f[pl](i).html);
           f = null;
         }
-        const h = e[ul](i);
+        const h = e[pl](i);
         if (h.success) {
           if (h.html) {
             c ||= h.html.children?.length > 0;
@@ -48262,27 +48335,27 @@ class Template extends XFAObject {
           flush(t);
           if ('auto' === e.targetType) continue;
           if (e.leader) {
-            l = this[rl](e.leader, e[Fo]());
+            l = this[ol](e.leader, e[Ro]());
             l = l ? l[0] : null;
           }
           if (e.trailer) {
-            f = this[rl](e.trailer, e[Fo]());
+            f = this[ol](e.trailer, e[Ro]());
             f = f ? f[0] : null;
           }
           if ('pageArea' === e.targetType) {
-            o = e[uo].target;
+            o = e[po].target;
             t = 1 / 0;
-          } else if (e[uo].target) {
-            o = e[uo].target;
-            u = e[uo].index + 1;
+          } else if (e[po].target) {
+            o = e[po].target;
+            u = e[po].index + 1;
             t = 1 / 0;
-          } else t = e[uo].index;
+          } else t = e[po].index;
           continue;
         }
-        if (this[uo].overflowNode) {
-          const e = this[uo].overflowNode;
-          this[uo].overflowNode = null;
-          const a = e[vo](),
+        if (this[po].overflowNode) {
+          const e = this[po].overflowNode;
+          this[po].overflowNode = null;
+          const a = e[Ao](),
             n = a.target;
           a.addLeader = null !== a.leader;
           a.addTrailer = null !== a.trailer;
@@ -48294,7 +48367,7 @@ class Template extends XFAObject {
             const e = s.indexOf(n);
             if (-1 !== e) e > r ? (t = e - 1) : (u = e);
             else {
-              o = n[Fo]();
+              o = n[Ro]();
               u = o.contentArea.children.indexOf(n);
             }
           }
@@ -48302,16 +48375,16 @@ class Template extends XFAObject {
         }
         flush(t);
       }
-      this[uo].pageNumber += 1;
-      o && (o[Wo]() ? (o[uo].numberOfUse += 1) : (o = null));
-      n = o || n[Co]();
+      this[po].pageNumber += 1;
+      o && (o[Go]() ? (o[po].numberOfUse += 1) : (o = null));
+      n = o || n[Fo]();
       yield null;
     }
   }
 }
 class Text extends ContentObject {
   constructor(e) {
-    super(Jl, 'text');
+    super(Zl, 'text');
     this.id = e.id || '';
     this.maxChars = getInteger({
       data: e.maxChars,
@@ -48323,39 +48396,39 @@ class Text extends ContentObject {
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [eo]() {
+  [ao]() {
     return !0;
   }
-  [Yo](e) {
-    if (e[Go] === bl.xhtml.id) {
-      this[fo] = e;
+  [Qo](e) {
+    if (e[$o] === jl.xhtml.id) {
+      this[ho] = e;
       return !0;
     }
-    warn(`XFA - Invalid content in Text: ${e[Vo]}.`);
+    warn(`XFA - Invalid content in Text: ${e[Yo]}.`);
     return !1;
   }
-  [Qo](e) {
-    this[fo] instanceof XFAObject || super[Qo](e);
+  [el](e) {
+    this[ho] instanceof XFAObject || super[el](e);
   }
-  [mo]() {
-    'string' == typeof this[fo] &&
-      (this[fo] = this[fo].replaceAll('\r\n', '\n'));
+  [go]() {
+    'string' == typeof this[ho] &&
+      (this[ho] = this[ho].replaceAll('\r\n', '\n'));
   }
-  [vo]() {
-    return 'string' == typeof this[fo]
-      ? this[fo]
+  [Ao]() {
+    return 'string' == typeof this[ho]
+      ? this[ho]
           .split(/[\u2029\u2028\n]/)
           .filter((e) => !!e)
           .join('\n')
-      : this[fo][cl]();
+      : this[ho][ul]();
   }
-  [ul](e) {
-    if ('string' == typeof this[fo]) {
-      const e = valueToHtml(this[fo]).html;
-      if (this[fo].includes('\u2029')) {
+  [pl](e) {
+    if ('string' == typeof this[ho]) {
+      const e = valueToHtml(this[ho]).html;
+      if (this[ho].includes('\u2029')) {
         e.name = 'div';
         e.children = [];
-        this[fo]
+        this[ho]
           .split('\u2029')
           .map((e) =>
             e
@@ -48365,21 +48438,21 @@ class Text extends ContentObject {
           .forEach((t) => {
             e.children.push({ name: 'p', children: t });
           });
-      } else if (/[\u2028\n]/.test(this[fo])) {
+      } else if (/[\u2028\n]/.test(this[ho])) {
         e.name = 'div';
         e.children = [];
-        this[fo].split(/[\u2028\n]/).forEach((t) => {
+        this[ho].split(/[\u2028\n]/).forEach((t) => {
           e.children.push({ name: 'span', value: t }, { name: 'br' });
         });
       }
       return HTMLResult.success(e);
     }
-    return this[fo][ul](e);
+    return this[ho][pl](e);
   }
 }
 class TextEdit extends XFAObject {
   constructor(e) {
-    super(Jl, 'textEdit', !0);
+    super(Zl, 'textEdit', !0);
     this.allowRichText = getInteger({
       data: e.allowRichText,
       defaultValue: 0,
@@ -48408,18 +48481,18 @@ class TextEdit extends XFAObject {
     this.extras = null;
     this.margin = null;
   }
-  [ul](e) {
+  [pl](e) {
     const t = toStyle(this, 'border', 'font', 'margin');
     let a;
-    const n = this[Fo]()[Fo]();
+    const n = this[Ro]()[Ro]();
     '' === this.multiLine && (this.multiLine = n instanceof Draw ? 1 : 0);
     a =
       1 === this.multiLine
         ? {
             name: 'textarea',
             attributes: {
-              dataId: n[co]?.[dl] || n[dl],
-              fieldId: n[dl],
+              dataId: n[uo]?.[bl] || n[bl],
+              fieldId: n[bl],
               class: ['xfaTextfield'],
               style: t,
               'aria-label': ariaLabel(n),
@@ -48430,8 +48503,8 @@ class TextEdit extends XFAObject {
             name: 'input',
             attributes: {
               type: 'text',
-              dataId: n[co]?.[dl] || n[dl],
-              fieldId: n[dl],
+              dataId: n[uo]?.[bl] || n[bl],
+              fieldId: n[bl],
               class: ['xfaTextfield'],
               style: t,
               'aria-label': ariaLabel(n),
@@ -48451,23 +48524,23 @@ class TextEdit extends XFAObject {
 }
 class Time extends StringObject {
   constructor(e) {
-    super(Jl, 'time');
+    super(Zl, 'time');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
   }
-  [mo]() {
-    const e = this[fo].trim();
-    this[fo] = e ? new Date(e) : null;
+  [go]() {
+    const e = this[ho].trim();
+    this[ho] = e ? new Date(e) : null;
   }
-  [ul](e) {
-    return valueToHtml(this[fo] ? this[fo].toString() : '');
+  [pl](e) {
+    return valueToHtml(this[ho] ? this[ho].toString() : '');
   }
 }
 class TimeStamp extends XFAObject {
   constructor(e) {
-    super(Jl, 'timeStamp');
+    super(Zl, 'timeStamp');
     this.id = e.id || '';
     this.server = e.server || '';
     this.type = getStringOption(e.type, ['optional', 'required']);
@@ -48477,7 +48550,7 @@ class TimeStamp extends XFAObject {
 }
 class ToolTip extends StringObject {
   constructor(e) {
-    super(Jl, 'toolTip');
+    super(Zl, 'toolTip');
     this.id = e.id || '';
     this.rid = e.rid || '';
     this.use = e.use || '';
@@ -48486,7 +48559,7 @@ class ToolTip extends StringObject {
 }
 class Traversal extends XFAObject {
   constructor(e) {
-    super(Jl, 'traversal', !0);
+    super(Zl, 'traversal', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -48496,7 +48569,7 @@ class Traversal extends XFAObject {
 }
 class Traverse extends XFAObject {
   constructor(e) {
-    super(Jl, 'traverse', !0);
+    super(Zl, 'traverse', !0);
     this.id = e.id || '';
     this.operation = getStringOption(e.operation, [
       'next',
@@ -48516,13 +48589,13 @@ class Traverse extends XFAObject {
   get name() {
     return this.operation;
   }
-  [Xo]() {
+  [Ko]() {
     return !1;
   }
 }
 class Ui extends XFAObject {
   constructor(e) {
-    super(Jl, 'ui', !0);
+    super(Zl, 'ui', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -48540,28 +48613,28 @@ class Ui extends XFAObject {
     this.signature = null;
     this.textEdit = null;
   }
-  [vo]() {
-    if (void 0 === this[uo]) {
+  [Ao]() {
+    if (void 0 === this[po]) {
       for (const e of Object.getOwnPropertyNames(this)) {
         if ('extras' === e || 'picture' === e) continue;
         const t = this[e];
         if (t instanceof XFAObject) {
-          this[uo] = t;
+          this[po] = t;
           return t;
         }
       }
-      this[uo] = null;
+      this[po] = null;
     }
-    return this[uo];
+    return this[po];
   }
-  [ul](e) {
-    const t = this[vo]();
-    return t ? t[ul](e) : HTMLResult.EMPTY;
+  [pl](e) {
+    const t = this[Ao]();
+    return t ? t[pl](e) : HTMLResult.EMPTY;
   }
 }
 class Validate extends XFAObject {
   constructor(e) {
-    super(Jl, 'validate', !0);
+    super(Zl, 'validate', !0);
     this.formatTest = getStringOption(e.formatTest, [
       'warning',
       'disabled',
@@ -48588,7 +48661,7 @@ class Validate extends XFAObject {
 }
 class Value extends XFAObject {
   constructor(e) {
-    super(Jl, 'value', !0);
+    super(Zl, 'value', !0);
     this.id = e.id || '';
     this.override = getInteger({
       data: e.override,
@@ -48612,52 +48685,52 @@ class Value extends XFAObject {
     this.text = null;
     this.time = null;
   }
-  [ll](e) {
-    const t = this[Fo]();
+  [cl](e) {
+    const t = this[Ro]();
     if (t instanceof Field && t.ui?.imageEdit) {
       if (!this.image) {
         this.image = new Image({});
-        this[ao](this.image);
+        this[so](this.image);
       }
-      this.image[fo] = e[fo];
+      this.image[ho] = e[ho];
       return;
     }
-    const a = e[Vo];
+    const a = e[Yo];
     if (null === this[a]) {
       for (const e of Object.getOwnPropertyNames(this)) {
         const t = this[e];
         if (t instanceof XFAObject) {
           this[e] = null;
-          this[al](t);
+          this[sl](t);
         }
       }
-      this[e[Vo]] = e;
-      this[ao](e);
-    } else this[a][fo] = e[fo];
+      this[e[Yo]] = e;
+      this[so](e);
+    } else this[a][ho] = e[ho];
   }
-  [cl]() {
+  [ul]() {
     if (this.exData)
-      return 'string' == typeof this.exData[fo]
-        ? this.exData[fo].trim()
-        : this.exData[fo][cl]().trim();
+      return 'string' == typeof this.exData[ho]
+        ? this.exData[ho].trim()
+        : this.exData[ho][ul]().trim();
     for (const e of Object.getOwnPropertyNames(this)) {
       if ('image' === e) continue;
       const t = this[e];
-      if (t instanceof XFAObject) return (t[fo] || '').toString().trim();
+      if (t instanceof XFAObject) return (t[ho] || '').toString().trim();
     }
     return null;
   }
-  [ul](e) {
+  [pl](e) {
     for (const t of Object.getOwnPropertyNames(this)) {
       const a = this[t];
-      if (a instanceof XFAObject) return a[ul](e);
+      if (a instanceof XFAObject) return a[pl](e);
     }
     return HTMLResult.EMPTY;
   }
 }
 class Variables extends XFAObject {
   constructor(e) {
-    super(Jl, 'variables', !0);
+    super(Zl, 'variables', !0);
     this.id = e.id || '';
     this.use = e.use || '';
     this.usehref = e.usehref || '';
@@ -48674,15 +48747,15 @@ class Variables extends XFAObject {
     this.text = new XFAObjectArray();
     this.time = new XFAObjectArray();
   }
-  [Xo]() {
+  [Ko]() {
     return !0;
   }
 }
 class TemplateNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(TemplateNamespace, e)) {
       const a = TemplateNamespace[e](t);
-      a[ol](t);
+      a[fl](t);
       return a;
     }
   }
@@ -49026,19 +49099,19 @@ class TemplateNamespace {
     return new Variables(e);
   }
 }
-const tf = bl.datasets.id;
+const nf = jl.datasets.id;
 function createText(e) {
   const t = new Text({});
-  t[fo] = e;
+  t[ho] = e;
   return t;
 }
 class Binder {
   constructor(e) {
     this.root = e;
     this.datasets = e.datasets;
-    this.data = e.datasets?.data || new XmlObject(bl.datasets.id, 'data');
-    this.emptyMerge = 0 === this.data[Ao]().length;
-    this.root.form = this.form = e.template[oo]();
+    this.data = e.datasets?.data || new XmlObject(jl.datasets.id, 'data');
+    this.emptyMerge = 0 === this.data[Co]().length;
+    this.root.form = this.form = e.template[fo]();
   }
   _isConsumeData() {
     return !this.emptyMerge && this._mergeMode;
@@ -49054,23 +49127,23 @@ class Binder {
     return this.data;
   }
   _bindValue(e, t, a) {
-    e[co] = t;
-    if (e[Ho]())
-      if (t[_o]()) {
-        const a = t[qo]();
-        e[ll](createText(a));
+    e[uo] = t;
+    if (e[Do]())
+      if (t[zo]()) {
+        const a = t[So]();
+        e[cl](createText(a));
       } else if (
         e instanceof Field &&
         'multiSelect' === e.ui?.choiceList?.open
       ) {
-        const a = t[Ao]()
-          .map((e) => e[fo].trim())
+        const a = t[Co]()
+          .map((e) => e[ho].trim())
           .join('\n');
-        e[ll](createText(a));
+        e[cl](createText(a));
       } else
         this._isConsumeData() && warn("XFA - Nodes haven't the same type.");
     else
-      !t[_o]() || this._isMatchTemplate()
+      !t[zo]() || this._isMatchTemplate()
         ? this._bindElement(e, t)
         : warn("XFA - Nodes haven't the same type.");
   }
@@ -49078,22 +49151,22 @@ class Binder {
     if (!e) return null;
     let s, r;
     for (let n = 0; n < 3; n++) {
-      s = a[So](e, !1, !0);
+      s = a[xo](e, !1, !0);
       for (;;) {
         r = s.next().value;
         if (!r) break;
-        if (t === r[_o]()) return r;
+        if (t === r[zo]()) return r;
       }
-      if (a[Go] === bl.datasets.id && 'data' === a[Vo]) break;
-      a = a[Fo]();
+      if (a[$o] === jl.datasets.id && 'data' === a[Yo]) break;
+      a = a[Ro]();
     }
     if (!n) return null;
-    s = this.data[So](e, !0, !1);
+    s = this.data[xo](e, !0, !1);
     r = s.next().value;
     if (r) return r;
-    s = this.data[go](e, !0);
+    s = this.data[wo](e, !0);
     r = s.next().value;
-    return r?.[_o]() ? r : null;
+    return r?.[zo]() ? r : null;
   }
   _setProperties(e, t) {
     if (Object.hasOwn(e, 'setProperty'))
@@ -49107,7 +49180,7 @@ class Binder {
           continue;
         }
         const [i] = r;
-        if (!i[Eo](this.data)) {
+        if (!i[Lo](this.data)) {
           warn('XFA - Invalid node: must be a data node.');
           continue;
         }
@@ -49117,11 +49190,11 @@ class Binder {
           continue;
         }
         const [l] = o;
-        if (!l[Eo](e)) {
+        if (!l[Lo](e)) {
           warn('XFA - Invalid target: must be a property or subproperty.');
           continue;
         }
-        const f = l[Fo]();
+        const f = l[Ro]();
         if (l instanceof SetProperty || f instanceof SetProperty) {
           warn(
             'XFA - Invalid target: cannot be a setProperty or one of its properties.'
@@ -49134,8 +49207,8 @@ class Binder {
           );
           continue;
         }
-        const c = i[cl](),
-          h = l[Vo];
+        const c = i[ul](),
+          h = l[Yo];
         if (l instanceof XFAAttribute) {
           const e = Object.create(null);
           e[h] = c;
@@ -49145,10 +49218,10 @@ class Binder {
           f[h] = t[h];
           continue;
         }
-        if (Object.hasOwn(l, fo)) {
-          l[co] = i;
-          l[fo] = c;
-          l[mo]();
+        if (Object.hasOwn(l, ho)) {
+          l[uo] = i;
+          l[ho] = c;
+          l[go]();
         } else warn('XFA - Invalid node to use in setProperty');
       }
   }
@@ -49159,13 +49232,13 @@ class Binder {
       e.bindItems.isEmpty()
     )
       return;
-    for (const t of e.items.children) e[al](t);
+    for (const t of e.items.children) e[sl](t);
     e.items.clear();
     const a = new Items({}),
       n = new Items({});
-    e[ao](a);
+    e[so](a);
     e.items.push(a);
-    e[ao](n);
+    e[so](n);
     e.items.push(n);
     for (const { ref: s, labelRef: r, valueRef: i, connection: o } of e
       .bindItems.children) {
@@ -49174,7 +49247,7 @@ class Binder {
       const e = searchNode(this.root, t, s, !1, !1);
       if (e)
         for (const t of e) {
-          if (!t[Eo](this.datasets)) {
+          if (!t[Lo](this.datasets)) {
             warn(`XFA - Invalid ref (${s}): must be a datasets child.`);
             continue;
           }
@@ -49184,7 +49257,7 @@ class Binder {
             continue;
           }
           const [o] = e;
-          if (!o[Eo](this.datasets)) {
+          if (!o[Lo](this.datasets)) {
             warn('XFA - Invalid label: must be a datasets child.');
             continue;
           }
@@ -49194,15 +49267,15 @@ class Binder {
             continue;
           }
           const [f] = l;
-          if (!f[Eo](this.datasets)) {
+          if (!f[Lo](this.datasets)) {
             warn('XFA - Invalid value: must be a datasets child.');
             continue;
           }
-          const c = createText(o[cl]()),
-            h = createText(f[cl]());
-          a[ao](c);
+          const c = createText(o[ul]()),
+            h = createText(f[ul]());
+          a[so](c);
           a.text.push(c);
-          n[ao](h);
+          n[so](h);
           n.text.push(h);
         }
       else warn(`XFA - Invalid reference: ${s}.`);
@@ -49211,22 +49284,22 @@ class Binder {
   _bindOccurrences(e, t, a) {
     let n;
     if (t.length > 1) {
-      n = e[oo]();
-      n[al](n.occur);
+      n = e[fo]();
+      n[sl](n.occur);
       n.occur = null;
     }
     this._bindValue(e, t[0], a);
     this._setProperties(e, t[0]);
     this._bindItems(e, t[0]);
     if (1 === t.length) return;
-    const s = e[Fo](),
-      r = e[Vo],
-      i = s[Do](e);
+    const s = e[Ro](),
+      r = e[Yo],
+      i = s[No](e);
     for (let e = 1, o = t.length; e < o; e++) {
       const o = t[e],
-        l = n[oo]();
+        l = n[fo]();
       s[r].push(l);
-      s[Mo](i + e, l);
+      s[Po](i + e, l);
       this._bindValue(l, o, a);
       this._setProperties(l, o);
       this._bindItems(l, o);
@@ -49236,25 +49309,25 @@ class Binder {
     if (!this.emptyMerge) return;
     const { occur: t } = e;
     if (!t || t.initial <= 1) return;
-    const a = e[Fo](),
-      n = e[Vo];
+    const a = e[Ro](),
+      n = e[Yo];
     if (!(a[n] instanceof XFAObjectArray)) return;
     let s;
     s = e.name
       ? a[n].children.filter((t) => t.name === e.name).length
       : a[n].children.length;
-    const r = a[Do](e) + 1,
+    const r = a[No](e) + 1,
       i = t.initial - s;
     if (i) {
-      const t = e[oo]();
-      t[al](t.occur);
+      const t = e[fo]();
+      t[sl](t.occur);
       t.occur = null;
       a[n].push(t);
-      a[Mo](r, t);
+      a[Po](r, t);
       for (let e = 1; e < i; e++) {
-        const s = t[oo]();
+        const s = t[fo]();
         a[n].push(s);
-        a[Mo](r + e, s);
+        a[Po](r + e, s);
       }
     }
   }
@@ -49272,21 +49345,21 @@ class Binder {
   _bindElement(e, t) {
     const a = [];
     this._createOccurrences(e);
-    for (const n of e[Ao]()) {
-      if (n[co]) continue;
-      if (void 0 === this._mergeMode && 'subform' === n[Vo]) {
+    for (const n of e[Co]()) {
+      if (n[uo]) continue;
+      if (void 0 === this._mergeMode && 'subform' === n[Yo]) {
         this._mergeMode = 'consumeData' === n.mergeMode;
-        const e = t[Ao]();
+        const e = t[Co]();
         if (e.length > 0) this._bindOccurrences(n, [e[0]], null);
         else if (this.emptyMerge) {
-          const e = t[Go] === tf ? -1 : t[Go],
-            a = (n[co] = new XmlObject(e, n.name || 'root'));
-          t[ao](a);
+          const e = t[$o] === nf ? -1 : t[$o],
+            a = (n[uo] = new XmlObject(e, n.name || 'root'));
+          t[so](a);
           this._bindElement(n, a);
         }
         continue;
       }
-      if (!n[Po]()) continue;
+      if (!n[Eo]()) continue;
       let e = !1,
         s = null,
         r = null,
@@ -49301,13 +49374,13 @@ class Binder {
             break;
           case 'dataRef':
             if (!n.bind.ref) {
-              warn(`XFA - ref is empty in node ${n[Vo]}.`);
+              warn(`XFA - ref is empty in node ${n[Yo]}.`);
               this._setAndBind(n, t);
               continue;
             }
             r = n.bind.ref;
         }
-        n.bind.picture && (s = n.bind.picture[fo]);
+        n.bind.picture && (s = n.bind.picture[ho]);
       }
       const [o, l] = this._getOccurInfo(n);
       if (r) {
@@ -49315,16 +49388,16 @@ class Binder {
         if (null === i) {
           i = createDataNode(this.data, t, r);
           if (!i) continue;
-          this._isConsumeData() && (i[lo] = !0);
+          this._isConsumeData() && (i[co] = !0);
           this._setAndBind(n, i);
           continue;
         }
-        this._isConsumeData() && (i = i.filter((e) => !e[lo]));
+        this._isConsumeData() && (i = i.filter((e) => !e[co]));
         i.length > l ? (i = i.slice(0, l)) : 0 === i.length && (i = null);
         i &&
           this._isConsumeData() &&
           i.forEach((e) => {
-            e[lo] = !0;
+            e[co] = !0;
           });
       } else {
         if (!n.name) {
@@ -49334,27 +49407,27 @@ class Binder {
         if (this._isConsumeData()) {
           const a = [];
           for (; a.length < l;) {
-            const s = this._findDataByNameToConsume(n.name, n[Ho](), t, e);
+            const s = this._findDataByNameToConsume(n.name, n[Do](), t, e);
             if (!s) break;
-            s[lo] = !0;
+            s[co] = !0;
             a.push(s);
           }
           i = a.length > 0 ? a : null;
         } else {
-          i = t[So](n.name, !1, this.emptyMerge).next().value;
+          i = t[xo](n.name, !1, this.emptyMerge).next().value;
           if (!i) {
             if (0 === o) {
               a.push(n);
               continue;
             }
-            const e = t[Go] === tf ? -1 : t[Go];
-            i = n[co] = new XmlObject(e, n.name);
-            this.emptyMerge && (i[lo] = !0);
-            t[ao](i);
+            const e = t[$o] === nf ? -1 : t[$o];
+            i = n[uo] = new XmlObject(e, n.name);
+            this.emptyMerge && (i[co] = !0);
+            t[so](i);
             this._setAndBind(n, i);
             continue;
           }
-          this.emptyMerge && (i[lo] = !0);
+          this.emptyMerge && (i[co] = !0);
           i = [i];
         }
       }
@@ -49364,7 +49437,7 @@ class Binder {
           ? this._setAndBind(n, t)
           : a.push(n);
     }
-    a.forEach((e) => e[Fo]()[al](e));
+    a.forEach((e) => e[Ro]()[sl](e));
   }
 }
 class DataHandler {
@@ -49373,7 +49446,7 @@ class DataHandler {
     this.dataset = e.datasets || null;
   }
   serialize(e) {
-    const t = [[-1, this.data[Ao]()]];
+    const t = [[-1, this.data[Co]()]];
     for (; t.length > 0;) {
       const a = t.at(-1),
         [n, s] = a;
@@ -49382,35 +49455,35 @@ class DataHandler {
         continue;
       }
       const r = s[++a[0]],
-        i = e.get(r[dl]);
-      if (i) r[ll](i);
+        i = e.get(r[bl]);
+      if (i) r[cl](i);
       else {
-        const t = r[bo]();
+        const t = r[jo]();
         for (const a of t.values()) {
-          const t = e.get(a[dl]);
+          const t = e.get(a[bl]);
           if (t) {
-            a[ll](t);
+            a[cl](t);
             break;
           }
         }
       }
-      const o = r[Ao]();
+      const o = r[Co]();
       o.length > 0 && t.push([-1, o]);
     }
     const a = [
       '<xfa:datasets xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/">',
     ];
     if (this.dataset)
-      for (const e of this.dataset[Ao]()) 'data' !== e[Vo] && e[ml](a);
-    this.data[ml](a);
+      for (const e of this.dataset[Co]()) 'data' !== e[Yo] && e[dl](a);
+    this.data[dl](a);
     a.push('</xfa:datasets>');
     return a.join('');
   }
 }
-const af = bl.config.id;
+const sf = jl.config.id;
 class Acrobat extends XFAObject {
   constructor(e) {
-    super(af, 'acrobat', !0);
+    super(sf, 'acrobat', !0);
     this.acrobat7 = null;
     this.autoSave = null;
     this.common = null;
@@ -49421,60 +49494,60 @@ class Acrobat extends XFAObject {
 }
 class Acrobat7 extends XFAObject {
   constructor(e) {
-    super(af, 'acrobat7', !0);
+    super(sf, 'acrobat7', !0);
     this.dynamicRender = null;
   }
 }
 class ADBE_JSConsole extends OptionObject {
   constructor(e) {
-    super(af, 'ADBE_JSConsole', ['delegate', 'Enable', 'Disable']);
+    super(sf, 'ADBE_JSConsole', ['delegate', 'Enable', 'Disable']);
   }
 }
 class ADBE_JSDebugger extends OptionObject {
   constructor(e) {
-    super(af, 'ADBE_JSDebugger', ['delegate', 'Enable', 'Disable']);
+    super(sf, 'ADBE_JSDebugger', ['delegate', 'Enable', 'Disable']);
   }
 }
 class AddSilentPrint extends Option01 {
   constructor(e) {
-    super(af, 'addSilentPrint');
+    super(sf, 'addSilentPrint');
   }
 }
 class AddViewerPreferences extends Option01 {
   constructor(e) {
-    super(af, 'addViewerPreferences');
+    super(sf, 'addViewerPreferences');
   }
 }
 class AdjustData extends Option10 {
   constructor(e) {
-    super(af, 'adjustData');
+    super(sf, 'adjustData');
   }
 }
 class AdobeExtensionLevel extends IntegerObject {
   constructor(e) {
-    super(af, 'adobeExtensionLevel', 0, (e) => e >= 1 && e <= 8);
+    super(sf, 'adobeExtensionLevel', 0, (e) => e >= 1 && e <= 8);
   }
 }
 class Agent extends XFAObject {
   constructor(e) {
-    super(af, 'agent', !0);
+    super(sf, 'agent', !0);
     this.name = e.name ? e.name.trim() : '';
     this.common = new XFAObjectArray();
   }
 }
 class AlwaysEmbed extends ContentObject {
   constructor(e) {
-    super(af, 'alwaysEmbed');
+    super(sf, 'alwaysEmbed');
   }
 }
 class Amd extends StringObject {
   constructor(e) {
-    super(af, 'amd');
+    super(sf, 'amd');
   }
 }
 class config_Area extends XFAObject {
   constructor(e) {
-    super(af, 'area');
+    super(sf, 'area');
     this.level = getInteger({
       data: e.level,
       defaultValue: 0,
@@ -49498,22 +49571,22 @@ class config_Area extends XFAObject {
 }
 class Attributes extends OptionObject {
   constructor(e) {
-    super(af, 'attributes', ['preserve', 'delegate', 'ignore']);
+    super(sf, 'attributes', ['preserve', 'delegate', 'ignore']);
   }
 }
 class AutoSave extends OptionObject {
   constructor(e) {
-    super(af, 'autoSave', ['disabled', 'enabled']);
+    super(sf, 'autoSave', ['disabled', 'enabled']);
   }
 }
 class Base extends StringObject {
   constructor(e) {
-    super(af, 'base');
+    super(sf, 'base');
   }
 }
 class BatchOutput extends XFAObject {
   constructor(e) {
-    super(af, 'batchOutput');
+    super(sf, 'batchOutput');
     this.format = getStringOption(e.format, [
       'none',
       'concat',
@@ -49524,11 +49597,11 @@ class BatchOutput extends XFAObject {
 }
 class BehaviorOverride extends ContentObject {
   constructor(e) {
-    super(af, 'behaviorOverride');
+    super(sf, 'behaviorOverride');
   }
-  [mo]() {
-    this[fo] = new Map(
-      this[fo]
+  [go]() {
+    this[ho] = new Map(
+      this[ho]
         .trim()
         .split(/\s+/)
         .filter((e) => e.includes(':'))
@@ -49538,18 +49611,18 @@ class BehaviorOverride extends ContentObject {
 }
 class Cache extends XFAObject {
   constructor(e) {
-    super(af, 'cache', !0);
+    super(sf, 'cache', !0);
     this.templateCache = null;
   }
 }
 class Change extends Option01 {
   constructor(e) {
-    super(af, 'change');
+    super(sf, 'change');
   }
 }
 class Common extends XFAObject {
   constructor(e) {
-    super(af, 'common', !0);
+    super(sf, 'common', !0);
     this.data = null;
     this.locale = null;
     this.localeSet = null;
@@ -49563,23 +49636,23 @@ class Common extends XFAObject {
 }
 class Compress extends XFAObject {
   constructor(e) {
-    super(af, 'compress');
+    super(sf, 'compress');
     this.scope = getStringOption(e.scope, ['imageOnly', 'document']);
   }
 }
 class CompressLogicalStructure extends Option01 {
   constructor(e) {
-    super(af, 'compressLogicalStructure');
+    super(sf, 'compressLogicalStructure');
   }
 }
 class CompressObjectStream extends Option10 {
   constructor(e) {
-    super(af, 'compressObjectStream');
+    super(sf, 'compressObjectStream');
   }
 }
 class Compression extends XFAObject {
   constructor(e) {
-    super(af, 'compression', !0);
+    super(sf, 'compression', !0);
     this.compressLogicalStructure = null;
     this.compressObjectStream = null;
     this.level = null;
@@ -49588,7 +49661,7 @@ class Compression extends XFAObject {
 }
 class Config extends XFAObject {
   constructor(e) {
-    super(af, 'config', !0);
+    super(sf, 'config', !0);
     this.acrobat = null;
     this.present = null;
     this.trace = null;
@@ -49597,32 +49670,32 @@ class Config extends XFAObject {
 }
 class Conformance extends OptionObject {
   constructor(e) {
-    super(af, 'conformance', ['A', 'B']);
+    super(sf, 'conformance', ['A', 'B']);
   }
 }
 class ContentCopy extends Option01 {
   constructor(e) {
-    super(af, 'contentCopy');
+    super(sf, 'contentCopy');
   }
 }
 class Copies extends IntegerObject {
   constructor(e) {
-    super(af, 'copies', 1, (e) => e >= 1);
+    super(sf, 'copies', 1, (e) => e >= 1);
   }
 }
 class Creator extends StringObject {
   constructor(e) {
-    super(af, 'creator');
+    super(sf, 'creator');
   }
 }
 class CurrentPage extends IntegerObject {
   constructor(e) {
-    super(af, 'currentPage', 0, (e) => e >= 0);
+    super(sf, 'currentPage', 0, (e) => e >= 0);
   }
 }
 class Data extends XFAObject {
   constructor(e) {
-    super(af, 'data', !0);
+    super(sf, 'data', !0);
     this.adjustData = null;
     this.attributes = null;
     this.incrementalLoad = null;
@@ -49639,13 +49712,13 @@ class Data extends XFAObject {
 }
 class Debug extends XFAObject {
   constructor(e) {
-    super(af, 'debug', !0);
+    super(sf, 'debug', !0);
     this.uri = null;
   }
 }
 class DefaultTypeface extends ContentObject {
   constructor(e) {
-    super(af, 'defaultTypeface');
+    super(sf, 'defaultTypeface');
     this.writingScript = getStringOption(e.writingScript, [
       '*',
       'Arabic',
@@ -49665,17 +49738,17 @@ class DefaultTypeface extends ContentObject {
 }
 class Destination extends OptionObject {
   constructor(e) {
-    super(af, 'destination', ['pdf', 'pcl', 'ps', 'webClient', 'zpl']);
+    super(sf, 'destination', ['pdf', 'pcl', 'ps', 'webClient', 'zpl']);
   }
 }
 class DocumentAssembly extends Option01 {
   constructor(e) {
-    super(af, 'documentAssembly');
+    super(sf, 'documentAssembly');
   }
 }
 class Driver extends XFAObject {
   constructor(e) {
-    super(af, 'driver', !0);
+    super(sf, 'driver', !0);
     this.name = e.name ? e.name.trim() : '';
     this.fontInfo = null;
     this.xdc = null;
@@ -49683,7 +49756,7 @@ class Driver extends XFAObject {
 }
 class DuplexOption extends OptionObject {
   constructor(e) {
-    super(af, 'duplexOption', [
+    super(sf, 'duplexOption', [
       'simplex',
       'duplexFlipLongEdge',
       'duplexFlipShortEdge',
@@ -49692,22 +49765,22 @@ class DuplexOption extends OptionObject {
 }
 class DynamicRender extends OptionObject {
   constructor(e) {
-    super(af, 'dynamicRender', ['forbidden', 'required']);
+    super(sf, 'dynamicRender', ['forbidden', 'required']);
   }
 }
 class Embed extends Option01 {
   constructor(e) {
-    super(af, 'embed');
+    super(sf, 'embed');
   }
 }
 class config_Encrypt extends Option01 {
   constructor(e) {
-    super(af, 'encrypt');
+    super(sf, 'encrypt');
   }
 }
 class config_Encryption extends XFAObject {
   constructor(e) {
-    super(af, 'encryption', !0);
+    super(sf, 'encryption', !0);
     this.encrypt = null;
     this.encryptionLevel = null;
     this.permissions = null;
@@ -49715,17 +49788,17 @@ class config_Encryption extends XFAObject {
 }
 class EncryptionLevel extends OptionObject {
   constructor(e) {
-    super(af, 'encryptionLevel', ['40bit', '128bit']);
+    super(sf, 'encryptionLevel', ['40bit', '128bit']);
   }
 }
 class Enforce extends StringObject {
   constructor(e) {
-    super(af, 'enforce');
+    super(sf, 'enforce');
   }
 }
 class Equate extends XFAObject {
   constructor(e) {
-    super(af, 'equate');
+    super(sf, 'equate');
     this.force = getInteger({
       data: e.force,
       defaultValue: 1,
@@ -49737,7 +49810,7 @@ class Equate extends XFAObject {
 }
 class EquateRange extends XFAObject {
   constructor(e) {
-    super(af, 'equateRange');
+    super(sf, 'equateRange');
     this.from = e.from || '';
     this.to = e.to || '';
     this._unicodeRange = e.unicodeRange || '';
@@ -49762,10 +49835,10 @@ class EquateRange extends XFAObject {
 }
 class Exclude extends ContentObject {
   constructor(e) {
-    super(af, 'exclude');
+    super(sf, 'exclude');
   }
-  [mo]() {
-    this[fo] = this[fo]
+  [go]() {
+    this[ho] = this[ho]
       .trim()
       .split(/\s+/)
       .filter(
@@ -49785,17 +49858,17 @@ class Exclude extends ContentObject {
 }
 class ExcludeNS extends StringObject {
   constructor(e) {
-    super(af, 'excludeNS');
+    super(sf, 'excludeNS');
   }
 }
 class FlipLabel extends OptionObject {
   constructor(e) {
-    super(af, 'flipLabel', ['usePrinterSetting', 'on', 'off']);
+    super(sf, 'flipLabel', ['usePrinterSetting', 'on', 'off']);
   }
 }
 class config_FontInfo extends XFAObject {
   constructor(e) {
-    super(af, 'fontInfo', !0);
+    super(sf, 'fontInfo', !0);
     this.embed = null;
     this.map = null;
     this.subsetBelow = null;
@@ -49806,47 +49879,47 @@ class config_FontInfo extends XFAObject {
 }
 class FormFieldFilling extends Option01 {
   constructor(e) {
-    super(af, 'formFieldFilling');
+    super(sf, 'formFieldFilling');
   }
 }
 class GroupParent extends StringObject {
   constructor(e) {
-    super(af, 'groupParent');
+    super(sf, 'groupParent');
   }
 }
 class IfEmpty extends OptionObject {
   constructor(e) {
-    super(af, 'ifEmpty', ['dataValue', 'dataGroup', 'ignore', 'remove']);
+    super(sf, 'ifEmpty', ['dataValue', 'dataGroup', 'ignore', 'remove']);
   }
 }
 class IncludeXDPContent extends StringObject {
   constructor(e) {
-    super(af, 'includeXDPContent');
+    super(sf, 'includeXDPContent');
   }
 }
 class IncrementalLoad extends OptionObject {
   constructor(e) {
-    super(af, 'incrementalLoad', ['none', 'forwardOnly']);
+    super(sf, 'incrementalLoad', ['none', 'forwardOnly']);
   }
 }
 class IncrementalMerge extends Option01 {
   constructor(e) {
-    super(af, 'incrementalMerge');
+    super(sf, 'incrementalMerge');
   }
 }
 class Interactive extends Option01 {
   constructor(e) {
-    super(af, 'interactive');
+    super(sf, 'interactive');
   }
 }
 class Jog extends OptionObject {
   constructor(e) {
-    super(af, 'jog', ['usePrinterSetting', 'none', 'pageSet']);
+    super(sf, 'jog', ['usePrinterSetting', 'none', 'pageSet']);
   }
 }
 class LabelPrinter extends XFAObject {
   constructor(e) {
-    super(af, 'labelPrinter', !0);
+    super(sf, 'labelPrinter', !0);
     this.name = getStringOption(e.name, ['zpl', 'dpl', 'ipl', 'tcpl']);
     this.batchOutput = null;
     this.flipLabel = null;
@@ -49856,32 +49929,32 @@ class LabelPrinter extends XFAObject {
 }
 class Layout extends OptionObject {
   constructor(e) {
-    super(af, 'layout', ['paginate', 'panel']);
+    super(sf, 'layout', ['paginate', 'panel']);
   }
 }
 class Level extends IntegerObject {
   constructor(e) {
-    super(af, 'level', 0, (e) => e > 0);
+    super(sf, 'level', 0, (e) => e > 0);
   }
 }
 class Linearized extends Option01 {
   constructor(e) {
-    super(af, 'linearized');
+    super(sf, 'linearized');
   }
 }
 class Locale extends StringObject {
   constructor(e) {
-    super(af, 'locale');
+    super(sf, 'locale');
   }
 }
 class LocaleSet extends StringObject {
   constructor(e) {
-    super(af, 'localeSet');
+    super(sf, 'localeSet');
   }
 }
 class Log extends XFAObject {
   constructor(e) {
-    super(af, 'log', !0);
+    super(sf, 'log', !0);
     this.mode = null;
     this.threshold = null;
     this.to = null;
@@ -49890,69 +49963,69 @@ class Log extends XFAObject {
 }
 class MapElement extends XFAObject {
   constructor(e) {
-    super(af, 'map', !0);
+    super(sf, 'map', !0);
     this.equate = new XFAObjectArray();
     this.equateRange = new XFAObjectArray();
   }
 }
 class MediumInfo extends XFAObject {
   constructor(e) {
-    super(af, 'mediumInfo', !0);
+    super(sf, 'mediumInfo', !0);
     this.map = null;
   }
 }
 class config_Message extends XFAObject {
   constructor(e) {
-    super(af, 'message', !0);
+    super(sf, 'message', !0);
     this.msgId = null;
     this.severity = null;
   }
 }
 class Messaging extends XFAObject {
   constructor(e) {
-    super(af, 'messaging', !0);
+    super(sf, 'messaging', !0);
     this.message = new XFAObjectArray();
   }
 }
 class Mode extends OptionObject {
   constructor(e) {
-    super(af, 'mode', ['append', 'overwrite']);
+    super(sf, 'mode', ['append', 'overwrite']);
   }
 }
 class ModifyAnnots extends Option01 {
   constructor(e) {
-    super(af, 'modifyAnnots');
+    super(sf, 'modifyAnnots');
   }
 }
 class MsgId extends IntegerObject {
   constructor(e) {
-    super(af, 'msgId', 1, (e) => e >= 1);
+    super(sf, 'msgId', 1, (e) => e >= 1);
   }
 }
 class NameAttr extends StringObject {
   constructor(e) {
-    super(af, 'nameAttr');
+    super(sf, 'nameAttr');
   }
 }
 class NeverEmbed extends ContentObject {
   constructor(e) {
-    super(af, 'neverEmbed');
+    super(sf, 'neverEmbed');
   }
 }
 class NumberOfCopies extends IntegerObject {
   constructor(e) {
-    super(af, 'numberOfCopies', null, (e) => e >= 2 && e <= 5);
+    super(sf, 'numberOfCopies', null, (e) => e >= 2 && e <= 5);
   }
 }
 class OpenAction extends XFAObject {
   constructor(e) {
-    super(af, 'openAction', !0);
+    super(sf, 'openAction', !0);
     this.destination = null;
   }
 }
 class Output extends XFAObject {
   constructor(e) {
-    super(af, 'output', !0);
+    super(sf, 'output', !0);
     this.to = null;
     this.type = null;
     this.uri = null;
@@ -49960,27 +50033,27 @@ class Output extends XFAObject {
 }
 class OutputBin extends StringObject {
   constructor(e) {
-    super(af, 'outputBin');
+    super(sf, 'outputBin');
   }
 }
 class OutputXSL extends XFAObject {
   constructor(e) {
-    super(af, 'outputXSL', !0);
+    super(sf, 'outputXSL', !0);
     this.uri = null;
   }
 }
 class Overprint extends OptionObject {
   constructor(e) {
-    super(af, 'overprint', ['none', 'both', 'draw', 'field']);
+    super(sf, 'overprint', ['none', 'both', 'draw', 'field']);
   }
 }
 class Packets extends StringObject {
   constructor(e) {
-    super(af, 'packets');
+    super(sf, 'packets');
   }
-  [mo]() {
-    '*' !== this[fo] &&
-      (this[fo] = this[fo]
+  [go]() {
+    '*' !== this[ho] &&
+      (this[ho] = this[ho]
         .trim()
         .split(/\s+/)
         .filter((e) =>
@@ -49990,7 +50063,7 @@ class Packets extends StringObject {
 }
 class PageOffset extends XFAObject {
   constructor(e) {
-    super(af, 'pageOffset');
+    super(sf, 'pageOffset');
     this.x = getInteger({
       data: e.x,
       defaultValue: 'useXDCSetting',
@@ -50005,26 +50078,26 @@ class PageOffset extends XFAObject {
 }
 class PageRange extends StringObject {
   constructor(e) {
-    super(af, 'pageRange');
+    super(sf, 'pageRange');
   }
-  [mo]() {
-    const e = this[fo]
+  [go]() {
+    const e = this[ho]
         .trim()
         .split(/\s+/)
         .map((e) => parseInt(e, 10)),
       t = [];
     for (let a = 0, n = e.length; a < n; a += 2) t.push(e.slice(a, a + 2));
-    this[fo] = t;
+    this[ho] = t;
   }
 }
 class Pagination extends OptionObject {
   constructor(e) {
-    super(af, 'pagination', ['simplex', 'duplexShortEdge', 'duplexLongEdge']);
+    super(sf, 'pagination', ['simplex', 'duplexShortEdge', 'duplexLongEdge']);
   }
 }
 class PaginationOverride extends OptionObject {
   constructor(e) {
-    super(af, 'paginationOverride', [
+    super(sf, 'paginationOverride', [
       'none',
       'forceDuplex',
       'forceDuplexLongEdge',
@@ -50035,12 +50108,12 @@ class PaginationOverride extends OptionObject {
 }
 class Part extends IntegerObject {
   constructor(e) {
-    super(af, 'part', 1, (e) => !1);
+    super(sf, 'part', 1, (e) => !1);
   }
 }
 class Pcl extends XFAObject {
   constructor(e) {
-    super(af, 'pcl', !0);
+    super(sf, 'pcl', !0);
     this.name = e.name || '';
     this.batchOutput = null;
     this.fontInfo = null;
@@ -50054,7 +50127,7 @@ class Pcl extends XFAObject {
 }
 class Pdf extends XFAObject {
   constructor(e) {
-    super(af, 'pdf', !0);
+    super(sf, 'pdf', !0);
     this.name = e.name || '';
     this.adobeExtensionLevel = null;
     this.batchOutput = null;
@@ -50079,7 +50152,7 @@ class Pdf extends XFAObject {
 }
 class Pdfa extends XFAObject {
   constructor(e) {
-    super(af, 'pdfa', !0);
+    super(sf, 'pdfa', !0);
     this.amd = null;
     this.conformance = null;
     this.includeXDPContent = null;
@@ -50088,7 +50161,7 @@ class Pdfa extends XFAObject {
 }
 class Permissions extends XFAObject {
   constructor(e) {
-    super(af, 'permissions', !0);
+    super(sf, 'permissions', !0);
     this.accessibleContent = null;
     this.change = null;
     this.contentCopy = null;
@@ -50102,22 +50175,22 @@ class Permissions extends XFAObject {
 }
 class PickTrayByPDFSize extends Option01 {
   constructor(e) {
-    super(af, 'pickTrayByPDFSize');
+    super(sf, 'pickTrayByPDFSize');
   }
 }
 class config_Picture extends StringObject {
   constructor(e) {
-    super(af, 'picture');
+    super(sf, 'picture');
   }
 }
 class PlaintextMetadata extends Option01 {
   constructor(e) {
-    super(af, 'plaintextMetadata');
+    super(sf, 'plaintextMetadata');
   }
 }
 class Presence extends OptionObject {
   constructor(e) {
-    super(af, 'presence', [
+    super(sf, 'presence', [
       'preserve',
       'dissolve',
       'dissolveStructure',
@@ -50128,7 +50201,7 @@ class Presence extends OptionObject {
 }
 class Present extends XFAObject {
   constructor(e) {
-    super(af, 'present', !0);
+    super(sf, 'present', !0);
     this.behaviorOverride = null;
     this.cache = null;
     this.common = null;
@@ -50155,32 +50228,32 @@ class Present extends XFAObject {
 }
 class Print extends Option01 {
   constructor(e) {
-    super(af, 'print');
+    super(sf, 'print');
   }
 }
 class PrintHighQuality extends Option01 {
   constructor(e) {
-    super(af, 'printHighQuality');
+    super(sf, 'printHighQuality');
   }
 }
 class PrintScaling extends OptionObject {
   constructor(e) {
-    super(af, 'printScaling', ['appdefault', 'noScaling']);
+    super(sf, 'printScaling', ['appdefault', 'noScaling']);
   }
 }
 class PrinterName extends StringObject {
   constructor(e) {
-    super(af, 'printerName');
+    super(sf, 'printerName');
   }
 }
 class Producer extends StringObject {
   constructor(e) {
-    super(af, 'producer');
+    super(sf, 'producer');
   }
 }
 class Ps extends XFAObject {
   constructor(e) {
-    super(af, 'ps', !0);
+    super(sf, 'ps', !0);
     this.name = e.name || '';
     this.batchOutput = null;
     this.fontInfo = null;
@@ -50193,10 +50266,10 @@ class Ps extends XFAObject {
 }
 class Range extends ContentObject {
   constructor(e) {
-    super(af, 'range');
+    super(sf, 'range');
   }
-  [mo]() {
-    this[fo] = this[fo]
+  [go]() {
+    this[ho] = this[ho]
       .split(',', 2)
       .map((e) => e.split('-').map((e) => parseInt(e.trim(), 10)))
       .filter((e) => e.every((e) => !isNaN(e)))
@@ -50208,46 +50281,46 @@ class Range extends ContentObject {
 }
 class Record extends ContentObject {
   constructor(e) {
-    super(af, 'record');
+    super(sf, 'record');
   }
-  [mo]() {
-    this[fo] = this[fo].trim();
-    const e = parseInt(this[fo], 10);
-    !isNaN(e) && e >= 0 && (this[fo] = e);
+  [go]() {
+    this[ho] = this[ho].trim();
+    const e = parseInt(this[ho], 10);
+    !isNaN(e) && e >= 0 && (this[ho] = e);
   }
 }
 class Relevant extends ContentObject {
   constructor(e) {
-    super(af, 'relevant');
+    super(sf, 'relevant');
   }
-  [mo]() {
-    this[fo] = this[fo].trim().split(/\s+/);
+  [go]() {
+    this[ho] = this[ho].trim().split(/\s+/);
   }
 }
 class Rename extends ContentObject {
   constructor(e) {
-    super(af, 'rename');
+    super(sf, 'rename');
   }
-  [mo]() {
-    this[fo] = this[fo].trim();
-    (this[fo].toLowerCase().startsWith('xml') ||
-      /[\p{L}_][\p{L}\d._\p{M}-]*/u.test(this[fo])) &&
+  [go]() {
+    this[ho] = this[ho].trim();
+    (this[ho].toLowerCase().startsWith('xml') ||
+      /[\p{L}_][\p{L}\d._\p{M}-]*/u.test(this[ho])) &&
       warn('XFA - Rename: invalid XFA name');
   }
 }
 class RenderPolicy extends OptionObject {
   constructor(e) {
-    super(af, 'renderPolicy', ['server', 'client']);
+    super(sf, 'renderPolicy', ['server', 'client']);
   }
 }
 class RunScripts extends OptionObject {
   constructor(e) {
-    super(af, 'runScripts', ['both', 'client', 'none', 'server']);
+    super(sf, 'runScripts', ['both', 'client', 'none', 'server']);
   }
 }
 class config_Script extends XFAObject {
   constructor(e) {
-    super(af, 'script', !0);
+    super(sf, 'script', !0);
     this.currentPage = null;
     this.exclude = null;
     this.runScripts = null;
@@ -50255,12 +50328,12 @@ class config_Script extends XFAObject {
 }
 class ScriptModel extends OptionObject {
   constructor(e) {
-    super(af, 'scriptModel', ['XFA', 'none']);
+    super(sf, 'scriptModel', ['XFA', 'none']);
   }
 }
 class Severity extends OptionObject {
   constructor(e) {
-    super(af, 'severity', [
+    super(sf, 'severity', [
       'ignore',
       'error',
       'information',
@@ -50271,55 +50344,55 @@ class Severity extends OptionObject {
 }
 class SilentPrint extends XFAObject {
   constructor(e) {
-    super(af, 'silentPrint', !0);
+    super(sf, 'silentPrint', !0);
     this.addSilentPrint = null;
     this.printerName = null;
   }
 }
 class Staple extends XFAObject {
   constructor(e) {
-    super(af, 'staple');
+    super(sf, 'staple');
     this.mode = getStringOption(e.mode, ['usePrinterSetting', 'on', 'off']);
   }
 }
 class StartNode extends StringObject {
   constructor(e) {
-    super(af, 'startNode');
+    super(sf, 'startNode');
   }
 }
 class StartPage extends IntegerObject {
   constructor(e) {
-    super(af, 'startPage', 0, (e) => !0);
+    super(sf, 'startPage', 0, (e) => !0);
   }
 }
 class SubmitFormat extends OptionObject {
   constructor(e) {
-    super(af, 'submitFormat', ['html', 'delegate', 'fdf', 'xml', 'pdf']);
+    super(sf, 'submitFormat', ['html', 'delegate', 'fdf', 'xml', 'pdf']);
   }
 }
 class SubmitUrl extends StringObject {
   constructor(e) {
-    super(af, 'submitUrl');
+    super(sf, 'submitUrl');
   }
 }
 class SubsetBelow extends IntegerObject {
   constructor(e) {
-    super(af, 'subsetBelow', 100, (e) => e >= 0 && e <= 100);
+    super(sf, 'subsetBelow', 100, (e) => e >= 0 && e <= 100);
   }
 }
 class SuppressBanner extends Option01 {
   constructor(e) {
-    super(af, 'suppressBanner');
+    super(sf, 'suppressBanner');
   }
 }
 class Tagged extends Option01 {
   constructor(e) {
-    super(af, 'tagged');
+    super(sf, 'tagged');
   }
 }
 class config_Template extends XFAObject {
   constructor(e) {
-    super(af, 'template', !0);
+    super(sf, 'template', !0);
     this.base = null;
     this.relevant = null;
     this.startPage = null;
@@ -50329,17 +50402,17 @@ class config_Template extends XFAObject {
 }
 class Threshold extends OptionObject {
   constructor(e) {
-    super(af, 'threshold', ['trace', 'error', 'information', 'warning']);
+    super(sf, 'threshold', ['trace', 'error', 'information', 'warning']);
   }
 }
 class To extends OptionObject {
   constructor(e) {
-    super(af, 'to', ['null', 'memory', 'stderr', 'stdout', 'system', 'uri']);
+    super(sf, 'to', ['null', 'memory', 'stderr', 'stdout', 'system', 'uri']);
   }
 }
 class TemplateCache extends XFAObject {
   constructor(e) {
-    super(af, 'templateCache');
+    super(sf, 'templateCache');
     this.maxEntries = getInteger({
       data: e.maxEntries,
       defaultValue: 5,
@@ -50349,13 +50422,13 @@ class TemplateCache extends XFAObject {
 }
 class Trace extends XFAObject {
   constructor(e) {
-    super(af, 'trace', !0);
+    super(sf, 'trace', !0);
     this.area = new XFAObjectArray();
   }
 }
 class Transform extends XFAObject {
   constructor(e) {
-    super(af, 'transform', !0);
+    super(sf, 'transform', !0);
     this.groupParent = null;
     this.ifEmpty = null;
     this.nameAttr = null;
@@ -50367,7 +50440,7 @@ class Transform extends XFAObject {
 }
 class Type extends OptionObject {
   constructor(e) {
-    super(af, 'type', [
+    super(sf, 'type', [
       'none',
       'ascii85',
       'asciiHex',
@@ -50383,20 +50456,20 @@ class Type extends OptionObject {
 }
 class Uri extends StringObject {
   constructor(e) {
-    super(af, 'uri');
+    super(sf, 'uri');
   }
 }
 class config_Validate extends OptionObject {
   constructor(e) {
-    super(af, 'validate', ['preSubmit', 'prePrint', 'preExecute', 'preSave']);
+    super(sf, 'validate', ['preSubmit', 'prePrint', 'preExecute', 'preSave']);
   }
 }
 class ValidateApprovalSignatures extends ContentObject {
   constructor(e) {
-    super(af, 'validateApprovalSignatures');
+    super(sf, 'validateApprovalSignatures');
   }
-  [mo]() {
-    this[fo] = this[fo]
+  [go]() {
+    this[ho] = this[ho]
       .trim()
       .split(/\s+/)
       .filter((e) => ['docReady', 'postSign'].includes(e));
@@ -50404,7 +50477,7 @@ class ValidateApprovalSignatures extends ContentObject {
 }
 class ValidationMessaging extends OptionObject {
   constructor(e) {
-    super(af, 'validationMessaging', [
+    super(sf, 'validationMessaging', [
       'allMessagesIndividually',
       'allMessagesTogether',
       'firstMessageOnly',
@@ -50414,12 +50487,12 @@ class ValidationMessaging extends OptionObject {
 }
 class Version extends OptionObject {
   constructor(e) {
-    super(af, 'version', ['1.7', '1.6', '1.5', '1.4', '1.3', '1.2']);
+    super(sf, 'version', ['1.7', '1.6', '1.5', '1.4', '1.3', '1.2']);
   }
 }
 class VersionControl extends XFAObject {
   constructor(e) {
-    super(af, 'VersionControl');
+    super(sf, 'VersionControl');
     this.outputBelow = getStringOption(e.outputBelow, [
       'warn',
       'error',
@@ -50431,7 +50504,7 @@ class VersionControl extends XFAObject {
 }
 class ViewerPreferences extends XFAObject {
   constructor(e) {
-    super(af, 'viewerPreferences', !0);
+    super(sf, 'viewerPreferences', !0);
     this.ADBE_JSConsole = null;
     this.ADBE_JSDebugger = null;
     this.addViewerPreferences = null;
@@ -50445,7 +50518,7 @@ class ViewerPreferences extends XFAObject {
 }
 class WebClient extends XFAObject {
   constructor(e) {
-    super(af, 'webClient', !0);
+    super(sf, 'webClient', !0);
     this.name = e.name ? e.name.trim() : '';
     this.fontInfo = null;
     this.xdc = null;
@@ -50453,7 +50526,7 @@ class WebClient extends XFAObject {
 }
 class Whitespace extends OptionObject {
   constructor(e) {
-    super(af, 'whitespace', [
+    super(sf, 'whitespace', [
       'preserve',
       'ltrim',
       'normalize',
@@ -50464,40 +50537,40 @@ class Whitespace extends OptionObject {
 }
 class Window extends ContentObject {
   constructor(e) {
-    super(af, 'window');
+    super(sf, 'window');
   }
-  [mo]() {
-    const e = this[fo].split(',', 2).map((e) => parseInt(e.trim(), 10));
-    if (e.some((e) => isNaN(e))) this[fo] = [0, 0];
+  [go]() {
+    const e = this[ho].split(',', 2).map((e) => parseInt(e.trim(), 10));
+    if (e.some((e) => isNaN(e))) this[ho] = [0, 0];
     else {
       1 === e.length && e.push(e[0]);
-      this[fo] = e;
+      this[ho] = e;
     }
   }
 }
 class Xdc extends XFAObject {
   constructor(e) {
-    super(af, 'xdc', !0);
+    super(sf, 'xdc', !0);
     this.uri = new XFAObjectArray();
     this.xsl = new XFAObjectArray();
   }
 }
 class Xdp extends XFAObject {
   constructor(e) {
-    super(af, 'xdp', !0);
+    super(sf, 'xdp', !0);
     this.packets = null;
   }
 }
 class Xsl extends XFAObject {
   constructor(e) {
-    super(af, 'xsl', !0);
+    super(sf, 'xsl', !0);
     this.debug = null;
     this.uri = null;
   }
 }
 class Zpl extends XFAObject {
   constructor(e) {
-    super(af, 'zpl', !0);
+    super(sf, 'zpl', !0);
     this.name = e.name ? e.name.trim() : '';
     this.batchOutput = null;
     this.flipLabel = null;
@@ -50506,7 +50579,7 @@ class Zpl extends XFAObject {
   }
 }
 class ConfigNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(ConfigNamespace, e)) return ConfigNamespace[e](t);
   }
   static acrobat(e) {
@@ -50927,10 +51000,10 @@ class ConfigNamespace {
     return new Zpl(e);
   }
 }
-const nf = bl.connectionSet.id;
+const rf = jl.connectionSet.id;
 class ConnectionSet extends XFAObject {
   constructor(e) {
-    super(nf, 'connectionSet', !0);
+    super(rf, 'connectionSet', !0);
     this.wsdlConnection = new XFAObjectArray();
     this.xmlConnection = new XFAObjectArray();
     this.xsdConnection = new XFAObjectArray();
@@ -50938,7 +51011,7 @@ class ConnectionSet extends XFAObject {
 }
 class EffectiveInputPolicy extends XFAObject {
   constructor(e) {
-    super(nf, 'effectiveInputPolicy');
+    super(rf, 'effectiveInputPolicy');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -50947,7 +51020,7 @@ class EffectiveInputPolicy extends XFAObject {
 }
 class EffectiveOutputPolicy extends XFAObject {
   constructor(e) {
-    super(nf, 'effectiveOutputPolicy');
+    super(rf, 'effectiveOutputPolicy');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -50956,7 +51029,7 @@ class EffectiveOutputPolicy extends XFAObject {
 }
 class Operation extends StringObject {
   constructor(e) {
-    super(nf, 'operation');
+    super(rf, 'operation');
     this.id = e.id || '';
     this.input = e.input || '';
     this.name = e.name || '';
@@ -50967,7 +51040,7 @@ class Operation extends StringObject {
 }
 class RootElement extends StringObject {
   constructor(e) {
-    super(nf, 'rootElement');
+    super(rf, 'rootElement');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -50976,7 +51049,7 @@ class RootElement extends StringObject {
 }
 class SoapAction extends StringObject {
   constructor(e) {
-    super(nf, 'soapAction');
+    super(rf, 'soapAction');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -50985,7 +51058,7 @@ class SoapAction extends StringObject {
 }
 class SoapAddress extends StringObject {
   constructor(e) {
-    super(nf, 'soapAddress');
+    super(rf, 'soapAddress');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -50994,7 +51067,7 @@ class SoapAddress extends StringObject {
 }
 class connection_set_Uri extends StringObject {
   constructor(e) {
-    super(nf, 'uri');
+    super(rf, 'uri');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -51003,7 +51076,7 @@ class connection_set_Uri extends StringObject {
 }
 class WsdlAddress extends StringObject {
   constructor(e) {
-    super(nf, 'wsdlAddress');
+    super(rf, 'wsdlAddress');
     this.id = e.id || '';
     this.name = e.name || '';
     this.use = e.use || '';
@@ -51012,7 +51085,7 @@ class WsdlAddress extends StringObject {
 }
 class WsdlConnection extends XFAObject {
   constructor(e) {
-    super(nf, 'wsdlConnection', !0);
+    super(rf, 'wsdlConnection', !0);
     this.dataDescription = e.dataDescription || '';
     this.name = e.name || '';
     this.effectiveInputPolicy = null;
@@ -51025,7 +51098,7 @@ class WsdlConnection extends XFAObject {
 }
 class XmlConnection extends XFAObject {
   constructor(e) {
-    super(nf, 'xmlConnection', !0);
+    super(rf, 'xmlConnection', !0);
     this.dataDescription = e.dataDescription || '';
     this.name = e.name || '';
     this.uri = null;
@@ -51033,7 +51106,7 @@ class XmlConnection extends XFAObject {
 }
 class XsdConnection extends XFAObject {
   constructor(e) {
-    super(nf, 'xsdConnection', !0);
+    super(rf, 'xsdConnection', !0);
     this.dataDescription = e.dataDescription || '';
     this.name = e.name || '';
     this.rootElement = null;
@@ -51041,7 +51114,7 @@ class XsdConnection extends XFAObject {
   }
 }
 class ConnectionSetNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(ConnectionSetNamespace, e))
       return ConnectionSetNamespace[e](t);
   }
@@ -51082,31 +51155,31 @@ class ConnectionSetNamespace {
     return new XsdConnection(e);
   }
 }
-const sf = bl.datasets.id;
+const of = jl.datasets.id;
 class datasets_Data extends XmlObject {
   constructor(e) {
-    super(sf, 'data', e);
+    super(of, 'data', e);
   }
-  [zo]() {
+  [Uo]() {
     return !0;
   }
 }
 class Datasets extends XFAObject {
   constructor(e) {
-    super(sf, 'datasets', !0);
+    super(of, 'datasets', !0);
     this.data = null;
     this.Signature = null;
   }
-  [Yo](e) {
-    const t = e[Vo];
-    (('data' === t && e[Go] === sf) ||
-      ('Signature' === t && e[Go] === bl.signature.id)) &&
+  [Qo](e) {
+    const t = e[Yo];
+    (('data' === t && e[$o] === of) ||
+      ('Signature' === t && e[$o] === jl.signature.id)) &&
       (this[t] = e);
-    this[ao](e);
+    this[so](e);
   }
 }
 class DatasetsNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(DatasetsNamespace, e)) return DatasetsNamespace[e](t);
   }
   static datasets(e) {
@@ -51116,10 +51189,10 @@ class DatasetsNamespace {
     return new datasets_Data(e);
   }
 }
-const rf = bl.localeSet.id;
+const lf = jl.localeSet.id;
 class CalendarSymbols extends XFAObject {
   constructor(e) {
-    super(rf, 'calendarSymbols', !0);
+    super(lf, 'calendarSymbols', !0);
     this.name = 'gregorian';
     this.dayNames = new XFAObjectArray(2);
     this.eraNames = null;
@@ -51129,41 +51202,41 @@ class CalendarSymbols extends XFAObject {
 }
 class CurrencySymbol extends StringObject {
   constructor(e) {
-    super(rf, 'currencySymbol');
+    super(lf, 'currencySymbol');
     this.name = getStringOption(e.name, ['symbol', 'isoname', 'decimal']);
   }
 }
 class CurrencySymbols extends XFAObject {
   constructor(e) {
-    super(rf, 'currencySymbols', !0);
+    super(lf, 'currencySymbols', !0);
     this.currencySymbol = new XFAObjectArray(3);
   }
 }
 class DatePattern extends StringObject {
   constructor(e) {
-    super(rf, 'datePattern');
+    super(lf, 'datePattern');
     this.name = getStringOption(e.name, ['full', 'long', 'med', 'short']);
   }
 }
 class DatePatterns extends XFAObject {
   constructor(e) {
-    super(rf, 'datePatterns', !0);
+    super(lf, 'datePatterns', !0);
     this.datePattern = new XFAObjectArray(4);
   }
 }
 class DateTimeSymbols extends ContentObject {
   constructor(e) {
-    super(rf, 'dateTimeSymbols');
+    super(lf, 'dateTimeSymbols');
   }
 }
 class Day extends StringObject {
   constructor(e) {
-    super(rf, 'day');
+    super(lf, 'day');
   }
 }
 class DayNames extends XFAObject {
   constructor(e) {
-    super(rf, 'dayNames', !0);
+    super(lf, 'dayNames', !0);
     this.abbr = getInteger({
       data: e.abbr,
       defaultValue: 0,
@@ -51174,18 +51247,18 @@ class DayNames extends XFAObject {
 }
 class Era extends StringObject {
   constructor(e) {
-    super(rf, 'era');
+    super(lf, 'era');
   }
 }
 class EraNames extends XFAObject {
   constructor(e) {
-    super(rf, 'eraNames', !0);
+    super(lf, 'eraNames', !0);
     this.era = new XFAObjectArray(2);
   }
 }
 class locale_set_Locale extends XFAObject {
   constructor(e) {
-    super(rf, 'locale', !0);
+    super(lf, 'locale', !0);
     this.desc = e.desc || '';
     this.name = 'isoname';
     this.calendarSymbols = null;
@@ -51200,29 +51273,29 @@ class locale_set_Locale extends XFAObject {
 }
 class locale_set_LocaleSet extends XFAObject {
   constructor(e) {
-    super(rf, 'localeSet', !0);
+    super(lf, 'localeSet', !0);
     this.locale = new XFAObjectArray();
   }
 }
 class Meridiem extends StringObject {
   constructor(e) {
-    super(rf, 'meridiem');
+    super(lf, 'meridiem');
   }
 }
 class MeridiemNames extends XFAObject {
   constructor(e) {
-    super(rf, 'meridiemNames', !0);
+    super(lf, 'meridiemNames', !0);
     this.meridiem = new XFAObjectArray(2);
   }
 }
 class Month extends StringObject {
   constructor(e) {
-    super(rf, 'month');
+    super(lf, 'month');
   }
 }
 class MonthNames extends XFAObject {
   constructor(e) {
-    super(rf, 'monthNames', !0);
+    super(lf, 'monthNames', !0);
     this.abbr = getInteger({
       data: e.abbr,
       defaultValue: 0,
@@ -51233,19 +51306,19 @@ class MonthNames extends XFAObject {
 }
 class NumberPattern extends StringObject {
   constructor(e) {
-    super(rf, 'numberPattern');
+    super(lf, 'numberPattern');
     this.name = getStringOption(e.name, ['full', 'long', 'med', 'short']);
   }
 }
 class NumberPatterns extends XFAObject {
   constructor(e) {
-    super(rf, 'numberPatterns', !0);
+    super(lf, 'numberPatterns', !0);
     this.numberPattern = new XFAObjectArray(4);
   }
 }
 class NumberSymbol extends StringObject {
   constructor(e) {
-    super(rf, 'numberSymbol');
+    super(lf, 'numberSymbol');
     this.name = getStringOption(e.name, [
       'decimal',
       'grouping',
@@ -51257,36 +51330,36 @@ class NumberSymbol extends StringObject {
 }
 class NumberSymbols extends XFAObject {
   constructor(e) {
-    super(rf, 'numberSymbols', !0);
+    super(lf, 'numberSymbols', !0);
     this.numberSymbol = new XFAObjectArray(5);
   }
 }
 class TimePattern extends StringObject {
   constructor(e) {
-    super(rf, 'timePattern');
+    super(lf, 'timePattern');
     this.name = getStringOption(e.name, ['full', 'long', 'med', 'short']);
   }
 }
 class TimePatterns extends XFAObject {
   constructor(e) {
-    super(rf, 'timePatterns', !0);
+    super(lf, 'timePatterns', !0);
     this.timePattern = new XFAObjectArray(4);
   }
 }
 class TypeFace extends XFAObject {
   constructor(e) {
-    super(rf, 'typeFace', !0);
+    super(lf, 'typeFace', !0);
     this.name = '' | e.name;
   }
 }
 class TypeFaces extends XFAObject {
   constructor(e) {
-    super(rf, 'typeFaces', !0);
+    super(lf, 'typeFaces', !0);
     this.typeFace = new XFAObjectArray();
   }
 }
 class LocaleSetNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(LocaleSetNamespace, e)) return LocaleSetNamespace[e](t);
   }
   static calendarSymbols(e) {
@@ -51362,38 +51435,38 @@ class LocaleSetNamespace {
     return new TypeFaces(e);
   }
 }
-const of = bl.signature.id;
+const ff = jl.signature.id;
 class signature_Signature extends XFAObject {
   constructor(e) {
-    super(of, 'signature', !0);
+    super(ff, 'signature', !0);
   }
 }
 class SignatureNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(SignatureNamespace, e)) return SignatureNamespace[e](t);
   }
   static signature(e) {
     return new signature_Signature(e);
   }
 }
-const lf = bl.stylesheet.id;
+const cf = jl.stylesheet.id;
 class Stylesheet extends XFAObject {
   constructor(e) {
-    super(lf, 'stylesheet', !0);
+    super(cf, 'stylesheet', !0);
   }
 }
 class StylesheetNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(StylesheetNamespace, e)) return StylesheetNamespace[e](t);
   }
   static stylesheet(e) {
     return new Stylesheet(e);
   }
 }
-const ff = bl.xdp.id;
+const hf = jl.xdp.id;
 class xdp_Xdp extends XFAObject {
   constructor(e) {
-    super(ff, 'xdp', !0);
+    super(hf, 'xdp', !0);
     this.uuid = e.uuid || '';
     this.timeStamp = e.timeStamp || '';
     this.config = null;
@@ -51403,22 +51476,22 @@ class xdp_Xdp extends XFAObject {
     this.stylesheet = new XFAObjectArray();
     this.template = null;
   }
-  [Jo](e) {
-    const t = bl[e[Vo]];
-    return t && e[Go] === t.id;
+  [Zo](e) {
+    const t = jl[e[Yo]];
+    return t && e[$o] === t.id;
   }
 }
 class XdpNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(XdpNamespace, e)) return XdpNamespace[e](t);
   }
   static xdp(e) {
     return new xdp_Xdp(e);
   }
 }
-const cf = bl.xhtml.id,
-  hf = Symbol(),
-  uf = new Set([
+const uf = jl.xhtml.id,
+  mf = Symbol(),
+  pf = new Set([
     'color',
     'font',
     'font-family',
@@ -51450,7 +51523,7 @@ const cf = bl.xhtml.id,
     'xfa-spacerun',
     'xfa-tab-stops',
   ]),
-  mf = new Map([
+  df = new Map([
     ['page-break-after', 'breakAfter'],
     ['page-break-before', 'breakBefore'],
     ['page-break-inside', 'breakInside'],
@@ -51481,15 +51554,15 @@ const cf = bl.xhtml.id,
     ['font-family', (e) => e],
     ['vertical-align', (e) => measureToString(getMeasurement(e))],
   ]),
-  pf = /\s+/g,
-  df = /[\r\n]+/g,
-  gf = /\r\n?/g;
+  gf = /\s+/g,
+  bf = /[\r\n]+/g,
+  wf = /\r\n?/g;
 function mapStyle(e, t, a) {
   const n = Object.create(null);
   if (!e) return n;
   const s = Object.create(null);
   for (const [t, a] of e.split(';').map((e) => e.split(':', 2))) {
-    const e = mf.get(t);
+    const e = df.get(t);
     if ('' === e) continue;
     let r = a;
     e && (r = 'string' == typeof e ? e : e(a, s));
@@ -51506,7 +51579,7 @@ function mapStyle(e, t, a) {
         size: s.fontSize || 0,
       },
       t,
-      t[Ro].fontFinder,
+      t[Bo].fontFinder,
       n
     );
   if (a && n.verticalAlign && '0px' !== n.verticalAlign && n.fontSize) {
@@ -51524,15 +51597,15 @@ function mapStyle(e, t, a) {
   fixTextIndent(n);
   return n;
 }
-const bf = new Set(['body', 'html']);
+const jf = new Set(['body', 'html']);
 class XhtmlObject extends XmlObject {
   constructor(e, t) {
-    super(cf, t);
-    this[hf] = !1;
+    super(uf, t);
+    this[mf] = !1;
     this.style = e.style || '';
   }
-  [so](e) {
-    super[so](e);
+  [io](e) {
+    super[io](e);
     this.style = (function checkStyle(e) {
       return e.style
         ? e.style
@@ -51540,26 +51613,26 @@ class XhtmlObject extends XmlObject {
             .filter((e) => !!e.trim())
             .map((e) => e.split(':', 2).map((e) => e.trim()))
             .filter(([t, a]) => {
-              'font-family' === t && e[Ro].usedTypefaces.add(a);
-              return uf.has(t);
+              'font-family' === t && e[Bo].usedTypefaces.add(a);
+              return pf.has(t);
             })
             .map((e) => e.join(':'))
             .join(';')
         : '';
     })(this);
   }
-  [eo]() {
-    return !bf.has(this[Vo]);
+  [ao]() {
+    return !jf.has(this[Yo]);
   }
-  [Qo](e, t = !1) {
-    if (t) this[hf] = !0;
+  [el](e, t = !1) {
+    if (t) this[mf] = !0;
     else {
-      e = e.replaceAll(df, '');
-      this.style.includes('xfa-spacerun:yes') || (e = e.replaceAll(pf, ' '));
+      e = e.replaceAll(bf, '');
+      this.style.includes('xfa-spacerun:yes') || (e = e.replaceAll(gf, ' '));
     }
-    e && (this[fo] += e);
+    e && (this[ho] += e);
   }
-  [Zo](e, t = !0) {
+  [tl](e, t = !0) {
     const a = Object.create(null),
       n = { top: NaN, bottom: NaN, left: NaN, right: NaN };
     let s = null;
@@ -51618,28 +51691,28 @@ class XhtmlObject extends XmlObject {
           s = getMeasurement(t);
       }
     e.pushData(a, n, s);
-    if (this[fo]) e.addString(this[fo]);
+    if (this[ho]) e.addString(this[ho]);
     else
-      for (const t of this[Ao]())
-        '#text' !== t[Vo] ? t[Zo](e) : e.addString(t[fo]);
+      for (const t of this[Co]())
+        '#text' !== t[Yo] ? t[tl](e) : e.addString(t[ho]);
     t && e.popFont();
   }
-  [ul](e) {
+  [pl](e) {
     const t = [];
-    this[uo] = { children: t };
-    this[no]({});
-    if (0 === t.length && !this[fo]) return HTMLResult.EMPTY;
+    this[po] = { children: t };
+    this[ro]({});
+    if (0 === t.length && !this[ho]) return HTMLResult.EMPTY;
     let a;
-    a = this[hf]
-      ? this[fo]
-        ? this[fo].replaceAll(gf, '\n')
+    a = this[mf]
+      ? this[ho]
+        ? this[ho].replaceAll(wf, '\n')
         : void 0
-      : this[fo] || void 0;
+      : this[ho] || void 0;
     return HTMLResult.success({
-      name: this[Vo],
+      name: this[Yo],
       attributes: {
         href: this.href,
-        style: mapStyle(this.style, this, this[hf]),
+        style: mapStyle(this.style, this, this[mf]),
       },
       children: t,
       value: a,
@@ -51656,9 +51729,9 @@ class B extends XhtmlObject {
   constructor(e) {
     super(e, 'b');
   }
-  [Zo](e) {
+  [tl](e) {
     e.pushFont({ weight: 'bold' });
-    super[Zo](e);
+    super[tl](e);
     e.popFont();
   }
 }
@@ -51666,8 +51739,8 @@ class Body extends XhtmlObject {
   constructor(e) {
     super(e, 'body');
   }
-  [ul](e) {
-    const t = super[ul](e),
+  [pl](e) {
+    const t = super[pl](e),
       { html: a } = t;
     if (!a) return HTMLResult.EMPTY;
     a.name = 'div';
@@ -51679,13 +51752,13 @@ class Br extends XhtmlObject {
   constructor(e) {
     super(e, 'br');
   }
-  [cl]() {
+  [ul]() {
     return '\n';
   }
-  [Zo](e) {
+  [tl](e) {
     e.addString('\n');
   }
-  [ul](e) {
+  [pl](e) {
     return HTMLResult.success({ name: 'br' });
   }
 }
@@ -51693,15 +51766,15 @@ class Html extends XhtmlObject {
   constructor(e) {
     super(e, 'html');
   }
-  [ul](e) {
+  [pl](e) {
     const t = [];
-    this[uo] = { children: t };
-    this[no]({});
+    this[po] = { children: t };
+    this[ro]({});
     if (0 === t.length)
       return HTMLResult.success({
         name: 'div',
         attributes: { class: ['xfaRich'], style: {} },
-        value: this[fo] || '',
+        value: this[ho] || '',
       });
     if (1 === t.length) {
       const e = t[0];
@@ -51718,9 +51791,9 @@ class I extends XhtmlObject {
   constructor(e) {
     super(e, 'i');
   }
-  [Zo](e) {
+  [tl](e) {
     e.pushFont({ posture: 'italic' });
-    super[Zo](e);
+    super[tl](e);
     e.popFont();
   }
 }
@@ -51738,14 +51811,14 @@ class P extends XhtmlObject {
   constructor(e) {
     super(e, 'p');
   }
-  [Zo](e) {
-    super[Zo](e, !1);
+  [tl](e) {
+    super[tl](e, !1);
     e.addString('\n');
     e.addPara();
     e.popFont();
   }
-  [cl]() {
-    return this[Fo]()[Ao]().at(-1) === this ? super[cl]() : super[cl]() + '\n';
+  [ul]() {
+    return this[Ro]()[Co]().at(-1) === this ? super[ul]() : super[ul]() + '\n';
   }
 }
 class Span extends XhtmlObject {
@@ -51769,7 +51842,7 @@ class Ul extends XhtmlObject {
   }
 }
 class XhtmlNamespace {
-  static [gl](e, t) {
+  static [wl](e, t) {
     if (Object.hasOwn(XhtmlNamespace, e)) return XhtmlNamespace[e](t);
   }
   static a(e) {
@@ -51812,7 +51885,7 @@ class XhtmlNamespace {
     return new Ul(e);
   }
 }
-const wf = {
+const kf = {
   config: ConfigNamespace,
   connection: ConnectionSetNamespace,
   datasets: DatasetsNamespace,
@@ -51827,7 +51900,7 @@ class UnknownNamespace {
   constructor(e) {
     this.namespaceId = e;
   }
-  [gl](e, t) {
+  [wl](e, t) {
     return new XmlObject(this.namespaceId, e, t);
   }
 }
@@ -51835,18 +51908,18 @@ class Root extends XFAObject {
   constructor(e) {
     super(-1, 'root', Object.create(null));
     this.element = null;
-    this[Bo] = e;
+    this[Mo] = e;
   }
-  [Yo](e) {
+  [Qo](e) {
     this.element = e;
     return !0;
   }
-  [mo]() {
-    super[mo]();
+  [go]() {
+    super[go]();
     if (this.element.template instanceof Template) {
-      this[Bo].set(nl, this.element);
-      this.element.template[sl](this[Bo]);
-      this.element.template[Bo] = this[Bo];
+      this[Mo].set(rl, this.element);
+      this.element.template[il](this[Mo]);
+      this.element.template[Mo] = this[Mo];
     }
   }
 }
@@ -51854,7 +51927,7 @@ class Empty extends XFAObject {
   constructor() {
     super(-1, '', Object.create(null));
   }
-  [Yo](e) {
+  [Qo](e) {
     return !1;
   }
 }
@@ -51864,7 +51937,7 @@ class Builder {
     this._nsAgnosticLevel = 0;
     this._namespacePrefixes = new Map();
     this._namespaces = new Map();
-    this._nextNsId = Math.max(...Object.values(bl).map(({ id: e }) => e));
+    this._nextNsId = Math.max(...Object.values(jl).map(({ id: e }) => e));
     this._currentNamespace = e || new UnknownNamespace(++this._nextNsId);
   }
   buildRoot(e) {
@@ -51877,9 +51950,9 @@ class Builder {
       this._currentNamespace = this._searchNamespace(n);
     }
     s && this._addNamespacePrefix(s);
-    if (Object.hasOwn(a, $o)) {
-      const e = wf.datasets,
-        t = a[$o];
+    if (Object.hasOwn(a, Jo)) {
+      const e = kf.datasets,
+        t = a[Jo];
       let n = null;
       for (const [a, s] of Object.entries(t)) {
         if (this._getNamespaceToUse(a) === e) {
@@ -51887,13 +51960,13 @@ class Builder {
           break;
         }
       }
-      n ? (a[$o] = n) : delete a[$o];
+      n ? (a[Jo] = n) : delete a[Jo];
     }
     const i = this._getNamespaceToUse(e),
-      o = i?.[gl](t, a) || new Empty();
-    o[zo]() && this._nsAgnosticLevel++;
-    (r || s || o[zo]()) &&
-      (o[io] = { hasNamespace: r, prefixes: s, nsAgnostic: o[zo]() });
+      o = i?.[wl](t, a) || new Empty();
+    o[Uo]() && this._nsAgnosticLevel++;
+    (r || s || o[Uo]()) &&
+      (o[lo] = { hasNamespace: r, prefixes: s, nsAgnostic: o[Uo]() });
     return o;
   }
   isNsAgnostic() {
@@ -51902,9 +51975,9 @@ class Builder {
   _searchNamespace(e) {
     let t = this._namespaces.get(e);
     if (t) return t;
-    for (const [a, { check: n }] of Object.entries(bl))
+    for (const [a, { check: n }] of Object.entries(jl))
       if (n(e)) {
-        t = wf[a];
+        t = kf[a];
         if (t) {
           this._namespaces.set(e, t);
           return t;
@@ -51946,26 +52019,26 @@ class XFAParser extends XMLParserBase {
     this._globalData = { usedTypefaces: new Set() };
     this._ids = new Map();
     this._current = this._builder.buildRoot(this._ids);
-    this._errorCode = _i;
+    this._errorCode = zi;
     this._whiteRegex = /^\s+$/;
     this._nbsps = /\xa0+/g;
     this._richText = t;
   }
   parse(e) {
     this.parseXml(e);
-    if (this._errorCode === _i) {
-      this._current[mo]();
+    if (this._errorCode === zi) {
+      this._current[go]();
       return this._current.element;
     }
   }
   onText(e) {
     e = e.replace(this._nbsps, (e) => e.slice(1) + ' ');
-    this._richText || this._current[eo]()
-      ? this._current[Qo](e, this._richText)
-      : this._whiteRegex.test(e) || this._current[Qo](e.trim());
+    this._richText || this._current[ao]()
+      ? this._current[el](e, this._richText)
+      : this._whiteRegex.test(e) || this._current[el](e.trim());
   }
   onCdata(e) {
-    this._current[Qo](e);
+    this._current[el](e);
   }
   _mkAttributes(e, t) {
     let a = null,
@@ -51982,7 +52055,7 @@ class XFAParser extends XMLParserBase {
         const e = r.indexOf(':');
         if (-1 === e) s[r] = i;
         else {
-          const t = (s[$o] ??= Object.create(null)),
+          const t = (s[Jo] ??= Object.create(null)),
             [a, n] = [r.slice(0, e), r.slice(e + 1)];
           (t[a] ||= Object.create(null))[n] = i;
         }
@@ -52005,11 +52078,11 @@ class XFAParser extends XMLParserBase {
         namespace: n,
         prefixes: s,
       });
-    l[Ro] = this._globalData;
+    l[Bo] = this._globalData;
     if (a) {
-      l[mo]();
-      this._current[Yo](l) && l[il](this._ids);
-      l[so](this._builder);
+      l[go]();
+      this._current[Qo](l) && l[ll](this._ids);
+      l[io](this._builder);
     } else {
       this._stack.push(this._current);
       this._current = l;
@@ -52017,17 +52090,17 @@ class XFAParser extends XMLParserBase {
   }
   onEndElement(e) {
     const t = this._current;
-    if (t[No]() && 'string' == typeof t[fo]) {
+    if (t[_o]() && 'string' == typeof t[ho]) {
       const e = new XFAParser();
       e._globalData = this._globalData;
-      const a = e.parse(t[fo]);
-      t[fo] = null;
-      t[Yo](a);
+      const a = e.parse(t[ho]);
+      t[ho] = null;
+      t[Qo](a);
     }
-    t[mo]();
+    t[go]();
     this._current = this._stack.pop();
-    this._current[Yo](t) && t[il](this._ids);
-    t[so](this._builder);
+    this._current[Qo](t) && t[ll](this._ids);
+    t[io](this._builder);
   }
   onError(e) {
     this._errorCode = e;
@@ -52040,7 +52113,7 @@ class XFAFactory {
       const t = new Binder(this.root);
       this.form = t.bind();
       this.dataHandler = new DataHandler(this.root, t.getData());
-      this.form[Ro].template = this.form;
+      this.form[Bo].template = this.form;
     } catch (e) {
       warn(`XFA - an error occurred during parsing and binding: ${e}`);
     }
@@ -52049,7 +52122,7 @@ class XFAFactory {
     return !(!this.root || !this.form);
   }
   _createPagesHelper() {
-    const e = this.form[hl]();
+    const e = this.form[ml]();
     return new Promise((t, a) => {
       const nextIteration = () => {
         try {
@@ -52081,19 +52154,19 @@ class XFAFactory {
     return this.dims.length;
   }
   setImages(e) {
-    this.form[Ro].images = e;
+    this.form[Bo].images = e;
   }
   setFonts(e) {
-    this.form[Ro].fontFinder = new FontFinder(e);
+    this.form[Bo].fontFinder = new FontFinder(e);
     const t = [];
-    for (let e of this.form[Ro].usedTypefaces) {
+    for (let e of this.form[Bo].usedTypefaces) {
       e = stripQuotes(e);
-      this.form[Ro].fontFinder.find(e) || t.push(e);
+      this.form[Bo].fontFinder.find(e) || t.push(e);
     }
     return t.length > 0 ? t : null;
   }
   appendFonts(e, t) {
-    this.form[Ro].fontFinder.add(e, t);
+    this.form[Bo].fontFinder.add(e, t);
   }
   async getPages() {
     this.pages || (await this._createPages());
@@ -52111,12 +52184,12 @@ class XFAFactory {
     if (!e || 'string' != typeof e) return null;
     try {
       let t = new XFAParser(XhtmlNamespace, !0).parse(e);
-      if (!['body', 'xhtml'].includes(t[Vo])) {
+      if (!['body', 'xhtml'].includes(t[Yo])) {
         const e = XhtmlNamespace.body({});
-        e[ao](t);
+        e[so](t);
         t = e;
       }
-      const a = t[ul]();
+      const a = t[pl]();
       if (!a.success) return null;
       const { html: n } = a,
         { attributes: s } = n;
@@ -52124,7 +52197,7 @@ class XFAFactory {
         s.class && (s.class = s.class.filter((e) => !e.startsWith('xfa')));
         s.dir = 'auto';
       }
-      return { html: n, str: t[cl]() };
+      return { html: n, str: t[ul]() };
     } catch (e) {
       warn(`XFA - an error occurred during parsing of rich text: ${e}`);
     }
@@ -52143,6 +52216,7 @@ class AnnotationFactory {
     ]).then(
       ([t, a, n, s, r, i]) => ({
         pdfManager: e,
+        catalog: e.pdfDocument.catalog,
         acroForm: t instanceof Dict ? t : Dict.empty,
         xfaDatasets: a,
         structTreeRoot: n,
@@ -52234,6 +52308,10 @@ class AnnotationFactory {
         return new StampAnnotation(p);
       case 'FileAttachment':
         return new FileAttachmentAnnotation(p);
+      case 'RichMedia':
+        return new RichMediaAnnotation(p);
+      case 'Screen':
+        return new ScreenAnnotation(p);
       default:
         s ||
           warn(
@@ -52459,6 +52537,7 @@ function getTransformMatrix(e, t, n) {
   return [f, 0, 0, c, e[0] - r * f, e[1] - i * c];
 }
 class Annotation {
+  appearance = null;
   _oc = void 0;
   constructor(e) {
     const {
@@ -52479,15 +52558,15 @@ class Annotation {
     this.setColor(a.getArray('C'));
     this.setBorderStyle(a);
     this.setAppearance(a);
-    this.#ut(i, a);
+    this.#bt(i, a);
     const l = a.get('MK');
     this.setBorderAndBackgroundColors(l);
     this.setRotation(l, a);
     this.ref = e.ref instanceof Ref ? e.ref : null;
     this._streams = [];
     this.appearance && this._streams.push(this.appearance);
-    const f = !!(this.flags & U),
-      c = !!(this.flags & X);
+    const f = !!(this.flags & W),
+      c = !!(this.flags & K);
     this.data = {
       annotationType: H[r?.toUpperCase()],
       annotationFlags: this.flags,
@@ -52504,7 +52583,7 @@ class Annotation {
       rect: this.rectangle,
       subtype: r,
       hasOwnCanvas: !1,
-      noRotate: !!(this.flags & z),
+      noRotate: !!(this.flags & U),
       noHTML: f && c,
       isEditable: !1,
       structParent: -1,
@@ -52521,7 +52600,7 @@ class Annotation {
         for (const a of t) a instanceof Ref && e.push(a.toString());
         0 !== e.length && (this.data.kidIds = e);
       }
-      this.data.actions = collectActions(i, a, oe);
+      this.data.actions = collectActions(i, a, fe);
       this.data.fieldName = this._constructFieldName(a);
       this.data.pageIndex = e.pageIndex;
     }
@@ -52532,6 +52611,9 @@ class Annotation {
     this._fallbackFontDict = null;
     this._needAppearances = !1;
   }
+  _getOperatorListNoAppearance() {
+    return { opList: new OperatorList(), separateForm: !1, separateCanvas: !1 };
+  }
   _hasFlag(e, t) {
     return !!(e & t);
   }
@@ -52539,24 +52621,24 @@ class Annotation {
     let { flags: a } = this;
     if (void 0 === e) {
       if (void 0 === t) return;
-      return t ? a & ~E : (a & ~_) | E;
+      return t ? a & ~L : (a & ~z) | L;
     }
     if (e) {
-      a |= E;
-      return t ? (a & ~L) | _ : (a & ~_) | L;
+      a |= L;
+      return t ? (a & ~X) | z : (a & ~z) | X;
     }
-    a &= ~(_ | L);
-    return t ? a & ~E : a | E;
+    a &= ~(z | X);
+    return t ? a & ~L : a | L;
   }
   _isViewable(e) {
-    return !this._hasFlag(e, N) && !this._hasFlag(e, L);
+    return !this._hasFlag(e, E) && !this._hasFlag(e, X);
   }
   _isPrintable(e) {
-    return this._hasFlag(e, E) && !this._hasFlag(e, _) && !this._hasFlag(e, N);
+    return this._hasFlag(e, L) && !this._hasFlag(e, z) && !this._hasFlag(e, E);
   }
   mustBeViewed(e, t) {
     const a = e?.get(this.data.id)?.noView;
-    return void 0 !== a ? !a : this.viewable && !this._hasFlag(this.flags, _);
+    return void 0 !== a ? !a : this.viewable && !this._hasFlag(this.flags, z);
   }
   mustBePrinted(e) {
     const t = e?.get(this.data.id)?.noPrint;
@@ -52602,9 +52684,9 @@ class Annotation {
   }
   setFlags(e) {
     this.flags = Number.isInteger(e) && e > 0 ? e : 0;
-    this.flags & N &&
+    this.flags & E &&
       'Annotation' !== this.constructor.name &&
-      (this.flags ^= N);
+      (this.flags ^= E);
   }
   hasFlag(e) {
     return this._hasFlag(this.flags, e);
@@ -52679,7 +52761,6 @@ class Annotation {
       } else this.borderStyle.setWidth(0);
   }
   setAppearance(e) {
-    this.appearance = null;
     const t = e.get('AP');
     if (!(t instanceof Dict)) return;
     const a = t.get('N');
@@ -52689,15 +52770,16 @@ class Annotation {
     }
     if (!(a instanceof Dict)) return;
     const n = e.get('AS');
-    if (!(n instanceof Name && a.has(n.name))) return;
+    if (!(n instanceof Name)) return;
     const s = a.get(n.name);
     s instanceof BaseStream && (this.appearance = s);
   }
-  #ut(e, t) {
+  #bt(e, t) {
     if (t.has('OC'))
       try {
         this._oc = parseMarkedContentProps(e, t.get('OC'), null);
       } catch (e) {
+        if (e instanceof MissingDataException) throw e;
         warn(`#setOptionalContent: ${e}`);
       }
   }
@@ -52706,48 +52788,41 @@ class Annotation {
     a && (await ObjectLoader.load(a, e, a.xref));
     return a;
   }
+  get _ownCanvasRequiresForms() {
+    return !1;
+  }
   async getOperatorList(e, t, a, n) {
     const { hasOwnCanvas: s, id: r, rect: i } = this.data;
     let o = this.appearance;
-    const l = !!(s && a & f);
+    const l = !!(s && a & f && (!this._ownCanvasRequiresForms || a & u));
     if (l && (0 === this.width || 0 === this.height)) {
       this.data.hasOwnCanvas = !1;
-      return {
-        opList: new OperatorList(),
-        separateForm: !1,
-        separateCanvas: !1,
-      };
+      return this._getOperatorListNoAppearance();
     }
     if (!o) {
-      if (!l)
-        return {
-          opList: new OperatorList(),
-          separateForm: !1,
-          separateCanvas: !1,
-        };
-      o = new StringStream('');
-      o.dict = new Dict();
+      if (!l) return this._getOperatorListNoAppearance();
+      o = new StringStream('', new Dict());
     }
     const c = o.dict,
-      h = await this.loadResources(ga, o),
-      u = lookupRect(c.getArray('BBox'), [0, 0, 1, 1]),
-      m = lookupMatrix(c.getArray('Matrix'), da),
-      p = getTransformMatrix(i, u, m),
-      d = new OperatorList(),
-      g = this._oc;
-    void 0 !== g && d.addOp(Ct, ['OC', g]);
-    d.addOp(Dt, [r, i, p, m, l]);
+      h = await this.loadResources(wa, o),
+      m = lookupRect(c.getArray('BBox'), [0, 0, this.width, this.height]),
+      p = lookupMatrix(c.getArray('Matrix'), ba),
+      d = getTransformMatrix(i, m, p),
+      g = new OperatorList(),
+      b = this._oc;
+    void 0 !== b && g.addOp(Ft, ['OC', b]);
+    g.addOp(Nt, [r, i, d, p, l]);
     await e.getOperatorList({
       stream: o,
       task: t,
       resources: h,
-      operatorList: d,
+      operatorList: g,
       fallbackFontDict: this._fallbackFontDict,
     });
-    d.addOp(Mt, []);
-    void 0 !== g && d.addOp(It, []);
+    g.addOp(Pt, []);
+    void 0 !== b && g.addOp(Tt, []);
     this.reset();
-    return { opList: d, separateForm: !1, separateCanvas: l };
+    return { opList: g, separateForm: !1, separateCanvas: l };
   }
   async save(e, t, a, n) {
     return null;
@@ -52760,7 +52835,7 @@ class Annotation {
   }
   async extractTextContent(e, t, a) {
     if (!this.appearance) return;
-    const n = await this.loadResources(ba, this.appearance),
+    const n = await this.loadResources(ja, this.appearance),
       s = [],
       r = [];
     let i = null;
@@ -52847,6 +52922,14 @@ class Annotation {
     }
     return t.join('.');
   }
+  _getAttachmentId(e, t, a) {
+    if (e instanceof Dict) {
+      t instanceof Ref || (t = FileSpec.pickPlatformItem(e.get('EF'), !0));
+      return t instanceof Ref
+        ? a.catalog.getAttachmentIdForAnnotation(t)
+        : void 0;
+    }
+  }
   get width() {
     return this.data.rect[2] - this.data.rect[0];
   }
@@ -52857,7 +52940,7 @@ class Annotation {
 class AnnotationBorderStyle {
   width = 1;
   rawWidth = 1;
-  style = ae;
+  style = se;
   dashArray = [3];
   horizontalCornerRadius = 0;
   verticalCornerRadius = 0;
@@ -52880,19 +52963,19 @@ class AnnotationBorderStyle {
     if (e instanceof Name)
       switch (e.name) {
         case 'S':
-          this.style = ae;
-          break;
-        case 'D':
-          this.style = ne;
-          break;
-        case 'B':
           this.style = se;
           break;
-        case 'I':
+        case 'D':
           this.style = re;
           break;
-        case 'U':
+        case 'B':
           this.style = ie;
+          break;
+        case 'I':
+          this.style = oe;
+          break;
+        case 'U':
+          this.style = le;
       }
   }
   setDashArray(e, t = !1) {
@@ -52998,8 +53081,7 @@ class MarkupAnnotation extends Annotation {
     const u = new Dict(e),
       m = new Dict(e);
     m.setIfName('Subtype', 'Form');
-    const p = new StringStream(c.join(' '));
-    p.dict = m;
+    const p = new StringStream(c.join(' '), m);
     u.set('Fm0', p);
     const d = new Dict(e);
     r && d.setIfName('BM', r);
@@ -53013,8 +53095,7 @@ class MarkupAnnotation extends Annotation {
     const w = new Dict(e);
     w.set('Resources', b);
     w.set('BBox', f);
-    this.appearance = new StringStream('/GS0 gs /Fm0 Do');
-    this.appearance.dict = w;
+    this.appearance = new StringStream('/GS0 gs /Fm0 Do', w);
     this._streams.push(this.appearance, p);
   }
   static async createNewAnnotation(e, t, a, n) {
@@ -53067,7 +53148,7 @@ class WidgetAnnotation extends Annotation {
       s = this.data;
     this._needAppearances = e.needAppearances;
     void 0 === s.fieldName && (s.fieldName = this._constructFieldName(t));
-    void 0 === s.actions && (s.actions = collectActions(a, t, oe));
+    void 0 === s.actions && (s.actions = collectActions(a, t, fe));
     let r = getInheritableProperty({ dict: t, key: 'V', getArray: !0 });
     s.fieldValue = this._decodeFormValue(r);
     const i = getInheritableProperty({ dict: t, key: 'DV', getArray: !0 });
@@ -53103,12 +53184,12 @@ class WidgetAnnotation extends Annotation {
     };
     s.fieldFlags = getInheritableProperty({ dict: t, key: 'Ff' });
     (!Number.isInteger(s.fieldFlags) || s.fieldFlags < 0) && (s.fieldFlags = 0);
-    s.password = this.hasFieldFlag(V);
-    s.readOnly = this.hasFieldFlag(W);
-    s.required = this.hasFieldFlag(K);
+    s.password = this.hasFieldFlag(Y);
+    s.readOnly = this.hasFieldFlag(G);
+    s.required = this.hasFieldFlag(V);
     s.hidden =
-      this._hasFlag(s.annotationFlags, _) ||
-      this._hasFlag(s.annotationFlags, L);
+      this._hasFlag(s.annotationFlags, z) ||
+      this._hasFlag(s.annotationFlags, X);
   }
   _decodeFormValue(e) {
     if (Array.isArray(e)) {
@@ -53132,12 +53213,12 @@ class WidgetAnnotation extends Annotation {
   mustBeViewed(e, t) {
     return t
       ? this.viewable
-      : super.mustBeViewed(e, t) && !this._hasFlag(this.flags, L);
+      : super.mustBeViewed(e, t) && !this._hasFlag(this.flags, X);
   }
   getRotationMatrix(e) {
     let t = e?.get(this.data.id)?.rotation;
     void 0 === t && (t = this.rotation);
-    return 0 === t ? da : getRotationMatrix(t, this.width, this.height);
+    return 0 === t ? ba : getRotationMatrix(t, this.width, this.height);
   }
   getBorderAndBackgroundAppearances(e) {
     let t = e?.get(this.data.id)?.rotation;
@@ -53161,12 +53242,11 @@ class WidgetAnnotation extends Annotation {
       !(this instanceof SignatureWidgetAnnotation) &&
       !this.data.noHTML &&
       !this.data.hasOwnCanvas
-    )
-      return {
-        opList: new OperatorList(),
-        separateForm: !0,
-        separateCanvas: !1,
-      };
+    ) {
+      const e = this._getOperatorListNoAppearance();
+      e.separateForm = !0;
+      return e;
+    }
     if (!this._hasText) return super.getOperatorList(e, t, a, n);
     const s = await this._getAppearance(e, t, a, n);
     if (this.appearance && null === s) return super.getOperatorList(e, t, a, n);
@@ -53177,8 +53257,8 @@ class WidgetAnnotation extends Annotation {
       o = [0, 0, this.width, this.height],
       l = getTransformMatrix(this.data.rect, o, [1, 0, 0, 1, 0, 0]),
       c = this._oc;
-    void 0 !== c && r.addOp(Ct, ['OC', c]);
-    r.addOp(Dt, [
+    void 0 !== c && r.addOp(Ft, ['OC', c]);
+    r.addOp(Nt, [
       this.data.id,
       this.data.rect,
       l,
@@ -53192,8 +53272,8 @@ class WidgetAnnotation extends Annotation {
       resources: this._fieldResources.mergedResources,
       operatorList: r,
     });
-    r.addOp(Mt, []);
-    void 0 !== c && r.addOp(It, []);
+    r.addOp(Pt, []);
+    void 0 !== c && r.addOp(Tt, []);
     return { opList: r, separateForm: !1, separateCanvas: i };
   }
   _getMKDict(e) {
@@ -53291,18 +53371,18 @@ class WidgetAnnotation extends Annotation {
       m.set('AP', t);
       t.set('N', e);
       const s = this._getSaveFieldResources(c),
-        r = new StringStream(l),
-        i = (r.dict = new Dict(c));
-      i.setIfName('Subtype', 'Form');
-      i.set('Resources', s);
-      const f =
+        r = new Dict(c);
+      r.setIfName('Subtype', 'Form');
+      r.set('Resources', s);
+      const i =
         o % 180 == 0
           ? [0, 0, this.width, this.height]
           : [0, 0, this.height, this.width];
-      i.set('BBox', f);
-      const h = this.getRotationMatrix(a);
-      h !== da && i.set('Matrix', h);
-      n.put(e, { data: r, xfa: null, needAppearances: !1 });
+      r.set('BBox', i);
+      const f = new StringStream(l, r),
+        h = this.getRotationMatrix(a);
+      h !== ba && r.set('Matrix', h);
+      n.put(e, { data: f, xfa: null, needAppearances: !1 });
     }
     m.set('M', `D:${getModificationDate()}`);
   }
@@ -53411,10 +53491,6 @@ class WidgetAnnotation extends Annotation {
         d,
         u,
         m,
-        2,
-        y,
-        k,
-        g,
         q,
         'rtl' === bidi(f[0]).dir,
         n
@@ -53538,7 +53614,7 @@ class TextWidgetAnnotation extends WidgetAnnotation {
     super(e);
     const { dict: t } = e;
     if (t.has('PMD')) {
-      this.flags |= _;
+      this.flags |= z;
       this.data.hidden = !0;
       warn('Barcodes are not supported');
     }
@@ -53551,14 +53627,14 @@ class TextWidgetAnnotation extends WidgetAnnotation {
     let n = getInheritableProperty({ dict: t, key: 'MaxLen' });
     (!Number.isInteger(n) || n < 0) && (n = 0);
     this.data.maxLen = n;
-    this.data.multiLine = this.hasFieldFlag(G);
+    this.data.multiLine = this.hasFieldFlag($);
     this.data.comb =
-      this.hasFieldFlag(te) &&
+      this.hasFieldFlag(ne) &&
       !this.data.multiLine &&
       !this.data.password &&
-      !this.hasFieldFlag(Q) &&
+      !this.hasFieldFlag(ee) &&
       0 !== this.data.maxLen;
-    this.data.doNotScroll = this.hasFieldFlag(ee);
+    this.data.doNotScroll = this.hasFieldFlag(ae);
     const {
       data: { actions: s },
     } = this;
@@ -53592,7 +53668,7 @@ class TextWidgetAnnotation extends WidgetAnnotation {
       const s = parseInt(n, 10);
       isNaN(s) ||
         Math.floor(Math.log10(s)) + 1 !== t[2].length ||
-        (n = (a ? Ni : Pi)[s] ?? n);
+        (n = (a ? _i : Ei)[s] ?? n);
       this.data.datetimeFormat = n;
       if (!i) break;
       if (a) {
@@ -53610,23 +53686,33 @@ class TextWidgetAnnotation extends WidgetAnnotation {
   get hasTextContent() {
     return !!this.appearance && !this._needAppearances;
   }
-  _getCombAppearance(e, t, a, n, s, r, i, o, l, f, c, h, u) {
-    const m = s / this.data.maxLen,
-      p = this.getBorderAndBackgroundAppearances(u),
-      d = [],
-      g = t.getCharPositions(a);
-    for (const [e, t] of g) d.push(`(${escapeString(a.substring(e, t))}) Tj`);
-    h && d.reverse();
-    const b = m * g.length;
-    let w = i;
-    1 === c
-      ? (w += Math.floor((s - b) / (2 * m)) * m)
-      : 2 === c && (w += s - b);
-    const j = d.join(` ${numberToString(m)} 0 Td `);
+  _getCombAppearance(e, t, a, n, s, r, i, o, l) {
+    const f = s / this.data.maxLen,
+      c = this.getBorderAndBackgroundAppearances(l),
+      h = t.getCharPositions(a).map(([e, s]) => {
+        const r = a.substring(e, s);
+        return { glyph: r, width: this._getTextWidth(r, t) * n };
+      });
+    o && h.reverse();
+    const u = f * h.length;
+    let m = 0;
+    1 === i
+      ? (m += Math.floor((s - u) / (2 * f)) * f)
+      : 2 === i && (m += s - u);
+    const p = [];
+    let d = 0;
+    for (let e = 0, t = h.length; e < t; e++) {
+      const { glyph: t, width: a } = h[e],
+        n = 0 === e ? (f - a) / 2 : f + (d - a) / 2;
+      p.push(`${numberToString(n)} 0 Td (${escapeString(t)}) Tj`);
+      d = a;
+    }
+    const g = p.join(' '),
+      b = (r - (t.capHeight || t.ascent || 1) * n) / 2;
     return (
-      `/Tx BMC q ${p}BT ` +
+      `/Tx BMC q ${c}BT ` +
       e +
-      ` 1 0 0 1 ${numberToString(w)} ${numberToString(o + l)} Tm ${j} ET Q EMC`
+      ` 1 0 0 1 ${numberToString(m)} ${numberToString(b)} Tm ${g} ET Q EMC`
     );
   }
   _getMultilineAppearance(e, t, a, n, s, r, i, o, l, f, c, h) {
@@ -53693,7 +53779,7 @@ class TextWidgetAnnotation extends WidgetAnnotation {
         }
       else m += d;
     }
-    u < e.length && l.push(e.substring(u, e.length));
+    u < e.length && l.push(e.substring(u));
     return l;
   }
   async extractTextContent(e, t, a) {
@@ -53737,22 +53823,52 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
     super(e);
     this.checkedAppearance = null;
     this.uncheckedAppearance = null;
-    const t = this.hasFieldFlag($),
-      a = this.hasFieldFlag(Y);
+    const t = this.hasFieldFlag(J),
+      a = this.hasFieldFlag(Q);
     this.data.checkBox = !t && !a;
     this.data.radioButton = t && !a;
     this.data.pushButton = a;
     this.data.isTooltipOnly = !1;
-    if (this.data.checkBox) this._processCheckBox(e);
-    else if (this.data.radioButton) this._processRadioButton(e);
-    else if (this.data.pushButton) {
-      this.data.hasOwnCanvas = !0;
-      this.data.noHTML = !1;
-      this._processPushButton(e);
-    } else warn('Invalid field flags for button widget annotation');
+    this.data.hasOwnCanvas = !0;
+    this.data.noHTML = !1;
+    this.data.checkBox
+      ? this._processCheckBox(e)
+      : this.data.radioButton
+        ? this._processRadioButton(e)
+        : this.data.pushButton
+          ? this._processPushButton(e)
+          : warn('Invalid field flags for button widget annotation');
+  }
+  get _ownCanvasRequiresForms() {
+    return this.data.checkBox || this.data.radioButton;
+  }
+  #wt(e, t, a, n, s, r) {
+    if (!r) return this._getOperatorListNoAppearance();
+    const i = this.appearance,
+      o = lookupMatrix(r.dict.getArray('Matrix'), ba);
+    s && r.dict.set('Matrix', this.getRotationMatrix(n));
+    this.appearance = r;
+    const l = super.getOperatorList(e, t, a, n);
+    this.appearance = i;
+    r.dict.set('Matrix', o);
+    return l;
   }
   async getOperatorList(e, t, a, n) {
     if (this.data.pushButton) return super.getOperatorList(e, t, a, !1, n);
+    if (a & f && a & u && (this.data.checkBox || this.data.radioButton)) {
+      const setCanvasName = (e, t) => {
+          const a = e.fnArray.indexOf(Nt);
+          -1 !== a && e.argsArray[a].push(t);
+        },
+        s = await this.#wt(e, t, a, n, null, this.checkedAppearance);
+      setCanvasName(s.opList, 'checked');
+      const r = await this.#wt(e, t, a, n, null, this.uncheckedAppearance);
+      setCanvasName(r.opList, 'unchecked');
+      s.opList.addOpList(r.opList);
+      s.separateForm ||= r.separateForm;
+      s.separateCanvas ||= r.separateCanvas;
+      return s;
+    }
     let s = null,
       r = null;
     if (n) {
@@ -53765,18 +53881,14 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
       (s = this.data.checkBox
         ? this.data.fieldValue === this.data.exportValue
         : this.data.fieldValue === this.data.buttonValue);
-    const i = s ? this.checkedAppearance : this.uncheckedAppearance;
-    if (i) {
-      const s = this.appearance,
-        o = lookupMatrix(i.dict.getArray('Matrix'), da);
-      r && i.dict.set('Matrix', this.getRotationMatrix(n));
-      this.appearance = i;
-      const l = super.getOperatorList(e, t, a, n);
-      this.appearance = s;
-      i.dict.set('Matrix', o);
-      return l;
-    }
-    return { opList: new OperatorList(), separateForm: !1, separateCanvas: !1 };
+    return this.#wt(
+      e,
+      t,
+      a,
+      n,
+      r,
+      s ? this.checkedAppearance : this.uncheckedAppearance
+    );
   }
   async save(e, t, a, n) {
     this.data.checkBox
@@ -53802,7 +53914,7 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
         path: this.data.fieldName,
         value: o ? this.data.exportValue : '',
       },
-      c = Name.get(o ? this.data.exportValue : 'Off');
+      c = Name.get(o ? this._onStateName : 'Off');
     this.setValue(l, c, e.xref, n);
     l.set('AS', c);
     l.set('M', `D:${getModificationDate()}`);
@@ -53830,7 +53942,7 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
         path: this.data.fieldName,
         value: o ? this.data.buttonValue : '',
       },
-      c = Name.get(o ? this.data.buttonValue : 'Off');
+      c = Name.get(o ? this._onStateName : 'Off');
     o && this.setValue(l, c, e.xref, n);
     l.set('AS', c);
     l.set('M', `D:${getModificationDate()}`);
@@ -53864,22 +53976,79 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
     h.set('PdfJsZaDb', this.fallbackFontDict);
     c.set('Font', h);
     f.set('Resources', c);
-    this.checkedAppearance = new StringStream(l);
-    this.checkedAppearance.dict = f;
+    this.checkedAppearance = new StringStream(l, f);
     this._streams.push(this.checkedAppearance);
+  }
+  _getOnStateName(e) {
+    const t = e.get('AP');
+    if (!(t instanceof Dict)) return null;
+    const a = t.get('N');
+    if (!(a instanceof Dict)) return null;
+    for (const e of a.getKeys()) if ('Off' !== e) return e;
+    return null;
+  }
+  _getExportValueForOptIndex(e, t, a) {
+    if (Number.isInteger(e) && e >= 0 && e < t.length) {
+      const n = this._decodeFormValue(a.fetchIfRef(t[e]));
+      if ('string' == typeof n) return n;
+    }
+    return null;
+  }
+  _getOptInfo(e, t, a, n) {
+    if (!Array.isArray(a)) return null;
+    const s = new Map();
+    let r = null;
+    const i = e.get('Parent'),
+      o = i instanceof Dict ? i.get('Kids') : null;
+    if (Array.isArray(o))
+      for (let t = 0, i = Math.min(o.length, a.length); t < i; t++) {
+        const a = o[t];
+        a instanceof Ref && isRefsEqual(a, this.ref) && (r = t);
+        const i = n.fetchIfRef(a);
+        if (!(i instanceof Dict)) continue;
+        i === e && (r = t);
+        const l = this._getOnStateName(i);
+        'string' != typeof l || s.has(l) || s.set(l, t);
+      }
+    else if (1 === a.length && 'string' == typeof t) {
+      r = 0;
+      s.set(t, 0);
+    }
+    return { currentIndex: r, opt: a, stateToIndex: s };
+  }
+  _getExportValue(e, t, a) {
+    if (!t || 'string' != typeof e || 'Off' === e) return e;
+    if (e === this._onStateName) {
+      const e = this._getExportValueForOptIndex(t.currentIndex, t.opt, a);
+      if (null !== e) return e;
+    }
+    if (t.stateToIndex.has(e)) {
+      const n = this._getExportValueForOptIndex(
+        t.stateToIndex.get(e),
+        t.opt,
+        a
+      );
+      if (null !== n) return n;
+    }
+    const n = parseInt(e, 10);
+    return (
+      (Number.isInteger(n) &&
+        String(n) === e &&
+        this._getExportValueForOptIndex(n, t.opt, a)) ||
+      e
+    );
   }
   _processCheckBox(e) {
     const t = e.dict.get('AP');
-    if (!(t instanceof Dict)) return;
-    const a = t.get('N');
-    if (!(a instanceof Dict)) return;
+    let a = t instanceof Dict ? t.get('N') : null;
+    a instanceof Dict || (a = null);
     const n = this._decodeFormValue(e.dict.get('AS'));
     'string' == typeof n && (this.data.fieldValue = n);
     const s =
         null !== this.data.fieldValue && 'Off' !== this.data.fieldValue
           ? this.data.fieldValue
           : 'Yes',
-      r = [...a.getKeys()];
+      r = a ? [...a.getKeys()] : [];
     if (0 === r.length) r.push('Off', s);
     else if (1 === r.length) 'Off' === r[0] ? r.push(s) : r.unshift('Off');
     else if (r.includes(s)) {
@@ -53890,12 +54059,28 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
       r.length = 0;
       r.push('Off', e);
     }
-    r.includes(this.data.fieldValue) || (this.data.fieldValue = 'Off');
-    this.data.exportValue = r[1];
-    const i = a.get(this.data.exportValue);
-    this.checkedAppearance = i instanceof BaseStream ? i : null;
-    const o = a.get('Off');
-    this.uncheckedAppearance = o instanceof BaseStream ? o : null;
+    const i = r[1];
+    this._onStateName = i;
+    const o = getInheritableProperty({ dict: e.dict, key: 'Opt' }),
+      l = this._getOptInfo(e.dict, i, o, e.xref);
+    this.data.exportValue = this._getExportValue(i, l, e.xref);
+    r.includes(this.data.fieldValue) ||
+      this.data.fieldValue === this.data.exportValue ||
+      (this.data.fieldValue = 'Off');
+    this.data.fieldValue = this._getExportValue(
+      this.data.fieldValue,
+      l,
+      e.xref
+    );
+    this.data.defaultFieldValue = this._getExportValue(
+      this.data.defaultFieldValue,
+      l,
+      e.xref
+    );
+    const f = a?.get(i);
+    this.checkedAppearance = f instanceof BaseStream ? f : null;
+    const c = a?.get('Off');
+    this.uncheckedAppearance = c instanceof BaseStream ? c : null;
     this.checkedAppearance
       ? this._streams.push(this.checkedAppearance)
       : this._getDefaultCheckedAppearance(e, 'check');
@@ -53916,15 +54101,30 @@ class ButtonWidgetAnnotation extends WidgetAnnotation {
     if (!(a instanceof Dict)) return;
     const n = a.get('N');
     if (!(n instanceof Dict)) return;
+    let s = null;
     for (const e of n.getKeys())
       if ('Off' !== e) {
-        this.data.buttonValue = e;
+        s = e;
         break;
       }
-    const s = n.get(this.data.buttonValue);
-    this.checkedAppearance = s instanceof BaseStream ? s : null;
-    const r = n.get('Off');
-    this.uncheckedAppearance = r instanceof BaseStream ? r : null;
+    this._onStateName = s;
+    const r = getInheritableProperty({ dict: e.dict, key: 'Opt' }),
+      i = this._getOptInfo(e.dict, s, r, e.xref);
+    this.data.buttonValue = this._getExportValue(s, i, e.xref);
+    this.data.fieldValue = this._getExportValue(
+      this.data.fieldValue,
+      i,
+      e.xref
+    );
+    this.data.defaultFieldValue = this._getExportValue(
+      this.data.defaultFieldValue,
+      i,
+      e.xref
+    );
+    const o = n.get(s);
+    this.checkedAppearance = o instanceof BaseStream ? o : null;
+    const l = n.get('Off');
+    this.uncheckedAppearance = l instanceof BaseStream ? l : null;
     this.checkedAppearance
       ? this._streams.push(this.checkedAppearance)
       : this._getDefaultCheckedAppearance(e, 'disc');
@@ -54016,8 +54216,8 @@ class ChoiceWidgetAnnotation extends WidgetAnnotation {
         exportValue: e,
         displayValue: e,
       })));
-    this.data.combo = this.hasFieldFlag(J);
-    this.data.multiSelect = this.hasFieldFlag(Z);
+    this.data.combo = this.hasFieldFlag(Z);
+    this.data.multiSelect = this.hasFieldFlag(te);
     this._hasText = !0;
   }
   getFieldObject() {
@@ -54361,8 +54561,7 @@ class FreeTextAnnotation extends MarkupAnnotation {
       for (const e of n) a += e.width * q;
       v = Math.max(v, a);
     }
-    let x = 1;
-    v > j && (x = j / v);
+    const x = v > j ? j / v : 1;
     let C = 1;
     const F = s * l,
       T = 1 * l,
@@ -54414,9 +54613,7 @@ class FreeTextAnnotation extends MarkupAnnotation {
     z.set('BBox', f);
     z.set('Resources', u);
     z.set('Matrix', [1, 0, 0, 1, -f[0], -f[1]]);
-    const L = new StringStream(E);
-    L.dict = z;
-    return L;
+    return new StringStream(E, z);
   }
 }
 class LineAnnotation extends MarkupAnnotation {
@@ -54715,9 +54912,7 @@ class InkAnnotation extends MarkupAnnotation {
       e.set('ExtGState', a);
       c.set('Resources', e);
     }
-    const h = new StringStream(f);
-    h.dict = c;
-    return h;
+    return new StringStream(f, c);
   }
   static async createNewAppearanceStreamForHighlight(e, t, a) {
     const {
@@ -54755,9 +54950,7 @@ class InkAnnotation extends MarkupAnnotation {
       u.set('ca', i);
       u.setIfName('Type', 'ExtGState');
     }
-    const m = new StringStream(l);
-    m.dict = f;
-    return m;
+    return new StringStream(l, f);
   }
 }
 class HighlightAnnotation extends MarkupAnnotation {
@@ -54768,10 +54961,7 @@ class HighlightAnnotation extends MarkupAnnotation {
     this.data.noHTML = !1;
     this.data.opacity = t.get('CA') || 1;
     if ((this.data.quadPoints = getQuadPoints(t, null))) {
-      const e = this.appearance?.dict.get('Resources');
-      if (!this.appearance || !e?.has('ExtGState')) {
-        this.appearance &&
-          warn('HighlightAnnotation - ignoring built-in appearance stream.');
+      if (!this.appearance) {
         const e = getPdfColorArray(this.color, [1, 1, 0]),
           n = t.get('CA');
         this._setDefaultAppearance({
@@ -54858,9 +55048,7 @@ class HighlightAnnotation extends MarkupAnnotation {
       m.set('ca', i);
       m.setIfName('Type', 'ExtGState');
     }
-    const p = new StringStream(f);
-    p.dict = c;
-    return p;
+    return new StringStream(f, c);
   }
 }
 class UnderlineAnnotation extends MarkupAnnotation {
@@ -54954,7 +55142,7 @@ class StrikeOutAnnotation extends MarkupAnnotation {
   }
 }
 class StampAnnotation extends MarkupAnnotation {
-  #mt = null;
+  #jt = null;
   constructor(e) {
     super(e);
     this.data.hasOwnCanvas = this.data.noRotate;
@@ -54964,13 +55152,13 @@ class StampAnnotation extends MarkupAnnotation {
   mustBeViewedWhenEditing(e, t = null) {
     if (e) {
       if (!this.data.isEditable) return !0;
-      this.#mt ??= this.data.hasOwnCanvas;
+      this.#jt ??= this.data.hasOwnCanvas;
       this.data.hasOwnCanvas = !0;
       return !0;
     }
-    if (null !== this.#mt) {
-      this.data.hasOwnCanvas = this.#mt;
-      this.#mt = null;
+    if (null !== this.#jt) {
+      this.data.hasOwnCanvas = this.#jt;
+      this.#jt = null;
     }
     return !t?.has(this.data.id);
   }
@@ -54992,7 +55180,7 @@ class StampAnnotation extends MarkupAnnotation {
     }
     return f;
   }
-  static async #pt(e, t) {
+  static async #kt(e, t) {
     const { areContours: a, color: n, rect: s, lines: r, thickness: i } = e;
     if (!n) return null;
     const o = [`${i} w 1 J 1 j`, `${getPdfColor(n, a)}`];
@@ -55016,13 +55204,11 @@ class StampAnnotation extends MarkupAnnotation {
     f.setIfName('Type', 'XObject');
     f.set('BBox', s);
     f.set('Length', l.length);
-    const c = new StringStream(l);
-    c.dict = f;
-    return c;
+    return new StringStream(l, f);
   }
   static async createNewAppearanceStream(e, t, a) {
     if (e.oldAnnotation) return null;
-    if (e.isSignature) return this.#pt(e, t);
+    if (e.isSignature) return this.#kt(e, t);
     const { rotation: n } = e,
       { imageRef: s, width: r, height: i } = a.image,
       o = new Dict(t),
@@ -55040,26 +55226,193 @@ class StampAnnotation extends MarkupAnnotation {
       const e = getRotationMatrix(n, r, i);
       c.set('Matrix', e);
     }
-    const h = new StringStream(f);
-    h.dict = c;
-    return h;
+    return new StringStream(f, c);
   }
 }
 class FileAttachmentAnnotation extends MarkupAnnotation {
   constructor(e) {
     super(e);
-    const { dict: t } = e,
-      a = new FileSpec(t.get('FS'));
+    const { annotationGlobals: t, dict: a } = e,
+      n = a.get('FS');
     this.data.hasOwnCanvas = this.data.noRotate;
     this.data.noHTML = !1;
-    this.data.file = a.serializable;
-    const n = t.get('Name');
-    this.data.name = n instanceof Name ? stringToPDFString(n.name) : 'PushPin';
-    const s = t.get('ca');
-    this.data.fillAlpha = 'number' == typeof s && s >= 0 && s <= 1 ? s : null;
+    this.data.fileId = this._getAttachmentId(n, a.getRaw('FS'), t);
+    this.data.file = new FileSpec(n).serializable;
+    const s = a.get('Name');
+    this.data.name = s instanceof Name ? stringToPDFString(s.name) : 'PushPin';
+    const r = a.get('ca');
+    this.data.fillAlpha = 'number' == typeof r && r >= 0 && r <= 1 ? r : null;
   }
 }
-const jf = {
+class MediaAnnotation extends Annotation {
+  static #yt = /^(?:video|audio)\//;
+  constructor(e) {
+    super(e);
+    this.data.noHTML = !0;
+  }
+  _setMediaData({ assetRef: e, assetDict: t, filename: a, contentType: n }, s) {
+    this.data.noHTML = !1;
+    this.data.richMedia = {
+      fileId: this._getAttachmentId(t, e, s),
+      filename: a,
+      contentType: n,
+    };
+  }
+  static _getContentType(e, t, a = null) {
+    if ('string' == typeof a && MediaAnnotation.#yt.test(a)) return a;
+    const n = FileSpec.pickPlatformItem(e.get('EF')),
+      s = n instanceof BaseStream ? n.dict?.get('Subtype') : null;
+    if (s instanceof Name && MediaAnnotation.#yt.test(s.name)) return s.name;
+    const r = t.split('.').at(-1)?.toLowerCase();
+    switch (r) {
+      case 'mp4':
+      case 'm4v':
+        return 'video/mp4';
+      case 'webm':
+        return 'video/webm';
+      case 'ogv':
+        return 'video/ogg';
+      case 'mov':
+        return 'video/quicktime';
+      case 'mp3':
+        return 'audio/mpeg';
+      case 'm4a':
+        return 'audio/mp4';
+      case 'wav':
+        return 'audio/wav';
+      case 'oga':
+      case 'ogg':
+        return 'audio/ogg';
+      default:
+        return null;
+    }
+  }
+}
+class RichMediaAnnotation extends MediaAnnotation {
+  constructor(e) {
+    super(e);
+    const { dict: t, xref: a, annotationGlobals: n } = e,
+      s = t.get('RichMediaContent');
+    if (!(s instanceof Dict)) return;
+    const r = RichMediaAnnotation.#qt(s, a);
+    r
+      ? this._setMediaData(r, n)
+      : warn('RichMedia annotation has no playable asset.');
+  }
+  static #qt(e, t) {
+    const a = e.get('Configurations');
+    if (!Array.isArray(a)) return null;
+    for (const e of a) {
+      const a = t.fetchIfRef(e);
+      if (!(a instanceof Dict)) continue;
+      const n = a.get('Instances');
+      if (Array.isArray(n))
+        for (const e of n) {
+          const a = t.fetchIfRef(e);
+          if (!(a instanceof Dict)) continue;
+          if (isName(a.get('Subtype'), 'Flash')) continue;
+          const n = a.getRaw('Asset'),
+            s = t.fetchIfRef(n);
+          if (!(s instanceof Dict)) continue;
+          if (!FileSpec.hasEmbeddedFile(s)) continue;
+          const { filename: r } = new FileSpec(s).serializable,
+            i = MediaAnnotation._getContentType(s, r);
+          if (i)
+            return {
+              assetRef: n instanceof Ref ? n : null,
+              assetDict: s,
+              filename: r,
+              contentType: i,
+            };
+        }
+    }
+    return null;
+  }
+}
+class ScreenAnnotation extends MediaAnnotation {
+  constructor(e) {
+    super(e);
+    const { dict: t, xref: a, annotationGlobals: n } = e,
+      s = ScreenAnnotation.#qt(t, a);
+    s && this._setMediaData(s, n);
+  }
+  static #qt(e, t) {
+    for (const a of this.#vt(e)) {
+      const e = this.#St(a.get('R'), t, new RefSet());
+      if (e) return e;
+    }
+    return null;
+  }
+  static *#vt(e) {
+    const t = e.get('A');
+    t instanceof Dict &&
+      isName(t.get('S'), 'Rendition') &&
+      this.#At(t) &&
+      (yield t);
+    const a = e.get('AA');
+    if (a instanceof Dict)
+      for (const [, e] of a)
+        e instanceof Dict &&
+          isName(e.get('S'), 'Rendition') &&
+          this.#At(e) &&
+          (yield e);
+  }
+  static #At(e) {
+    const t = e.get('OP');
+    return void 0 === t || t === N || t === _;
+  }
+  static #St(e, t, a) {
+    if (!(e instanceof Dict)) return null;
+    const n = e.get('S');
+    if (isName(n, 'MR')) return this.#xt(e.get('C'), t);
+    if (isName(n, 'SR')) {
+      const n = e.get('R');
+      if (Array.isArray(n))
+        for (const e of n) {
+          if (e instanceof Ref) {
+            if (a.has(e)) continue;
+            a.put(e);
+          }
+          const n = this.#St(t.fetchIfRef(e), t, a);
+          if (n) return n;
+        }
+    }
+    return null;
+  }
+  static #xt(e, t) {
+    if (!(e instanceof Dict && isName(e.get('S'), 'MCD'))) return null;
+    const a = e.getRaw('D'),
+      n = t.fetchIfRef(a),
+      s = e.get('CT');
+    let r,
+      i,
+      o = 'string' == typeof s ? s : null;
+    if (n instanceof BaseStream) {
+      r = n.dict;
+      const t = e.get('N');
+      i = 'string' == typeof t ? stringToPDFString(t) : '';
+      if (!o) {
+        const e = n.dict.get('Subtype');
+        e instanceof Name && (o = e.name);
+      }
+    } else {
+      if (!(n instanceof Dict)) return null;
+      if (!FileSpec.hasEmbeddedFile(n)) return null;
+      r = n;
+      ({ filename: i } = new FileSpec(n).serializable);
+    }
+    const l = MediaAnnotation._getContentType(r, i, o);
+    return l
+      ? {
+          assetRef: a instanceof Ref ? a : null,
+          assetDict: r,
+          filename: i,
+          contentType: l,
+        }
+      : null;
+  }
+}
+const yf = {
   get r() {
     return shadow(
       this,
@@ -55111,7 +55464,7 @@ function calculateMD5(e, t, a) {
   l[f++] = (a >>> 29) & 255;
   f += 3;
   const u = new Int32Array(16),
-    { k: m, r: p } = jf;
+    { k: m, r: p } = yf;
   for (f = 0; f < o;) {
     for (c = 0; c < 16; ++c, f += 4)
       u[c] = l[f] | (l[f + 1] << 8) | (l[f + 2] << 16) | (l[f + 3] << 24);
@@ -55210,18 +55563,18 @@ class DatasetReader {
   }
 }
 class SingleIntersector {
-  #dt;
+  #Ct;
   minX = 1 / 0;
   minY = 1 / 0;
   maxX = -1 / 0;
   maxY = -1 / 0;
-  #gt = null;
-  #bt = [];
-  #wt = [];
-  #jt = -1;
-  #kt = !1;
+  #It = null;
+  #Ft = [];
+  #Tt = [];
+  #Ot = -1;
+  #Rt = !1;
   constructor(e) {
-    this.#dt = e;
+    this.#Ct = e;
     const t = e.data.quadPoints;
     if (t) {
       for (let e = 0, a = t.length; e < a; e += 8) {
@@ -55230,69 +55583,69 @@ class SingleIntersector {
         this.minY = Math.min(this.minY, t[e + 5]);
         this.maxY = Math.max(this.maxY, t[e + 1]);
       }
-      t.length > 8 && (this.#gt = t);
+      t.length > 8 && (this.#It = t);
     } else [this.minX, this.minY, this.maxX, this.maxY] = e.data.rect;
   }
-  #yt(e, t) {
+  #Ht(e, t) {
     if (this.minX >= e || this.maxX <= e || this.minY >= t || this.maxY <= t)
       return !1;
-    const a = this.#gt;
+    const a = this.#It;
     if (!a) return !0;
-    if (this.#jt >= 0) {
-      const n = this.#jt;
+    if (this.#Ot >= 0) {
+      const n = this.#Ot;
       if (!(a[n] >= e || a[n + 2] <= e || a[n + 5] >= t || a[n + 1] <= t))
         return !0;
-      this.#jt = -1;
+      this.#Ot = -1;
     }
     for (let n = 0, s = a.length; n < s; n += 8)
       if (!(a[n] >= e || a[n + 2] <= e || a[n + 5] >= t || a[n + 1] <= t)) {
-        this.#jt = n;
+        this.#Ot = n;
         return !0;
       }
     return !1;
   }
   addGlyph(e, t, a) {
-    if (!this.#yt(e, t)) {
+    if (!this.#Ht(e, t)) {
       this.disableExtraChars();
       return !1;
     }
-    if (this.#wt.length > 0) {
-      this.#bt.push(this.#wt.join(''));
-      this.#wt.length = 0;
+    if (this.#Tt.length > 0) {
+      this.#Ft.push(this.#Tt.join(''));
+      this.#Tt.length = 0;
     }
-    this.#bt.push(a);
-    this.#kt = !0;
+    this.#Ft.push(a);
+    this.#Rt = !0;
     return !0;
   }
   addExtraChar(e) {
-    this.#kt && this.#wt.push(e);
+    this.#Rt && this.#Tt.push(e);
   }
   disableExtraChars() {
-    if (this.#kt) {
-      this.#kt = !1;
-      this.#wt.length = 0;
+    if (this.#Rt) {
+      this.#Rt = !1;
+      this.#Tt.length = 0;
     }
   }
   setText() {
-    this.#dt.data.overlaidText = this.#bt.join('');
+    this.#Ct.data.overlaidText = this.#Ft.join('');
   }
 }
-const kf = 64;
+const qf = 64;
 class Intersector {
-  #qt = [];
-  #vt = [];
-  #St;
-  #At;
-  #xt;
-  #Ct;
-  #It;
-  #Ft;
+  #Bt = [];
+  #Dt = [];
+  #Mt;
+  #Nt;
+  #Pt;
+  #_t;
+  #Et;
+  #zt;
   constructor(e) {
     let t = 1 / 0,
       a = 1 / 0,
       n = -1 / 0,
       s = -1 / 0;
-    const r = this.#qt;
+    const r = this.#Bt;
     for (const i of e) {
       if (!i.data.quadPoints && !i.data.rect) continue;
       const e = new SingleIntersector(i);
@@ -55302,39 +55655,39 @@ class Intersector {
       n = Math.max(n, e.maxX);
       s = Math.max(s, e.maxY);
     }
-    this.#St = t;
-    this.#xt = a;
-    this.#At = n;
-    this.#Ct = s;
-    this.#It = 63 / (n - t);
-    this.#Ft = 63 / (s - a);
+    this.#Mt = t;
+    this.#Pt = a;
+    this.#Nt = n;
+    this.#_t = s;
+    this.#Et = 63 / (n - t);
+    this.#zt = 63 / (s - a);
     for (const e of r) {
-      const t = this.#Tt(e.minX, e.minY),
-        a = this.#Tt(e.maxX, e.maxY),
-        n = (a - t) % kf,
-        s = Math.floor((a - t) / kf);
-      for (let a = t; a <= t + s * kf; a += kf)
-        for (let t = 0; t <= n; t++) (this.#vt[a + t] ??= []).push(e);
+      const t = this.#Lt(e.minX, e.minY),
+        a = this.#Lt(e.maxX, e.maxY),
+        n = (a - t) % qf,
+        s = Math.floor((a - t) / qf);
+      for (let a = t; a <= t + s * qf; a += qf)
+        for (let t = 0; t <= n; t++) (this.#Dt[a + t] ??= []).push(e);
     }
   }
-  #Tt(e, t) {
+  #Lt(e, t) {
     return (
-      Math.floor((e - this.#St) * this.#It) +
-      Math.floor((t - this.#xt) * this.#Ft) * kf
+      Math.floor((e - this.#Mt) * this.#Et) +
+      Math.floor((t - this.#Pt) * this.#zt) * qf
     );
   }
   addGlyph(e, t, a, n) {
     const s = e[4] + t / 2,
       r = e[5] + a / 2;
-    if (s < this.#St || r < this.#xt || s > this.#At || r > this.#Ct) return;
-    const i = this.#vt[this.#Tt(s, r)];
+    if (s < this.#Mt || r < this.#Pt || s > this.#Nt || r > this.#_t) return;
+    const i = this.#Dt[this.#Lt(s, r)];
     if (i) for (const e of i) e.addGlyph(s, r, n);
   }
   addExtraChar(e) {
-    for (const t of this.#qt) t.addExtraChar(e);
+    for (const t of this.#Bt) t.addExtraChar(e);
   }
   setText() {
-    for (const e of this.#qt) e.setText();
+    for (const e of this.#Bt) e.setText();
   }
 }
 class Word64 {
@@ -55398,7 +55751,7 @@ class Word64 {
     this.low = e.low;
   }
 }
-const yf = {
+const vf = {
   get k() {
     return shadow(this, 'k', [
       new Word64(1116352408, 3609767458),
@@ -55578,7 +55931,7 @@ function calculateSHA512(e, t, a, n = !1) {
   m[p++] = (a << 3) & 255;
   const b = new Array(80);
   for (p = 0; p < 80; p++) b[p] = new Word64(0, 0);
-  const { k: w } = yf;
+  const { k: w } = vf;
   let j = new Word64(0, 0),
     k = new Word64(0, 0),
     y = new Word64(0, 0),
@@ -55672,7 +56025,7 @@ function calculateSHA512(e, t, a, n = !1) {
 function calculateSHA384(e, t, a) {
   return calculateSHA512(e, t, a, !0);
 }
-const qf = {
+const Sf = {
   get k() {
     return shadow(
       this,
@@ -55737,7 +56090,7 @@ function calculateSHA256(e, t, a) {
   u[m++] = (a >> 5) & 255;
   u[m++] = (a << 3) & 255;
   const g = new Uint32Array(64),
-    { k: b } = qf;
+    { k: b } = Sf;
   for (m = 0; m < h;) {
     for (p = 0; p < 16; ++p) {
       g[p] = (u[m] << 24) | (u[m + 1] << 16) | (u[m + 2] << 8) | u[m + 3];
@@ -55822,7 +56175,7 @@ function calculateSHA256(e, t, a) {
   ]);
 }
 class DecryptStream extends DecodeStream {
-  #Ot = null;
+  #Ut = null;
   constructor(e, t, a) {
     super(t);
     this.stream = e;
@@ -55830,13 +56183,13 @@ class DecryptStream extends DecodeStream {
     this.decrypt = a;
   }
   readBlock() {
-    let e = this.#Ot ?? this.stream.getBytes(512);
+    let e = this.#Ut ?? this.stream.getBytes(512);
     if (!e?.length) {
       this.eof = !0;
       return;
     }
-    this.#Ot = this.stream.getBytes(512);
-    const t = this.#Ot?.length > 0;
+    this.#Ut = this.stream.getBytes(512);
+    const t = this.#Ut?.length > 0;
     e = (0, this.decrypt)(e, !t);
     const a = this.bufferLength,
       n = a + e.length;
@@ -56372,30 +56725,35 @@ class PDF20 extends PDFBase {
   }
 }
 class CipherTransform {
-  #Rt = new Map();
+  #Xt = new Map();
+  embeddedFilterName = null;
   constructor(e, t = null, a = null) {
     this.resolveCipher = e;
     this.streamFilterName = a;
     this.stringFilterName = t;
   }
-  #Ht(e = null) {
+  #Wt(e = null) {
     const t = e instanceof Name ? e.name : '__default__';
-    return this.#Rt.getOrInsertComputed(t, () => this.resolveCipher(e));
+    return this.#Xt.getOrInsertComputed(t, () => this.resolveCipher(e));
   }
   createStream(e, t, a = null) {
-    const n = new (this.#Ht(a || this.streamFilterName))();
+    const n =
+        this.embeddedFilterName && isDict(e.dict, 'EmbeddedFile')
+          ? this.embeddedFilterName
+          : this.streamFilterName,
+      s = new (this.#Wt(a || n))();
     return new DecryptStream(e, t, function cipherTransformDecryptStream(e, t) {
-      return n.decryptBlock(e, t);
+      return s.decryptBlock(e, t);
     });
   }
   decryptString(e) {
-    const t = new (this.#Ht(this.stringFilterName))();
+    const t = new (this.#Wt(this.stringFilterName))();
     let a = stringToBytes(e);
     a = t.decryptBlock(a, !0);
     return bytesToString(a);
   }
   encryptString(e) {
-    const t = new (this.#Ht(this.stringFilterName))();
+    const t = new (this.#Wt(this.stringFilterName))();
     if (t instanceof AESBaseCipher) {
       const a = 16 - (e.length % 16);
       e += String.fromCharCode(a).repeat(a);
@@ -56414,6 +56772,7 @@ class CipherTransform {
   }
 }
 class CipherTransformFactory {
+  #Kt;
   static get _defaultPasswordBytes() {
     return shadow(
       this,
@@ -56424,7 +56783,7 @@ class CipherTransformFactory {
       ])
     );
   }
-  #Bt(e, t, a, n, s, r, i, o, l, f, c, h) {
+  #Gt(e, t, a, n, s, r, i, o, l, f, c, h) {
     if (t) {
       const e = Math.min(127, t.length);
       t = t.subarray(0, e);
@@ -56436,7 +56795,7 @@ class CipherTransformFactory {
         ? u.getOwnerKey(t, s, r, f)
         : null;
   }
-  #Dt(e, t, a, n, s, r, i, o) {
+  #Vt(e, t, a, n, s, r, i, o) {
     const l = 40 + a.length + e.length,
       f = new Uint8Array(l);
     let c,
@@ -56486,7 +56845,7 @@ class CipherTransformFactory {
     }
     return b.every((e, t) => n[t] === e) ? d : null;
   }
-  #Mt(e, t, a, n) {
+  #$t(e, t, a, n) {
     const s = new Uint8Array(32);
     let r = 0;
     const i = Math.min(32, e.length);
@@ -56511,7 +56870,7 @@ class CipherTransformFactory {
     }
     return h;
   }
-  #Nt(e, t, a, n = !1) {
+  #Yt(e, t, a, n = !1) {
     const s = a.length,
       r = new Uint8Array(s + 9);
     r.set(a);
@@ -56535,6 +56894,7 @@ class CipherTransformFactory {
       throw new FormatError('unknown encryption method');
     this.filterName = n.name;
     this.dict = e;
+    this.#Kt = t;
     const s = e.get('V');
     if (!Number.isInteger(s) || (1 !== s && 2 !== s && 4 !== s && 5 !== s))
       throw new FormatError('unsupported encryption algorithm');
@@ -56554,18 +56914,33 @@ class CipherTransformFactory {
       }
     if (!Number.isInteger(r) || r < 40 || r % 8 != 0)
       throw new FormatError('invalid key length');
-    const i = stringToBytes(e.get('O')),
-      o = stringToBytes(e.get('U')),
-      l = i.subarray(0, 32),
-      f = o.subarray(0, 32),
-      c = e.get('P'),
-      h = e.get('R'),
-      u = (4 === s || 5 === s) && !1 !== e.get('EncryptMetadata');
-    this.encryptMetadata = u;
-    const m = stringToBytes(t);
-    let p, d;
+    let i = null,
+      o = Name.get('Identity'),
+      l = Name.get('Identity'),
+      f = o;
+    if (s >= 4) {
+      i = e.get('CF');
+      i instanceof Dict && (i.suppressEncryption = !0);
+      o = e.get('StmF') || Name.get('Identity');
+      l = e.get('StrF') || Name.get('Identity');
+      f = e.get('EFF') || o;
+    }
+    this.cf = i;
+    this.stmf = o;
+    this.strf = l;
+    this.eff = f;
+    const c = stringToBytes(e.get('O')),
+      h = stringToBytes(e.get('U')),
+      u = c.subarray(0, 32),
+      m = h.subarray(0, 32),
+      p = e.get('P'),
+      d = e.get('R'),
+      g = (4 === s || 5 === s) && !1 !== e.get('EncryptMetadata');
+    this.encryptMetadata = g;
+    const b = stringToBytes(t);
+    let w, j;
     if (a) {
-      if (6 === h)
+      if (6 === d)
         try {
           a = utf8StringToString(a);
         } catch {
@@ -56573,57 +56948,71 @@ class CipherTransformFactory {
             'CipherTransformFactory: Unable to convert UTF8 encoded password.'
           );
         }
-      p = stringToBytes(a);
+      w = stringToBytes(a);
     }
-    if (5 !== s) d = this.#Dt(m, p, l, f, c, h, r, u);
+    if (5 !== s) j = this.#Vt(b, w, u, m, p, d, r, g);
     else {
-      const t = i.subarray(32, 40),
-        a = i.subarray(40, 48),
-        n = o.subarray(0, 48),
-        s = o.subarray(32, 40),
-        r = o.subarray(40, 48),
-        c = stringToBytes(e.get('OE')),
-        u = stringToBytes(e.get('UE')),
-        m = stringToBytes(e.get('Perms'));
-      d = this.#Bt(h, p, l, t, a, n, f, s, r, c, u, m);
+      const t = c.subarray(32, 40),
+        a = c.subarray(40, 48),
+        n = h.subarray(0, 48),
+        s = h.subarray(32, 40),
+        r = h.subarray(40, 48),
+        i = stringToBytes(e.get('OE')),
+        o = stringToBytes(e.get('UE')),
+        l = stringToBytes(e.get('Perms'));
+      j = this.#Gt(d, w, u, t, a, n, m, s, r, i, o, l);
     }
-    if (!d) {
-      if (!a) throw new PasswordException('No password given', ea);
-      const e = this.#Mt(p, l, h, r);
-      d = this.#Dt(m, e, l, f, c, h, r, u);
+    if (!j) {
+      if (!a) {
+        if (
+          this.algorithm >= 4 &&
+          isName(this.stmf, 'Identity') &&
+          isName(this.strf, 'Identity')
+        ) {
+          const e = this.cf?.get(this.eff.name),
+            t = e?.get('AuthEvent');
+          if (isName(t, 'EFOpen')) {
+            this.encryptionKey = null;
+            return;
+          }
+        }
+        throw new PasswordException('No password given', aa);
+      }
+      const e = this.#$t(w, u, d, r);
+      j = this.#Vt(b, e, u, m, p, d, r, g);
     }
-    if (!d) throw new PasswordException('Incorrect Password', ta);
-    if (4 === s && d.length < 16) {
+    if (!j) throw new PasswordException('Incorrect Password', na);
+    if (4 === s && j.length < 16) {
       this.encryptionKey = new Uint8Array(16);
-      this.encryptionKey.set(d);
-    } else this.encryptionKey = d;
-    if (s >= 4) {
-      const t = e.get('CF');
-      t instanceof Dict && (t.suppressEncryption = !0);
-      this.cf = t;
-      this.stmf = e.get('StmF') || Name.get('Identity');
-      this.strf = e.get('StrF') || Name.get('Identity');
-      this.eff = e.get('EFF') || this.stmf;
-    }
+      this.encryptionKey.set(j);
+    } else this.encryptionKey = j;
+  }
+  setPassword(e) {
+    const t = new CipherTransformFactory(this.dict, this.#Kt, e);
+    this.encryptionKey = t.encryptionKey;
   }
   createCipherTransform(e, t) {
     if (4 === this.algorithm || 5 === this.algorithm) {
-      return new CipherTransform(
+      const a = new CipherTransform(
         (a) => {
           if (!(a instanceof Name))
             throw new FormatError('Invalid crypt filter name.');
           const n = this.cf.get(a.name),
             s = n?.get('CFM');
           if (!s || 'None' === s.name) return NullCipher;
+          if (!this.encryptionKey)
+            throw new PasswordException('No password given', aa);
+          if (5 === this.algorithm)
+            return AES256Cipher.bind(null, this.encryptionKey);
           if ('V2' === s.name)
             return ARCFourCipher.bind(
               null,
-              this.#Nt(e, t, this.encryptionKey, !1)
+              this.#Yt(e, t, this.encryptionKey, !1)
             );
           if ('AESV2' === s.name)
             return AES128Cipher.bind(
               null,
-              this.#Nt(e, t, this.encryptionKey, !0)
+              this.#Yt(e, t, this.encryptionKey, !0)
             );
           if ('AESV3' === s.name)
             return AES256Cipher.bind(null, this.encryptionKey);
@@ -56632,9 +57021,11 @@ class CipherTransformFactory {
         this.strf,
         this.stmf
       );
+      a.embeddedFilterName = this.eff;
+      return a;
     }
     return new CipherTransform(() =>
-      ARCFourCipher.bind(null, this.#Nt(e, t, this.encryptionKey, !1))
+      ARCFourCipher.bind(null, this.#Yt(e, t, this.encryptionKey, !1))
     );
   }
 }
@@ -57126,7 +57517,7 @@ class XRef {
     if (this._pendingRefs.has(e)) {
       this._pendingRefs.remove(e);
       warn(`Ignoring circular reference: ${e}.`);
-      return ia;
+      return la;
     }
     this._pendingRefs.put(e);
     try {
@@ -57238,9 +57629,9 @@ class XRef {
     return this.root;
   }
 }
-const vf = [0, 0, 612, 792];
+const Af = [0, 0, 612, 792];
 class Page {
-  #Pt = null;
+  #Jt = null;
   constructor({
     pdfManager: e,
     xref: t,
@@ -57281,7 +57672,7 @@ class Page {
       }
     };
   }
-  #_t(e, t = this.pageIndex) {
+  #Qt(e, t = this.pageIndex) {
     return new PartialEvaluator({
       xref: this.xref,
       handler: e,
@@ -57297,9 +57688,9 @@ class Page {
     });
   }
   createAnnotationEvaluator(e) {
-    return this.#_t(e);
+    return this.#Qt(e);
   }
-  #Et(e, t = !1) {
+  #Zt(e, t = !1) {
     const a = getInheritableProperty({
       dict: this.pageDict,
       key: e,
@@ -57316,12 +57707,12 @@ class Page {
     return this.pageDict.getArray('Contents');
   }
   get resources() {
-    const e = this.#Et('Resources');
+    const e = this.#Zt('Resources');
     return shadow(this, 'resources', e instanceof Dict ? e : Dict.empty);
   }
   getBoundingBox(e) {
     if (this.xfaData) return this.xfaData.bbox;
-    const t = lookupNormalRect(this.#Et(e, !0), null);
+    const t = lookupNormalRect(this.#Zt(e, !0), null);
     if (t) {
       if (t[2] - t[0] > 0 && t[3] - t[1] > 0) return t;
       warn(`Empty, or invalid, /${e} entry.`);
@@ -57329,7 +57720,7 @@ class Page {
     return null;
   }
   get mediaBox() {
-    return shadow(this, 'mediaBox', this.getBoundingBox('MediaBox') || vf);
+    return shadow(this, 'mediaBox', this.getBoundingBox('MediaBox') || Af);
   }
   get cropBox() {
     return shadow(
@@ -57353,7 +57744,7 @@ class Page {
     return shadow(this, 'view', t);
   }
   get rotate() {
-    let e = this.#Et('Rotate') || 0;
+    let e = this.#Zt('Rotate') || 0;
     e % 90 != 0
       ? (e = 0)
       : e >= 360
@@ -57361,7 +57752,7 @@ class Page {
         : e < 0 && (e = ((e % 360) + 360) % 360);
     return shadow(this, 'rotate', e);
   }
-  #zt(e, t) {
+  #ea(e, t) {
     if (!this.evaluatorOptions.ignoreErrors) throw e;
     warn(`getContentStream - ignoring sub-stream (${t}): "${e}".`);
   }
@@ -57387,7 +57778,7 @@ class Page {
           );
       }
       t.length > 0 && (await Promise.all(t));
-      return new StreamsSequenceStream(e, this.#zt.bind(this));
+      return new StreamsSequenceStream(e, this.#ea.bind(this));
     }
     return new NullStream();
   }
@@ -57400,7 +57791,7 @@ class Page {
         : null
     );
   }
-  async #Lt(e, t, a) {
+  async #ta(e, t, a) {
     const n = [];
     for (const s of e)
       if (s.id) {
@@ -57439,10 +57830,10 @@ class Page {
   }
   async saveNewAnnotations(e, t, a, n, s) {
     if (this.xfaFactory) throw new Error('XFA: Cannot save new annotations.');
-    const r = this.#_t(e),
+    const r = this.#Qt(e),
       i = new RefSetCache(),
       o = new RefSet();
-    await this.#Lt(a, i, o);
+    await this.#ta(a, i, o);
     const l = this.pageDict,
       f = this.annotations.filter((e) => !(e instanceof Ref && i.has(e))),
       c = await AnnotationFactory.saveNewAnnotations(r, this.xref, t, a, n, s);
@@ -57454,7 +57845,7 @@ class Page {
     for (const e of i) s.put(e, { data: null });
   }
   async save(e, t, a, n) {
-    const s = this.#_t(e),
+    const s = this.#Qt(e),
       r = await this._parsedAnnotations,
       i = [];
     for (const e of r)
@@ -57469,10 +57860,10 @@ class Page {
     return Promise.all(i);
   }
   async loadResources(e) {
-    await (this.#Pt ??= this.pdfManager.ensure(this, 'resources'));
+    await (this.#Jt ??= this.pdfManager.ensure(this, 'resources'));
     await ObjectLoader.load(this.resources, e, this.xref);
   }
-  async #Ut(e, t) {
+  async #aa(e, t) {
     const a = e?.get('Resources');
     if (!(a instanceof Dict && a.size)) return this.resources;
     await ObjectLoader.load(a, t, this.xref);
@@ -57493,8 +57884,8 @@ class Page {
     modifiedIds: o = null,
   }) {
     const h = this.getContentStream(),
-      d = this.loadResources(ga),
-      b = this.#_t(e, r),
+      d = this.loadResources(wa),
+      b = this.#Qt(e, r),
       w = this.xfaFactory ? null : getNewAnnotationsMap(i),
       j = w?.get(this.pageIndex);
     let k = Promise.resolve(null),
@@ -57513,12 +57904,12 @@ class Page {
         t = AnnotationFactory.generateImages(e, this.xref, s);
       } else t = AnnotationFactory.generateImages(j, this.xref, s);
       y = new RefSet();
-      k = Promise.all([e, this.#Lt(j, y, null)]).then(([e]) =>
+      k = Promise.all([e, this.#ta(j, y, null)]).then(([e]) =>
         e ? AnnotationFactory.printNewAnnotations(e, b, a, j, t) : null
       );
     }
     const q = Promise.all([h, d]).then(async ([i]) => {
-      const o = await this.#Ut(i.dict, ga),
+      const o = await this.#aa(i.dict, wa),
         l = new OperatorList(n, t);
       e.send('StartRenderPage', {
         transparency: b.hasBlendModes(o, this.nonBlendModesSet),
@@ -57593,11 +57984,11 @@ class Page {
     intersector: r = null,
   }) {
     const i = this.getContentStream(),
-      o = this.loadResources(ba),
+      o = this.loadResources(ja),
       l = this.pdfManager.ensureCatalog('lang'),
       [f, , c] = await Promise.all([i, o, l]),
-      h = await this.#Ut(f.dict, ba);
-    return this.#_t(e).getTextContent({
+      h = await this.#aa(f.dict, ja);
+    return this.#Qt(e).getTextContent({
       stream: f,
       task: t,
       resources: h,
@@ -57640,7 +58031,7 @@ class Page {
       const n = o || (h && a.viewable);
       (n || (u && a.printable)) && s.push(a.data);
       if (a.hasTextContent && n) {
-        i ??= this.#_t(e);
+        i ??= this.#Qt(e);
         r.push(
           a
             .extractTextContent(i, t, [-1 / 0, -1 / 0, 1 / 0, 1 / 0])
@@ -57661,8 +58052,6 @@ class Page {
           includeMarkedContent: !1,
           disableNormalization: !1,
           sink: null,
-          viewBox: this.view,
-          lang: null,
           intersector: a,
         }).then(() => {
           a.setText();
@@ -57673,7 +58062,7 @@ class Page {
     return s;
   }
   get annotations() {
-    const e = this.#Et('Annots');
+    const e = this.#Zt('Annots');
     return shadow(this, 'annotations', Array.isArray(e) ? e : []);
   }
   get _parsedAnnotations() {
@@ -57724,7 +58113,7 @@ class Page {
     return shadow(
       this,
       'jsActions',
-      collectActions(this.xref, this.pageDict, fe)
+      collectActions(this.xref, this.pageDict, he)
     );
   }
   async collectAnnotationsByType(e, t, a, n, s) {
@@ -57756,7 +58145,7 @@ class Page {
             if (!a) return null;
             a.data.pageIndex = r;
             if (a.hasTextContent && a.viewable) {
-              o ??= this.#_t(e);
+              o ??= this.#Qt(e);
               await a.extractTextContent(o, t, [-1 / 0, -1 / 0, 1 / 0, 1 / 0]);
             }
             return a.data;
@@ -57768,9 +58157,9 @@ class Page {
       );
   }
 }
-const Sf = new Uint8Array([37, 80, 68, 70, 45]),
-  Af = new Uint8Array([115, 116, 97, 114, 116, 120, 114, 101, 102]),
-  xf = new Uint8Array([101, 110, 100, 111, 98, 106]);
+const xf = new Uint8Array([37, 80, 68, 70, 45]),
+  Cf = new Uint8Array([115, 116, 97, 114, 116, 120, 114, 101, 102]),
+  If = new Uint8Array([101, 110, 100, 111, 98, 106]);
 function find(e, t, a = 1024, n = !1) {
   const s = t.length,
     r = e.peekBytes(a),
@@ -57803,8 +58192,8 @@ function find(e, t, a = 1024, n = !1) {
   return !1;
 }
 class PDFDocument {
-  #Xt = new Map();
-  #Wt = null;
+  #na = new Map();
+  #sa = null;
   constructor(e, t) {
     if (t.length <= 0)
       throw new InvalidPDFException(
@@ -57848,7 +58237,7 @@ class PDFDocument {
     let t = 0;
     if (this.linearization) {
       e.reset();
-      if (find(e, xf)) {
+      if (find(e, If)) {
         e.skip(6);
         let a = e.peekByte();
         for (; isWhiteSpace(a);) {
@@ -57859,14 +58248,14 @@ class PDFDocument {
       }
     } else {
       const a = 1024,
-        n = Af.length;
+        n = Cf.length;
       let s = !1,
         r = e.end;
       for (; !s && r > 0;) {
         r -= a - n;
         r < 0 && (r = 0);
         e.pos = r;
-        s = find(e, Af, a, !0);
+        s = find(e, Cf, a, !0);
       }
       if (s) {
         e.skip(9);
@@ -57888,13 +58277,13 @@ class PDFDocument {
   checkHeader() {
     const e = this.stream;
     e.reset();
-    if (!find(e, Sf)) return;
+    if (!find(e, xf)) return;
     e.moveStart();
-    e.skip(Sf.length);
+    e.skip(xf.length);
     let t,
       a = '';
     for (; (t = e.getByte()) > 32 && a.length < 7;) a += String.fromCharCode(t);
-    ma.test(a) ? (this.#Wt = a) : warn(`Invalid PDF header version: ${a}`);
+    da.test(a) ? (this.#sa = a) : warn(`Invalid PDF header version: ${a}`);
   }
   parseStartXRef() {
     this.xref.setStartXRef(this.startXRef);
@@ -57910,7 +58299,7 @@ class PDFDocument {
           : this.catalog.numPages;
     return shadow(this, 'numPages', e);
   }
-  #Kt(e, t = 0) {
+  #ra(e, t = 0) {
     return (
       !!Array.isArray(e) &&
       e.every((e) => {
@@ -57920,7 +58309,7 @@ class PDFDocument {
             warn('#hasOnlyDocumentSignatures: maximum recursion depth reached');
             return !1;
           }
-          return this.#Kt(e.get('Kids'), t);
+          return this.#ra(e.get('Kids'), t);
         }
         const a = isName(e.get('FT'), 'Sig'),
           n = e.get('Rect'),
@@ -58004,11 +58393,11 @@ class PDFDocument {
   get htmlForXfa() {
     return this.xfaFactory ? this.xfaFactory.getPages() : null;
   }
-  async #Gt() {
+  async #ia() {
     const e = await this.pdfManager.ensureCatalog('xfaImages');
     e && this.xfaFactory.setImages(e);
   }
-  async #Vt(e, t) {
+  async #oa(e, t) {
     const a = await this.pdfManager.ensureCatalog('acroForm');
     if (!a) return;
     const n = await a.getAsync('DR');
@@ -58097,13 +58486,13 @@ class PDFDocument {
     this.xfaFactory.appendFonts(h, d);
   }
   loadXfaResources(e, t) {
-    return Promise.all([this.#Vt(e, t).catch(() => {}), this.#Gt()]);
+    return Promise.all([this.#oa(e, t).catch(() => {}), this.#ia()]);
   }
   serializeXfaData(e) {
     return this.xfaFactory ? this.xfaFactory.serializeData(e) : null;
   }
   get version() {
-    return this.catalog.version || this.#Wt;
+    return this.catalog.version || this.#sa;
   }
   get formInfo() {
     const e = { hasFields: !1, hasAcroForm: !1, hasXfa: !1, hasSignatures: !1 },
@@ -58118,7 +58507,7 @@ class PDFDocument {
         (Array.isArray(s) && s.length > 0) ||
         (s instanceof BaseStream && !s.isEmpty);
       const r = !!(1 & t.get('SigFlags')),
-        i = r && this.#Kt(a);
+        i = r && this.#ra(a);
       e.hasAcroForm = n && !i;
       e.hasSignatures = r;
     } catch (e) {
@@ -58206,7 +58595,7 @@ class PDFDocument {
     } else a = calculateMD5(this.stream.getByteRange(0, 1024), 0, 1024);
     return shadow(this, 'fingerprints', [a.toHex(), n?.toHex() ?? null]);
   }
-  async #$t(e) {
+  async #la(e) {
     const { catalog: t, linearization: a, xref: n } = this,
       s = Ref.get(a.objectNumberFirst, 0);
     try {
@@ -58232,14 +58621,14 @@ class PDFDocument {
     }
   }
   getPage(e) {
-    const t = this.#Xt.get(e);
+    const t = this.#na.get(e);
     if (t) return t;
     const { catalog: a, linearization: n, xfaFactory: s } = this;
     let r;
     r = s
       ? Promise.resolve([Dict.empty, null])
       : n?.pageFirst === e
-        ? this.#$t(e)
+        ? this.#la(e)
         : a.getPageDict(e);
     r = r.then(
       ([t, n]) =>
@@ -58260,7 +58649,7 @@ class PDFDocument {
           xfaFactory: s,
         })
     );
-    this.#Xt.set(e, r);
+    this.#na.set(e, r);
     return r;
   }
   async checkFirstPage(e = !1) {
@@ -58269,7 +58658,7 @@ class PDFDocument {
         await this.getPage(0);
       } catch (e) {
         if (e instanceof XRefEntryException) {
-          this.#Xt.delete(0);
+          this.#na.delete(0);
           await this.cleanup();
           throw new XRefParseException();
         }
@@ -58292,7 +58681,7 @@ class PDFDocument {
       if (n <= 1) return;
       await this.getPage(n - 1);
     } catch (s) {
-      this.#Xt.delete(n - 1);
+      this.#na.delete(n - 1);
       await this.cleanup();
       if (s instanceof XRefEntryException && !e) throw new XRefParseException();
       warn(`checkLastPage - invalid /Pages tree /Count: ${n}.`);
@@ -58329,7 +58718,7 @@ class PDFDocument {
               xfaFactory: null,
             })
           );
-        this.#Xt.set(e, r);
+        this.#na.set(e, r);
       }
       t.setActualNumPages(r.size);
     }
@@ -58345,7 +58734,7 @@ class PDFDocument {
   async cleanup(e = !1) {
     return this.catalog ? this.catalog.cleanup(e) : clearGlobalCaches();
   }
-  async #Yt(e, t, a, n, s, r, i) {
+  async #fa(e, t, a, n, s, r, i) {
     const { xref: o } = this;
     if (!(a instanceof Ref) || r.has(a)) return;
     r.put(a);
@@ -58385,7 +58774,7 @@ class PDFDocument {
     if (!l.has('Kids')) return;
     const c = await l.getAsync('Kids');
     if (Array.isArray(c))
-      for (const t of c) await this.#Yt(e, a, t, n, s, r, i);
+      for (const t of c) await this.#fa(e, a, t, n, s, r, i);
   }
   get fieldObjects() {
     return shadow(
@@ -58401,7 +58790,7 @@ class PDFDocument {
           r = new Map(),
           i = new RefSetCache();
         for (const e of a.get('Fields'))
-          await this.#Yt('', null, e, r, t, n, i);
+          await this.#fa('', null, e, r, t, n, i);
         const o = [];
         for (const [e, t] of r)
           o.push(
@@ -58504,6 +58893,13 @@ class BasePdfManager {
   ensureCatalog(e, t) {
     return this.ensure(this.pdfDocument.catalog, e, t);
   }
+  async initDocument(e) {
+    await this.ensureDoc('checkHeader');
+    await this.ensureDoc('parseStartXRef');
+    await this.ensureDoc('parse', [e]);
+    await this.ensureDoc('checkFirstPage', [e]);
+    await this.ensureDoc('checkLastPage', [e]);
+  }
   getPage(e) {
     return this.pdfDocument.getPage(e);
   }
@@ -58527,6 +58923,7 @@ class BasePdfManager {
   }
   updatePassword(e) {
     this._password = e;
+    this.pdfDocument.xref.encrypt?.setPassword(e);
   }
   terminate(e) {
     unreachable('Abstract method `terminate` called');
@@ -58585,16 +58982,16 @@ class NetworkPdfManager extends BasePdfManager {
     this.streamManager.abort(e);
   }
 }
-const Cf = 1,
-  If = 2,
-  Ff = 1,
+const Ff = 1,
   Tf = 2,
-  Of = 3,
-  Rf = 4,
-  Hf = 5,
-  Bf = 6,
-  Df = 7,
-  Mf = 8;
+  Of = 1,
+  Rf = 2,
+  Hf = 3,
+  Bf = 4,
+  Df = 5,
+  Mf = 6,
+  Nf = 7,
+  Pf = 8;
 function onFn() {}
 function wrapReason(e) {
   if (
@@ -58625,7 +59022,7 @@ function wrapReason(e) {
   return new UnknownErrorException(e.message, e.toString());
 }
 class MessageHandler {
-  #Jt = new AbortController();
+  #ca = new AbortController();
   constructor(e, t, a) {
     this.sourceName = e;
     this.targetName = t;
@@ -58636,14 +59033,14 @@ class MessageHandler {
     this.streamControllers = Object.create(null);
     this.callbackCapabilities = Object.create(null);
     this.actionHandler = Object.create(null);
-    a.addEventListener('message', this.#Qt.bind(this), {
-      signal: this.#Jt.signal,
+    a.addEventListener('message', this.#ha.bind(this), {
+      signal: this.#ca.signal,
     });
   }
-  #Qt({ data: e }) {
+  #ha({ data: e }) {
     if (e.targetName !== this.sourceName) return;
     if (e.stream) {
-      this.#Zt(e);
+      this.#ua(e);
       return;
     }
     if (e.callback) {
@@ -58651,9 +59048,9 @@ class MessageHandler {
         a = this.callbackCapabilities[t];
       if (!a) throw new Error(`Cannot resolve callback ${t}`);
       delete this.callbackCapabilities[t];
-      if (e.callback === Cf) a.resolve(e.data);
+      if (e.callback === Ff) a.resolve(e.data);
       else {
-        if (e.callback !== If) throw new Error('Unexpected callback case');
+        if (e.callback !== Tf) throw new Error('Unexpected callback case');
         a.reject(wrapReason(e.reason));
       }
       return;
@@ -58669,7 +59066,7 @@ class MessageHandler {
           s.postMessage({
             sourceName: a,
             targetName: n,
-            callback: Cf,
+            callback: Ff,
             callbackId: e.callbackId,
             data: t,
           });
@@ -58678,7 +59075,7 @@ class MessageHandler {
           s.postMessage({
             sourceName: a,
             targetName: n,
-            callback: If,
+            callback: Tf,
             callbackId: e.callbackId,
             reason: wrapReason(t),
           });
@@ -58686,7 +59083,7 @@ class MessageHandler {
       );
       return;
     }
-    e.streamId ? this.#ea(e) : t(e.data);
+    e.streamId ? this.#ma(e) : t(e.data);
   }
   on(e, t) {
     const a = this.actionHandler;
@@ -58759,7 +59156,7 @@ class MessageHandler {
           o.postMessage({
             sourceName: r,
             targetName: i,
-            stream: Bf,
+            stream: Mf,
             streamId: s,
             desiredSize: e.desiredSize,
           });
@@ -58773,7 +59170,7 @@ class MessageHandler {
           o.postMessage({
             sourceName: r,
             targetName: i,
-            stream: Ff,
+            stream: Of,
             streamId: s,
             reason: wrapReason(e),
           });
@@ -58783,7 +59180,7 @@ class MessageHandler {
       a
     );
   }
-  #ea(e) {
+  #ma(e) {
     const t = e.streamId,
       a = this.sourceName,
       n = e.sourceName,
@@ -58800,7 +59197,7 @@ class MessageHandler {
             this.ready = this.sinkCapability.promise;
           }
           s.postMessage(
-            { sourceName: a, targetName: n, stream: Rf, streamId: t, chunk: e },
+            { sourceName: a, targetName: n, stream: Bf, streamId: t, chunk: e },
             i
           );
         },
@@ -58810,7 +59207,7 @@ class MessageHandler {
             s.postMessage({
               sourceName: a,
               targetName: n,
-              stream: Of,
+              stream: Hf,
               streamId: t,
             });
             delete r.streamSinks[t];
@@ -58823,7 +59220,7 @@ class MessageHandler {
             s.postMessage({
               sourceName: a,
               targetName: n,
-              stream: Hf,
+              stream: Df,
               streamId: t,
               reason: wrapReason(e),
             });
@@ -58844,7 +59241,7 @@ class MessageHandler {
         s.postMessage({
           sourceName: a,
           targetName: n,
-          stream: Mf,
+          stream: Pf,
           streamId: t,
           success: !0,
         });
@@ -58853,14 +59250,14 @@ class MessageHandler {
         s.postMessage({
           sourceName: a,
           targetName: n,
-          stream: Mf,
+          stream: Pf,
           streamId: t,
           reason: wrapReason(e),
         });
       }
     );
   }
-  #Zt(e) {
+  #ua(e) {
     const t = e.streamId,
       a = this.sourceName,
       n = e.sourceName,
@@ -58868,22 +59265,22 @@ class MessageHandler {
       r = this.streamControllers[t],
       i = this.streamSinks[t];
     switch (e.stream) {
-      case Mf:
+      case Pf:
         e.success
           ? r.startCall.resolve()
           : r.startCall.reject(wrapReason(e.reason));
         break;
-      case Df:
+      case Nf:
         e.success
           ? r.pullCall.resolve()
           : r.pullCall.reject(wrapReason(e.reason));
         break;
-      case Bf:
+      case Mf:
         if (!i) {
           s.postMessage({
             sourceName: a,
             targetName: n,
-            stream: Df,
+            stream: Nf,
             streamId: t,
             success: !0,
           });
@@ -58896,7 +59293,7 @@ class MessageHandler {
             s.postMessage({
               sourceName: a,
               targetName: n,
-              stream: Df,
+              stream: Nf,
               streamId: t,
               success: !0,
             });
@@ -58905,37 +59302,37 @@ class MessageHandler {
             s.postMessage({
               sourceName: a,
               targetName: n,
-              stream: Df,
+              stream: Nf,
               streamId: t,
               reason: wrapReason(e),
             });
           }
         );
         break;
-      case Rf:
+      case Bf:
         assert(r, 'enqueue should have stream controller');
         if (r.isClosed) break;
         r.controller.enqueue(e.chunk);
         break;
-      case Of:
+      case Hf:
         assert(r, 'close should have stream controller');
         if (r.isClosed) break;
         r.isClosed = !0;
         r.controller.close();
-        this.#ta(r, t);
+        this.#pa(r, t);
         break;
-      case Hf:
+      case Df:
         assert(r, 'error should have stream controller');
         r.controller.error(wrapReason(e.reason));
-        this.#ta(r, t);
+        this.#pa(r, t);
         break;
-      case Tf:
+      case Rf:
         e.success
           ? r.cancelCall.resolve()
           : r.cancelCall.reject(wrapReason(e.reason));
-        this.#ta(r, t);
+        this.#pa(r, t);
         break;
-      case Ff:
+      case Of:
         if (!i) break;
         const o = wrapReason(e.reason);
         Promise.try(i.onCancel || onFn, o).then(
@@ -58943,7 +59340,7 @@ class MessageHandler {
             s.postMessage({
               sourceName: a,
               targetName: n,
-              stream: Tf,
+              stream: Rf,
               streamId: t,
               success: !0,
             });
@@ -58952,7 +59349,7 @@ class MessageHandler {
             s.postMessage({
               sourceName: a,
               targetName: n,
-              stream: Tf,
+              stream: Rf,
               streamId: t,
               reason: wrapReason(e),
             });
@@ -58966,7 +59363,7 @@ class MessageHandler {
         throw new Error('Unexpected stream case');
     }
   }
-  async #ta(e, t) {
+  async #pa(e, t) {
     await Promise.allSettled([
       e.startCall?.promise,
       e.pullCall?.promise,
@@ -58975,8 +59372,8 @@ class MessageHandler {
     delete this.streamControllers[t];
   }
   destroy() {
-    this.#Jt?.abort();
-    this.#Jt = null;
+    this.#ca?.abort();
+    this.#ca = null;
   }
 }
 async function writeObject(
@@ -59037,7 +59434,7 @@ async function writeValue(e, t, a) {
                     isName(o, 'JBIG2Decode') ||
                     isName(o, 'CCITTFaxDecode') ||
                     isName(o, 'LZWDecode');
-                if (!l && !f && n.length >= 256)
+                if (!(l || f || isName(o, 'BrotliDecode')) && n.length >= 256)
                   try {
                     const e = new CompressionStream('deflate'),
                       t = e.writable.getWriter();
@@ -59109,8 +59506,7 @@ function updateXFA({ xfaData: e, xfaDatasetsRef: t, changes: a, xref: n }) {
       return n.join('');
     })(n.fetchIfRef(t).getString(), a);
   }
-  const s = new StringStream(e);
-  s.dict = new Dict(n);
+  const s = new StringStream(e, new Dict(n));
   s.dict.setIfName('Type', 'EmbeddedFile');
   a.put(t, { data: s });
 }
@@ -59304,6 +59700,7 @@ class DocumentData {
     this.dedupNamedDestinations = new Map();
     this.usedNamedDestinations = new Set();
     this.postponedRefCopies = new RefSetCache();
+    this.resourceStreamPromises = new Map();
     this.usedStructParents = new Set();
     this.oldStructParentMapping = new Map();
     this.structTreeRoot = null;
@@ -59348,8 +59745,9 @@ class XRefWrapper {
 }
 class PDFEditor {
   isSingleFile = !1;
-  #aa = null;
-  #na = null;
+  #da = null;
+  #ga = null;
+  #ba = new Map();
   currentDocument = null;
   oldPages = [];
   newPages = [];
@@ -59397,9 +59795,9 @@ class PDFEditor {
     const e = this.newRef;
     return [e, (this.xref[e.num] = new Dict())];
   }
-  async #sa(e, t) {
+  async #wa(e, t) {
     const a = this.newRef;
-    this.xref[a.num] = await this.#ra(e, !0, t);
+    this.xref[a.num] = await this.#ja(e, !0, t);
     return a;
   }
   cloneDict(e) {
@@ -59407,55 +59805,140 @@ class PDFEditor {
     t.xref = this.xrefWrapper;
     return t;
   }
-  async #ra(e, t, a) {
+  async #ja(e, t, a, n = new RefSet()) {
     if (e instanceof Ref) {
       const {
-        currentDocument: { oldRefMapping: t },
-      } = this;
-      let n = t.get(e);
-      if (n) return n;
-      const s = e;
-      if ('number' == typeof (e = await a.fetchAsync(s))) return e;
-      n = this.newRef;
-      t.put(s, n);
-      this.xref[n.num] = await this.#ra(e, !0, a);
-      return n;
+          currentDocument: { oldRefMapping: t },
+        } = this,
+        s = t.get(e);
+      if (s) return s;
+      const r = e;
+      if ('number' == typeof (e = await a.fetchAsync(r))) return e;
+      if (e instanceof BaseStream && this.#ka(e.dict))
+        return this.#ya(r, e, a, n);
+      const i = this.newRef;
+      t.put(r, i);
+      this.xref[i.num] = await this.#ja(e, !0, a, n);
+      return i;
     }
-    const n = [],
+    const s = [],
       {
-        currentDocument: { postponedRefCopies: s },
+        currentDocument: { postponedRefCopies: r },
       } = this;
     if (Array.isArray(e)) {
       t && (e = e.slice());
-      for (let t = 0, r = e.length; t < r; t++) {
-        const r = e[t] instanceof Ref && s.get(e[t]);
-        r
-          ? r.push((a) => (e[t] = a))
-          : n.push(this.#ra(e[t], !0, a).then((a) => (e[t] = a)));
+      for (let t = 0, i = e.length; t < i; t++) {
+        const i = e[t] instanceof Ref && r.get(e[t]);
+        i
+          ? i.push((a) => (e[t] = a))
+          : s.push(this.#ja(e[t], !0, a, n).then((a) => (e[t] = a)));
       }
-      await Promise.all(n);
+      await Promise.all(s);
       return e;
     }
-    let r;
+    let i;
     if (e instanceof BaseStream) {
-      ({ dict: r } = e = e.getOriginalStream().clone());
-      r.xref = this.xrefWrapper;
+      ({ dict: i } = e = e.getOriginalStream().clone());
+      i.xref = this.xrefWrapper;
     } else if (e instanceof Dict) {
       t && ((e = e.clone()).xref = this.xrefWrapper);
-      r = e;
+      i = e;
     }
-    if (r) {
-      for (const [e, t] of r.getRawEntries()) {
-        const i = t instanceof Ref && s.get(t);
-        i
-          ? i.push((t) => r.set(e, t))
-          : n.push(this.#ra(t, !0, a).then((t) => r.set(e, t)));
+    if (i) {
+      for (const [e, t] of i.getRawEntries()) {
+        const o = t instanceof Ref && r.get(t);
+        o
+          ? o.push((t) => i.set(e, t))
+          : s.push(this.#ja(t, !0, a, n).then((t) => i.set(e, t)));
       }
-      await Promise.all(n);
+      await Promise.all(s);
     }
     return e;
   }
-  async #ia(e, t, a, n, s, r, i, o = new RefSet()) {
+  #ka(e) {
+    const t = e.get('Subtype');
+    return (
+      isName(t, 'Image') ||
+      e.has('Length1') ||
+      isName(t, 'Type1C') ||
+      isName(t, 'CIDFontType0C') ||
+      isName(t, 'OpenType')
+    );
+  }
+  #qa(e) {
+    const t = e.getOriginalStream();
+    t.reset();
+    return t.getBytes();
+  }
+  async #va(e) {
+    const t = [];
+    await writeValue(e, t, null);
+    return t.join('');
+  }
+  #Sa(e, t) {
+    const a = 256,
+      { length: n } = t,
+      s = new MurmurHash3_64();
+    s.update(e);
+    s.update(`#${n}`);
+    if (n <= 1024) s.update(t);
+    else {
+      const e = Math.floor((n - a) / 3);
+      for (let r = 0; r < 4; r++) {
+        const i = Math.min(r * e, n - a);
+        s.update(t.subarray(i, i + a));
+      }
+    }
+    return s.hexdigest();
+  }
+  async #ya(e, t, a, n) {
+    const {
+      currentDocument: { oldRefMapping: s, resourceStreamPromises: r },
+    } = this;
+    if (n.has(e)) {
+      let t = s.get(e);
+      if (!t) {
+        t = this.newRef;
+        s.put(e, t);
+      }
+      return t;
+    }
+    const i = e.toString(),
+      o = r.get(i);
+    if (o) return o;
+    const l = new RefSet(n);
+    l.put(e);
+    const f = Promise.resolve().then(async () => {
+      const n = await this.#ja(t, !0, a, l),
+        r = s.get(e);
+      if (r) {
+        this.xref[r.num] = n;
+        return r;
+      }
+      const i = await this.#Aa(n);
+      s.put(e, i);
+      return i;
+    });
+    r.set(i, f);
+    try {
+      return await f;
+    } finally {
+      r.get(i) === f && r.delete(i);
+    }
+  }
+  async #Aa(e) {
+    const t = await this.#va(e.dict),
+      a = this.#qa(e),
+      n = this.#Sa(t, a),
+      s = this.#ba.getOrInsertComputed(n, makeArr);
+    for (const e of s)
+      if (e.dictStr === t && isArrayEqual(this.#qa(e.stream), a)) return e.ref;
+    const r = this.newRef;
+    this.xref[r.num] = e;
+    s.push({ ref: r, dictStr: t, stream: e });
+    return r;
+  }
+  async #xa(e, t, a, n, s, r, i, o = new RefSet()) {
     const {
         currentDocument: { pagesMap: l, oldRefMapping: f },
       } = this,
@@ -59492,7 +59975,7 @@ class PDFEditor {
           if (!isName(t.get('S'), 'Link')) continue;
           e = !0;
         }
-        const l = await this.#ia(c, t, a, n, s, r, i, o);
+        const l = await this.#xa(c, t, a, n, s, r, i, o);
         if (l) {
           p.push(m.length);
           m.push(l);
@@ -59518,12 +60001,12 @@ class PDFEditor {
         continue;
       }
       if (isName(u, 'MCR')) {
-        const e = await this.#ra(c || t, !0, a);
+        const e = await this.#ja(c || t, !0, a);
         m.push(e);
         continue;
       }
       if (c) {
-        const e = await this.#ra(c, !0, a);
+        const e = await this.#ja(c, !0, a);
         m.push(e);
       }
     }
@@ -59535,30 +60018,30 @@ class PDFEditor {
     g.delete('K');
     g.delete('P');
     g.delete('S');
-    await this.#ra(g, !1, a);
+    await this.#ja(g, !1, a);
     const b = t.get('C');
     if (b instanceof Name) {
       const e = r.get(b.name);
-      e ? g.set('C', Name.get(e)) : g.set('C', b);
+      g.set('C', e ? Name.get(e) : b);
     } else if (Array.isArray(b)) {
       const e = [];
       for (const t of b)
         if (t instanceof Name) {
           const a = r.get(t.name);
-          a ? e.push(Name.get(a)) : e.push(t);
+          e.push(a ? Name.get(a) : t);
         }
       g.set('C', e);
     }
     const w = t.get('S');
     if (w instanceof Name) {
       const e = i.get(w.name);
-      e ? g.set('S', Name.get(e)) : g.set('S', w);
+      g.set('S', e ? Name.get(e) : w);
     }
     const j = t.get('ID');
     if ('string' == typeof j) {
       const e = stringToPDFString(j, !1),
         t = s.get(e);
-      t ? g.set('ID', stringToAsciiOrUTF16BE(t)) : g.set('ID', j);
+      g.set('ID', t ? stringToAsciiOrUTF16BE(t) : j);
     }
     let k = g.get('A');
     if (k) {
@@ -59582,7 +60065,7 @@ class PDFEditor {
     1 === m.length ? g.set('K', m[0]) : m.length > 1 && g.set('K', m);
     return d;
   }
-  #oa({ document: e, includePages: t, excludePages: a }) {
+  #Ca({ document: e, includePages: t, excludePages: a }) {
     if (!e) return [];
     const compile = (e) => {
         if (!e?.length) return null;
@@ -59600,7 +60083,7 @@ class PDFEditor {
       (s && matches(t, s)) || (n && !matches(t, n)) || r.push(t);
     return r;
   }
-  #la(e) {
+  #Ia(e) {
     const t = new Array(e.length),
       a = [],
       n = [];
@@ -59613,7 +60096,7 @@ class PDFEditor {
           t[s] = 0;
           continue;
         }
-        i = t[s] = this.#oa(r).length;
+        i = t[s] = this.#Ca(r).length;
       }
       if (!r.pageIndices)
         if (void 0 === r.insertAfter) for (let e = 0; e < i; e++) a.push(s);
@@ -59677,7 +60160,7 @@ class PDFEditor {
     });
   }
   async extractPages(e, t, a, n, s) {
-    this.#na = a;
+    this.#ga = a;
     const r = [];
     let i = 0;
     const reservePageSlot = (e) => {
@@ -59687,13 +60170,13 @@ class PDFEditor {
           throw new Error('extractPages: overlapping pageIndices.');
         this.oldPages[e] = null;
       },
-      o = (e = this.#la(e)).filter((e) => !!e.document);
+      o = (e = this.#Ia(e)).filter((e) => !!e.document);
     this.isSingleFile =
       1 === o.length ||
       (o.length > 0 && o.every((e) => e.document === o[0].document));
     const l = [];
     t &&
-      (this.#aa = {
+      (this.#da = {
         handler: n,
         task: s,
         newAnnotationsByPage: getNewAnnotationsMap(t),
@@ -59728,12 +60211,12 @@ class PDFEditor {
       }
       if (!e) continue;
       o && (i = -1);
-      const c = this.#oa({ document: e, includePages: n, excludePages: s });
+      const c = this.#Ca({ document: e, includePages: n, excludePages: s });
       if (o && o.length > c.length)
         throw new Error('extractPages: too many pageIndices.');
       const h = new DocumentData(e);
       l.push(h);
-      r.push(this.#fa(h));
+      r.push(this.#Fa(h));
       let u = 0;
       for (const t of c) {
         let a;
@@ -59754,30 +60237,30 @@ class PDFEditor {
       if (void 0 === this.oldPages[e])
         throw new Error('extractPages: sparse pageIndices.');
     r.length = 0;
-    this.#ca(l);
-    this.#ha(l);
-    this.#ua();
-    for (const e of this.oldPages) e && r.push(this.#ma(e));
+    this.#Ta(l);
+    this.#Oa(l);
+    this.#Ra();
+    for (const e of this.oldPages) e && r.push(this.#Ha(e));
     await Promise.all(r);
-    this.#pa();
-    this.#da(l);
+    this.#Ba();
+    this.#Da(l);
     const c = new Map();
     for (const e of f) c.set(e.slot, e);
-    const h = c.size > 0 ? this.#ga() : null;
+    const h = c.size > 0 ? this.#Ma() : null;
     for (let e = 0, t = this.oldPages.length; e < t; e++) {
       const t = c.get(e);
       this.newPages[e] = t
-        ? await this.#ba(t.image, h)
-        : await this.#wa(e, null);
+        ? await this.#Na(t.image, h)
+        : await this.#Pa(e, null);
     }
-    this.#ja(l);
-    await this.#ka(l);
-    await this.#ya(l);
-    this.#qa(l);
-    await this.#va(l);
+    this.#_a(l);
+    await this.#Ea(l);
+    await this.#za(l);
+    this.#La(l);
+    await this.#Ua(l);
     return this.writePDF();
   }
-  async #fa(e) {
+  async #Fa(e) {
     const {
       document: { pdfManager: t, xref: a },
     } = e;
@@ -59811,7 +60294,7 @@ class PDFEditor {
       e.structTreePronunciationLexicon = t.get('PronunciationLexicon') || null;
     }
   }
-  async #ma(e) {
+  async #Ha(e) {
     const {
       page: { xref: t, annotations: a },
       documentData: {
@@ -59862,11 +60345,11 @@ class PDFEditor {
     e.annotations = l.length > 0 ? l : null;
     e.documentData.hasSignatureAnnotations ||= c;
   }
-  #da(e) {
+  #Da(e) {
     for (const { postponedRefCopies: t, pagesMap: a } of e)
       for (const e of a.keys()) t.put(e, []);
   }
-  #ja(e) {
+  #_a(e) {
     for (const { postponedRefCopies: t, oldRefMapping: a } of e) {
       for (const [e, n] of t.items()) {
         const t = a.get(e);
@@ -59875,26 +60358,26 @@ class PDFEditor {
       t.clear();
     }
   }
-  #Sa(e, t, a = new RefSet()) {
+  #Xa(e, t, a = new RefSet()) {
     if (e instanceof Ref) {
       if (!a.has(e)) {
         a.put(e);
-        this.#Sa(this.xref[e.num], t, a);
+        this.#Xa(this.xref[e.num], t, a);
       }
       return;
     }
     if (Array.isArray(e)) {
-      for (const n of e) this.#Sa(n, t, a);
+      for (const n of e) this.#Xa(n, t, a);
       return;
     }
     let n;
     e instanceof BaseStream ? ({ dict: n } = e) : e instanceof Dict && (n = e);
     if (n) {
       t(n);
-      for (const e of n.getRawValues()) this.#Sa(e, t, a);
+      for (const e of n.getRawValues()) this.#Xa(e, t, a);
     }
   }
-  async #ka(e) {
+  async #Ea(e) {
     let t = 0;
     const { parentTree: a } = this;
     for (let e = 0, n = this.newPages.length; e < n; e++) {
@@ -59913,7 +60396,7 @@ class PDFEditor {
         f = this.xref[l.num],
         c = new RefSet();
       c.put(l);
-      this.#Sa(
+      this.#Xa(
         f,
         (e) => {
           const l = e.get('StructParent') ?? e.get('StructParents');
@@ -59989,7 +60472,7 @@ class PDFEditor {
       const y = new Map();
       if (p?.size > 0)
         for (let [t, a] of p) {
-          a = await this.#ra(a, !0, e);
+          a = await this.#ja(a, !0, e);
           if (r.has(t))
             for (let e = 1; ; e++) {
               const a = `${t}_${e}`;
@@ -60023,11 +60506,11 @@ class PDFEditor {
           let n = a.get('NS');
           if (!n || o.has(n)) continue;
           n = stringToPDFString(n, !1);
-          const s = await this.#ra(a, !0, e);
+          const s = await this.#ja(a, !0, e);
           o.set(n, s);
         }
-      if (b) for (const t of b) l.push(await this.#ra(t, !0, e));
-      if (w) for (const t of w) f.push(await this.#ra(t, !0, e));
+      if (b) for (const t of b) l.push(await this.#ja(t, !0, e));
+      if (w) for (const t of w) f.push(await this.#ja(t, !0, e));
       let v = u.dict.get('K');
       if (v) {
         v = Array.isArray(v) ? v : [v];
@@ -60035,7 +60518,7 @@ class PDFEditor {
           const a = t instanceof Ref ? t : null;
           if (a && j.has(a)) continue;
           t = await e.fetchIfRefAsync(t);
-          const s = await this.#ia(a, t, e, j, k, y, q);
+          const s = await this.#xa(a, t, e, j, k, y, q);
           s && n.push(s);
         }
         for (const [e, t] of m || []) {
@@ -60060,7 +60543,7 @@ class PDFEditor {
     }
     this.currentDocument = null;
   }
-  #ca(e) {
+  #Ta(e) {
     for (const t of e) {
       if (!t.destinations) continue;
       const { destinations: e, pagesMap: a } = t,
@@ -60075,7 +60558,7 @@ class PDFEditor {
       }
     }
   }
-  #pa() {
+  #Ba() {
     const { namedDestinations: e } = this,
       getUniqueDestinationName = (t) => {
         if (!e.has(t)) return t;
@@ -60111,7 +60594,7 @@ class PDFEditor {
       }
     }
   }
-  #Aa(e, t) {
+  #Wa(e, t) {
     if (0 === t.size) return;
     const fixDestination = (e, a, n) => {
       'string' == typeof n && e.set(a, t.get(stringToPDFString(n, !0)) || n);
@@ -60129,7 +60612,7 @@ class PDFEditor {
       fixDestination(e, 'Dest', n);
     }
   }
-  #ha(e) {
+  #Oa(e) {
     const collect = (e, t, a) => {
       for (const n of e) {
         'string' == typeof n.dest && t?.has(n.dest) && a.add(n.dest);
@@ -60141,7 +60624,7 @@ class PDFEditor {
       e?.length && collect(e, a, n);
     }
   }
-  #xa(e, t) {
+  #Ka(e, t) {
     const {
       dest: a,
       action: n,
@@ -60160,11 +60643,11 @@ class PDFEditor {
       !!(Array.isArray(a) && a[0] instanceof Ref) && !!t.oldRefMapping.get(a[0])
     );
   }
-  #Ca(e, t) {
+  #Ga(e, t) {
     const a = [];
     for (const n of e) {
-      const e = this.#Ca(n.items, t),
-        s = this.#xa(n, t);
+      const e = this.#Ga(n.items, t),
+        s = this.#Ka(n, t);
       (s || e.length > 0) &&
         a.push({
           ...n,
@@ -60176,15 +60659,15 @@ class PDFEditor {
     }
     return a;
   }
-  #qa(e) {
+  #La(e) {
     const t = [];
     for (const a of e) {
       const { outline: e } = a;
-      e?.length && t.push(...this.#Ca(e, a));
+      e?.length && t.push(...this.#Ga(e, a));
     }
     this.outlineItems = t.length > 0 ? t : null;
   }
-  async #Ia(e, t) {
+  async #Va(e, t) {
     const { dest: a, rawDict: n } = t,
       s = t._documentData;
     if (a) {
@@ -60201,12 +60684,12 @@ class PDFEditor {
     const r = n?.get('A');
     if (r instanceof Dict) {
       this.currentDocument = s;
-      const t = await this.#sa(r, s.document.xref);
+      const t = await this.#wa(r, s.document.xref);
       this.currentDocument = null;
       e.set('A', t);
     }
   }
-  async #Fa() {
+  async #$a() {
     const { outlineItems: e } = this;
     if (!e?.length) return;
     const [t, a] = this.newDict;
@@ -60234,7 +60717,7 @@ class PDFEditor {
             void 0 !== s.count && r.set('Count', s.count < 0 ? -e : e);
             a += void 0 !== s.count && s.count < 0 ? 1 : e + 1;
           } else a += 1;
-          await this.#Ia(r, s);
+          await this.#Va(r, s);
           const i = (s.bold ? 2 : 0) | (s.italic ? 1 : 0);
           0 !== i && r.set('F', i);
           !s.color ||
@@ -60249,26 +60732,26 @@ class PDFEditor {
     a.set('Count', n);
     this.rootDict.set('Outlines', t);
   }
-  async #ya(e) {
-    this.#Ta(e);
-    this.#Oa(e);
-    this.#Ra(e);
-    await this.#Ha(e);
+  async #za(e) {
+    this.#Ya(e);
+    this.#Ja(e);
+    this.#Qa(e);
+    await this.#Za(e);
     const t = this.fields;
     for (const a of e) {
       let e = a.acroForm?.get('Fields') || null;
       !e &&
         a.fieldToParent.size > 0 &&
-        (e = this.#Ba(a.fieldToParent, a.document.xref));
+        (e = this.#en(a.fieldToParent, a.document.xref));
       if (Array.isArray(e) && e.length > 0) {
         this.currentDocument = a;
-        await this.#Da(t, e);
+        await this.#tn(t, e);
         this.currentDocument = null;
       }
     }
-    this.#Ma(e);
+    this.#an(e);
   }
-  #Ra(e) {
+  #Qa(e) {
     let t = 0,
       a = null;
     for (const n of e) {
@@ -60288,7 +60771,7 @@ class PDFEditor {
     }
     t > 0 && (this.acroFormQ = t);
   }
-  #Ta(e) {
+  #Ya(e) {
     let t = 0,
       a = !1;
     for (const n of e) {
@@ -60300,7 +60783,7 @@ class PDFEditor {
     this.acroFormSigFlags = t;
     this.acroFormNeedAppearances = a;
   }
-  #Ma(e) {
+  #an(e) {
     const t = [];
     for (const a of e) {
       const e = a.acroForm?.get('CO') || null;
@@ -60313,7 +60796,7 @@ class PDFEditor {
     }
     this.acroFormCalculationOrder = t.length > 0 ? t : null;
   }
-  #Oa(e) {
+  #Ja(e) {
     let t = null,
       a = null;
     for (const n of e) {
@@ -60333,7 +60816,7 @@ class PDFEditor {
     }
     t && (this.acroFormDefaultAppearance = t);
   }
-  async #Ha(e) {
+  async #Za(e) {
     let t = null,
       a = null,
       n = null;
@@ -60356,11 +60839,11 @@ class PDFEditor {
     }
     if (t) {
       this.currentDocument = n;
-      this.acroFormDefaultResources = await this.#ra(a, !0, n.document.xref);
+      this.acroFormDefaultResources = await this.#ja(a, !0, n.document.xref);
       this.currentDocument = null;
     }
   }
-  #Ba(e, t) {
+  #en(e, t) {
     const a = [],
       n = new RefSet();
     for (const [s, r] of e) {
@@ -60382,7 +60865,7 @@ class PDFEditor {
     }
     return a;
   }
-  async #Da(e, t) {
+  async #tn(e, t) {
     const a = new RefSet(),
       n = [
         {
@@ -60413,7 +60896,7 @@ class PDFEditor {
         const t = (this.xref[e.parentRef.num] = this.cloneDict(m));
         t.delete('Parent');
         t.delete('Kids');
-        await this.#ra(t, !1, s);
+        await this.#ja(t, !1, s);
         t.set('Kids', u);
         if (n.length > 0) {
           const a = n.at(-1);
@@ -60467,7 +60950,7 @@ class PDFEditor {
         if (!(e instanceof BaseStream)) continue;
         let t = e.dict.getRaw('Resources');
         if (!t) {
-          const t = await u.getOrInsertComputed(l, () => this.#sa(l, s));
+          const t = await u.getOrInsertComputed(l, () => this.#wa(l, s));
           e.dict.set('Resources', t);
           continue;
         }
@@ -60476,17 +60959,17 @@ class PDFEditor {
           if (!t.has(e)) {
             let n = a;
             a instanceof Ref
-              ? (n = await this.#ra(a, !0, s))
+              ? (n = await this.#ja(a, !0, s))
               : (a instanceof Dict ||
                   a instanceof BaseStream ||
                   Array.isArray(a)) &&
-                (n = await u.getOrInsertComputed(a, () => this.#sa(a, s)));
+                (n = await u.getOrInsertComputed(a, () => this.#wa(a, s)));
             t.set(e, n);
           }
       }
     }
   }
-  async #ua() {
+  async #Ra() {
     if (!this.isSingleFile) return;
     const e = this.oldPages.find((e) => !!e);
     if (!e) return;
@@ -60534,7 +61017,7 @@ class PDFEditor {
       }
     }
   }
-  async #wa(e) {
+  async #Pa(e) {
     const {
       page: t,
       documentData: a,
@@ -60566,7 +61049,7 @@ class PDFEditor {
     ])
       m.delete(e);
     const p = this.newRefCount;
-    await this.#ra(m, !1, o);
+    await this.#ja(m, !1, o);
     m.set('Rotate', l);
     m.set('MediaBox', f);
     for (const e of ['CropBox', 'BleedBox', 'TrimBox', 'ArtBox']) {
@@ -60575,19 +61058,19 @@ class PDFEditor {
     }
     const d = t.userUnit;
     1 !== d && m.set('UserUnit', d);
-    m.setIfDict('Resources', await this.#ra(c, !0, o));
+    m.setIfDict('Resources', await this.#ja(c, !0, o));
     let g = null;
     if (n) {
-      const e = await this.#ra(n, !0, o);
-      this.#Aa(e, r);
+      const e = await this.#ja(n, !0, o);
+      this.#Wa(e, r);
       Array.isArray(e) && e.length > 0 && (g = e);
     }
     const b =
-      a.document === this.#na
-        ? this.#aa?.newAnnotationsByPage?.get(t.pageIndex)
+      a.document === this.#ga
+        ? this.#da?.newAnnotationsByPage?.get(t.pageIndex)
         : null;
     if (b) {
-      const { handler: e, task: a, imagesPromises: n } = this.#aa,
+      const { handler: e, task: a, imagesPromises: n } = this.#da,
         s = new RefSetCache(),
         r = await AnnotationFactory.saveNewAnnotations(
           t.createAnnotationEvaluator(e),
@@ -60617,7 +61100,7 @@ class PDFEditor {
     this.currentDocument = null;
     return u;
   }
-  #ga() {
+  #Ma() {
     const e = new Map();
     for (const t of this.oldPages) {
       if (!t) continue;
@@ -60632,7 +61115,7 @@ class PDFEditor {
       c ? c.count++ : e.set(f, { width: o, height: l, count: 1 });
     }
     if (0 === e.size) {
-      const [, , e, t] = vf;
+      const [, , e, t] = Af;
       return { width: e, height: t };
     }
     let t = null;
@@ -60643,7 +61126,7 @@ class PDFEditor {
         (t = a);
     return { width: t.width, height: t.height };
   }
-  async #ba(e, t) {
+  async #Na(e, t) {
     const { width: a, height: n } = t,
       s = 0.1 * a,
       r = Math.max(1, a - 2 * s),
@@ -60673,16 +61156,15 @@ class PDFEditor {
     j.set('XObject', w);
     j.set('ProcSet', [Name.get('PDF'), Name.get('ImageC')]);
     const k = `q ${numberToString(m)} 0 0 ${numberToString(p)} ${numberToString(d)} ${numberToString(g)} cm /Im0 Do Q`,
-      y = new Dict(this.xrefWrapper),
-      q = new Stream(stringToBytes(k), 0, 0, y),
-      v = this.newRef;
-    this.xref[v.num] = q;
-    const S = this.newRef,
-      x = (this.xref[S.num] = new Dict(this.xrefWrapper));
-    x.setIfName('Type', 'Page');
-    x.set('MediaBox', [0, 0, a, n]);
-    x.set('Resources', j);
-    x.set('Contents', v);
+      y = new StringStream(k, new Dict(this.xrefWrapper)),
+      q = this.newRef;
+    this.xref[q.num] = y;
+    const v = this.newRef,
+      S = (this.xref[v.num] = new Dict(this.xrefWrapper));
+    S.setIfName('Type', 'Page');
+    S.set('MediaBox', [0, 0, a, n]);
+    S.set('Resources', j);
+    S.set('Contents', q);
     if (this.useObjectStreams) {
       const e = this.newRefCount,
         t = [];
@@ -60695,9 +61177,9 @@ class PDFEditor {
         this.xref[a.num] = t.slice(e, e + 65535);
       }
     }
-    return S;
+    return v;
   }
-  #Na() {
+  #nn() {
     const { newPages: e, rootDict: t, pagesRef: a, pagesDict: n } = this;
     t.set('Pages', a);
     n.setIfName('Type', 'Pages');
@@ -60725,7 +61207,7 @@ class PDFEditor {
       }
     }
   }
-  #Pa(e, t) {
+  #sn(e, t) {
     const a = e.sort(
         t ? ([e], [t]) => e.localeCompare(t) : ([e], [t]) => e - t
       ),
@@ -60753,14 +61235,14 @@ class PDFEditor {
     }
     return n;
   }
-  #_a() {
+  #rn() {
     const { pageLabels: e } = this;
-    if (!e || 0 === e.length) return;
+    if (!e?.length) return;
     const { rootDict: t } = this,
-      a = this.#Pa(this.pageLabels, !1);
+      a = this.#sn(this.pageLabels, !1);
     t.set('PageLabels', a);
   }
-  async #va(e) {
+  async #Ua(e) {
     const { embeddedFiles: t } = this;
     for (const a of e) {
       const {
@@ -60781,13 +61263,13 @@ class PDFEditor {
               }
             }
           }
-          t.set(e, await this.#ra(s, !0, n));
+          t.set(e, await this.#ja(s, !0, n));
         }
         this.currentDocument = null;
       }
     }
   }
-  #Ea() {
+  #in() {
     const { embeddedFiles: e } = this;
     if (0 !== e.size) {
       if (!this.namesDict) {
@@ -60796,23 +61278,23 @@ class PDFEditor {
       }
       this.namesDict.set(
         'EmbeddedFiles',
-        this.#Pa(Array.from(e.entries()), !0)
+        this.#sn(Array.from(e.entries()), !0)
       );
     }
   }
-  #za() {
+  #on() {
     const { namedDestinations: e } = this;
     if (0 !== e.size) {
       if (!this.namesDict) {
         [this.namesRef, this.namesDict] = this.newDict;
         this.rootDict.set('Names', this.namesRef);
       }
-      this.namesDict.set('Dests', this.#Pa(Array.from(e.entries()), !0));
+      this.namesDict.set('Dests', this.#sn(Array.from(e.entries()), !0));
     }
   }
-  #La() {
+  #ln() {
     const { structTreeKids: e } = this;
-    if (!e || 0 === e.length) return;
+    if (!e?.length) return;
     const { rootDict: t } = this,
       a = this.newRef,
       n = (this.xref[a.num] = new Dict());
@@ -60824,13 +61306,13 @@ class PDFEditor {
       (n && !isName(n, 'StructElem')) || e.set('P', a);
     }
     if (this.parentTree.size > 0) {
-      const e = this.#Pa(Array.from(this.parentTree.entries()), !1);
+      const e = this.#sn(Array.from(this.parentTree.entries()), !1);
       this.xref[e.num].setIfName('Type', 'ParentTree');
       n.set('ParentTree', e);
       n.set('ParentTreeNextKey', this.parentTree.size);
     }
     if (this.idTree.size > 0) {
-      const e = this.#Pa(Array.from(this.idTree.entries()), !0);
+      const e = this.#sn(Array.from(this.idTree.entries()), !0);
       this.xref[e.num].setIfName('Type', 'IDTree');
       n.set('IDTree', e);
     }
@@ -60861,7 +61343,7 @@ class PDFEditor {
     }
     t.set('StructTreeRoot', a);
   }
-  #Ua() {
+  #fn() {
     if (0 === this.fields.length) return;
     const { rootDict: e } = this,
       t = this.newRef,
@@ -60876,19 +61358,19 @@ class PDFEditor {
       a.set('DA', this.acroFormDefaultAppearance);
     this.acroFormQ > 0 && a.set('Q', this.acroFormQ);
   }
-  async #Xa() {
+  async #cn() {
     const { rootDict: e } = this;
     e.setIfName('Type', 'Catalog');
     e.setIfName('Version', this.version);
-    this.#Ua();
-    this.#Na();
-    this.#_a();
-    this.#Ea();
-    this.#za();
-    this.#La();
-    await this.#Fa();
+    this.#fn();
+    this.#nn();
+    this.#rn();
+    this.#in();
+    this.#on();
+    this.#ln();
+    await this.#$a();
   }
-  #Wa() {
+  #hn() {
     const e = new Map();
     if (this.isSingleFile) {
       const t = this.oldPages.find((e) => !!e),
@@ -60908,7 +61390,7 @@ class PDFEditor {
     for (const [t, a] of e) this.infoDict.set(t, stringToAsciiOrUTF16BE(a));
     return e;
   }
-  async #Ka() {
+  async #un() {
     if (!this.isSingleFile) return [null, null, null];
     const e = this.oldPages.find((e) => !!e),
       { documentData: t } = e,
@@ -60921,20 +61403,20 @@ class PDFEditor {
     const s = a.get('Encrypt');
     if (!(s instanceof Dict)) return [null, null, null];
     this.currentDocument = t;
-    const r = [await this.#sa(s, a.xref), n, a.get('ID')];
+    const r = [await this.#wa(s, a.xref), n, a.get('ID')];
     this.currentDocument = null;
     return r;
   }
-  async #Ga() {
+  async #mn() {
     const e = new RefSetCache();
     e.put(Ref.get(0, 65535), { data: null });
     for (let t = 1, a = this.xref.length; t < a; t++)
       this.objStreamRefs?.has(t)
-        ? await this.#Va(Ref.get(t, 0), this.xref[t], e)
+        ? await this.#pn(Ref.get(t, 0), this.xref[t], e)
         : e.put(Ref.get(t, 0), { data: this.xref[t] });
     return [e, this.newRef];
   }
-  async #Va(e, t, a) {
+  async #pn(e, t, a) {
     const n = [''],
       s = [];
     let r = 0;
@@ -60951,18 +61433,18 @@ class PDFEditor {
       r += c.length + 1;
     }
     n[0] = s.join('\n');
-    const o = new StringStream(n.join('\n')),
-      l = (o.dict = new Dict());
-    l.setIfName('Type', 'ObjStm');
-    l.set('N', t.length);
-    l.set('First', n[0].length + 1);
-    a.put(e, { data: o });
+    const o = new Dict();
+    o.setIfName('Type', 'ObjStm');
+    o.set('N', t.length);
+    o.set('First', n[0].length + 1);
+    const l = new StringStream(n.join('\n'), o);
+    a.put(e, { data: l });
   }
   async writePDF() {
-    await this.#Xa();
-    const e = this.#Wa(),
-      [t, a, n] = await this.#Ka(),
-      [s, r] = await this.#Ga();
+    await this.#cn();
+    const e = this.#hn(),
+      [t, a, n] = await this.#un(),
+      [s, r] = await this.#mn();
     return incrementalUpdate({
       originalData: stringToBytes(`%PDF-${this.version}\n%úÞúÎ`),
       changes: s,
@@ -60981,15 +61463,15 @@ class PDFEditor {
   }
 }
 class BasePDFStream {
-  #$a = null;
-  #Ya = null;
+  #dn = null;
+  #gn = null;
   _fullReader = null;
   _rangeReaders = new Set();
   _source = null;
   constructor(e, t, a) {
     this._source = e;
-    this.#$a = t;
-    this.#Ya = a;
+    this.#dn = t;
+    this.#gn = a;
   }
   get _progressiveDataLength() {
     return this._fullReader?._loaded ?? 0;
@@ -60999,11 +61481,11 @@ class BasePDFStream {
       !this._fullReader,
       'BasePDFStream.getFullReader can only be called once.'
     );
-    return (this._fullReader = new this.#$a(this));
+    return (this._fullReader = new this.#dn(this));
   }
   getRangeReader(e, t) {
     if (t <= this._progressiveDataLength) return null;
-    const a = new this.#Ya(this, e, t);
+    const a = new this.#gn(this, e, t);
     this._rangeReaders.add(a);
     return a;
   }
@@ -61142,7 +61624,7 @@ class WorkerMessageHandler {
     });
     e.on('configure', (e) => {
       !(function setVerbosityLevel(e) {
-        Number.isInteger(e) && (aa = e);
+        Number.isInteger(e) && (sa = e);
       })(e.verbosity);
     });
     e.on('GetDocRequest', (e) => this.createDocumentHandler(e, t));
@@ -61154,7 +61636,7 @@ class WorkerMessageHandler {
     const r = new Set(),
       i = getVerbosityLevel(),
       { docId: o, apiVersion: l } = e,
-      f = '6.0.227';
+      f = '6.1.200';
     if (l !== f)
       throw new Error(
         `The API version "${l}" does not match the Worker version "${f}".`
@@ -61176,11 +61658,7 @@ class WorkerMessageHandler {
       r.delete(e);
     }
     async function loadDocument(e) {
-      await a.ensureDoc('checkHeader');
-      await a.ensureDoc('parseStartXRef');
-      await a.ensureDoc('parse', [e]);
-      await a.ensureDoc('checkFirstPage', [e]);
-      await a.ensureDoc('checkLastPage', [e]);
+      await a.initDocument(e);
       const t = await a.ensureDoc('isPureXfa');
       if (t) {
         const e = new WorkerTask('loadXfaResources');
@@ -61198,27 +61676,34 @@ class WorkerMessageHandler {
         htmlForXfa: t ? await a.ensureDoc('htmlForXfa') : null,
       };
     }
+    async function getPassword(e) {
+      const t = new WorkerTask(`PasswordException: response ${e.code}`);
+      startWorkerTask(t);
+      try {
+        return (await h.sendWithPromise('PasswordRequest', e)).password;
+      } finally {
+        Promise.resolve().then(() => {
+          finishWorkerTask(t);
+        });
+      }
+    }
     function setupDoc(e) {
       function onSuccess(e) {
         ensureNotTerminated();
         h.send('GetDoc', { pdfInfo: e });
       }
       function onFailure(e) {
-        if (!n)
-          if (e instanceof PasswordException) {
-            const t = new WorkerTask(`PasswordException: response ${e.code}`);
-            startWorkerTask(t);
-            h.sendWithPromise('PasswordRequest', e)
-              .then(function ({ password: e }) {
-                finishWorkerTask(t);
-                a.updatePassword(e);
-                pdfManagerReady();
-              })
-              .catch(function () {
-                finishWorkerTask(t);
-                h.send('DocException', e);
-              });
-          } else h.send('DocException', wrapReason(e));
+        n ||
+          (e instanceof PasswordException
+            ? getPassword(e)
+                .then((e) => {
+                  a.updatePassword(e);
+                  pdfManagerReady();
+                })
+                .catch(() => {
+                  h.send('DocException', e);
+                })
+            : h.send('DocException', wrapReason(e)));
       }
       function pdfManagerReady() {
         ensureNotTerminated();
@@ -61228,7 +61713,7 @@ class WorkerMessageHandler {
             ? a.requestLoadedStream().then(function () {
                 ensureNotTerminated();
                 loadDocument(!0).then(onSuccess, onFailure);
-              })
+              }, onFailure)
             : onFailure(e);
         });
       }
@@ -61311,9 +61796,12 @@ class WorkerMessageHandler {
             throw new Error('Worker was terminated');
           }
           a = e;
-          a.requestLoadedStream(!0).then((e) => {
-            h.send('DataLoaded', { length: e.bytes.byteLength });
-          });
+          a.requestLoadedStream(!0).then(
+            (e) => {
+              h.send('DataLoaded', { length: e.bytes.byteLength });
+            },
+            () => {}
+          );
         })
         .then(pdfManagerReady, onFailure);
     }
@@ -61363,6 +61851,22 @@ class WorkerMessageHandler {
     h.on('GetAttachments', function (e) {
       return a.ensureCatalog('attachments');
     });
+    h.on('GetAttachmentContent', async function (e) {
+      let t;
+      for (;;) {
+        const n = t ? await getPassword(t) : null;
+        try {
+          n && a.updatePassword(n);
+          return await a.ensureCatalog('attachmentContent', [e]);
+        } catch (e) {
+          if (e instanceof PasswordException) {
+            t = e;
+            continue;
+          }
+          throw e;
+        }
+      }
+    });
     h.on('GetDocJSActions', function (e) {
       return a.ensureCatalog('jsActions');
     });
@@ -61390,10 +61894,7 @@ class WorkerMessageHandler {
               r.push(
                 a
                   .getPage(l)
-                  .then(
-                    async (t) =>
-                      (t && t.collectAnnotationsByType(h, o, e, i, s)) || []
-                  )
+                  .then((t) => t.collectAnnotationsByType(h, o, e, i, s))
               );
             }
           await Promise.all(r);
@@ -61429,16 +61930,9 @@ class WorkerMessageHandler {
       return a.getPage(e).then(function (a) {
         const n = new WorkerTask(`GetAnnotations: page ${e}`);
         startWorkerTask(n);
-        return a.getAnnotationsData(h, n, t).then(
-          (e) => {
-            finishWorkerTask(n);
-            return e;
-          },
-          (e) => {
-            finishWorkerTask(n);
-            throw e;
-          }
-        );
+        return a.getAnnotationsData(h, n, t).finally(() => {
+          finishWorkerTask(n);
+        });
       });
     });
     h.on('GetFieldObjects', function (e) {
@@ -61476,9 +61970,7 @@ class WorkerMessageHandler {
               for (;;)
                 try {
                   await e.requestLoadedStream();
-                  await e.ensureDoc('checkHeader');
-                  await e.ensureDoc('parseStartXRef');
-                  await e.ensureDoc('parse', [n]);
+                  await e.initDocument(n);
                   break;
                 } catch (t) {
                   if (t instanceof XRefParseException) {
@@ -61488,24 +61980,15 @@ class WorkerMessageHandler {
                     }
                     r = !1;
                     warn('extractPages: XRefParseException.');
-                  } else if (t instanceof PasswordException) {
-                    const a = new WorkerTask(
-                      `PasswordException: response ${t.code}`
-                    );
-                    startWorkerTask(a);
+                  } else if (t instanceof PasswordException)
                     try {
-                      const { password: a } = await h.sendWithPromise(
-                        'PasswordRequest',
-                        t
-                      );
+                      const a = await getPassword(t);
                       e.updatePassword(a);
                     } catch {
                       r = !1;
                       warn('extractPages: invalid password.');
-                    } finally {
-                      finishWorkerTask(a);
                     }
-                  } else {
+                  else {
                     r = !1;
                     warn('extractPages: invalid document.');
                   }
@@ -61574,7 +62057,7 @@ class WorkerMessageHandler {
               a.getPage(n).then((t) => {
                 const a = new WorkerTask(`Save (editor): page ${n}`);
                 startWorkerTask(a);
-                return t.saveNewAnnotations(h, a, s, e, i).finally(function () {
+                return t.saveNewAnnotations(h, a, s, e, i).finally(() => {
                   finishWorkerTask(a);
                 });
               })
@@ -61609,7 +62092,7 @@ class WorkerMessageHandler {
               a.getPage(e).then(function (t) {
                 const a = new WorkerTask(`Save: page ${e}`);
                 startWorkerTask(a);
-                return t.save(h, a, n, i).finally(function () {
+                return t.save(h, a, n, i).finally(() => {
                   finishWorkerTask(a);
                 });
               })
@@ -61674,7 +62157,7 @@ class WorkerMessageHandler {
       a.getPage(n).then(function (a) {
         const n = new WorkerTask(`GetOperatorList: page ${s}`);
         startWorkerTask(n);
-        const r = i >= he ? Date.now() : 0;
+        const r = i >= me ? Date.now() : 0;
         a.getOperatorList({
           handler: h,
           sink: t,
@@ -61684,20 +62167,22 @@ class WorkerMessageHandler {
           annotationStorage: e.annotationStorage,
           modifiedIds: e.modifiedIds,
           pageIndex: s,
-        }).then(
-          function (e) {
+        })
+          .then(
+            (e) => {
+              r &&
+                info(
+                  `page=${s + 1} - getOperatorList: time=${Date.now() - r}ms, len=${e.length}`
+                );
+              t.close();
+            },
+            (e) => {
+              n.terminated || t.error(e);
+            }
+          )
+          .finally(() => {
             finishWorkerTask(n);
-            r &&
-              info(
-                `page=${s + 1} - getOperatorList: time=${Date.now() - r}ms, len=${e.length}`
-              );
-            t.close();
-          },
-          function (e) {
-            finishWorkerTask(n);
-            n.terminated || t.error(e);
-          }
-        );
+          });
       });
     });
     h.on('GetTextContent', function (e, t) {
@@ -61710,29 +62195,31 @@ class WorkerMessageHandler {
       a.getPage(n).then(function (e) {
         const a = new WorkerTask('GetTextContent: page ' + s);
         startWorkerTask(a);
-        const n = i >= he ? Date.now() : 0;
+        const n = i >= me ? Date.now() : 0;
         e.extractTextContent({
           handler: h,
           task: a,
           sink: t,
           includeMarkedContent: r,
           disableNormalization: o,
-        }).then(
-          function () {
+        })
+          .then(
+            () => {
+              n &&
+                info(
+                  `page=${s + 1} - getTextContent: time=` +
+                    (Date.now() - n) +
+                    'ms'
+                );
+              t.close();
+            },
+            (e) => {
+              a.terminated || t.error(e);
+            }
+          )
+          .finally(() => {
             finishWorkerTask(a);
-            n &&
-              info(
-                `page=${s + 1} - getTextContent: time=` +
-                  (Date.now() - n) +
-                  'ms'
-              );
-            t.close();
-          },
-          function (e) {
-            finishWorkerTask(a);
-            a.terminated || t.error(e);
-          }
-        );
+          });
       });
     });
     h.on('GetStructTree', function (e) {

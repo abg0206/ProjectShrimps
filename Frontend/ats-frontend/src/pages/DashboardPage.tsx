@@ -1,6 +1,10 @@
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import JobCard, { Job } from '../components/JobCard';
+import JobCard, {
+  Job,
+  StageEvent,
+  InterviewEntry,
+} from '../components/JobCard';
 
 const STAGE_LABELS: Record<string, string> = {
   '0': 'Interested',
@@ -67,34 +71,52 @@ export default function DashboardPage() {
   } | null>(null);
   const [archiving, setArchiving] = useState(false);
 
-  // Edit modal
-  const [editJob, setEditJob] = useState<Job | null>(null);
-  const [editTitle, setEditTitle] = useState('');
-  const [editCompany, setEditCompany] = useState('');
-  const [editDescription, setEditDescription] = useState('');
-  const [editStage, setEditStage] = useState('0');
-  const [saving, setSaving] = useState(false);
-  const [editError, setEditError] = useState('');
-
-  const [editDeadline, setEditDeadline] = useState('');
-
   const [detailJob, setDetailJob] = useState<Job | null>(null);
+
+  // Inline "edit job details" mode — lives inside the detail view itself now,
+  // instead of a separate Edit Job modal.
+  const [editingJobDetails, setEditingJobDetails] = useState(false);
+  const [detailEditTitle, setDetailEditTitle] = useState('');
+  const [detailEditCompany, setDetailEditCompany] = useState('');
+  const [detailEditDescription, setDetailEditDescription] = useState('');
+  const [detailEditDeadline, setDetailEditDeadline] = useState('');
+  const [savingJobDetails, setSavingJobDetails] = useState(false);
+  const [jobDetailsError, setJobDetailsError] = useState('');
 
   const [detailNotes, setDetailNotes] = useState('');
   const [savingNotes, setSaveNotes] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
 
-  // interview tracker
-  type InterviewEntry = {
-    round_type: string;
-    interview_date: string;
-    notes: string;
-  };
-  const [interviews, setInterviews] = useState<InterviewEntry[]>([]);
+  // Per-job stage history and interviews stored by job id
+  const [stageHistoryMap, setStageHistoryMap] = useState<
+    Map<number, StageEvent[]>
+  >(new Map());
+  const [jobInterviewsMap, setJobInterviewsMap] = useState<
+    Map<number, InterviewEntry[]>
+  >(new Map());
+
+  // interview tracker — scoped to current detailJob
   const [showAddInterview, setShowAddInterview] = useState(false);
   const [newInterviewRound, setNewInterviewRound] = useState('');
   const [newInterviewDate, setNewInterviewDate] = useState('');
   const [newInterviewNotes, setNewInterviewNotes] = useState('');
+  // null = adding a brand-new interview; a number = editing that existing entry
+  const [editingInterviewIndex, setEditingInterviewIndex] = useState<
+    number | null
+  >(null);
+
+  // ── Modal exclusivity ───────────────────────────────────────────────────────
+  // Only one of these should ever be open at a time. Call this before opening
+  // any modal so a stale one can never linger behind / reappear underneath
+  // another. This is the single source of truth for "close everything else."
+  function closeAllModals() {
+    setShowAddModal(false);
+    setArchiveTarget(null);
+    setDetailJob(null);
+    setEditingJobDetails(false);
+    setShowAddInterview(false);
+    setEditingInterviewIndex(null);
+  }
 
   // Fetch jobs from the server, passing filters as query params
   const fetchJobs = useCallback(async () => {
@@ -165,71 +187,96 @@ export default function DashboardPage() {
     }
   }
 
-  // Open edit modal
+  // Card's "Edit" button — jump straight into the detail view, already in edit mode.
   function openEdit(job: Job) {
-    setEditJob(job);
-    setEditTitle(job.title);
-    setEditCompany(job.company);
-    setEditDescription(job.description);
-    setEditStage(job.status);
-    setEditDeadline(job.deadline ?? '');
-    setEditError('');
+    closeAllModals();
+    setDetailJob(job);
+    setDetailNotes(job.recruiter_notes ?? '');
+    setNotesSaved(false);
+    startEditJobDetails(job);
   }
 
-  // Save edit
-  async function handleSaveEdit() {
-    if (!editJob) return;
-    setEditError('');
-    if (!editTitle.trim() || !editCompany.trim() || !editDescription.trim()) {
-      setEditError('All fields are required.');
+  function startEditJobDetails(job: Job) {
+    setDetailEditTitle(job.title);
+    setDetailEditCompany(job.company);
+    setDetailEditDescription(job.description);
+    setDetailEditDeadline(job.deadline ?? '');
+    setJobDetailsError('');
+    setEditingJobDetails(true);
+  }
+
+  function cancelEditJobDetails() {
+    setEditingJobDetails(false);
+    setJobDetailsError('');
+  }
+
+  // Save inline job-detail edits (title/company/description/deadline).
+  // Stage is intentionally left untouched here — it's changed via the
+  // "Change Stage" dropdown, which already has its own archive-confirmation flow.
+  async function saveJobDetails() {
+    if (!detailJob) return;
+    setJobDetailsError('');
+    if (
+      !detailEditTitle.trim() ||
+      !detailEditCompany.trim() ||
+      !detailEditDescription.trim()
+    ) {
+      setJobDetailsError('All fields are required.');
       return;
     }
-    // Intercept archive from edit modal too
-    if (editStage === '5') {
-      setArchiveTarget({ id: editJob.id, title: editJob.title });
-      setEditJob(null);
-      return;
-    }
-    setSaving(true);
+    setSavingJobDetails(true);
     try {
       const res = await fetch(
-        `/api/jobs/${encodeURIComponent(userEmail)}/${editJob.id}`,
+        `/api/jobs/${encodeURIComponent(userEmail)}/${detailJob.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            stages: editStage,
-            title: editTitle.trim(),
-            company: editCompany.trim(),
-            description: editDescription.trim(),
-            deadline: editDeadline || null,
+            stages: detailJob.status,
+            title: detailEditTitle.trim(),
+            company: detailEditCompany.trim(),
+            description: detailEditDescription.trim(),
+            deadline: detailEditDeadline || null,
           }),
         }
       );
       if (!res.ok) {
         const data = await res.json();
-        setEditError(data.error ?? 'Failed to save.');
+        setJobDetailsError(data.error ?? 'Failed to save.');
         return;
       }
-      // Refetch so the card reflects the new stage filter
+      setDetailJob((prev) =>
+        prev
+          ? {
+              ...prev,
+              title: detailEditTitle.trim(),
+              company: detailEditCompany.trim(),
+              description: detailEditDescription.trim(),
+              deadline: detailEditDeadline || null,
+            }
+          : prev
+      );
       await fetchJobs();
-      setEditJob(null);
+      setEditingJobDetails(false);
     } catch (err) {
       console.error(err);
-      setEditError('Could not connect to the server.');
+      setJobDetailsError('Could not connect to the server.');
     } finally {
-      setSaving(false);
+      setSavingJobDetails(false);
     }
   }
 
-  // Quick status change from card dropdown
+  // Quick status change from card dropdown / detail view
   async function handleStatusChange(
     jobId: number,
     newStage: string,
     jobTitle: string
   ) {
-    // Intercept archive — show confirmation modal instead of firing immediately
+    // Intercept archive — show confirmation modal instead of firing immediately,
+    // and make sure no other modal (e.g. the detail view this was triggered from)
+    // is left open behind it.
     if (newStage === '5') {
+      closeAllModals();
       setArchiveTarget({ id: jobId, title: jobTitle });
       return;
     }
@@ -243,6 +290,20 @@ export default function DashboardPage() {
         }
       );
       if (!res.ok) return;
+      // Record stage change in history
+      setStageHistoryMap((prev) => {
+        const next = new Map(prev);
+        const existing = next.get(jobId) ?? [];
+        next.set(jobId, [
+          ...existing,
+          { stage: newStage, changedAt: new Date().toISOString() },
+        ]);
+        return next;
+      });
+      // Also update detailJob if it's open
+      setDetailJob((prev) =>
+        prev && prev.id === jobId ? { ...prev, status: newStage } : prev
+      );
       await fetchJobs();
     } catch (err) {
       console.error('Status update failed:', err);
@@ -264,6 +325,10 @@ export default function DashboardPage() {
       );
       if (res.ok) {
         setJobs((prev) => prev.filter((j) => j.id !== archiveTarget.id));
+        // In case the detail view still references this job, clear it too.
+        setDetailJob((prev) =>
+          prev && prev.id === archiveTarget.id ? null : prev
+        );
       }
     } catch (err) {
       console.error('Archive failed:', err);
@@ -283,6 +348,8 @@ export default function DashboardPage() {
       );
       if (!res.ok) return;
       setJobs((prev) => prev.filter((j) => j.id !== jobId));
+      // Clean up the detail view if it was pointing at the deleted job.
+      setDetailJob((prev) => (prev && prev.id === jobId ? null : prev));
     } catch (err) {
       console.error('Delete failed:', err);
     }
@@ -310,26 +377,6 @@ export default function DashboardPage() {
     } finally {
       setSaveNotes(false);
     }
-  }
-
-  function handleAddInterview() {
-    if (!newInterviewRound.trim() || !newInterviewDate) return;
-    setInterviews([
-      ...interviews,
-      {
-        round_type: newInterviewRound.trim(),
-        interview_date: newInterviewDate,
-        notes: newInterviewNotes.trim(),
-      },
-    ]);
-    setNewInterviewRound('');
-    setNewInterviewDate('');
-    setNewInterviewNotes('');
-    setShowAddInterview(false);
-  }
-
-  function handleDeleteInterview(index: number) {
-    setInterviews(interviews.filter((_, i) => i !== index));
   }
 
   const filtered = jobs
@@ -433,6 +480,7 @@ export default function DashboardPage() {
           </h1>
           <button
             onClick={() => {
+              closeAllModals();
               setShowAddModal(true);
               setModalError('');
             }}
@@ -602,15 +650,19 @@ export default function DashboardPage() {
               <JobCard
                 key={job.id}
                 job={job}
+                stageHistory={stageHistoryMap.get(job.id) ?? []}
+                interviews={jobInterviewsMap.get(job.id) ?? []}
                 onStatusChange={handleStatusChange}
                 onEdit={openEdit}
                 onDelete={handleDelete}
                 onViewDetail={(job) => {
+                  closeAllModals();
                   setDetailJob(job);
                   setDetailNotes(job.recruiter_notes ?? '');
                   setNotesSaved(false);
-                  setInterviews([]);
                   setShowAddInterview(false);
+                  setEditingInterviewIndex(null);
+                  setEditingJobDetails(false);
                 }}
               />
             ))}
@@ -646,103 +698,201 @@ export default function DashboardPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* stage  */}
+            {/* stage + edit toggle */}
             <div
               style={{
-                display: 'inline-block',
-                backgroundColor:
-                  (
-                    {
-                      '0': '#6B7280',
-                      '1': '#2563EB',
-                      '2': '#D97706',
-                      '3': '#16A34A',
-                      '4': '#DC2626',
-                      '5': '#9CA3AF',
-                    } as Record<string, string>
-                  )[detailJob.status] ?? '#6B7280',
-                color: 'white',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                padding: '2px 10px',
-                borderRadius: '999px',
-                alignSelf: 'flex-start',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
-              {STAGE_LABELS[detailJob.status]}
-            </div>
-
-            {/* title */}
-            <h2
-              style={{
-                color: '#3C1510',
-                fontSize: '20px',
-                fontWeight: 'bold',
-                margin: 0,
-              }}
-            >
-              {detailJob.title}
-            </h2>
-
-            {/* company */}
-            <p
-              style={{
-                color: '#3C1510',
-                fontSize: '15px',
-                margin: 0,
-                fontWeight: '500',
-              }}
-            >
-              {detailJob.company}
-            </p>
-
-            {/* date added */}
-            <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
-              Added: {new Date(detailJob.created_at).toLocaleDateString()}
-            </p>
-
-            {/*deadline */}
-            <div>
-              <p
+              <div
                 style={{
-                  color: '#3C1510',
-                  fontSize: '13px',
+                  display: 'inline-block',
+                  backgroundColor:
+                    (
+                      {
+                        '0': '#6B7280',
+                        '1': '#2563EB',
+                        '2': '#D97706',
+                        '3': '#16A34A',
+                        '4': '#DC2626',
+                        '5': '#9CA3AF',
+                      } as Record<string, string>
+                    )[detailJob.status] ?? '#6B7280',
+                  color: 'white',
+                  fontSize: '11px',
                   fontWeight: 'bold',
-                  marginBottom: '4px',
+                  padding: '2px 10px',
+                  borderRadius: '999px',
                 }}
               >
-                Deadline
-              </p>
-              <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
-                {detailJob.deadline
-                  ? new Date(detailJob.deadline).toLocaleDateString()
-                  : 'No deadline set'}
-              </p>
+                {STAGE_LABELS[detailJob.status]}
+              </div>
+              {!editingJobDetails && (
+                <button
+                  onClick={() => startEditJobDetails(detailJob)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#932C20',
+                    border: '1px solid #932C20',
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                  }}
+                >
+                  Edit Job
+                </button>
+              )}
             </div>
 
-            {/* description */}
-            <div>
-              <p
+            {editingJobDetails ? (
+              <div
                 style={{
-                  color: '#3C1510',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  marginBottom: '4px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
                 }}
               >
-                Job Description
-              </p>
-              <p
-                style={{
-                  color: '#3C1510',
-                  fontSize: '14px',
-                  margin: 0,
-                  whiteSpace: 'pre-wrap',
-                }}
-              >
-                {detailJob.description}
-              </p>
-            </div>
+                {jobDetailsError && (
+                  <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
+                    {jobDetailsError}
+                  </p>
+                )}
+                <div>
+                  <label style={labelStyle}>Job Title</label>
+                  <input
+                    type="text"
+                    value={detailEditTitle}
+                    onChange={(e) => setDetailEditTitle(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Company</label>
+                  <input
+                    type="text"
+                    value={detailEditCompany}
+                    onChange={(e) => setDetailEditCompany(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Job Description</label>
+                  <textarea
+                    value={detailEditDescription}
+                    onChange={(e) => setDetailEditDescription(e.target.value)}
+                    style={{
+                      ...inputStyle,
+                      height: '100px',
+                      resize: 'vertical',
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Application Deadline</label>
+                  <input
+                    type="date"
+                    value={detailEditDeadline}
+                    onChange={(e) => setDetailEditDeadline(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    gap: '8px',
+                  }}
+                >
+                  <button onClick={cancelEditJobDetails} style={btnSecondary}>
+                    Cancel
+                  </button>
+                  <button
+                    onClick={saveJobDetails}
+                    disabled={savingJobDetails}
+                    style={btnPrimary(savingJobDetails)}
+                  >
+                    {savingJobDetails ? 'Saving…' : 'Save'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* title */}
+                <h2
+                  style={{
+                    color: '#3C1510',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    margin: 0,
+                  }}
+                >
+                  {detailJob.title}
+                </h2>
+
+                {/* company */}
+                <p
+                  style={{
+                    color: '#3C1510',
+                    fontSize: '15px',
+                    margin: 0,
+                    fontWeight: '500',
+                  }}
+                >
+                  {detailJob.company}
+                </p>
+
+                {/* date added */}
+                <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
+                  Added: {new Date(detailJob.created_at).toLocaleDateString()}
+                </p>
+
+                {/*deadline */}
+                <div>
+                  <p
+                    style={{
+                      color: '#3C1510',
+                      fontSize: '13px',
+                      fontWeight: 'bold',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Deadline
+                  </p>
+                  <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
+                    {detailJob.deadline
+                      ? new Date(detailJob.deadline).toLocaleDateString()
+                      : 'No deadline set'}
+                  </p>
+                </div>
+
+                {/* description */}
+                <div>
+                  <p
+                    style={{
+                      color: '#3C1510',
+                      fontSize: '13px',
+                      fontWeight: 'bold',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Job Description
+                  </p>
+                  <p
+                    style={{
+                      color: '#3C1510',
+                      fontSize: '14px',
+                      margin: 0,
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
+                    {detailJob.description}
+                  </p>
+                </div>
+              </>
+            )}
 
             {/* recruiter Notes */}
             <div>
@@ -838,7 +988,7 @@ export default function DashboardPage() {
                 <option value={detailJob.status}>
                   {STAGE_LABELS[detailJob.status]}
                 </option>
-                {Number(detailJob.status) < 4 && (
+                {Number(detailJob.status) < 3 && (
                   <option value={String(Number(detailJob.status) + 1)}>
                     {STAGE_LABELS[String(Number(detailJob.status) + 1)]}
                   </option>
@@ -852,257 +1002,580 @@ export default function DashboardPage() {
               </select>
             </div>
 
-            {/* interview tracker */}
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '8px',
-                }}
-              >
-                <p
-                  style={{
-                    color: '#3C1510',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    margin: 0,
-                  }}
-                >
-                  Interview History
-                </p>
-                <button
-                  onClick={() => setShowAddInterview(!showAddInterview)}
-                  style={{
-                    backgroundColor: 'transparent',
-                    color: '#932C20',
-                    border: '2px solid #932C20',
-                    padding: '4px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                  }}
-                >
-                  Add Interview
-                </button>
-              </div>
+            {/* Unified Timeline */}
+            {detailJob &&
+              (() => {
+                const jobId = detailJob.id;
+                const stageHistory = stageHistoryMap.get(jobId) ?? [];
+                const detailInterviews = jobInterviewsMap.get(jobId) ?? [];
 
-              {/* add interview form */}
-              {showAddInterview && (
-                <div
-                  style={{
-                    backgroundColor: '#D9958C',
-                    borderRadius: '8px',
-                    padding: '12px',
-                    marginBottom: '12px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                  }}
-                >
-                  <div>
-                    <label
-                      style={{
-                        fontSize: '12px',
-                        color: '#3C1510',
-                        display: 'block',
-                        marginBottom: '2px',
-                      }}
-                    >
-                      Round Type
-                    </label>
-                    <select
-                      value={newInterviewRound}
-                      onChange={(e) => setNewInterviewRound(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '6px',
-                        borderRadius: '6px',
-                        border: 'solid',
-                        fontSize: '13px',
-                        boxSizing: 'border-box',
-                        backgroundColor: 'white',
-                      }}
-                    >
-                      <option value="">Select round...</option>
-                      <option value="First Round">First Round</option>
-                      <option value="Virtual">Virtual</option>
-                      <option value="Technical">Technical</option>
-                      <option value="Final">Final</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label
-                      style={{
-                        fontSize: '12px',
-                        color: '#3C1510',
-                        display: 'block',
-                        marginBottom: '2px',
-                      }}
-                    >
-                      Date & Time
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={newInterviewDate}
-                      onChange={(e) => setNewInterviewDate(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '6px',
-                        borderRadius: '6px',
-                        border: 'solid',
-                        fontSize: '13px',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      style={{
-                        fontSize: '12px',
-                        color: '#3C1510',
-                        display: 'block',
-                        marginBottom: '2px',
-                      }}
-                    >
-                      Notes
-                    </label>
-                    <textarea
-                      value={newInterviewNotes}
-                      onChange={(e) => setNewInterviewNotes(e.target.value)}
-                      placeholder="How did it go? What was discussed?"
-                      style={{
-                        width: '100%',
-                        height: '60px',
-                        padding: '6px',
-                        borderRadius: '6px',
-                        border: 'solid',
-                        fontSize: '13px',
-                        boxSizing: 'border-box',
-                        resize: 'vertical',
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      gap: '8px',
-                    }}
-                  >
-                    <button
-                      onClick={() => setShowAddInterview(false)}
-                      style={{
-                        backgroundColor: 'transparent',
-                        color: '#3C1510',
-                        border: '1px solid #3C1510',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleAddInterview}
-                      style={{
-                        backgroundColor: '#932C20',
-                        color: 'white',
-                        border: 'none',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                      }}
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              )}
+                type TimelineItem =
+                  | { kind: 'stage'; stage: string; date: Date }
+                  | { kind: 'created'; date: Date }
+                  | {
+                      kind: 'interview';
+                      entry: InterviewEntry;
+                      index: number;
+                      date: Date;
+                    };
 
-              {/* Interview list */}
-              {interviews.length === 0 ? (
-                <p style={{ color: '#3C1510', fontSize: '13px', margin: 0 }}>
-                  No interviews logged yet.
-                </p>
-              ) : (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                  }}
-                >
-                  {interviews.map((interview, index) => (
+                const items: TimelineItem[] = [
+                  { kind: 'created', date: new Date(detailJob.created_at) },
+                  ...stageHistory.map((e) => ({
+                    kind: 'stage' as const,
+                    stage: e.stage,
+                    date: new Date(e.changedAt),
+                  })),
+                  ...detailInterviews.map((iv, idx) => ({
+                    kind: 'interview' as const,
+                    entry: iv,
+                    index: idx,
+                    date: new Date(iv.interview_date),
+                  })),
+                ].sort((a, b) => a.date.getTime() - b.date.getTime());
+
+                const STAGE_COLORS_MAP: Record<string, string> = {
+                  '0': '#6B7280',
+                  '1': '#2563EB',
+                  '2': '#D97706',
+                  '3': '#16A34A',
+                  '4': '#DC2626',
+                  '5': '#9CA3AF',
+                };
+                const STAGE_LABELS_MAP: Record<string, string> = {
+                  '0': 'Interested',
+                  '1': 'Applied',
+                  '2': 'Interview',
+                  '3': 'Offer',
+                  '4': 'Rejected',
+                  '5': 'Archived',
+                };
+
+                function saveInterview() {
+                  if (!newInterviewRound.trim() || !newInterviewDate) return;
+                  setJobInterviewsMap((prev) => {
+                    const next = new Map(prev);
+                    const existing = next.get(jobId) ?? [];
+                    const entry: InterviewEntry = {
+                      round_type: newInterviewRound.trim(),
+                      interview_date: newInterviewDate,
+                      notes: newInterviewNotes.trim(),
+                    };
+                    if (editingInterviewIndex !== null) {
+                      next.set(
+                        jobId,
+                        existing.map((iv, i) =>
+                          i === editingInterviewIndex ? entry : iv
+                        )
+                      );
+                    } else {
+                      next.set(jobId, [...existing, entry]);
+                    }
+                    return next;
+                  });
+                  setNewInterviewRound('');
+                  setNewInterviewDate('');
+                  setNewInterviewNotes('');
+                  setEditingInterviewIndex(null);
+                  setShowAddInterview(false);
+                }
+
+                function startEditInterview(
+                  index: number,
+                  entry: InterviewEntry
+                ) {
+                  setNewInterviewRound(entry.round_type);
+                  setNewInterviewDate(entry.interview_date);
+                  setNewInterviewNotes(entry.notes);
+                  setEditingInterviewIndex(index);
+                  setShowAddInterview(true);
+                }
+
+                function deleteInterview(index: number) {
+                  setJobInterviewsMap((prev) => {
+                    const next = new Map(prev);
+                    const existing = next.get(jobId) ?? [];
+                    next.set(
+                      jobId,
+                      existing.filter((_, i) => i !== index)
+                    );
+                    return next;
+                  });
+                }
+
+                return (
+                  <div>
                     <div
-                      key={index}
                       style={{
-                        backgroundColor: '#D9958C',
-                        borderRadius: '8px',
-                        padding: '12px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '12px',
                       }}
                     >
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '13px',
+                          fontWeight: 'bold',
+                          margin: 0,
+                        }}
+                      >
+                        Timeline
+                      </p>
+                      <button
+                        onClick={() => {
+                          if (showAddInterview) {
+                            setShowAddInterview(false);
+                            setEditingInterviewIndex(null);
+                          } else {
+                            setNewInterviewRound('');
+                            setNewInterviewDate('');
+                            setNewInterviewNotes('');
+                            setEditingInterviewIndex(null);
+                            setShowAddInterview(true);
+                          }
+                        }}
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: '#932C20',
+                          border: '2px solid #932C20',
+                          padding: '4px 12px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                        }}
+                      >
+                        + Add Interview
+                      </button>
+                    </div>
+
+                    {/* Add interview form */}
+                    {showAddInterview && (
                       <div
                         style={{
+                          backgroundColor: '#D9958C',
+                          borderRadius: '8px',
+                          padding: '12px',
+                          marginBottom: '12px',
                           display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          marginBottom: '4px',
+                          flexDirection: 'column',
+                          gap: '8px',
                         }}
                       >
                         <p
                           style={{
+                            fontSize: '12px',
                             color: '#3C1510',
-                            fontSize: '13px',
                             fontWeight: 'bold',
                             margin: 0,
                           }}
                         >
-                          {interview.round_type}
+                          {editingInterviewIndex !== null
+                            ? 'Edit Interview'
+                            : 'New Interview'}
                         </p>
-                        <button
-                          onClick={() => handleDeleteInterview(index)}
+                        <div>
+                          <label
+                            style={{
+                              fontSize: '12px',
+                              color: '#3C1510',
+                              display: 'block',
+                              marginBottom: '2px',
+                            }}
+                          >
+                            Round Type
+                          </label>
+                          <select
+                            value={newInterviewRound}
+                            onChange={(e) =>
+                              setNewInterviewRound(e.target.value)
+                            }
+                            style={{
+                              width: '100%',
+                              padding: '6px',
+                              borderRadius: '6px',
+                              border: 'solid',
+                              fontSize: '13px',
+                              boxSizing: 'border-box',
+                              backgroundColor: 'white',
+                            }}
+                          >
+                            <option value="">Select round...</option>
+                            <option value="First Round">First Round</option>
+                            <option value="Virtual">Virtual</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Final">Final</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label
+                            style={{
+                              fontSize: '12px',
+                              color: '#3C1510',
+                              display: 'block',
+                              marginBottom: '2px',
+                            }}
+                          >
+                            Date & Time
+                          </label>
+                          <input
+                            type="datetime-local"
+                            value={newInterviewDate}
+                            onChange={(e) =>
+                              setNewInterviewDate(e.target.value)
+                            }
+                            style={{
+                              width: '100%',
+                              padding: '6px',
+                              borderRadius: '6px',
+                              border: 'solid',
+                              fontSize: '13px',
+                              boxSizing: 'border-box',
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label
+                            style={{
+                              fontSize: '12px',
+                              color: '#3C1510',
+                              display: 'block',
+                              marginBottom: '2px',
+                            }}
+                          >
+                            Notes
+                          </label>
+                          <textarea
+                            value={newInterviewNotes}
+                            onChange={(e) =>
+                              setNewInterviewNotes(e.target.value)
+                            }
+                            placeholder="How did it go? What was discussed?"
+                            style={{
+                              width: '100%',
+                              height: '60px',
+                              padding: '6px',
+                              borderRadius: '6px',
+                              border: 'solid',
+                              fontSize: '13px',
+                              boxSizing: 'border-box',
+                              resize: 'vertical',
+                            }}
+                          />
+                        </div>
+                        <div
                           style={{
-                            backgroundColor: 'transparent',
-                            border: 'none',
-                            color: '#932C20',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                            padding: 0,
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            gap: '8px',
                           }}
                         >
-                          Remove
-                        </button>
+                          <button
+                            onClick={() => {
+                              setShowAddInterview(false);
+                              setEditingInterviewIndex(null);
+                            }}
+                            style={{
+                              backgroundColor: 'transparent',
+                              color: '#3C1510',
+                              border: '1px solid #3C1510',
+                              padding: '4px 12px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '12px',
+                            }}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={saveInterview}
+                            style={{
+                              backgroundColor: '#932C20',
+                              color: 'white',
+                              border: 'none',
+                              padding: '4px 12px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '12px',
+                            }}
+                          >
+                            {editingInterviewIndex !== null ? 'Update' : 'Save'}
+                          </button>
+                        </div>
                       </div>
-                      <p
+                    )}
+
+                    {/* Timeline items */}
+                    <div style={{ position: 'relative', paddingLeft: '20px' }}>
+                      {/* vertical line */}
+                      <div
                         style={{
-                          color: '#3C1510',
-                          fontSize: '12px',
-                          margin: '0 0 4px 0',
+                          position: 'absolute',
+                          left: '7px',
+                          top: '8px',
+                          bottom: '8px',
+                          width: '2px',
+                          backgroundColor: '#C9A99E',
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '12px',
                         }}
                       >
-                        {new Date(interview.interview_date).toLocaleString()}
-                      </p>
-                      {interview.notes && (
-                        <p
-                          style={{
-                            color: '#3C1510',
-                            fontSize: '12px',
-                            margin: 0,
-                          }}
-                        >
-                          {interview.notes}
-                        </p>
-                      )}
+                        {items.map((item, i) => {
+                          if (item.kind === 'created') {
+                            return (
+                              <div
+                                key={i}
+                                style={{
+                                  display: 'flex',
+                                  gap: '10px',
+                                  alignItems: 'flex-start',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    left: '2px',
+                                    width: '12px',
+                                    height: '12px',
+                                    borderRadius: '50%',
+                                    backgroundColor: STAGE_COLORS_MAP['0'],
+                                    border: '2px solid #E6CECB',
+                                    marginTop: '2px',
+                                    flexShrink: 0,
+                                  }}
+                                />
+                                <div>
+                                  <p
+                                    style={{
+                                      color: '#3C1510',
+                                      fontSize: '12px',
+                                      fontWeight: 'bold',
+                                      margin: 0,
+                                    }}
+                                  >
+                                    Added as Interested
+                                  </p>
+                                  <p
+                                    style={{
+                                      color: '#7A4540',
+                                      fontSize: '11px',
+                                      margin: '2px 0 0 0',
+                                    }}
+                                  >
+                                    {item.date.toLocaleDateString(undefined, {
+                                      month: 'long',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          if (item.kind === 'stage') {
+                            return (
+                              <div
+                                key={i}
+                                style={{
+                                  display: 'flex',
+                                  gap: '10px',
+                                  alignItems: 'flex-start',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    left: '2px',
+                                    width: '12px',
+                                    height: '12px',
+                                    borderRadius: '3px',
+                                    backgroundColor:
+                                      STAGE_COLORS_MAP[item.stage] ?? '#6B7280',
+                                    border: '2px solid #E6CECB',
+                                    marginTop: '2px',
+                                    flexShrink: 0,
+                                  }}
+                                />
+                                <div>
+                                  <p
+                                    style={{
+                                      color: '#3C1510',
+                                      fontSize: '12px',
+                                      fontWeight: 'bold',
+                                      margin: 0,
+                                    }}
+                                  >
+                                    Stage changed to{' '}
+                                    <span
+                                      style={{
+                                        color:
+                                          STAGE_COLORS_MAP[item.stage] ??
+                                          '#3C1510',
+                                      }}
+                                    >
+                                      {STAGE_LABELS_MAP[item.stage] ??
+                                        'Unknown'}
+                                    </span>
+                                  </p>
+                                  <p
+                                    style={{
+                                      color: '#7A4540',
+                                      fontSize: '11px',
+                                      margin: '2px 0 0 0',
+                                    }}
+                                  >
+                                    {item.date.toLocaleDateString(undefined, {
+                                      month: 'long',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          if (item.kind === 'interview') {
+                            return (
+                              <div
+                                key={i}
+                                style={{
+                                  display: 'flex',
+                                  gap: '10px',
+                                  alignItems: 'flex-start',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    left: '1px',
+                                    width: '14px',
+                                    height: '14px',
+                                    borderRadius: '50%',
+                                    backgroundColor: '#7C3AED',
+                                    border: '2px solid #E6CECB',
+                                    marginTop: '1px',
+                                    flexShrink: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: 'white',
+                                      fontSize: '7px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    ▸
+                                  </span>
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center',
+                                    }}
+                                  >
+                                    <p
+                                      style={{
+                                        color: '#3C1510',
+                                        fontSize: '12px',
+                                        fontWeight: 'bold',
+                                        margin: 0,
+                                      }}
+                                    >
+                                      Interview: {item.entry.round_type}
+                                    </p>
+                                    <div
+                                      style={{ display: 'flex', gap: '10px' }}
+                                    >
+                                      <button
+                                        onClick={() =>
+                                          startEditInterview(
+                                            item.index,
+                                            item.entry
+                                          )
+                                        }
+                                        style={{
+                                          backgroundColor: 'transparent',
+                                          border: 'none',
+                                          color: '#932C20',
+                                          cursor: 'pointer',
+                                          fontSize: '11px',
+                                          padding: 0,
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          deleteInterview(item.index)
+                                        }
+                                        style={{
+                                          backgroundColor: 'transparent',
+                                          border: 'none',
+                                          color: '#932C20',
+                                          cursor: 'pointer',
+                                          fontSize: '11px',
+                                          padding: 0,
+                                        }}
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <p
+                                    style={{
+                                      color: '#7A4540',
+                                      fontSize: '11px',
+                                      margin: '2px 0 0 0',
+                                    }}
+                                  >
+                                    {item.date.toLocaleString(undefined, {
+                                      month: 'long',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                    })}
+                                  </p>
+                                  {item.entry.notes && (
+                                    <p
+                                      style={{
+                                        color: '#3C1510',
+                                        fontSize: '11px',
+                                        margin: '4px 0 0 0',
+                                        backgroundColor: '#D9958C',
+                                        borderRadius: '4px',
+                                        padding: '4px 8px',
+                                      }}
+                                    >
+                                      {item.entry.notes}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          return null;
+                        })}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </div>
+                );
+              })()}
 
             {/* Close button */}
             <div
@@ -1230,130 +1703,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/*  Edit Job Modal  */}
-      {editJob && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 50,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: '#E6CECB',
-              borderRadius: '10px',
-              padding: '24px',
-              width: '400px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-            }}
-          >
-            <h2
-              style={{
-                color: '#3C1510',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                margin: 0,
-              }}
-            >
-              Edit Job
-            </h2>
-            {editError && (
-              <p style={{ color: '#932C20', fontSize: '13px', margin: 0 }}>
-                {editError}
-              </p>
-            )}
-            <div>
-              <label style={labelStyle}>Job Title</label>
-              <input
-                type="text"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                style={inputStyle}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Company</label>
-              <input
-                type="text"
-                value={editCompany}
-                onChange={(e) => setEditCompany(e.target.value)}
-                style={inputStyle}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Job Description</label>
-              <textarea
-                value={editDescription}
-                onChange={(e) => setEditDescription(e.target.value)}
-                style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Application Deadline</label>
-              <input
-                type="date"
-                value={editDeadline}
-                onChange={(e) => setEditDeadline(e.target.value)}
-                style={inputStyle}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Status</label>
-              <select
-                value={editStage}
-                onChange={(e) => setEditStage(e.target.value)}
-                style={{
-                  ...inputStyle,
-                  border: '1px solid #932C20',
-                  backgroundColor: '#fff',
-                  cursor: 'pointer',
-                }}
-              >
-                {/* Current stage always shown */}
-                <option value={editJob!.status}>
-                  {STAGE_LABELS[editJob!.status]}
-                </option>
-                {/* Next stage (if not already at Rejected=4 or Archived=5) */}
-                {Number(editJob!.status) < 4 && (
-                  <option value={String(Number(editJob!.status) + 1)}>
-                    {STAGE_LABELS[String(Number(editJob!.status) + 1)]}
-                  </option>
-                )}
-                {/* Archived is always available unless already archived */}
-                {editJob!.status !== '5' && (
-                  <option value="5">{STAGE_LABELS['5']}</option>
-                )}
-              </select>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: '8px',
-                marginTop: '8px',
-              }}
-            >
-              <button onClick={() => setEditJob(null)} style={btnSecondary}>
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveEdit}
-                disabled={saving}
-                style={btnPrimary(saving)}
-              >
-                {saving ? 'Saving…' : 'Save'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {/*  Archive Confirmation Modal */}
       {archiveTarget && (
         <div
