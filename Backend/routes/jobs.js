@@ -49,7 +49,7 @@ module.exports = function (pool) {
       const orderBy = SORT_MAP[sort] ?? 'created_at DESC';
 
       const query = `
-        SELECT unique_num AS id, title, company, description, stages AS status, created_at
+        SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes
         FROM job_table
         WHERE ${conditions.join(' AND ')}
         ORDER BY ${orderBy}
@@ -78,7 +78,7 @@ module.exports = function (pool) {
       const result = await pool.query(
         `INSERT INTO job_table (email, title, company, description, stages)
          VALUES ($1, $2, $3, $4, '0')
-         RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
+         RETURNING unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes`,
         [email, title.trim(), company.trim(), description.trim()]
       );
       res.status(201).json(result.rows[0]);
@@ -92,7 +92,8 @@ module.exports = function (pool) {
   router.put('/jobs/:email/:id', async (req, res) => {
     try {
       const { email, id } = req.params;
-      const { stages, title, company, description } = req.body;
+      const { stages, title, company, description, recruiter_notes } =
+        req.body;
 
       if (stages !== undefined && !VALID_STAGES.includes(stages)) {
         return res
@@ -133,12 +134,13 @@ module.exports = function (pool) {
       const result = await pool.query(
         `UPDATE job_table
          SET
-           stages      = COALESCE($1::job_stage_enum, stages),
-           title       = COALESCE($4, title),
-           company     = COALESCE($5, company),
-           description = COALESCE($6, description)
+           stages          = COALESCE($1::job_stage_enum, stages),
+           title           = COALESCE($4, title),
+           company         = COALESCE($5, company),
+           description     = COALESCE($6, description),
+           recruiter_notes = COALESCE($7, recruiter_notes)
          WHERE unique_num = $2 AND email = $3 AND is_deleted = FALSE
-         RETURNING unique_num AS id, title, company, description, stages AS status, created_at`,
+         RETURNING unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes`,
         [
           stages ?? null,
           id,
@@ -146,6 +148,7 @@ module.exports = function (pool) {
           title?.trim() ?? null,
           company?.trim() ?? null,
           description?.trim() ?? null,
+          recruiter_notes ?? null,
         ]
       );
 
@@ -209,6 +212,63 @@ module.exports = function (pool) {
     } catch (err) {
       console.error('Get history error:', err);
       res.status(500).json({ error: 'Failed to fetch history' });
+    }
+  });
+
+  // GET /jobs/:email/:id/interviews — list interviews for a job
+  router.get('/jobs/:email/:id/interviews', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const result = await pool.query(
+        `SELECT i.round_type, i.scheduled_at AS interview_date, i.notes
+         FROM interview_table i
+         JOIN job_table j ON j.unique_num = i.job_id
+         WHERE i.job_id = $1 AND j.email = $2 AND j.is_deleted = FALSE
+         ORDER BY i.scheduled_at ASC`,
+        [id, email]
+      );
+
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Get interviews error:', err);
+      res.status(500).json({ error: 'Failed to fetch interviews' });
+    }
+  });
+
+  // POST /jobs/:email/:id/interviews — add an interview for a job
+  router.post('/jobs/:email/:id/interviews', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+      const { round_type, interview_date, notes } = req.body;
+
+      if (!round_type || !interview_date) {
+        return res
+          .status(400)
+          .json({ error: 'round_type and interview_date are required' });
+      }
+
+      // Confirm the job exists and belongs to this email before inserting.
+      const job = await pool.query(
+        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO interview_table (job_id, round_type, scheduled_at, notes)
+         VALUES ($1, $2, $3, $4)
+         RETURNING round_type, scheduled_at AS interview_date, notes`,
+        [id, round_type, interview_date, notes?.trim() ?? null]
+      );
+
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      console.error('Add interview error:', err);
+      res.status(500).json({ error: 'Failed to add interview' });
     }
   });
 

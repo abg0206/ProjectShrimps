@@ -98,15 +98,6 @@ async function main() {
      career_preferences  TEXT,
      profile_picture_url VARCHAR(255)
    );
-   `);
-
-   await pool.query(`
-   CREATE TABLE IF NOT EXISTS stage_history (
-  id          SERIAL PRIMARY KEY,
-  job_id      INTEGER NOT NULL REFERENCES job_table(unique_num),
-  stage       job_stage_enum NOT NULL,
-  changed_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
  `);
 
     // --- Migration: bring user_profile up to date with the Profile page ---
@@ -273,6 +264,13 @@ async function main() {
          ) THEN
            ALTER TABLE job_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
          END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'recruiter_notes'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN recruiter_notes TEXT;
+         END IF;
        END $$;
      `);
 
@@ -313,6 +311,51 @@ async function main() {
     created_at     TIMESTAMP DEFAULT NOW()
   );
 `);
+
+    // Migration: the frontend's round-type options ('First Round', 'Virtual',
+    // 'Final', etc.) don't match interview_type_enum, so store them as free
+    // text instead of forcing them through that enum.
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'interview_table' AND column_name = 'round_type'
+        ) THEN
+          ALTER TABLE interview_table ADD COLUMN round_type VARCHAR(100);
+        END IF;
+      END $$;
+    `);
+    await pool.query(`
+  CREATE TABLE IF NOT EXISTS stage_history (
+    history_id SERIAL PRIMARY KEY,
+    job_id     INTEGER NOT NULL,
+    stage      job_stage_enum NOT NULL,
+    changed_at TIMESTAMP DEFAULT NOW()
+  );
+`);
+
+    // Stage history to Job
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_stagehistory_job'
+        ) THEN
+          ALTER TABLE stage_history
+          ADD CONSTRAINT fk_stagehistory_job
+          FOREIGN KEY (job_id)
+          REFERENCES job_table(unique_num)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_stagehistory_job_id
+      ON stage_history(job_id);
+    `);
+
     //forein keys and indexes
     // Interview to Job
     await pool.query(`
@@ -388,8 +431,6 @@ async function main() {
   } finally {
     await pool.end();
   }
-
-  
 }
 
 main();
