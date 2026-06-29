@@ -1,9 +1,22 @@
 import Sidebar from '../components/Sidebar';
-import { useState, useRef, type CSSProperties, type ChangeEvent } from 'react';
+import { useState, useRef, useEffect, type CSSProperties, type ChangeEvent } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { plainTextToEditorHtml } from '../lib/utils';
+
+const REWRITE_GOALS = [
+  'Professional, ATS-friendly',
+  'More concise / shorter',
+  'More detailed / longer',
+  'Fix grammar only',
+  'More technical',
+  'More executive / senior-sounding',
+];
 
 export default function ResumePage() {
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [fontSize, setFontSize] = useState<string>('3');
   const [blockType, setBlockType] = useState<string>('<p>');
@@ -12,6 +25,30 @@ export default function ResumePage() {
     italic: false,
     underline: false,
   });
+  const [rewriteGoal, setRewriteGoal] = useState<string>(REWRITE_GOALS[0]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState('');
+  const [tailoredFor, setTailoredFor] = useState<string | null>(null);
+
+  // If we got here from "Tailor Resume" on a job card, drop that AI-generated
+  // resume straight into the editor.
+  useEffect(() => {
+    const incoming = (location.state as { aiContent?: string; jobTitle?: string } | null)
+      ?.aiContent;
+    if (!incoming) return;
+
+    if (editorRef.current) {
+      editorRef.current.innerHTML = plainTextToEditorHtml(incoming);
+      setIsEmpty(false);
+    }
+    setTailoredFor(
+      (location.state as { jobTitle?: string })?.jobTitle ?? 'this job'
+    );
+
+    // Clear the navigation state so a refresh/back doesn't redo this.
+    navigate(location.pathname, { replace: true, state: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function updateActiveFormats() {
     setActiveFormats({
@@ -111,9 +148,45 @@ export default function ResumePage() {
     }
   }
 
-  function handleAIEdit() {
-    // TODO: wire this up later
-    console.log('AI edit clicked');
+  async function handleAIEdit() {
+    const currentText = editorRef.current?.innerText.trim() ?? '';
+
+    if (!currentText) {
+      window.alert('Write or upload a resume first, then try AI Edit.');
+      return;
+    }
+
+    setAiError('');
+    setAiLoading(true);
+
+    try {
+      const res = await fetch('/api/ai/edit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: currentText,
+          rewriteType: rewriteGoal,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setAiError(data.error ?? 'AI edit failed. Please try again.');
+        return;
+      }
+
+      if (editorRef.current) {
+        editorRef.current.innerHTML = plainTextToEditorHtml(data.content);
+        setIsEmpty(false);
+      }
+      setTailoredFor(null);
+    } catch (err) {
+      console.error('AI edit error:', err);
+      setAiError('Could not connect to the server.');
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   const toolbarBtnStyle: CSSProperties = {
@@ -170,7 +243,7 @@ export default function ResumePage() {
             Resume
           </h1>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <input
               ref={fileInputRef}
               type="file"
@@ -193,23 +266,78 @@ export default function ResumePage() {
             >
               ⬆ Upload Resume
             </button>
+            <select
+              value={rewriteGoal}
+              onChange={(e) => setRewriteGoal(e.target.value)}
+              disabled={aiLoading}
+              title="AI Edit goal"
+              style={{
+                border: '1.5px solid #932C20',
+                borderRadius: '6px',
+                padding: '8px 10px',
+                fontSize: '13px',
+                color: '#932C20',
+                backgroundColor: '#fff',
+                cursor: aiLoading ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {REWRITE_GOALS.map((goal) => (
+                <option key={goal} value={goal}>
+                  {goal}
+                </option>
+              ))}
+            </select>
             <button
               onClick={handleAIEdit}
+              disabled={aiLoading}
               style={{
-                backgroundColor: '#5B3A8E',
+                backgroundColor: aiLoading ? '#8d76b3' : '#5B3A8E',
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '8px 16px',
                 borderRadius: '6px',
-                cursor: 'pointer',
+                cursor: aiLoading ? 'not-allowed' : 'pointer',
                 fontSize: '14px',
                 fontWeight: 500,
               }}
             >
-              ✨ AI Edit
+              {aiLoading ? '✨ Editing…' : '✨ AI Edit'}
             </button>
           </div>
         </div>
+
+        {tailoredFor && (
+          <p
+            style={{
+              backgroundColor: '#E9F7EF',
+              border: '1px solid #16A34A',
+              borderRadius: '8px',
+              padding: '10px 16px',
+              color: '#166534',
+              fontSize: '13px',
+              marginBottom: '16px',
+            }}
+          >
+            ✨ This resume was tailored for <strong>{tailoredFor}</strong>.
+            Review it, then click Save.
+          </p>
+        )}
+
+        {aiError && (
+          <p
+            style={{
+              backgroundColor: '#F5DDD9',
+              border: '1px solid #932C20',
+              borderRadius: '8px',
+              padding: '10px 16px',
+              color: '#932C20',
+              fontSize: '13px',
+              marginBottom: '16px',
+            }}
+          >
+            {aiError}
+          </p>
+        )}
 
         {/* Toolbar */}
         <div

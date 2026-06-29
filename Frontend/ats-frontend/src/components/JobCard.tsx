@@ -47,6 +47,8 @@ type JobCardProps = {
   onEdit: (job: Job) => void;
   onDelete: (jobId: number) => void;
   onViewDetail: (job: Job) => void;
+  onTailorResume: (job: Job) => void;
+  isTailoring?: boolean;
 };
 
 export default function JobCard({
@@ -57,6 +59,8 @@ export default function JobCard({
   onEdit,
   onDelete,
   onViewDetail,
+  onTailorResume,
+  isTailoring = false,
 }: JobCardProps) {
   return (
     <div
@@ -159,9 +163,26 @@ export default function JobCard({
           style={{
             display: 'flex',
             gap: '12px',
+            alignItems: 'center',
           }}
           onClick={(e) => e.stopPropagation()}
         >
+          <button
+            onClick={() => onTailorResume(job)}
+            disabled={isTailoring}
+            title="Generate a resume tailored to this job"
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: isTailoring ? '#9b8a8a' : '#5B3A8E',
+              cursor: isTailoring ? 'not-allowed' : 'pointer',
+              fontSize: '13px',
+              fontWeight: 500,
+              padding: 0,
+            }}
+          >
+            {isTailoring ? '✨ Tailoring…' : '✨ Tailor Resume'}
+          </button>
           <button
             onClick={() => onEdit(job)}
             style={{

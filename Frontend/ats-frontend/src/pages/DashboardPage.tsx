@@ -1,5 +1,6 @@
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import JobCard, {
   Job,
   StageEvent,
@@ -41,6 +42,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
   const userEmail = session.email ?? '';
 
@@ -50,6 +52,14 @@ export default function DashboardPage() {
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // AI resume tailoring
+  const [tailoringJobId, setTailoringJobId] = useState<number | null>(null);
+  const [tailorResult, setTailorResult] = useState<{
+    job: Job;
+    content: string;
+  } | null>(null);
+  const [tailorError, setTailorError] = useState('');
 
   // Debounce search so we don't fire on every keystroke
   const debouncedSearch = useDebounce(search, 300);
@@ -349,6 +359,40 @@ export default function DashboardPage() {
     }
   }
 
+  async function handleTailorResume(job: Job) {
+    setTailorError('');
+    setTailoringJobId(job.id);
+    try {
+      const res = await fetch(
+        `/api/ai/resume/${encodeURIComponent(userEmail)}/${job.id}`,
+        { method: 'POST' }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setTailorError(
+          data.error ?? 'Could not generate a tailored resume for this job.'
+        );
+        return;
+      }
+      setTailorResult({ job, content: data.content });
+    } catch (err) {
+      console.error('Tailor resume failed:', err);
+      setTailorError('Could not connect to the server.');
+    } finally {
+      setTailoringJobId(null);
+    }
+  }
+
+  function handleOpenTailoredResume() {
+    if (!tailorResult) return;
+    navigate('/resume', {
+      state: {
+        aiContent: tailorResult.content,
+        jobTitle: `${tailorResult.job.title} at ${tailorResult.job.company}`,
+      },
+    });
+  }
+
   async function loadStageHistory(jobId: number) {
     try {
       const res = await fetch(
@@ -606,6 +650,22 @@ export default function DashboardPage() {
           </p>
         )}
 
+        {tailorError && (
+          <p
+            style={{
+              backgroundColor: '#F5DDD9',
+              border: '1px solid #932C20',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#932C20',
+              fontSize: '14px',
+              marginBottom: '20px',
+            }}
+          >
+            {tailorError}
+          </p>
+        )}
+
         {/* Job count */}
         {!loading && (
           <p
@@ -689,6 +749,8 @@ export default function DashboardPage() {
                 onStatusChange={handleStatusChange}
                 onEdit={openEdit}
                 onDelete={handleDelete}
+                onTailorResume={handleTailorResume}
+                isTailoring={tailoringJobId === job.id}
                 onViewDetail={(job) => {
                   closeAllModals();
                   setDetailJob(job);
@@ -1817,6 +1879,79 @@ export default function DashboardPage() {
                 style={btnPrimary(archiving)}
               >
                 {archiving ? 'Archiving…' : 'Archive'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tailored Resume preview modal */}
+      {tailorResult && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+          onClick={() => setTailorResult(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '600px',
+              maxHeight: '80vh',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              ✨ Resume tailored for {tailorResult.job.title} at{' '}
+              {tailorResult.job.company}
+            </h2>
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '8px',
+                padding: '16px',
+                fontSize: '13px',
+                color: '#2b2b2b',
+                whiteSpace: 'pre-wrap',
+                overflowY: 'auto',
+                flex: 1,
+              }}
+            >
+              {tailorResult.content}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
+              <button
+                onClick={() => setTailorResult(null)}
+                style={btnSecondary}
+              >
+                Close
+              </button>
+              <button onClick={handleOpenTailoredResume} style={btnPrimary()}>
+                Open in Resume Editor
               </button>
             </div>
           </div>
