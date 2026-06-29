@@ -3,3 +3,9 @@ node_modules/
 *.pem
 node_modules/
 .DS_Store
+__pycache__/
+*.pyc
+venv/
+.venv/
+ats.db
+Documents/
