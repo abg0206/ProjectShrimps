@@ -187,26 +187,16 @@ export default function DashboardPage() {
     }
   }
 
-  async function loadStageHistory(jobId: number) {
-  const res = await fetch(`/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/history`);
-  if (!res.ok) return;
-  const data = await res.json();
-  setStageHistoryMap(prev => {
-    const next = new Map(prev);
-    next.set(jobId, data.map((r: any) => ({ stage: r.stage, changedAt: r.changed_at })));
-    return next;
-  });
-}
-
   // Card's "Edit" button — jump straight into the detail view, already in edit mode.
-  async function openEdit(job: Job) {
-  closeAllModals();
-  setDetailJob(job);
-  setDetailNotes(job.recruiter_notes ?? '');
-  setNotesSaved(false);
-  startEditJobDetails(job);
-  await loadStageHistory(job.id);  // ← add this
-}
+  function openEdit(job: Job) {
+    closeAllModals();
+    setDetailJob(job);
+    setDetailNotes(job.recruiter_notes ?? '');
+    setNotesSaved(false);
+    loadInterviews(job.id);
+    loadStageHistory(job.id);
+    startEditJobDetails(job);
+  }
 
   function startEditJobDetails(job: Job) {
     setDetailEditTitle(job.title);
@@ -244,7 +234,6 @@ export default function DashboardPage() {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            stages: detailJob.status,
             title: detailEditTitle.trim(),
             company: detailEditCompany.trim(),
             description: detailEditDescription.trim(),
@@ -302,16 +291,9 @@ export default function DashboardPage() {
         }
       );
       if (!res.ok) return;
-      // Record stage change in history
-      setStageHistoryMap((prev) => {
-        const next = new Map(prev);
-        const existing = next.get(jobId) ?? [];
-        next.set(jobId, [
-          ...existing,
-          { stage: newStage, changedAt: new Date().toISOString() },
-        ]);
-        return next;
-      });
+      // Refresh stage history from the server so it reflects what was
+      // actually recorded (and survives refresh/reopen).
+      await loadStageHistory(jobId);
       // Also update detailJob if it's open
       setDetailJob((prev) =>
         prev && prev.id === jobId ? { ...prev, status: newStage } : prev
@@ -364,6 +346,29 @@ export default function DashboardPage() {
       setDetailJob((prev) => (prev && prev.id === jobId ? null : prev));
     } catch (err) {
       console.error('Delete failed:', err);
+    }
+  }
+
+  async function loadStageHistory(jobId: number) {
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/history`
+      );
+      if (!res.ok) return;
+      const data: { stage: string; changed_at: string }[] = await res.json();
+      setStageHistoryMap((prev) => {
+        const next = new Map(prev);
+        next.set(
+          jobId,
+          data.map((row) => ({
+            stage: row.stage,
+            changedAt: row.changed_at,
+          }))
+        );
+        return next;
+      });
+    } catch (err) {
+      console.error('Failed to load stage history:', err);
     }
   }
 
@@ -676,15 +681,15 @@ export default function DashboardPage() {
             }}
           >
             {jobs.map((job) => (
-  <JobCard
-    key={job.id}
-    job={job}
-    stageHistory={stageHistoryMap.get(job.id) ?? []}
-    interviews={jobInterviewsMap.get(job.id) ?? []}
-    onStatusChange={handleStatusChange}
-    onEdit={openEdit}
-    onDelete={handleDelete}
-    onViewDetail={async (job) => {
+              <JobCard
+                key={job.id}
+                job={job}
+                stageHistory={stageHistoryMap.get(job.id) ?? []}
+                interviews={jobInterviewsMap.get(job.id) ?? []}
+                onStatusChange={handleStatusChange}
+                onEdit={openEdit}
+                onDelete={handleDelete}
+                onViewDetail={(job) => {
                   closeAllModals();
                   setDetailJob(job);
                   setDetailNotes(job.recruiter_notes ?? '');
@@ -692,10 +697,11 @@ export default function DashboardPage() {
                   setShowAddInterview(false);
                   setEditingInterviewIndex(null);
                   setEditingJobDetails(false);
-                  await loadStageHistory(job.id);
+                  loadInterviews(job.id);
+                  loadStageHistory(job.id);
                 }}
-  />
-))}
+              />
+            ))}
           </div>
         )}
       </div>
@@ -820,7 +826,15 @@ export default function DashboardPage() {
                     }}
                   />
                 </div>
-                
+                <div>
+                  <label style={labelStyle}>Application Deadline</label>
+                  <input
+                    type="date"
+                    value={detailEditDeadline}
+                    onChange={(e) => setDetailEditDeadline(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
                 <div
                   style={{
                     display: 'flex',
@@ -1073,28 +1087,49 @@ export default function DashboardPage() {
                   '5': 'Archived',
                 };
 
-                function saveInterview() {
+                async function saveInterview() {
                   if (!newInterviewRound.trim() || !newInterviewDate) return;
-                  setJobInterviewsMap((prev) => {
-                    const next = new Map(prev);
-                    const existing = next.get(jobId) ?? [];
-                    const entry: InterviewEntry = {
-                      round_type: newInterviewRound.trim(),
-                      interview_date: newInterviewDate,
-                      notes: newInterviewNotes.trim(),
-                    };
-                    if (editingInterviewIndex !== null) {
+                  const entry: InterviewEntry = {
+                    round_type: newInterviewRound.trim(),
+                    interview_date: newInterviewDate,
+                    notes: newInterviewNotes.trim(),
+                  };
+
+                  if (editingInterviewIndex !== null) {
+                    // Editing an existing entry isn't wired to the backend
+                    // yet — update local state only for now.
+                    setJobInterviewsMap((prev) => {
+                      const next = new Map(prev);
+                      const existing = next.get(jobId) ?? [];
                       next.set(
                         jobId,
                         existing.map((iv, i) =>
                           i === editingInterviewIndex ? entry : iv
                         )
                       );
-                    } else {
-                      next.set(jobId, [...existing, entry]);
+                      return next;
+                    });
+                  } else {
+                    try {
+                      const res = await fetch(
+                        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`,
+                        {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(entry),
+                        }
+                      );
+                      if (!res.ok) {
+                        console.error('Failed to save interview:', await res.text());
+                        return;
+                      }
+                      await loadInterviews(jobId);
+                    } catch (err) {
+                      console.error('Failed to save interview:', err);
+                      return;
                     }
-                    return next;
-                  });
+                  }
+
                   setNewInterviewRound('');
                   setNewInterviewDate('');
                   setNewInterviewNotes('');
@@ -1691,7 +1726,13 @@ export default function DashboardPage() {
               />
             </div>
             <div>
-              
+              <label style={labelStyle}>Application Deadline</label>
+              <input
+                type="date"
+                value={newDeadline}
+                onChange={(e) => setNewDeadline(e.target.value)}
+                style={inputStyle}
+              />
             </div>
             <div
               style={{
