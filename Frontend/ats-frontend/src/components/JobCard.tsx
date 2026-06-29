@@ -17,6 +17,17 @@ const STAGE_COLORS: Record<string, string> = {
   '5': '#9CA3AF',
 };
 
+export type StageEvent = {
+  stage: string;
+  changedAt: string; // ISO date string
+};
+
+export type InterviewEntry = {
+  round_type: string;
+  interview_date: string;
+  notes: string;
+};
+
 export type Job = {
   id: number;
   title: string;
@@ -30,6 +41,8 @@ export type Job = {
 
 type JobCardProps = {
   job: Job;
+  stageHistory: StageEvent[];
+  interviews: InterviewEntry[];
   onStatusChange: (jobId: number, newStage: string, jobTitle: string) => void;
   onEdit: (job: Job) => void;
   onDelete: (jobId: number) => void;
@@ -38,6 +51,8 @@ type JobCardProps = {
 
 export default function JobCard({
   job,
+  stageHistory,
+  interviews,
   onStatusChange,
   onEdit,
   onDelete,

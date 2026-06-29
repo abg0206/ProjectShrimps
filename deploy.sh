@@ -147,6 +147,32 @@ if [ ! -d "node_modules" ]; then
   npm install
 fi
 
+# ---------------------------------------------------------------------------
+# Resume upload deps (mammoth for .docx, pdfjs-dist for .pdf parsing)
+# ---------------------------------------------------------------------------
+NEED_RESUME_DEPS=false
+[ -d "node_modules/mammoth" ] || NEED_RESUME_DEPS=true
+[ -d "node_modules/pdfjs-dist" ] || NEED_RESUME_DEPS=true
+
+if [ "$NEED_RESUME_DEPS" = true ]; then
+  log "Installing resume upload dependencies (mammoth, pdfjs-dist)..."
+  npm install mammoth pdfjs-dist
+fi
+
+# pdfjs needs its worker file served as a static asset from public/
+PDF_WORKER_SRC="node_modules/pdfjs-dist/build/pdf.worker.min.mjs"
+PDF_WORKER_DEST="public/pdf.worker.min.mjs"
+
+if [ -f "$PDF_WORKER_SRC" ]; then
+  if [ ! -f "$PDF_WORKER_DEST" ] || [ "$PDF_WORKER_SRC" -nt "$PDF_WORKER_DEST" ]; then
+    log "Copying pdf.worker.min.mjs into public/..."
+    mkdir -p public
+    cp "$PDF_WORKER_SRC" "$PDF_WORKER_DEST"
+  fi
+else
+  warn "Could not find $PDF_WORKER_SRC — PDF resume upload may not work. Try reinstalling pdfjs-dist."
+fi
+
 log "Starting Vite dev server..."
 npm run dev &
 FRONTEND_PID=$!
