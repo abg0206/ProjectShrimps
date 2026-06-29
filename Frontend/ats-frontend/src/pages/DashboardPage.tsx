@@ -193,6 +193,7 @@ export default function DashboardPage() {
     setDetailJob(job);
     setDetailNotes(job.recruiter_notes ?? '');
     setNotesSaved(false);
+    loadInterviews(job.id);
     startEditJobDetails(job);
   }
 
@@ -352,6 +353,23 @@ export default function DashboardPage() {
       setDetailJob((prev) => (prev && prev.id === jobId ? null : prev));
     } catch (err) {
       console.error('Delete failed:', err);
+    }
+  }
+
+  async function loadInterviews(jobId: number) {
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`
+      );
+      if (!res.ok) return;
+      const data: InterviewEntry[] = await res.json();
+      setJobInterviewsMap((prev) => {
+        const next = new Map(prev);
+        next.set(jobId, data);
+        return next;
+      });
+    } catch (err) {
+      console.error('Failed to load interviews:', err);
     }
   }
 
@@ -663,6 +681,7 @@ export default function DashboardPage() {
                   setShowAddInterview(false);
                   setEditingInterviewIndex(null);
                   setEditingJobDetails(false);
+                  loadInterviews(job.id);
                 }}
               />
             ))}
@@ -1051,28 +1070,49 @@ export default function DashboardPage() {
                   '5': 'Archived',
                 };
 
-                function saveInterview() {
+                async function saveInterview() {
                   if (!newInterviewRound.trim() || !newInterviewDate) return;
-                  setJobInterviewsMap((prev) => {
-                    const next = new Map(prev);
-                    const existing = next.get(jobId) ?? [];
-                    const entry: InterviewEntry = {
-                      round_type: newInterviewRound.trim(),
-                      interview_date: newInterviewDate,
-                      notes: newInterviewNotes.trim(),
-                    };
-                    if (editingInterviewIndex !== null) {
+                  const entry: InterviewEntry = {
+                    round_type: newInterviewRound.trim(),
+                    interview_date: newInterviewDate,
+                    notes: newInterviewNotes.trim(),
+                  };
+
+                  if (editingInterviewIndex !== null) {
+                    // Editing an existing entry isn't wired to the backend
+                    // yet — update local state only for now.
+                    setJobInterviewsMap((prev) => {
+                      const next = new Map(prev);
+                      const existing = next.get(jobId) ?? [];
                       next.set(
                         jobId,
                         existing.map((iv, i) =>
                           i === editingInterviewIndex ? entry : iv
                         )
                       );
-                    } else {
-                      next.set(jobId, [...existing, entry]);
+                      return next;
+                    });
+                  } else {
+                    try {
+                      const res = await fetch(
+                        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`,
+                        {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(entry),
+                        }
+                      );
+                      if (!res.ok) {
+                        console.error('Failed to save interview:', await res.text());
+                        return;
+                      }
+                      await loadInterviews(jobId);
+                    } catch (err) {
+                      console.error('Failed to save interview:', err);
+                      return;
                     }
-                    return next;
-                  });
+                  }
+
                   setNewInterviewRound('');
                   setNewInterviewDate('');
                   setNewInterviewNotes('');

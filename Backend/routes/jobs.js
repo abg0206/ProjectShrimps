@@ -153,6 +153,13 @@ module.exports = function (pool) {
         return res.status(404).json({ error: 'Job not found' });
       }
 
+      if (stages !== undefined) {
+        await pool.query(
+          `INSERT INTO stage_history (job_id, stage) VALUES ($1, $2::job_stage_enum)`,
+          [id, stages]
+        );
+      }
+
       res.status(200).json(result.rows[0]);
     } catch (err) {
       console.error('Update job error:', err);
@@ -181,6 +188,27 @@ module.exports = function (pool) {
     } catch (err) {
       console.error('Delete job error:', err);
       res.status(500).json({ error: 'Failed to delete job' });
+    }
+  });
+
+  // GET /jobs/:email/:id/history — stage history for a job
+  router.get('/jobs/:email/:id/history', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const result = await pool.query(
+        `SELECT sh.stage, sh.changed_at
+         FROM stage_history sh
+         JOIN job_table j ON j.unique_num = sh.job_id
+         WHERE sh.job_id = $1 AND j.email = $2 AND j.is_deleted = FALSE
+         ORDER BY sh.changed_at ASC`,
+        [id, email]
+      );
+
+      res.json(result.rows);
+    } catch (err) {
+      console.error('Get history error:', err);
+      res.status(500).json({ error: 'Failed to fetch history' });
     }
   });
 

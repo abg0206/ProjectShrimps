@@ -98,6 +98,15 @@ async function main() {
      career_preferences  TEXT,
      profile_picture_url VARCHAR(255)
    );
+   `);
+
+   await pool.query(`
+   CREATE TABLE IF NOT EXISTS stage_history (
+  id          SERIAL PRIMARY KEY,
+  job_id      INTEGER NOT NULL REFERENCES job_table(unique_num),
+  stage       job_stage_enum NOT NULL,
+  changed_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
  `);
 
     // --- Migration: bring user_profile up to date with the Profile page ---
@@ -379,6 +388,8 @@ async function main() {
   } finally {
     await pool.end();
   }
+
+  
 }
 
 main();
