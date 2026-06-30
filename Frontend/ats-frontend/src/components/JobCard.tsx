@@ -36,6 +36,7 @@ export type Job = {
   status: string;
   created_at: string;
   deadline: string | null;
+  deadline_label: string | null;
   recruiter_notes: string | null;
 };
 
