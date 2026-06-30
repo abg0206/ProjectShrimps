@@ -23,6 +23,7 @@ export type StageEvent = {
 };
 
 export type InterviewEntry = {
+  id?: number;
   round_type: string;
   interview_date: string;
   notes: string;
@@ -50,6 +51,8 @@ type JobCardProps = {
   onViewDetail: (job: Job) => void;
   onTailorResume: (job: Job) => void;
   isTailoring?: boolean;
+  onTailorCoverLetter: (job: Job) => void;
+  isTailoringCoverLetter?: boolean;
 };
 
 export default function JobCard({
@@ -62,6 +65,8 @@ export default function JobCard({
   onViewDetail,
   onTailorResume,
   isTailoring = false,
+  onTailorCoverLetter,
+  isTailoringCoverLetter = false,
 }: JobCardProps) {
   return (
     <div
@@ -135,13 +140,13 @@ export default function JobCard({
       {job.reminder_text && job.reminder_date && (
         <p
           style={{
-            color: '#7C3AED',
+            color: '#c600a8',
             fontSize: '14px',
             fontWeight: 600,
             margin: 0,
           }}
         >
-          🔔 {job.reminder_text} —{' '}
+          Remember: {job.reminder_text} —{' '}
           {new Date(job.reminder_date).toLocaleDateString()}
         </p>
       )}
@@ -180,14 +185,30 @@ export default function JobCard({
             style={{
               backgroundColor: 'transparent',
               border: 'none',
-              color: isTailoring ? '#9b8a8a' : '#5B3A8E',
+              color: isTailoring ? '#9b8a8a' : '#932C20',
               cursor: isTailoring ? 'not-allowed' : 'pointer',
               fontSize: '13px',
               fontWeight: 500,
               padding: 0,
             }}
           >
-            {isTailoring ? '✨ Tailoring…' : '✨ Tailor Resume'}
+            {isTailoring ? 'Tailoring…' : 'Tailor Resume'}
+          </button>
+          <button
+            onClick={() => onTailorCoverLetter(job)}
+            disabled={isTailoringCoverLetter}
+            title="Generate a cover letter tailored to this job"
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: isTailoringCoverLetter ? '#9b8a8a' : '#932C20',
+              cursor: isTailoringCoverLetter ? 'not-allowed' : 'pointer',
+              fontSize: '13px',
+              fontWeight: 500,
+              padding: 0,
+            }}
+          >
+            {isTailoringCoverLetter ? 'Tailoring…' : 'Tailor Cover Letter'}
           </button>
           <button
             onClick={() => onEdit(job)}

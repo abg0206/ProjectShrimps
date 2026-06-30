@@ -297,7 +297,7 @@ module.exports = function (pool) {
       const { email, id } = req.params;
 
       const result = await pool.query(
-        `SELECT i.round_type, i.scheduled_at AS interview_date, i.notes
+        `SELECT i.interview_id AS id, i.round_type, i.scheduled_at AS interview_date, i.notes
          FROM interview_table i
          JOIN job_table j ON j.unique_num = i.job_id
          WHERE i.job_id = $1 AND j.email = $2 AND j.is_deleted = FALSE
@@ -337,7 +337,7 @@ module.exports = function (pool) {
       const result = await pool.query(
         `INSERT INTO interview_table (job_id, round_type, scheduled_at, notes)
          VALUES ($1, $2, $3, $4)
-         RETURNING round_type, scheduled_at AS interview_date, notes`,
+         RETURNING interview_id AS id, round_type, scheduled_at AS interview_date, notes`,
         [id, round_type, interview_date, notes?.trim() ?? null]
       );
 
@@ -345,6 +345,78 @@ module.exports = function (pool) {
     } catch (err) {
       console.error('Add interview error:', err);
       res.status(500).json({ error: 'Failed to add interview' });
+    }
+  });
+
+  // PUT /jobs/:email/:id/interviews/:interviewId — edit an existing interview
+  router.put('/jobs/:email/:id/interviews/:interviewId', async (req, res) => {
+    try {
+      const { email, id, interviewId } = req.params;
+      const { round_type, interview_date, notes } = req.body;
+
+      if (!round_type || !interview_date) {
+        return res
+          .status(400)
+          .json({ error: 'round_type and interview_date are required' });
+      }
+
+      const job = await pool.query(
+        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const result = await pool.query(
+        `UPDATE interview_table
+         SET round_type = $1, scheduled_at = $2, notes = $3
+         WHERE interview_id = $4 AND job_id = $5
+         RETURNING interview_id AS id, round_type, scheduled_at AS interview_date, notes`,
+        [round_type, interview_date, notes?.trim() ?? null, interviewId, id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Interview not found' });
+      }
+
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error('Update interview error:', err);
+      res.status(500).json({ error: 'Failed to update interview' });
+    }
+  });
+
+  // DELETE /jobs/:email/:id/interviews/:interviewId — remove an interview
+  router.delete('/jobs/:email/:id/interviews/:interviewId', async (req, res) => {
+    try {
+      const { email, id, interviewId } = req.params;
+
+      const job = await pool.query(
+        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM interview_table
+         WHERE interview_id = $1 AND job_id = $2
+         RETURNING interview_id`,
+        [interviewId, id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Interview not found' });
+      }
+
+      res.json({ success: true });
+    } catch (err) {
+      console.error('Delete interview error:', err);
+      res.status(500).json({ error: 'Failed to delete interview' });
     }
   });
 
@@ -442,5 +514,104 @@ module.exports = function (pool) {
       client.release();
     }
   });
+
+  // GET /jobs/:email/:id/cover-letters/latest - fetch the newest cover
+  // letter saved to a job
+  router.get('/jobs/:email/:id/cover-letters/latest', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const job = await pool.query(
+        `SELECT unique_num
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const savedCoverLetter = await pool.query(
+        `SELECT cl.cover_letter_id AS id, cl.title, cl.content, cl.created_at
+         FROM job_cover_letter jcl
+         JOIN cover_letter_table cl ON cl.cover_letter_id = jcl.cover_letter_id
+         WHERE jcl.job_id = $1 AND cl.email = $2
+         ORDER BY cl.created_at DESC NULLS LAST, cl.cover_letter_id DESC
+         LIMIT 1`,
+        [id, email]
+      );
+
+      res.json({
+        success: true,
+        coverLetter: savedCoverLetter.rows[0] ?? null,
+      });
+    } catch (err) {
+      console.error('Get saved job cover letter error:', err);
+      res.status(500).json({ error: 'Failed to fetch saved cover letter' });
+    }
+  });
+
+  // POST /jobs/:email/:id/cover-letters - save a cover letter and attach it
+  // to a job
+  router.post('/jobs/:email/:id/cover-letters', async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+      const { email, id } = req.params;
+      const { title, content } = req.body;
+
+      if (!content || !String(content).trim()) {
+        return res.status(400).json({ error: 'content is required' });
+      }
+
+      await client.query('BEGIN');
+
+      const job = await client.query(
+        `SELECT unique_num, title, company
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const savedCoverLetter = await client.query(
+        `INSERT INTO cover_letter_table (email, title, content)
+         VALUES ($1, $2, $3)
+         RETURNING cover_letter_id AS id, title, content, created_at`,
+        [
+          email,
+          title?.trim() ||
+            `Cover letter for ${job.rows[0].title} at ${job.rows[0].company}`,
+          content,
+        ]
+      );
+
+      await client.query(
+        `INSERT INTO job_cover_letter (job_id, cover_letter_id)
+         VALUES ($1, $2)
+         ON CONFLICT DO NOTHING`,
+        [id, savedCoverLetter.rows[0].id]
+      );
+
+      await client.query('COMMIT');
+
+      res.status(201).json({
+        success: true,
+        coverLetter: savedCoverLetter.rows[0],
+      });
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error('Save job cover letter error:', err);
+      res.status(500).json({ error: 'Failed to save cover letter' });
+    } finally {
+      client.release();
+    }
+  });
+
   return router;
 };

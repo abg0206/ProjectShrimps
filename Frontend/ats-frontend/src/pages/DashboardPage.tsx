@@ -79,6 +79,17 @@ export default function DashboardPage() {
   } | null>(null);
   const [tailorError, setTailorError] = useState('');
 
+  // AI cover letter tailoring
+  const [tailoringCoverLetterJobId, setTailoringCoverLetterJobId] = useState<
+    number | null
+  >(null);
+  const [coverLetterResult, setCoverLetterResult] = useState<{
+    job: Job;
+    content: string;
+    contentIsHtml?: boolean;
+  } | null>(null);
+  const [coverLetterError, setCoverLetterError] = useState('');
+
   // Debounce search so we don't fire on every keystroke
   const debouncedSearch = useDebounce(search, 300);
 
@@ -465,6 +476,65 @@ export default function DashboardPage() {
     });
   }
 
+  async function handleTailorCoverLetter(job: Job) {
+    setCoverLetterError('');
+    setTailoringCoverLetterJobId(job.id);
+    try {
+      const savedRes = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${job.id}/cover-letters/latest`
+      );
+      const savedData = await savedRes.json();
+
+      if (savedRes.ok && savedData.coverLetter?.content) {
+        setCoverLetterResult({
+          job,
+          content: savedData.coverLetter.content,
+          contentIsHtml: true,
+        });
+        return;
+      }
+
+      if (!savedRes.ok && savedRes.status !== 404) {
+        setCoverLetterError(
+          savedData.error ??
+            'Could not check for a saved cover letter for this job.'
+        );
+        return;
+      }
+
+      const res = await fetch(
+        `/api/ai/cover-letter/${encodeURIComponent(userEmail)}/${job.id}`,
+        { method: 'POST' }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setCoverLetterError(
+          data.error ?? 'Could not generate a tailored cover letter for this job.'
+        );
+        return;
+      }
+      setCoverLetterResult({ job, content: data.content });
+    } catch (err) {
+      console.error('Tailor cover letter failed:', err);
+      setCoverLetterError('Could not connect to the server.');
+    } finally {
+      setTailoringCoverLetterJobId(null);
+    }
+  }
+
+  function handleOpenTailoredCoverLetter() {
+    if (!coverLetterResult) return;
+    navigate('/cover-letter', {
+      state: {
+        ...(coverLetterResult.contentIsHtml
+          ? { coverLetterHtml: coverLetterResult.content }
+          : { aiContent: coverLetterResult.content }),
+        jobTitle: `${coverLetterResult.job.title} at ${coverLetterResult.job.company}`,
+        jobId: coverLetterResult.job.id,
+      },
+    });
+  }
+
   async function loadStageHistory(jobId: number) {
     try {
       const res = await fetch(
@@ -752,6 +822,22 @@ export default function DashboardPage() {
           </p>
         )}
 
+        {coverLetterError && (
+          <p
+            style={{
+              backgroundColor: '#F5DDD9',
+              border: '1px solid #932C20',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#932C20',
+              fontSize: '14px',
+              marginBottom: '20px',
+            }}
+          >
+            {coverLetterError}
+          </p>
+        )}
+
         {/* Job count */}
         {!loading && (
           <p
@@ -837,6 +923,8 @@ export default function DashboardPage() {
                 onDelete={handleDelete}
                 onTailorResume={handleTailorResume}
                 isTailoring={tailoringJobId === job.id}
+                onTailorCoverLetter={handleTailorCoverLetter}
+                isTailoringCoverLetter={tailoringCoverLetterJobId === job.id}
                 onViewDetail={(job) => {
                   closeAllModals();
                   setDetailJob(job);
@@ -1275,19 +1363,32 @@ export default function DashboardPage() {
                   };
 
                   if (editingInterviewIndex !== null) {
-                    // Editing an existing entry isn't wired to the backend
-                    // yet — update local state only for now.
-                    setJobInterviewsMap((prev) => {
-                      const next = new Map(prev);
-                      const existing = next.get(jobId) ?? [];
-                      next.set(
-                        jobId,
-                        existing.map((iv, i) =>
-                          i === editingInterviewIndex ? entry : iv
-                        )
+                    const existing =
+                      jobInterviewsMap.get(jobId)?.[editingInterviewIndex];
+
+                    if (!existing?.id) {
+                      console.error('Cannot edit interview: missing id');
+                      return;
+                    }
+
+                    try {
+                      const res = await fetch(
+                        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews/${existing.id}`,
+                        {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(entry),
+                        }
                       );
-                      return next;
-                    });
+                      if (!res.ok) {
+                        console.error('Failed to update interview:', await res.text());
+                        return;
+                      }
+                      await loadInterviews(jobId);
+                    } catch (err) {
+                      console.error('Failed to update interview:', err);
+                      return;
+                    }
                   } else {
                     try {
                       const res = await fetch(
@@ -1327,16 +1428,36 @@ export default function DashboardPage() {
                   setShowAddInterview(true);
                 }
 
-                function deleteInterview(index: number) {
-                  setJobInterviewsMap((prev) => {
-                    const next = new Map(prev);
-                    const existing = next.get(jobId) ?? [];
-                    next.set(
-                      jobId,
-                      existing.filter((_, i) => i !== index)
+                async function deleteInterview(index: number) {
+                  const existing = jobInterviewsMap.get(jobId)?.[index];
+
+                  if (!existing?.id) {
+                    // No id to delete on the backend with — just drop it locally.
+                    setJobInterviewsMap((prev) => {
+                      const next = new Map(prev);
+                      const current = next.get(jobId) ?? [];
+                      next.set(
+                        jobId,
+                        current.filter((_, i) => i !== index)
+                      );
+                      return next;
+                    });
+                    return;
+                  }
+
+                  try {
+                    const res = await fetch(
+                      `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews/${existing.id}`,
+                      { method: 'DELETE' }
                     );
-                    return next;
-                  });
+                    if (!res.ok) {
+                      console.error('Failed to delete interview:', await res.text());
+                      return;
+                    }
+                    await loadInterviews(jobId);
+                  } catch (err) {
+                    console.error('Failed to delete interview:', err);
+                  }
                 }
 
                 return (
@@ -2143,6 +2264,90 @@ export default function DashboardPage() {
               </button>
               <button onClick={handleOpenTailoredResume} style={btnPrimary()}>
                 Open in Resume Editor
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tailored Cover Letter preview modal */}
+      {coverLetterResult && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+          onClick={() => setCoverLetterResult(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '600px',
+              maxHeight: '80vh',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              ✨ Cover letter tailored for {coverLetterResult.job.title} at{' '}
+              {coverLetterResult.job.company}
+            </h2>
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '8px',
+                padding: '16px',
+                fontSize: '13px',
+                color: '#2b2b2b',
+                whiteSpace: 'pre-wrap',
+                overflowY: 'auto',
+                flex: 1,
+              }}
+            >
+              {coverLetterResult.contentIsHtml ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: coverLetterResult.content,
+                  }}
+                />
+              ) : (
+                coverLetterResult.content
+              )}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
+              <button
+                onClick={() => setCoverLetterResult(null)}
+                style={btnSecondary}
+              >
+                Close
+              </button>
+              <button
+                onClick={handleOpenTailoredCoverLetter}
+                style={btnPrimary()}
+              >
+                Open in Cover Letter Editor
               </button>
             </div>
           </div>

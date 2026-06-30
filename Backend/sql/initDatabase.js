@@ -337,12 +337,23 @@ async function main() {
      `);
 
     await pool.query(`
-       CREATE TABLE IF NOT EXISTS job_resume (
-         job_id    INTEGER NOT NULL,
-         resume_id INTEGER NOT NULL,
-         PRIMARY KEY (job_id, resume_id)
+       CREATE TABLE IF NOT EXISTS cover_letter_table (
+         cover_letter_id SERIAL PRIMARY KEY,
+         email           VARCHAR(255),
+         title           VARCHAR(255),
+         content         TEXT,
+         created_at      TIMESTAMP DEFAULT NOW()
        );
      `);
+
+    await pool.query(`
+       CREATE TABLE IF NOT EXISTS job_cover_letter (
+         job_id          INTEGER NOT NULL,
+         cover_letter_id INTEGER NOT NULL,
+         PRIMARY KEY (job_id, cover_letter_id)
+       );
+     `);
+
     await pool.query(`
   CREATE TABLE IF NOT EXISTS interview_table (
     interview_id   SERIAL PRIMARY KEY,
@@ -448,6 +459,38 @@ async function main() {
       END $$;
     `);
 
+    // JobCoverLetter & Job deleate
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobcoverletter_job'
+        ) THEN
+          ALTER TABLE job_cover_letter
+          ADD CONSTRAINT fk_jobcoverletter_job
+          FOREIGN KEY (job_id)
+          REFERENCES job_table(unique_num)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `);
+
+    // JobCoverLetter & CoverLetter deleate
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobcoverletter_coverletter'
+        ) THEN
+          ALTER TABLE job_cover_letter
+          ADD CONSTRAINT fk_jobcoverletter_coverletter
+          FOREIGN KEY (cover_letter_id)
+          REFERENCES cover_letter_table(cover_letter_id)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `);
+
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_job_company
       ON job_table(company);
@@ -466,6 +509,11 @@ async function main() {
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_resume_email
       ON resume_table(email);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_cover_letter_email
+      ON cover_letter_table(email);
     `);
 
     console.log('Tables created successfully');
