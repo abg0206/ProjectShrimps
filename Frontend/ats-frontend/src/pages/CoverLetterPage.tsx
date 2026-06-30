@@ -34,49 +34,49 @@ export default function CoverLetterPage() {
     italic: false,
     underline: false,
   });
-  
+
   const [aiLoading, setAiLoading] = useState(false);
-const [aiError, setAiError] = useState('');
+  const [aiError, setAiError] = useState('');
 
-// Read the navigation state once during render — it's a plain value from
-// useLocation(), not a ref, so reading it here is fine.
-type NavState = {
-  aiContent?: string;
-  coverLetterHtml?: string;
-  jobTitle?: string;
-  jobId?: number;
-} | null;
-const initialNavState = location.state as NavState;
-const hasIncomingLetter = Boolean(
-  initialNavState?.coverLetterHtml ?? initialNavState?.aiContent
-);
+  // Read the navigation state once during render — it's a plain value from
+  // useLocation(), not a ref, so reading it here is fine.
+  type NavState = {
+    aiContent?: string;
+    coverLetterHtml?: string;
+    jobTitle?: string;
+    jobId?: number;
+  } | null;
+  const initialNavState = location.state as NavState;
+  const hasIncomingLetter = Boolean(
+    initialNavState?.coverLetterHtml ?? initialNavState?.aiContent
+  );
 
-const [tailoredFor, setTailoredFor] = useState<string | null>(
-  hasIncomingLetter ? (initialNavState?.jobTitle ?? 'this job') : null
-);
-const [tailoredJobId] = useState<number | null>(
-  hasIncomingLetter ? (initialNavState?.jobId ?? null) : null
-);
-const [saving, setSaving] = useState(false);
-const [saveMessage, setSaveMessage] = useState('');
-const [saveError, setSaveError] = useState('');
+  const [tailoredFor, setTailoredFor] = useState<string | null>(
+    hasIncomingLetter ? (initialNavState?.jobTitle ?? 'this job') : null
+  );
+  const [tailoredJobId] = useState<number | null>(
+    hasIncomingLetter ? (initialNavState?.jobId ?? null) : null
+  );
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [saveError, setSaveError] = useState('');
 
-useEffect(() => {
-  const incoming =
-    initialNavState?.coverLetterHtml ?? initialNavState?.aiContent;
-  if (!incoming) return;
+  useEffect(() => {
+    const incoming =
+      initialNavState?.coverLetterHtml ?? initialNavState?.aiContent;
+    if (!incoming) return;
 
-  if (editorRef.current) {
-    editorRef.current.innerHTML = initialNavState?.coverLetterHtml
-      ? incoming
-      : plainTextToEditorHtml(incoming);
-    setIsEmpty(false);
-  }
+    if (editorRef.current) {
+      editorRef.current.innerHTML = initialNavState?.coverLetterHtml
+        ? incoming
+        : plainTextToEditorHtml(incoming);
+      setIsEmpty(false);
+    }
 
-  // Clear the navigation state so a refresh/back doesn't redo this.
-  navigate(location.pathname, { replace: true, state: null });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+    // Clear the navigation state so a refresh/back doesn't redo this.
+    navigate(location.pathname, { replace: true, state: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function updateActiveFormats() {
     setActiveFormats({
@@ -138,7 +138,7 @@ useEffect(() => {
           let pageText = '';
           let lastY: number | null = null;
           for (const item of content.items) {
-  if (!('str' in item) || typeof item.str !== 'string') continue;
+            if (!('str' in item) || typeof item.str !== 'string') continue;
             const y = item.transform[5];
             if (lastY !== null && Math.abs(y - lastY) > 1) {
               pageText += '\n';

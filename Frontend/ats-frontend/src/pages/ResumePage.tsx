@@ -53,32 +53,30 @@ export default function ResumePage() {
     initialNavState?.resumeHtml ?? initialNavState?.aiContent
   );
 
-  
   const [tailoredFor, setTailoredFor] = useState<string | null>(
-  hasIncomingResume ? (initialNavState?.jobTitle ?? 'this job') : null
-);
-const [tailoredJobId] = useState<number | null>(
-  hasIncomingResume ? (initialNavState?.jobId ?? null) : null
-);
+    hasIncomingResume ? (initialNavState?.jobTitle ?? 'this job') : null
+  );
+  const [tailoredJobId] = useState<number | null>(
+    hasIncomingResume ? (initialNavState?.jobId ?? null) : null
+  );
 
   // If we got here from "Tailor Resume" on a job card, drop that AI-generated
   // resume straight into the editor.
   useEffect(() => {
-  const incoming =
-    initialNavState?.resumeHtml ?? initialNavState?.aiContent;
-  if (!incoming) return;
+    const incoming = initialNavState?.resumeHtml ?? initialNavState?.aiContent;
+    if (!incoming) return;
 
-  if (editorRef.current) {
-    editorRef.current.innerHTML = initialNavState?.resumeHtml
-      ? incoming
-      : plainTextToEditorHtml(incoming);
-    setIsEmpty(false);
-  }
+    if (editorRef.current) {
+      editorRef.current.innerHTML = initialNavState?.resumeHtml
+        ? incoming
+        : plainTextToEditorHtml(incoming);
+      setIsEmpty(false);
+    }
 
-  // Clear the navigation state so a refresh/back doesn't redo this.
-  navigate(location.pathname, { replace: true, state: null });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+    // Clear the navigation state so a refresh/back doesn't redo this.
+    navigate(location.pathname, { replace: true, state: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function updateActiveFormats() {
     setActiveFormats({

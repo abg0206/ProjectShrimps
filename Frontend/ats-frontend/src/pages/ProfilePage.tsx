@@ -56,13 +56,10 @@ export default function ProfilePage() {
 
   // Read the logged-in user's email from sessionStorage (set by LoginPage)
 
-
   // Load profile from the backend on mount
   useEffect(() => {
     if (!userEmail) {
-     
       return;
-    
     }
 
     fetch(`/api/profile/${encodeURIComponent(userEmail)}`)
@@ -186,7 +183,6 @@ export default function ProfilePage() {
   function handleDeleteEducation(index: number) {
     setEducation(education.filter((_, i) => i !== index));
   }
-
 
   function validateEducation(): string | null {
     for (const entry of education) {
