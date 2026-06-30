@@ -1,5 +1,11 @@
 import Sidebar from '../components/Sidebar';
-import { useState, useRef, useEffect, type CSSProperties, type ChangeEvent } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  type CSSProperties,
+  type ChangeEvent,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { plainTextToEditorHtml } from '../lib/utils';
 
@@ -104,7 +110,9 @@ export default function ResumePage() {
     }
 
     if (!tailoredJobId) {
-      setSaveError('Open a resume from a job first so it can be saved to that job.');
+      setSaveError(
+        'Open a resume from a job first so it can be saved to that job.'
+      );
       return;
     }
 

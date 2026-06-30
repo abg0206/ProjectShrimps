@@ -182,7 +182,9 @@ export default function DashboardPage() {
       setJobs(data.map(normalise));
 
       // Fetch archived count separately (archived jobs live at a different endpoint)
-      const archivedRes = await fetch(`/api/jobs/${encodeURIComponent(userEmail)}/archived`);
+      const archivedRes = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/archived`
+      );
       if (archivedRes.ok) {
         const archivedData = await archivedRes.json();
         setArchivedCount(archivedData.length);
@@ -509,7 +511,8 @@ export default function DashboardPage() {
       const data = await res.json();
       if (!res.ok || !data.success) {
         setCoverLetterError(
-          data.error ?? 'Could not generate a tailored cover letter for this job.'
+          data.error ??
+            'Could not generate a tailored cover letter for this job.'
         );
         return;
       }
@@ -699,10 +702,7 @@ export default function DashboardPage() {
             My Jobs
           </h1>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <button
-              onClick={() => navigate('/archived')}
-              style={btnSecondary}
-            >
+            <button onClick={() => navigate('/archived')} style={btnSecondary}>
               Archive
             </button>
             <button
@@ -860,7 +860,10 @@ export default function DashboardPage() {
             }}
           >
             {Object.entries(STAGE_LABELS).map(([val, label]) => {
-              const count = val === '5' ? archivedCount : jobs.filter((j) => j.status === val).length;
+              const count =
+                val === '5'
+                  ? archivedCount
+                  : jobs.filter((j) => j.status === val).length;
               return (
                 <div
                   key={val}
@@ -1316,7 +1319,10 @@ export default function DashboardPage() {
                 };
 
                 const items: TimelineItem[] = [
-                  { kind: 'created' as const, date: new Date(detailJob.created_at) },
+                  {
+                    kind: 'created' as const,
+                    date: new Date(detailJob.created_at),
+                  },
                   ...stageHistory.map((e) => ({
                     kind: 'stage' as const,
                     stage: e.stage,
@@ -1381,7 +1387,10 @@ export default function DashboardPage() {
                         }
                       );
                       if (!res.ok) {
-                        console.error('Failed to update interview:', await res.text());
+                        console.error(
+                          'Failed to update interview:',
+                          await res.text()
+                        );
                         return;
                       }
                       await loadInterviews(jobId);
@@ -1400,7 +1409,10 @@ export default function DashboardPage() {
                         }
                       );
                       if (!res.ok) {
-                        console.error('Failed to save interview:', await res.text());
+                        console.error(
+                          'Failed to save interview:',
+                          await res.text()
+                        );
                         return;
                       }
                       await loadInterviews(jobId);
@@ -1451,7 +1463,10 @@ export default function DashboardPage() {
                       { method: 'DELETE' }
                     );
                     if (!res.ok) {
-                      console.error('Failed to delete interview:', await res.text());
+                      console.error(
+                        'Failed to delete interview:',
+                        await res.text()
+                      );
                       return;
                     }
                     await loadInterviews(jobId);
@@ -2180,10 +2195,7 @@ export default function DashboardPage() {
                 justifyContent: 'flex-end',
               }}
             >
-              <button
-                onClick={() => setReminderError('')}
-                style={btnPrimary()}
-              >
+              <button onClick={() => setReminderError('')} style={btnPrimary()}>
                 Got it
               </button>
             </div>

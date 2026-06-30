@@ -27,7 +27,8 @@ module.exports = function (pool) {
       if (profileResult.rows.length === 0) {
         return res.status(404).json({
           success: false,
-          error: 'Profile not found. Fill out your profile before generating a resume.',
+          error:
+            'Profile not found. Fill out your profile before generating a resume.',
         });
       }
 
@@ -39,7 +40,9 @@ module.exports = function (pool) {
       );
 
       if (jobResult.rows.length === 0) {
-        return res.status(404).json({ success: false, error: 'Job not found.' });
+        return res
+          .status(404)
+          .json({ success: false, error: 'Job not found.' });
       }
 
       const p = profileResult.rows[0];
@@ -74,7 +77,9 @@ module.exports = function (pool) {
       });
     } catch (err) {
       console.error('AI resume generation error:', err);
-      res.status(500).json({ success: false, error: 'Failed to generate resume.' });
+      res
+        .status(500)
+        .json({ success: false, error: 'Failed to generate resume.' });
     }
   });
 
@@ -134,7 +139,8 @@ module.exports = function (pool) {
       if (profileResult.rows.length === 0) {
         return res.status(404).json({
           success: false,
-          error: 'Profile not found. Fill out your profile before generating a cover letter.',
+          error:
+            'Profile not found. Fill out your profile before generating a cover letter.',
         });
       }
 
@@ -146,7 +152,9 @@ module.exports = function (pool) {
       );
 
       if (jobResult.rows.length === 0) {
-        return res.status(404).json({ success: false, error: 'Job not found.' });
+        return res
+          .status(404)
+          .json({ success: false, error: 'Job not found.' });
       }
 
       const p = profileResult.rows[0];

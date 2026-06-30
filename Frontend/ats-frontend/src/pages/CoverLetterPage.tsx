@@ -1,5 +1,11 @@
 import Sidebar from '../components/Sidebar';
-import { useState, useRef, useEffect, type CSSProperties, type ChangeEvent } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  type CSSProperties,
+  type ChangeEvent,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { plainTextToEditorHtml } from '../lib/utils';
 
@@ -205,7 +211,9 @@ export default function CoverLetterPage() {
     }
 
     if (!tailoredJobId) {
-      setSaveError('Open a cover letter from a job first so it can be saved to that job.');
+      setSaveError(
+        'Open a cover letter from a job first so it can be saved to that job.'
+      );
       return;
     }
 
@@ -220,7 +228,9 @@ export default function CoverLetterPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            title: tailoredFor ? `Cover letter for ${tailoredFor}` : 'Saved cover letter',
+            title: tailoredFor
+              ? `Cover letter for ${tailoredFor}`
+              : 'Saved cover letter',
             content: html,
           }),
         }
@@ -371,7 +381,8 @@ export default function CoverLetterPage() {
               marginBottom: '16px',
             }}
           >
-            ✨ This cover letter was tailored for <strong>{tailoredFor}</strong>.
+            ✨ This cover letter was tailored for <strong>{tailoredFor}</strong>
+            .
           </p>
         )}
 

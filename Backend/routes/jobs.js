@@ -156,8 +156,15 @@ module.exports = function (pool) {
   router.put('/jobs/:email/:id', async (req, res) => {
     try {
       const { email, id } = req.params;
-      const { stages, title, company, description, recruiter_notes, reminder_text, reminder_date } =
-        req.body;
+      const {
+        stages,
+        title,
+        company,
+        description,
+        recruiter_notes,
+        reminder_text,
+        reminder_date,
+      } = req.body;
 
       if (stages !== undefined && !VALID_STAGES.includes(stages)) {
         return res
@@ -192,13 +199,14 @@ module.exports = function (pool) {
         const REJECTED = 4;
 
         const isValidMove =
-          newStage === ARCHIVED ||           // always allowed
-          newStage === REJECTED ||           // always allowed
-          newStage === currentStage + 1;     // next stage in sequence
+          newStage === ARCHIVED || // always allowed
+          newStage === REJECTED || // always allowed
+          newStage === currentStage + 1; // next stage in sequence
 
         if (!isValidMove) {
           return res.status(400).json({
-            error: 'Can only advance one stage at a time, or move to Rejected/Archived.',
+            error:
+              'Can only advance one stage at a time, or move to Rejected/Archived.',
           });
         }
       }
@@ -389,36 +397,39 @@ module.exports = function (pool) {
   });
 
   // DELETE /jobs/:email/:id/interviews/:interviewId — remove an interview
-  router.delete('/jobs/:email/:id/interviews/:interviewId', async (req, res) => {
-    try {
-      const { email, id, interviewId } = req.params;
+  router.delete(
+    '/jobs/:email/:id/interviews/:interviewId',
+    async (req, res) => {
+      try {
+        const { email, id, interviewId } = req.params;
 
-      const job = await pool.query(
-        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
-        [id, email]
-      );
+        const job = await pool.query(
+          `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+          [id, email]
+        );
 
-      if (job.rows.length === 0) {
-        return res.status(404).json({ error: 'Job not found' });
-      }
+        if (job.rows.length === 0) {
+          return res.status(404).json({ error: 'Job not found' });
+        }
 
-      const result = await pool.query(
-        `DELETE FROM interview_table
+        const result = await pool.query(
+          `DELETE FROM interview_table
          WHERE interview_id = $1 AND job_id = $2
          RETURNING interview_id`,
-        [interviewId, id]
-      );
+          [interviewId, id]
+        );
 
-      if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'Interview not found' });
+        if (result.rows.length === 0) {
+          return res.status(404).json({ error: 'Interview not found' });
+        }
+
+        res.json({ success: true });
+      } catch (err) {
+        console.error('Delete interview error:', err);
+        res.status(500).json({ error: 'Failed to delete interview' });
       }
-
-      res.json({ success: true });
-    } catch (err) {
-      console.error('Delete interview error:', err);
-      res.status(500).json({ error: 'Failed to delete interview' });
     }
-  });
+  );
 
   // GET /jobs/:email/:id/resumes/latest - fetch the newest resume saved to a job
   router.get('/jobs/:email/:id/resumes/latest', async (req, res) => {
