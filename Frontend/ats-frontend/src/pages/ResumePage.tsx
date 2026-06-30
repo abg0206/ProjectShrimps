@@ -17,6 +17,8 @@ export default function ResumePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [fontSize, setFontSize] = useState<string>('3');
   const [blockType, setBlockType] = useState<string>('<p>');
@@ -29,21 +31,31 @@ export default function ResumePage() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState('');
   const [tailoredFor, setTailoredFor] = useState<string | null>(null);
+  const [tailoredJobId, setTailoredJobId] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [saveError, setSaveError] = useState('');
 
   // If we got here from "Tailor Resume" on a job card, drop that AI-generated
   // resume straight into the editor.
   useEffect(() => {
-    const incoming = (location.state as { aiContent?: string; jobTitle?: string } | null)
-      ?.aiContent;
+    const state = location.state as {
+      aiContent?: string;
+      resumeHtml?: string;
+      jobTitle?: string;
+      jobId?: number;
+    } | null;
+    const incoming = state?.resumeHtml ?? state?.aiContent;
     if (!incoming) return;
 
     if (editorRef.current) {
-      editorRef.current.innerHTML = plainTextToEditorHtml(incoming);
+      editorRef.current.innerHTML = state?.resumeHtml
+        ? incoming
+        : plainTextToEditorHtml(incoming);
       setIsEmpty(false);
     }
-    setTailoredFor(
-      (location.state as { jobTitle?: string })?.jobTitle ?? 'this job'
-    );
+    setTailoredFor(state?.jobTitle ?? 'this job');
+    setTailoredJobId(state?.jobId ?? null);
 
     // Clear the navigation state so a refresh/back doesn't redo this.
     navigate(location.pathname, { replace: true, state: null });
@@ -84,8 +96,49 @@ export default function ResumePage() {
 
   async function handleSave() {
     const html = editorRef.current?.innerHTML || '';
-    // TODO: replace with your real save logic (API call, DB write, etc.)
-    console.log('Saving resume HTML:', html);
+    const text = editorRef.current?.innerText.trim() || '';
+
+    if (!text) {
+      setSaveError('Write or upload a resume before saving.');
+      return;
+    }
+
+    if (!tailoredJobId) {
+      setSaveError('Open a resume from a job first so it can be saved to that job.');
+      return;
+    }
+
+    setSaving(true);
+    setSaveError('');
+    setSaveMessage('');
+
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${tailoredJobId}/resumes`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: tailoredFor ? `Resume for ${tailoredFor}` : 'Saved resume',
+            content: html,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setSaveError(data.error ?? 'Failed to save resume.');
+        return;
+      }
+
+      setSaveMessage('Resume saved to this job.');
+    } catch (err) {
+      console.error('Save resume error:', err);
+      setSaveError('Could not connect to the server.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleUploadClick() {
@@ -339,6 +392,38 @@ export default function ResumePage() {
           </p>
         )}
 
+        {saveError && (
+          <p
+            style={{
+              backgroundColor: '#F5DDD9',
+              border: '1px solid #932C20',
+              borderRadius: '8px',
+              padding: '10px 16px',
+              color: '#932C20',
+              fontSize: '13px',
+              marginBottom: '16px',
+            }}
+          >
+            {saveError}
+          </p>
+        )}
+
+        {saveMessage && (
+          <p
+            style={{
+              backgroundColor: '#E9F7EF',
+              border: '1px solid #16A34A',
+              borderRadius: '8px',
+              padding: '10px 16px',
+              color: '#166534',
+              fontSize: '13px',
+              marginBottom: '16px',
+            }}
+          >
+            {saveMessage}
+          </p>
+        )}
+
         {/* Toolbar */}
         <div
           style={{
@@ -514,17 +599,18 @@ export default function ResumePage() {
         >
           <button
             onClick={handleSave}
+            disabled={saving}
             style={{
-              backgroundColor: '#932C20',
+              backgroundColor: saving ? '#B8736B' : '#932C20',
               color: '#FFFFFF',
               padding: '8px 20px',
               borderRadius: '6px',
               border: 'none',
-              cursor: 'pointer',
+              cursor: saving ? 'not-allowed' : 'pointer',
               fontSize: '14px',
             }}
           >
-            Save
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

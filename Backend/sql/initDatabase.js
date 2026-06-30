@@ -278,11 +278,40 @@ async function main() {
        CREATE TABLE IF NOT EXISTS resume_table (
          experience_id SERIAL PRIMARY KEY,
          email         VARCHAR(255),
+         title         VARCHAR(255),
+         content       TEXT,
          other_links   TEXT,
          linkedin      VARCHAR(255),
          education     TEXT,
-         summary       TEXT
+         summary       TEXT,
+         created_at    TIMESTAMP DEFAULT NOW()
        );
+     `);
+
+    await pool.query(`
+       DO $$
+       BEGIN
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'resume_table' AND column_name = 'title'
+         ) THEN
+           ALTER TABLE resume_table ADD COLUMN title VARCHAR(255);
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'resume_table' AND column_name = 'content'
+         ) THEN
+           ALTER TABLE resume_table ADD COLUMN content TEXT;
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'resume_table' AND column_name = 'created_at'
+         ) THEN
+           ALTER TABLE resume_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
+         END IF;
+       END $$;
      `);
 
     await pool.query(`

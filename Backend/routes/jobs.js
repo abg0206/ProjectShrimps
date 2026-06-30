@@ -4,6 +4,53 @@ module.exports = function (pool) {
   const router = express.Router();
   const VALID_STAGES = ['0', '1', '2', '3', '4', '5'];
 
+  // GET /jobs/:email/archived - all archived jobs for a user
+  router.get('/jobs/:email/archived', async (req, res) => {
+    try {
+      const { email } = req.params;
+      const { search, sort } = req.query;
+
+      const conditions = [
+        'email = $1',
+        'is_deleted = FALSE',
+        "stages::text = '5'",
+      ];
+      const params = [email];
+      let paramIndex = 2;
+
+      if (search && search.trim()) {
+        const keywords = search.trim().split(/\s+/).filter(Boolean);
+        for (const keyword of keywords) {
+          conditions.push(
+            `(title ILIKE $${paramIndex} OR company ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`
+          );
+          params.push(`%${keyword}%`);
+          paramIndex++;
+        }
+      }
+
+      const SORT_MAP = {
+        newest: 'created_at DESC',
+        oldest: 'created_at ASC',
+        company: 'company ASC',
+        title: 'title ASC',
+      };
+      const orderBy = SORT_MAP[sort] ?? 'created_at DESC';
+
+      const result = await pool.query(
+        `SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes
+         FROM job_table
+         WHERE ${conditions.join(' AND ')}
+         ORDER BY ${orderBy}`,
+        params
+      );
+
+      res.status(200).json(result.rows);
+    } catch (err) {
+      console.error('Get archived jobs error:', err);
+      res.status(500).json({ error: 'Failed to fetch archived jobs' });
+    }
+  });
   // GET /jobs/:email — all active jobs for a user
   router.get('/jobs/:email', async (req, res) => {
     try {
@@ -116,17 +163,16 @@ module.exports = function (pool) {
         const newStage = Number(stages);
         const ARCHIVED = 5;
 
+        const REJECTED = 4;
+
         const isValidMove =
-          newStage === ARCHIVED ||
-          newStage === currentStage - 1 ||
-          newStage === currentStage + 1;
+          newStage === ARCHIVED ||           // always allowed
+          newStage === REJECTED ||           // always allowed
+          newStage === currentStage + 1;     // next stage in sequence
 
         if (!isValidMove) {
           return res.status(400).json({
-            error:
-              newStage <= currentStage
-                ? 'Cannot move a job backwards.'
-                : 'Can only advance one stage at a time.',
+            error: 'Can only advance one stage at a time, or move to Rejected/Archived.',
           });
         }
       }
@@ -272,5 +318,99 @@ module.exports = function (pool) {
     }
   });
 
+  // GET /jobs/:email/:id/resumes/latest - fetch the newest resume saved to a job
+  router.get('/jobs/:email/:id/resumes/latest', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const job = await pool.query(
+        `SELECT unique_num
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const savedResume = await pool.query(
+        `SELECT r.experience_id AS id, r.title, r.content, r.created_at
+         FROM job_resume jr
+         JOIN resume_table r ON r.experience_id = jr.resume_id
+         WHERE jr.job_id = $1 AND r.email = $2
+         ORDER BY r.created_at DESC NULLS LAST, r.experience_id DESC
+         LIMIT 1`,
+        [id, email]
+      );
+
+      res.json({
+        success: true,
+        resume: savedResume.rows[0] ?? null,
+      });
+    } catch (err) {
+      console.error('Get saved job resume error:', err);
+      res.status(500).json({ error: 'Failed to fetch saved resume' });
+    }
+  });
+  // POST /jobs/:email/:id/resumes - save a resume and attach it to a job
+  router.post('/jobs/:email/:id/resumes', async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+      const { email, id } = req.params;
+      const { title, content } = req.body;
+
+      if (!content || !String(content).trim()) {
+        return res.status(400).json({ error: 'content is required' });
+      }
+
+      await client.query('BEGIN');
+
+      const job = await client.query(
+        `SELECT unique_num, title, company
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (job.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      const savedResume = await client.query(
+        `INSERT INTO resume_table (email, title, content)
+         VALUES ($1, $2, $3)
+         RETURNING experience_id AS id, title, content, created_at`,
+        [
+          email,
+          title?.trim() ||
+            `Resume for ${job.rows[0].title} at ${job.rows[0].company}`,
+          content,
+        ]
+      );
+
+      await client.query(
+        `INSERT INTO job_resume (job_id, resume_id)
+         VALUES ($1, $2)
+         ON CONFLICT DO NOTHING`,
+        [id, savedResume.rows[0].id]
+      );
+
+      await client.query('COMMIT');
+
+      res.status(201).json({
+        success: true,
+        resume: savedResume.rows[0],
+      });
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error('Save job resume error:', err);
+      res.status(500).json({ error: 'Failed to save resume' });
+    } finally {
+      client.release();
+    }
+  });
   return router;
 };

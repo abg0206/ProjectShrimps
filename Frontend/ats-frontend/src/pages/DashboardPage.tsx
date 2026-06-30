@@ -47,6 +47,7 @@ export default function DashboardPage() {
   const userEmail = session.email ?? '';
 
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [archivedCount, setArchivedCount] = useState(0);
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -58,6 +59,7 @@ export default function DashboardPage() {
   const [tailorResult, setTailorResult] = useState<{
     job: Job;
     content: string;
+    contentIsHtml?: boolean;
   } | null>(null);
   const [tailorError, setTailorError] = useState('');
 
@@ -145,6 +147,13 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error('Failed to load jobs');
       const data = await res.json();
       setJobs(data.map(normalise));
+
+      // Fetch archived count separately (archived jobs live at a different endpoint)
+      const archivedRes = await fetch(`/api/jobs/${encodeURIComponent(userEmail)}/archived`);
+      if (archivedRes.ok) {
+        const archivedData = await archivedRes.json();
+        setArchivedCount(archivedData.length);
+      }
     } catch (err) {
       console.error(err);
       setError('Could not load jobs. Please refresh.');
@@ -329,6 +338,7 @@ export default function DashboardPage() {
       );
       if (res.ok) {
         setJobs((prev) => prev.filter((j) => j.id !== archiveTarget.id));
+        setArchivedCount((prev) => prev + 1);
         // In case the detail view still references this job, clear it too.
         setDetailJob((prev) =>
           prev && prev.id === archiveTarget.id ? null : prev
@@ -363,6 +373,27 @@ export default function DashboardPage() {
     setTailorError('');
     setTailoringJobId(job.id);
     try {
+      const savedRes = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${job.id}/resumes/latest`
+      );
+      const savedData = await savedRes.json();
+
+      if (savedRes.ok && savedData.resume?.content) {
+        setTailorResult({
+          job,
+          content: savedData.resume.content,
+          contentIsHtml: true,
+        });
+        return;
+      }
+
+      if (!savedRes.ok && savedRes.status !== 404) {
+        setTailorError(
+          savedData.error ?? 'Could not check for a saved resume for this job.'
+        );
+        return;
+      }
+
       const res = await fetch(
         `/api/ai/resume/${encodeURIComponent(userEmail)}/${job.id}`,
         { method: 'POST' }
@@ -387,8 +418,11 @@ export default function DashboardPage() {
     if (!tailorResult) return;
     navigate('/resume', {
       state: {
-        aiContent: tailorResult.content,
+        ...(tailorResult.contentIsHtml
+          ? { resumeHtml: tailorResult.content }
+          : { aiContent: tailorResult.content }),
         jobTitle: `${tailorResult.job.title} at ${tailorResult.job.company}`,
+        jobId: tailorResult.job.id,
       },
     });
   }
@@ -556,16 +590,24 @@ export default function DashboardPage() {
           >
             My Jobs
           </h1>
-          <button
-            onClick={() => {
-              closeAllModals();
-              setShowAddModal(true);
-              setModalError('');
-            }}
-            style={btnPrimary()}
-          >
-            Add Job
-          </button>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <button
+              onClick={() => navigate('/archived')}
+              style={btnSecondary}
+            >
+              Archive
+            </button>
+            <button
+              onClick={() => {
+                closeAllModals();
+                setShowAddModal(true);
+                setModalError('');
+              }}
+              style={btnPrimary()}
+            >
+              Add Job
+            </button>
+          </div>
         </div>
 
         {/* Filters — single row, all server-driven */}
@@ -595,7 +637,13 @@ export default function DashboardPage() {
 
           <select
             value={filterStage}
-            onChange={(e) => setFilterStage(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value === '5') {
+                navigate('/archived');
+                return;
+              }
+              setFilterStage(e.target.value);
+            }}
             style={{
               padding: '8px 12px',
               borderRadius: '6px',
@@ -688,7 +736,7 @@ export default function DashboardPage() {
             }}
           >
             {Object.entries(STAGE_LABELS).map(([val, label]) => {
-              const count = jobs.filter((j) => j.status === val).length;
+              const count = val === '5' ? archivedCount : jobs.filter((j) => j.status === val).length;
               return (
                 <div
                   key={val}
@@ -1083,17 +1131,21 @@ export default function DashboardPage() {
                   cursor: 'pointer',
                 }}
               >
+                {/* Current stage always shown */}
                 <option value={detailJob.status}>
                   {STAGE_LABELS[detailJob.status]}
                 </option>
+                {/* Next stage in sequence — only for stages 0, 1, 2 (next would be 1, 2, 3) */}
                 {Number(detailJob.status) < 3 && (
                   <option value={String(Number(detailJob.status) + 1)}>
                     {STAGE_LABELS[String(Number(detailJob.status) + 1)]}
                   </option>
                 )}
+                {/* Rejected — always available unless already Rejected or Archived */}
                 {detailJob.status !== '4' && detailJob.status !== '5' && (
                   <option value="4">{STAGE_LABELS['4']}</option>
                 )}
+                {/* Archived — always available unless already Archived */}
                 {detailJob.status !== '5' && (
                   <option value="5">{STAGE_LABELS['5']}</option>
                 )}
@@ -1117,8 +1169,14 @@ export default function DashboardPage() {
                       date: Date;
                     };
 
+                const getTimelinePosition = (item: TimelineItem) => {
+                  if (item.kind === 'created') return 0;
+                  if (item.kind === 'interview') return 2.5;
+                  return Number(item.stage) || 0;
+                };
+
                 const items: TimelineItem[] = [
-                  { kind: 'created', date: new Date(detailJob.created_at) },
+                  { kind: 'created' as const, date: new Date(detailJob.created_at) },
                   ...stageHistory.map((e) => ({
                     kind: 'stage' as const,
                     stage: e.stage,
@@ -1130,7 +1188,14 @@ export default function DashboardPage() {
                     index: idx,
                     date: new Date(iv.interview_date),
                   })),
-                ].sort((a, b) => a.date.getTime() - b.date.getTime());
+                ].sort((a, b) => {
+                  const positionDifference =
+                    getTimelinePosition(a) - getTimelinePosition(b);
+
+                  if (positionDifference !== 0) return positionDifference;
+
+                  return a.date.getTime() - b.date.getTime();
+                });
 
                 const STAGE_COLORS_MAP: Record<string, string> = {
                   '0': '#6B7280',
@@ -1935,7 +2000,13 @@ export default function DashboardPage() {
                 flex: 1,
               }}
             >
-              {tailorResult.content}
+              {tailorResult.contentIsHtml ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: tailorResult.content }}
+                />
+              ) : (
+                tailorResult.content
+              )}
             </div>
             <div
               style={{
