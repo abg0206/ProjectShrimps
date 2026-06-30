@@ -58,7 +58,7 @@ export default function DashboardPage() {
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
 
-  const [newDeadline, setNewDeadline] = useState('');
+
 
   // Archive confirmation modal
   const [archiveTarget, setArchiveTarget] = useState<{
@@ -142,7 +142,6 @@ export default function DashboardPage() {
           title: newTitle.trim(),
           company: newCompany.trim(),
           description: newDescription.trim(),
-          deadline: newDeadline || null,
         }),
       });
       if (!res.ok) {
@@ -155,7 +154,6 @@ export default function DashboardPage() {
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
-      setNewDeadline('');
       setShowAddModal(false);
     } catch (err) {
       console.error(err);
@@ -972,7 +970,7 @@ export default function DashboardPage() {
                     <textarea
                       value={newInterviewNotes}
                       onChange={(e) => setNewInterviewNotes(e.target.value)}
-                      placeholder="How did it go? What was discussed?"
+                      placeholder="Notes (e.g. Questions, concerns, anything said to you)"
                       style={{
                         width: '100%',
                         height: '60px',
@@ -1195,15 +1193,7 @@ export default function DashboardPage() {
                 style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
               />
             </div>
-            <div>
-              <label style={labelStyle}>Application Deadline</label>
-              <input
-                type="date"
-                value={newDeadline}
-                onChange={(e) => setNewDeadline(e.target.value)}
-                style={inputStyle}
-              />
-            </div>
+
             <div
               style={{
                 display: 'flex',
