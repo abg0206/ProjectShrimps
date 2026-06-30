@@ -27,7 +27,6 @@ function normalise(raw: Record<string, string | number>): Job {
     status: String(raw.status ?? raw.stages ?? '0'),
     created_at: String(raw.created_at),
     deadline: raw.deadline ? String(raw.deadline) : null,
-    deadline_label: raw.deadline_label ? String(raw.deadline_label) : null,
     recruiter_notes: raw.recruiter_notes ? String(raw.recruiter_notes) : null,
   };
 }
@@ -48,7 +47,6 @@ export default function DashboardPage() {
   const userEmail = session.email ?? '';
 
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [archivedCount, setArchivedCount] = useState(0);
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -75,24 +73,14 @@ export default function DashboardPage() {
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
 
+  const [newDeadline, setNewDeadline] = useState('');
+
   // Archive confirmation modal
   const [archiveTarget, setArchiveTarget] = useState<{
     id: number;
     title: string;
   } | null>(null);
   const [archiving, setArchiving] = useState(false);
-
-  // Edit modal
-  const [editJob, setEditJob] = useState<Job | null>(null);
-  const [editTitle, setEditTitle] = useState('');
-  const [editCompany, setEditCompany] = useState('');
-  const [editDescription, setEditDescription] = useState('');
-  const [editStage, setEditStage] = useState('0');
-  const [saving, setSaving] = useState(false);
-  const [editError, setEditError] = useState('');
-
-  const [editDeadline, setEditDeadline] = useState('');
-  const [editDeadlineLabel, setEditDeadlineLabel] = useState('Deadline');
 
   const [detailJob, setDetailJob] = useState<Job | null>(null);
 
@@ -158,13 +146,6 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error('Failed to load jobs');
       const data = await res.json();
       setJobs(data.map(normalise));
-
-      // Fetch archived count separately (archived jobs live at a different endpoint)
-      const archivedRes = await fetch(`/api/jobs/${encodeURIComponent(userEmail)}/archived`);
-      if (archivedRes.ok) {
-        const archivedData = await archivedRes.json();
-        setArchivedCount(archivedData.length);
-      }
     } catch (err) {
       console.error(err);
       setError('Could not load jobs. Please refresh.');
@@ -194,6 +175,7 @@ export default function DashboardPage() {
           title: newTitle.trim(),
           company: newCompany.trim(),
           description: newDescription.trim(),
+          deadline: newDeadline || null,
         }),
       });
       if (!res.ok) {
@@ -206,6 +188,7 @@ export default function DashboardPage() {
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
+      setNewDeadline('');
       setShowAddModal(false);
     } catch (err) {
       console.error(err);
@@ -347,7 +330,6 @@ export default function DashboardPage() {
       );
       if (res.ok) {
         setJobs((prev) => prev.filter((j) => j.id !== archiveTarget.id));
-        setArchivedCount((prev) => prev + 1);
         // In case the detail view still references this job, clear it too.
         setDetailJob((prev) =>
           prev && prev.id === archiveTarget.id ? null : prev
@@ -599,24 +581,16 @@ export default function DashboardPage() {
           >
             My Jobs
           </h1>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <button
-              onClick={() => navigate('/archived')}
-              style={btnSecondary}
-            >
-              Archive
-            </button>
-            <button
-              onClick={() => {
-                closeAllModals();
-                setShowAddModal(true);
-                setModalError('');
-              }}
-              style={btnPrimary()}
-            >
-              Add Job
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              closeAllModals();
+              setShowAddModal(true);
+              setModalError('');
+            }}
+            style={btnPrimary()}
+          >
+            Add Job
+          </button>
         </div>
 
         {/* Filters — single row, all server-driven */}
@@ -646,13 +620,7 @@ export default function DashboardPage() {
 
           <select
             value={filterStage}
-            onChange={(e) => {
-              if (e.target.value === '5') {
-                navigate('/archived');
-                return;
-              }
-              setFilterStage(e.target.value);
-            }}
+            onChange={(e) => setFilterStage(e.target.value)}
             style={{
               padding: '8px 12px',
               borderRadius: '6px',
@@ -745,7 +713,7 @@ export default function DashboardPage() {
             }}
           >
             {Object.entries(STAGE_LABELS).map(([val, label]) => {
-              const count = val === '5' ? archivedCount : jobs.filter((j) => j.status === val).length;
+              const count = jobs.filter((j) => j.status === val).length;
               return (
                 <div
                   key={val}
@@ -946,7 +914,7 @@ export default function DashboardPage() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Application Deadline</label>
+                  <label style={labelStyle}>Reminder</label>
                   <input
                     type="date"
                     value={detailEditDeadline}
@@ -1140,62 +1108,204 @@ export default function DashboardPage() {
                   cursor: 'pointer',
                 }}
               >
-                {/* Current stage always shown */}
                 <option value={detailJob.status}>
                   {STAGE_LABELS[detailJob.status]}
                 </option>
-                {/* Next stage in sequence — only for stages 0, 1, 2 (next would be 1, 2, 3) */}
                 {Number(detailJob.status) < 3 && (
                   <option value={String(Number(detailJob.status) + 1)}>
                     {STAGE_LABELS[String(Number(detailJob.status) + 1)]}
                   </option>
                 )}
-                {/* Rejected — always available unless already Rejected or Archived */}
                 {detailJob.status !== '4' && detailJob.status !== '5' && (
                   <option value="4">{STAGE_LABELS['4']}</option>
                 )}
-                {/* Archived — always available unless already Archived */}
                 {detailJob.status !== '5' && (
                   <option value="5">{STAGE_LABELS['5']}</option>
                 )}
               </select>
             </div>
 
-            {/* interview tracker */}
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '8px',
-                }}
-              >
-                <p
-                  style={{
-                    color: '#3C1510',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    margin: 0,
-                  }}
-                >
-                  Interview History
-                </p>
-                <button
-                  onClick={() => setShowAddInterview(!showAddInterview)}
-                  style={{
-                    backgroundColor: 'transparent',
-                    color: '#932C20',
-                    border: '2px solid #932C20',
-                    padding: '4px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                  }}
-                >
-                  Add Interview
-                </button>
-              </div>
+            {/* Unified Timeline */}
+            {detailJob &&
+              (() => {
+                const jobId = detailJob.id;
+                const stageHistory = stageHistoryMap.get(jobId) ?? [];
+                const detailInterviews = jobInterviewsMap.get(jobId) ?? [];
+
+                type TimelineItem =
+                  | { kind: 'stage'; stage: string; date: Date }
+                  | { kind: 'created'; date: Date }
+                  | {
+                      kind: 'interview';
+                      entry: InterviewEntry;
+                      index: number;
+                      date: Date;
+                    };
+
+                const getTimelinePosition = (item: TimelineItem) => {
+                  if (item.kind === 'created') return 0;
+                  if (item.kind === 'interview') return 2.5;
+                  return Number(item.stage) || 0;
+                };
+
+                const items: TimelineItem[] = [
+                  { kind: 'created' as const, date: new Date(detailJob.created_at) },
+                  ...stageHistory.map((e) => ({
+                    kind: 'stage' as const,
+                    stage: e.stage,
+                    date: new Date(e.changedAt),
+                  })),
+                  ...detailInterviews.map((iv, idx) => ({
+                    kind: 'interview' as const,
+                    entry: iv,
+                    index: idx,
+                    date: new Date(iv.interview_date),
+                  })),
+                ].sort((a, b) => {
+                  const positionDifference =
+                    getTimelinePosition(a) - getTimelinePosition(b);
+
+                  if (positionDifference !== 0) return positionDifference;
+
+                  return a.date.getTime() - b.date.getTime();
+                });
+
+                const STAGE_COLORS_MAP: Record<string, string> = {
+                  '0': '#6B7280',
+                  '1': '#2563EB',
+                  '2': '#D97706',
+                  '3': '#16A34A',
+                  '4': '#DC2626',
+                  '5': '#9CA3AF',
+                };
+                const STAGE_LABELS_MAP: Record<string, string> = {
+                  '0': 'Interested',
+                  '1': 'Applied',
+                  '2': 'Interview',
+                  '3': 'Offer',
+                  '4': 'Rejected',
+                  '5': 'Archived',
+                };
+
+                async function saveInterview() {
+                  if (!newInterviewRound.trim() || !newInterviewDate) return;
+                  const entry: InterviewEntry = {
+                    round_type: newInterviewRound.trim(),
+                    interview_date: newInterviewDate,
+                    notes: newInterviewNotes.trim(),
+                  };
+
+                  if (editingInterviewIndex !== null) {
+                    // Editing an existing entry isn't wired to the backend
+                    // yet — update local state only for now.
+                    setJobInterviewsMap((prev) => {
+                      const next = new Map(prev);
+                      const existing = next.get(jobId) ?? [];
+                      next.set(
+                        jobId,
+                        existing.map((iv, i) =>
+                          i === editingInterviewIndex ? entry : iv
+                        )
+                      );
+                      return next;
+                    });
+                  } else {
+                    try {
+                      const res = await fetch(
+                        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`,
+                        {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(entry),
+                        }
+                      );
+                      if (!res.ok) {
+                        console.error('Failed to save interview:', await res.text());
+                        return;
+                      }
+                      await loadInterviews(jobId);
+                    } catch (err) {
+                      console.error('Failed to save interview:', err);
+                      return;
+                    }
+                  }
+
+                  setNewInterviewRound('');
+                  setNewInterviewDate('');
+                  setNewInterviewNotes('');
+                  setEditingInterviewIndex(null);
+                  setShowAddInterview(false);
+                }
+
+                function startEditInterview(
+                  index: number,
+                  entry: InterviewEntry
+                ) {
+                  setNewInterviewRound(entry.round_type);
+                  setNewInterviewDate(entry.interview_date);
+                  setNewInterviewNotes(entry.notes);
+                  setEditingInterviewIndex(index);
+                  setShowAddInterview(true);
+                }
+
+                function deleteInterview(index: number) {
+                  setJobInterviewsMap((prev) => {
+                    const next = new Map(prev);
+                    const existing = next.get(jobId) ?? [];
+                    next.set(
+                      jobId,
+                      existing.filter((_, i) => i !== index)
+                    );
+                    return next;
+                  });
+                }
+
+                return (
+                  <div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '12px',
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '13px',
+                          fontWeight: 'bold',
+                          margin: 0,
+                        }}
+                      >
+                        Timeline
+                      </p>
+                      <button
+                        onClick={() => {
+                          if (showAddInterview) {
+                            setShowAddInterview(false);
+                            setEditingInterviewIndex(null);
+                          } else {
+                            setNewInterviewRound('');
+                            setNewInterviewDate('');
+                            setNewInterviewNotes('');
+                            setEditingInterviewIndex(null);
+                            setShowAddInterview(true);
+                          }
+                        }}
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: '#932C20',
+                          border: '2px solid #932C20',
+                          padding: '4px 12px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                        }}
+                      >
+                        + Add Interview
+                      </button>
+                    </div>
 
                     {/* Add interview form */}
                     {showAddInterview && (
@@ -1715,6 +1825,7 @@ export default function DashboardPage() {
                 style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
               />
             </div>
+           
             <div
               style={{
                 display: 'flex',
