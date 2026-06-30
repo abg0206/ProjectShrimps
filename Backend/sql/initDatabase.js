@@ -271,6 +271,20 @@ async function main() {
          ) THEN
            ALTER TABLE job_table ADD COLUMN recruiter_notes TEXT;
          END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'reminder_text'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN reminder_text VARCHAR(255);
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'reminder_date'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN reminder_date DATE;
+         END IF;
        END $$;
      `);
 

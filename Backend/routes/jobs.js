@@ -38,7 +38,7 @@ module.exports = function (pool) {
       const orderBy = SORT_MAP[sort] ?? 'created_at DESC';
 
       const result = await pool.query(
-        `SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes
+        `SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes, reminder_text, reminder_date::text AS reminder_date
          FROM job_table
          WHERE ${conditions.join(' AND ')}
          ORDER BY ${orderBy}`,
@@ -96,7 +96,7 @@ module.exports = function (pool) {
       const orderBy = SORT_MAP[sort] ?? 'created_at DESC';
 
       const query = `
-        SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes
+        SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes, reminder_text, reminder_date::text AS reminder_date
         FROM job_table
         WHERE ${conditions.join(' AND ')}
         ORDER BY ${orderBy}
@@ -114,7 +114,8 @@ module.exports = function (pool) {
   router.post('/jobs/:email', async (req, res) => {
     try {
       const { email } = req.params;
-      const { title, company, description } = req.body;
+      const { title, company, description, reminder_text, reminder_date } =
+        req.body;
 
       if (!title || !company || !description) {
         return res
@@ -122,11 +123,27 @@ module.exports = function (pool) {
           .json({ error: 'title, company, and description are required' });
       }
 
+      if (reminder_date) {
+        const todayStr = new Date().toISOString().slice(0, 10);
+        if (String(reminder_date).slice(0, 10) < todayStr) {
+          return res
+            .status(400)
+            .json({ error: 'Reminder date cannot be in the past.' });
+        }
+      }
+
       const result = await pool.query(
-        `INSERT INTO job_table (email, title, company, description, stages)
-         VALUES ($1, $2, $3, $4, '0')
-         RETURNING unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes`,
-        [email, title.trim(), company.trim(), description.trim()]
+        `INSERT INTO job_table (email, title, company, description, stages, reminder_text, reminder_date)
+         VALUES ($1, $2, $3, $4, '0', $5, $6)
+         RETURNING unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes, reminder_text, reminder_date::text AS reminder_date`,
+        [
+          email,
+          title.trim(),
+          company.trim(),
+          description.trim(),
+          reminder_text?.trim() || null,
+          reminder_date || null,
+        ]
       );
       res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -139,13 +156,22 @@ module.exports = function (pool) {
   router.put('/jobs/:email/:id', async (req, res) => {
     try {
       const { email, id } = req.params;
-      const { stages, title, company, description, recruiter_notes } =
+      const { stages, title, company, description, recruiter_notes, reminder_text, reminder_date } =
         req.body;
 
       if (stages !== undefined && !VALID_STAGES.includes(stages)) {
         return res
           .status(400)
           .json({ error: `stages must be one of: ${VALID_STAGES.join(', ')}` });
+      }
+
+      if (reminder_date) {
+        const todayStr = new Date().toISOString().slice(0, 10);
+        if (String(reminder_date).slice(0, 10) < todayStr) {
+          return res
+            .status(400)
+            .json({ error: 'Reminder date cannot be in the past.' });
+        }
       }
 
       // progression rules
@@ -184,9 +210,11 @@ module.exports = function (pool) {
            title           = COALESCE($4, title),
            company         = COALESCE($5, company),
            description     = COALESCE($6, description),
-           recruiter_notes = COALESCE($7, recruiter_notes)
+           recruiter_notes = COALESCE($7, recruiter_notes),
+           reminder_text   = COALESCE($8, reminder_text),
+           reminder_date   = COALESCE($9::date, reminder_date)
          WHERE unique_num = $2 AND email = $3 AND is_deleted = FALSE
-         RETURNING unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes`,
+         RETURNING unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes, reminder_text, reminder_date::text AS reminder_date`,
         [
           stages ?? null,
           id,
@@ -195,6 +223,8 @@ module.exports = function (pool) {
           company?.trim() ?? null,
           description?.trim() ?? null,
           recruiter_notes ?? null,
+          reminder_text ?? null,
+          reminder_date || null,
         ]
       );
 

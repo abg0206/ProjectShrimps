@@ -35,9 +35,9 @@ export type Job = {
   description: string;
   status: string;
   created_at: string;
-  deadline: string | null;
-  deadline_label: string | null;
   recruiter_notes: string | null;
+  reminder_text: string | null;
+  reminder_date: string | null;
 };
 
 type JobCardProps = {
@@ -131,6 +131,21 @@ export default function JobCard({
         {job.description}
       </p>
 
+      {/* reminder — only shown when both text and date are set */}
+      {job.reminder_text && job.reminder_date && (
+        <p
+          style={{
+            color: '#7C3AED',
+            fontSize: '14px',
+            fontWeight: 600,
+            margin: 0,
+          }}
+        >
+          🔔 {job.reminder_text} —{' '}
+          {new Date(job.reminder_date).toLocaleDateString()}
+        </p>
+      )}
+
       {/* bottom of card */}
       <div
         style={{
@@ -149,16 +164,6 @@ export default function JobCard({
           }}
         >
           <span>Added: {new Date(job.created_at).toLocaleDateString()}</span>
-          {job.deadline && (
-            <span
-              style={{
-                color: '#DC2626',
-                fontSize: '12px',
-              }}
-            >
-              Deadline: {new Date(job.deadline).toLocaleDateString()}
-            </span>
-          )}
         </div>
         <div
           style={{
