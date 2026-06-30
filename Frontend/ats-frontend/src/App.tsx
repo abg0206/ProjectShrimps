@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
+import ResumePage from './pages/ResumePage';
 import SettingsPage from './pages/SettingsPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -36,6 +37,14 @@ function App() {
           element={
             <RouteProtect>
               <ProfilePage />
+            </RouteProtect>
+          }
+        />
+        <Route
+          path="/resume"
+          element={
+            <RouteProtect>
+              <ResumePage />
             </RouteProtect>
           }
         />

@@ -9,6 +9,16 @@ type EducationInfo = {
   end_date: string;
 };
 
+type ExperienceInfo = {
+  company: string;
+  title: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  is_current: boolean;
+  description: string;
+};
+
 export default function ProfilePage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -30,6 +40,10 @@ export default function ProfilePage() {
   const [educationError, setEducationError] = useState('');
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Work experience
+  const [experience, setExperience] = useState<ExperienceInfo[]>([]);
+  const [experienceError, setExperienceError] = useState('');
 
   //career preferences
   const [targetRole, setTargetRole] = useState('');
@@ -59,10 +73,11 @@ export default function ProfilePage() {
           setFirstName(data.first_name ?? '');
           setLastName(data.last_name ?? '');
           setEmail(userEmail);
-          setPhone(data.phone ? String(data.phone) : '');
+          setPhone(data.phone ? formatPhone(String(data.phone)) : '');
           setSummary(data.summary ?? '');
           setSkills(data.skills ?? []); //added this to load skills from the backend
           setEducation(data.education ?? []); //same for education
+          setExperience(data.experience ?? []); //same for experience
           setTargetRole(data.target_role ?? '');
           setLocationPreference(data.location_preference ?? '');
           setWorkModePreference(data.work_mode_preference ?? '');
@@ -82,6 +97,39 @@ export default function ProfilePage() {
     const fields = [firstName, lastName, email, phone, summary];
     const filled = fields.filter((f) => f.trim() !== '').length;
     return Math.round((filled / fields.length) * 100);
+  }
+
+  // Formats any raw phone value (digits only, with/without existing dashes,
+  // a number from the backend, etc.) into 000-000-0000. Used both when
+  // loading a saved phone number and when the user types.
+  function formatPhone(value: string): string {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+    if (digits.length >= 7) {
+      return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+    }
+    if (digits.length >= 4) {
+      return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    }
+    return digits;
+  }
+
+  // Masks free text input into MM-YY as the user types: strips non-digits,
+  // caps at 4 digits total, and auto-inserts the dash after the 2nd digit.
+  // e.g. typing "0622" (or "06-22") becomes "06-22".
+  function maskMonthYear(value: string): string {
+    const digits = value.replace(/\D/g, '').slice(0, 4);
+    if (digits.length <= 2) return digits;
+    return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+  }
+
+  // Validates a fully-entered MM-YY string has a real month (01-12).
+  // Partial input (e.g. "0" or "06-") is treated as not-yet-complete, not invalid.
+  function isValidMonthYear(value: string): boolean {
+    if (!value) return true; // empty is allowed; required-ness is checked elsewhere
+    const match = value.match(/^(\d{2})-(\d{2})$/);
+    if (!match) return false;
+    const month = Number(match[1]);
+    return month >= 1 && month <= 12;
   }
 
   //Skills here
@@ -136,22 +184,117 @@ export default function ProfilePage() {
     setEducation(education.filter((_, i) => i !== index));
   }
 
-  function validateEducation() {
+  function validateEducation(): string | null {
     for (const entry of education) {
       if (!entry.school.trim() || !entry.degree.trim()) {
-        setEducationError('Each entry requires at least a school and degree.');
-        return false;
+        const msg =
+          'Each education entry requires at least a school and degree.';
+        setEducationError(msg);
+        return msg;
+      }
+      if (entry.start_date && !isValidMonthYear(entry.start_date)) {
+        const msg =
+          'Education start date must be in MM-YY format (e.g. 06-22).';
+        setEducationError(msg);
+        return msg;
+      }
+      if (entry.end_date && !isValidMonthYear(entry.end_date)) {
+        const msg = 'Education end date must be in MM-YY format (e.g. 06-22).';
+        setEducationError(msg);
+        return msg;
       }
       if (
         entry.start_date &&
         entry.end_date &&
+        isValidMonthYear(entry.start_date) &&
+        isValidMonthYear(entry.end_date) &&
         entry.end_date < entry.start_date
       ) {
-        setEducationError('End date cannot be earlier than start date.');
-        return false;
+        const msg = 'Education end date cannot be earlier than start date.';
+        setEducationError(msg);
+        return msg;
       }
     }
-    return true;
+    setEducationError('');
+    return null;
+  }
+
+  //Experience handlers
+  function handleAddExperience() {
+    setExperienceError('');
+    setExperience([
+      ...experience,
+      {
+        company: '',
+        title: '',
+        location: '',
+        start_date: '',
+        end_date: '',
+        is_current: false,
+        description: '',
+      },
+    ]);
+  }
+
+  function handleExperienceChange(
+    index: number,
+    field: keyof ExperienceInfo,
+    value: string | boolean
+  ) {
+    const updated = experience.map((entry, i) => {
+      if (i !== index) return entry;
+      const next = { ...entry, [field]: value };
+      // if marked as current job, clear the end date so it doesn't conflict
+      if (field === 'is_current' && value === true) {
+        next.end_date = '';
+      }
+      return next;
+    });
+    setExperience(updated);
+  }
+
+  function handleDeleteExperience(index: number) {
+    setExperience(experience.filter((_, i) => i !== index));
+  }
+
+  function validateExperience(): string | null {
+    for (const entry of experience) {
+      if (!entry.company.trim() || !entry.title.trim()) {
+        const msg =
+          'Each experience entry requires at least a company and title.';
+        setExperienceError(msg);
+        return msg;
+      }
+      if (entry.start_date && !isValidMonthYear(entry.start_date)) {
+        const msg =
+          'Experience start date must be in MM-YY format (e.g. 06-22).';
+        setExperienceError(msg);
+        return msg;
+      }
+      if (
+        !entry.is_current &&
+        entry.end_date &&
+        !isValidMonthYear(entry.end_date)
+      ) {
+        const msg = 'Experience end date must be in MM-YY format (e.g. 06-22).';
+        setExperienceError(msg);
+        return msg;
+      }
+      if (
+        !entry.is_current &&
+        entry.start_date &&
+        entry.end_date &&
+        isValidMonthYear(entry.start_date) &&
+        isValidMonthYear(entry.end_date) &&
+        entry.end_date < entry.start_date
+      ) {
+        const msg = 'Experience end date cannot be earlier than start date.';
+        setExperienceError(msg);
+        return msg;
+      }
+    }
+    setExperienceError('');
+    return null;
   }
 
   function handleProfilePictureChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -168,7 +311,19 @@ export default function ProfilePage() {
       setError('First name and last name are required.');
       return;
     }
-    if (!validateEducation()) return;
+
+    const educationIssue = validateEducation();
+    if (educationIssue) {
+      setError(educationIssue);
+      return;
+    }
+
+    const experienceIssue = validateExperience();
+    if (experienceIssue) {
+      setError(experienceIssue);
+      return;
+    }
+
     setSaving(true);
 
     try {
@@ -182,6 +337,7 @@ export default function ProfilePage() {
           summary: summary.trim() || null,
           skills, //added these to the profile save function
           education,
+          experience,
           target_role: targetRole.trim() || null,
           location_preference: locationPreference.trim() || null,
           work_mode_preference: workModePreference.trim() || null,
@@ -463,16 +619,7 @@ export default function ProfilePage() {
                 type="text"
                 placeholder="123-456-7890"
                 value={phone}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
-                  let formatted = digits;
-                  if (digits.length >= 7) {
-                    formatted = `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
-                  } else if (digits.length >= 4) {
-                    formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
-                  }
-                  setPhone(formatted);
-                }}
+                onChange={(e) => setPhone(formatPhone(e.target.value))}
                 style={{
                   width: '100%',
                   padding: '8px',
@@ -622,16 +769,19 @@ export default function ProfilePage() {
                         marginBottom: '4px',
                       }}
                     >
-                      Start Date
+                      Start Date (MM-YY)
                     </label>
                     <input
-                      type="month"
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="MM-YY"
+                      maxLength={5}
                       value={entry.start_date}
                       onChange={(e) =>
                         handleEducationChange(
                           index,
                           'start_date',
-                          e.target.value
+                          maskMonthYear(e.target.value)
                         )
                       }
                       style={{
@@ -654,13 +804,20 @@ export default function ProfilePage() {
                         marginBottom: '4px',
                       }}
                     >
-                      End Date
+                      End Date (MM-YY)
                     </label>
                     <input
-                      type="month"
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="MM-YY"
+                      maxLength={5}
                       value={entry.end_date}
                       onChange={(e) =>
-                        handleEducationChange(index, 'end_date', e.target.value)
+                        handleEducationChange(
+                          index,
+                          'end_date',
+                          maskMonthYear(e.target.value)
+                        )
                       }
                       style={{
                         width: '100%',
@@ -726,6 +883,313 @@ export default function ProfilePage() {
             }}
           >
             + Add Education
+          </button>
+
+          {/* Experience */}
+          <h2
+            style={{
+              color: '#3C1510',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              marginBottom: '5px',
+              marginTop: '24px',
+            }}
+          >
+            Work Experience
+          </h2>
+
+          {experience.map((entry, index) => (
+            <div
+              key={index}
+              style={{
+                backgroundColor: '#D9958C',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '12px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '12px',
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      fontSize: '13px',
+                      color: '#3C1510',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Company *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Acme Corp"
+                    value={entry.company}
+                    onChange={(e) =>
+                      handleExperienceChange(index, 'company', e.target.value)
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: 'solid',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      fontSize: '13px',
+                      color: '#3C1510',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Job Title *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Software Engineer"
+                    value={entry.title}
+                    onChange={(e) =>
+                      handleExperienceChange(index, 'title', e.target.value)
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: 'solid',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      fontSize: '13px',
+                      color: '#3C1510',
+                      display: 'block',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Newark, NJ"
+                    value={entry.location}
+                    onChange={(e) =>
+                      handleExperienceChange(index, 'location', e.target.value)
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: 'solid',
+                      fontSize: '14px',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '8px',
+                  }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '13px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      Start Date (MM-YY)
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="MM-YY"
+                      maxLength={5}
+                      value={entry.start_date}
+                      onChange={(e) =>
+                        handleExperienceChange(
+                          index,
+                          'start_date',
+                          maskMonthYear(e.target.value)
+                        )
+                      }
+                      style={{
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        fontSize: '13px',
+                        color: '#3C1510',
+                        display: 'block',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      End Date (MM-YY)
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="MM-YY"
+                      maxLength={5}
+                      disabled={entry.is_current}
+                      value={entry.end_date}
+                      onChange={(e) =>
+                        handleExperienceChange(
+                          index,
+                          'end_date',
+                          maskMonthYear(e.target.value)
+                        )
+                      }
+                      style={{
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '6px',
+                        border: 'solid',
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        backgroundColor: entry.is_current ? '#E6CECB' : 'white',
+                        cursor: entry.is_current ? 'not-allowed' : 'auto',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '13px',
+                  color: '#3C1510',
+                  marginTop: '12px',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={entry.is_current}
+                  onChange={(e) =>
+                    handleExperienceChange(
+                      index,
+                      'is_current',
+                      e.target.checked
+                    )
+                  }
+                />
+                I currently work here
+              </label>
+
+              <div style={{ marginTop: '12px' }}>
+                <label
+                  style={{
+                    fontSize: '13px',
+                    color: '#3C1510',
+                    display: 'block',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Description
+                </label>
+                <textarea
+                  value={entry.description}
+                  onChange={(e) =>
+                    handleExperienceChange(index, 'description', e.target.value)
+                  }
+                  placeholder="Briefly describe your responsibilities and accomplishments..."
+                  style={{
+                    width: '100%',
+                    height: '80px',
+                    padding: '8px',
+                    borderRadius: '6px',
+                    border: 'solid',
+                    fontSize: '14px',
+                    boxSizing: 'border-box',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  marginTop: '8px',
+                }}
+              >
+                <button
+                  onClick={() => handleDeleteExperience(index)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#932C20',
+                    border: '2px solid #932C20',
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {experienceError && (
+            <p
+              style={{
+                color: '#932C20',
+                fontSize: '13px',
+                margin: '0 0 8px 0',
+              }}
+            >
+              {experienceError}
+            </p>
+          )}
+
+          <button
+            onClick={handleAddExperience}
+            style={{
+              backgroundColor: 'transparent',
+              color: '#932C20',
+              border: '2px solid #932C20',
+              padding: '6px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              marginBottom: '8px',
+            }}
+          >
+            + Add Experience
           </button>
           {/* Career Preferences */}
           <h2
@@ -1008,6 +1472,45 @@ export default function ProfilePage() {
           <p style={{ color: '#3C1510', marginTop: '16px', fontSize: '14px' }}>
             ✓ Profile saved successfully
           </p>
+        )}
+
+        {error && (
+          <div
+            role="alert"
+            style={{
+              position: 'fixed',
+              bottom: '24px',
+              right: '24px',
+              maxWidth: '360px',
+              backgroundColor: '#932C20',
+              color: '#FFFFFF',
+              padding: '14px 16px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '10px',
+              fontSize: '14px',
+              zIndex: 1000,
+            }}
+          >
+            <span style={{ flex: 1 }}>{error}</span>
+            <button
+              onClick={() => setError('')}
+              aria-label="Dismiss error"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                fontSize: '16px',
+                lineHeight: 1,
+                padding: 0,
+              }}
+            >
+              ×
+            </button>
+          </div>
         )}
       </div>
     </div>
