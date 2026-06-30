@@ -314,21 +314,7 @@ export default function CoverLetterPage() {
               onChange={handleFileChange}
               style={{ display: 'none' }}
             />
-            <button
-              onClick={handleUploadClick}
-              style={{
-                backgroundColor: 'transparent',
-                color: '#932C20',
-                border: '1.5px solid #932C20',
-                padding: '8px 16px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: 500,
-              }}
-            >
-              ⬆ Upload Cover Letter
-            </button>
+
             <select
               value={rewriteGoal}
               onChange={(e) => setRewriteGoal(e.target.value)}
