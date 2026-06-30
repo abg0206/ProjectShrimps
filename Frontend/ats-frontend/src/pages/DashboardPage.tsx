@@ -22,6 +22,7 @@ function normalise(raw: Record<string, string | number>): Job {
     status: String(raw.status ?? raw.stages ?? '0'),
     created_at: String(raw.created_at),
     deadline: raw.deadline ? String(raw.deadline) : null,
+    deadline_label: raw.deadline_label ? String(raw.deadline_label) : null,
     recruiter_notes: raw.recruiter_notes ? String(raw.recruiter_notes) : null,
   };
 }
@@ -58,8 +59,6 @@ export default function DashboardPage() {
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
 
-
-
   // Archive confirmation modal
   const [archiveTarget, setArchiveTarget] = useState<{
     id: number;
@@ -77,6 +76,7 @@ export default function DashboardPage() {
   const [editError, setEditError] = useState('');
 
   const [editDeadline, setEditDeadline] = useState('');
+  const [editDeadlineLabel, setEditDeadlineLabel] = useState('Deadline');
 
   const [detailJob, setDetailJob] = useState<Job | null>(null);
 
@@ -172,6 +172,7 @@ export default function DashboardPage() {
     setEditStage(job.status);
     setEditDeadline(job.deadline ?? '');
     setEditError('');
+    setEditDeadlineLabel(job.deadline_label ?? 'Deadline');
   }
 
   // Save edit
@@ -201,6 +202,7 @@ export default function DashboardPage() {
             company: editCompany.trim(),
             description: editDescription.trim(),
             deadline: editDeadline || null,
+            deadline_label: editDeadlineLabel,
           }),
         }
       );
@@ -1193,7 +1195,6 @@ export default function DashboardPage() {
                 style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
               />
             </div>
-//removed the deadline creation to the edit tab instead of at creation
             <div
               style={{
                 display: 'flex',
@@ -1286,7 +1287,17 @@ export default function DashboardPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>Application Deadline</label>
+              <label style={labelStyle}>Label </label>
+              <input
+                type="text"
+                value={''}
+                onChange={(e) => setEditDeadlineLabel(e.target.value)}
+                placeholder="e.g. Deadline, Application Due, Submission Date"
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>{editDeadlineLabel}</label>
               <input
                 type="date"
                 value={editDeadline}
