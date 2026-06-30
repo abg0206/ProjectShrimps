@@ -55,6 +55,40 @@ type JobCardProps = {
   isTailoringCoverLetter?: boolean;
 };
 
+// Handles two formats:
+//   - plain "YYYY-MM-DD" (e.g. reminder_date) — parsed as UTC by `new Date()`,
+//     which can roll back a day once `.toLocaleDateString()` converts to local
+//     time, so we parse the parts directly to keep the displayed day correct.
+//   - full ISO timestamps (e.g. created_at, "2026-06-30T02:05:21.226Z") —
+//     these are unambiguous and safe to hand straight to `new Date()`.
+// Returns null (instead of silently producing a wrong/blank date) when the
+// string can't be parsed, so callers can show a warning instead of hiding it.
+function formatLocalDate(dateStr: string): string | null {
+  const datePart = dateStr.split('T')[0];
+  const [year, month, day] = datePart.split('-').map(Number);
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  if (dateStr.includes('T')) {
+    // Full timestamp — let the Date constructor handle the time/zone info,
+    // just verify it parsed into a real date.
+    const parsed = new Date(dateStr);
+    return isNaN(parsed.getTime()) ? null : parsed.toLocaleDateString();
+  }
+
+  const parsed = new Date(year, month - 1, day);
+  if (
+    parsed.getFullYear() !== year ||
+    parsed.getMonth() !== month - 1 ||
+    parsed.getDate() !== day
+  ) {
+    // e.g. month 13 or day 32 — Date() would otherwise silently roll over
+    return null;
+  }
+  return parsed.toLocaleDateString();
+}
+
 export default function JobCard({
   job,
   stageHistory,
@@ -147,7 +181,11 @@ export default function JobCard({
           }}
         >
           Remember: {job.reminder_text} —{' '}
-          {new Date(job.reminder_date).toLocaleDateString()}
+          {formatLocalDate(job.reminder_date) ?? (
+            <span style={{ color: '#DC2626' }}>
+              ⚠ Invalid reminder date ({job.reminder_date})
+            </span>
+          )}
         </p>
       )}
 
@@ -168,7 +206,14 @@ export default function JobCard({
             gap: '2px',
           }}
         >
-          <span>Added: {new Date(job.created_at).toLocaleDateString()}</span>
+          <span>
+            Added:{' '}
+            {formatLocalDate(job.created_at) ?? (
+              <span style={{ color: '#DC2626' }}>
+                ⚠ Invalid date ({job.created_at})
+              </span>
+            )}
+          </span>
         </div>
         <div
           style={{
