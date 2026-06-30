@@ -39,7 +39,7 @@ export default function LoginPage() {
         JSON.stringify({ email: data.email, clerkId: data.clerkId })
       );
       navigate('/dashboard');
-    } catch (err) {
+    } catch  {
       setError('Could not connect to the server. Please try again.');
     } finally {
       setLoading(false);

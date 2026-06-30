@@ -42,7 +42,7 @@ export default function RegisterPage() {
       }
 
       navigate('/');
-    } catch (err) {
+    } catch  {
       setError('Could not connect to the server. Please try again.');
     } finally {
       setLoading(false);

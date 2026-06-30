@@ -34,40 +34,49 @@ export default function CoverLetterPage() {
     italic: false,
     underline: false,
   });
-  const [rewriteGoal, setRewriteGoal] = useState<string>(REWRITE_GOALS[0]);
+  
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState('');
-  const [tailoredFor, setTailoredFor] = useState<string | null>(null);
-  const [tailoredJobId, setTailoredJobId] = useState<number | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState('');
-  const [saveError, setSaveError] = useState('');
+const [aiError, setAiError] = useState('');
 
-  // If we got here from "Tailor Cover Letter" on a job card, drop that
-  // AI-generated cover letter straight into the editor.
-  useEffect(() => {
-    const state = location.state as {
-      aiContent?: string;
-      coverLetterHtml?: string;
-      jobTitle?: string;
-      jobId?: number;
-    } | null;
-    const incoming = state?.coverLetterHtml ?? state?.aiContent;
-    if (!incoming) return;
+// Read the navigation state once during render — it's a plain value from
+// useLocation(), not a ref, so reading it here is fine.
+type NavState = {
+  aiContent?: string;
+  coverLetterHtml?: string;
+  jobTitle?: string;
+  jobId?: number;
+} | null;
+const initialNavState = location.state as NavState;
+const hasIncomingLetter = Boolean(
+  initialNavState?.coverLetterHtml ?? initialNavState?.aiContent
+);
 
-    if (editorRef.current) {
-      editorRef.current.innerHTML = state?.coverLetterHtml
-        ? incoming
-        : plainTextToEditorHtml(incoming);
-      setIsEmpty(false);
-    }
-    setTailoredFor(state?.jobTitle ?? 'this job');
-    setTailoredJobId(state?.jobId ?? null);
+const [tailoredFor, setTailoredFor] = useState<string | null>(
+  hasIncomingLetter ? (initialNavState?.jobTitle ?? 'this job') : null
+);
+const [tailoredJobId] = useState<number | null>(
+  hasIncomingLetter ? (initialNavState?.jobId ?? null) : null
+);
+const [saving, setSaving] = useState(false);
+const [saveMessage, setSaveMessage] = useState('');
+const [saveError, setSaveError] = useState('');
 
-    // Clear the navigation state so a refresh/back doesn't redo this.
-    navigate(location.pathname, { replace: true, state: null });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+useEffect(() => {
+  const incoming =
+    initialNavState?.coverLetterHtml ?? initialNavState?.aiContent;
+  if (!incoming) return;
+
+  if (editorRef.current) {
+    editorRef.current.innerHTML = initialNavState?.coverLetterHtml
+      ? incoming
+      : plainTextToEditorHtml(incoming);
+    setIsEmpty(false);
+  }
+
+  // Clear the navigation state so a refresh/back doesn't redo this.
+  navigate(location.pathname, { replace: true, state: null });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   function updateActiveFormats() {
     setActiveFormats({
@@ -101,10 +110,6 @@ export default function CoverLetterPage() {
     updateActiveFormats();
   }
 
-  function handleUploadClick() {
-    fileInputRef.current?.click();
-  }
-
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -132,8 +137,8 @@ export default function CoverLetterPage() {
           const content = await page.getTextContent();
           let pageText = '';
           let lastY: number | null = null;
-          for (const item of content.items as any[]) {
-            if (typeof item.str !== 'string') continue;
+          for (const item of content.items) {
+  if (!('str' in item) || typeof item.str !== 'string') continue;
             const y = item.transform[5];
             if (lastY !== null && Math.abs(y - lastY) > 1) {
               pageText += '\n';

@@ -20,6 +20,9 @@ type ExperienceInfo = {
 };
 
 export default function ProfilePage() {
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,7 +34,7 @@ export default function ProfilePage() {
   const [skillInput, setSkillInput] = useState('');
   const [skillError, setSkillError] = useState('');
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(userEmail));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
@@ -52,14 +55,14 @@ export default function ProfilePage() {
   const [SalaryExpectation, setSalaryExpectation] = useState('');
 
   // Read the logged-in user's email from sessionStorage (set by LoginPage)
-  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
-  const userEmail = session.email ?? '';
+
 
   // Load profile from the backend on mount
   useEffect(() => {
     if (!userEmail) {
-      setLoading(false);
+     
       return;
+    
     }
 
     fetch(`/api/profile/${encodeURIComponent(userEmail)}`)
@@ -184,10 +187,6 @@ export default function ProfilePage() {
     setEducation(education.filter((_, i) => i !== index));
   }
 
-  function monthYearToNumber(mmyy: string): number {
-    const [mm, yy] = mmyy.split('-').map(Number);
-    return yy * 100 + mm;
-  }
 
   function validateEducation(): string | null {
     for (const entry of education) {

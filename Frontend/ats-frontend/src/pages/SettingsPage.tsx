@@ -63,7 +63,7 @@ export default function SettingsPage() {
       );
       setNewEmail('');
       setEmailSaved(true);
-    } catch (err) {
+    } catch  {
       setEmailError('Could not connect to the server. Please try again.');
     } finally {
       setEmailLoading(false);
@@ -110,7 +110,7 @@ export default function SettingsPage() {
       setNewPassword('');
       setConfirmPassword('');
       setPasswordSaved(true);
-    } catch (err) {
+    } catch {
       setPasswordError('Could not connect to the server. Please try again.');
     } finally {
       setPasswordLoading(false);
@@ -133,7 +133,7 @@ export default function SettingsPage() {
 
       sessionStorage.removeItem('user');
       navigate('/');
-    } catch (err) {
+    } catch  {
       setDeleteError('Could not connect to the server. Please try again.');
     } finally {
       setDeleteLoading(false);

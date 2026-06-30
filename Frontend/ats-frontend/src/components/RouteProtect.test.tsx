@@ -2,7 +2,7 @@
 
 import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it} from 'vitest';
 import RouteProtect from './RouteProtect';
 import '@testing-library/jest-dom/vitest';
 
