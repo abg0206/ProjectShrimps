@@ -55,11 +55,10 @@ export default function ArchivedPage() {
     setError('');
     try {
       const params = new URLSearchParams();
-      params.set('stage', '5');
       if (debouncedSearch.trim()) params.set('search', debouncedSearch.trim());
       params.set('sort', sortBy);
 
-      const url = `/api/jobs/${encodeURIComponent(userEmail)}?${params.toString()}`;
+      const url = `/api/jobs/${encodeURIComponent(userEmail)}/archived?${params.toString()}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to load archived jobs');
       const data = await res.json();

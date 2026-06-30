@@ -10,6 +10,7 @@ const profileRouter = require('./routes/profile');
 const jobsRouter = require('./routes/jobs');
 const settingsRouter = require('./routes/settings');
 const interviewRoutes = require('./routes/interviews');
+const aiRouter = require('./routes/ai');
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use('/api', jobsRouter(pool));
 app.use('/api/settings', settingsRouter);
 app.use('/api/users', settingsRouter);
 app.use('/api/interviews', interviewRoutes(pool));
+app.use('/api/ai', aiRouter(pool));
 
 // start
 const PORT = process.env.PORT || 3000;

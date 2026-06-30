@@ -9,6 +9,7 @@ export default function Sidebar() {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [profilePic, setProfilePic] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userEmail) return;
@@ -19,6 +20,7 @@ export default function Sidebar() {
         if (data) {
           setFirstName(data.first_name ?? '');
           setLastName(data.last_name ?? '');
+          setProfilePic(data.profile_pic ?? null);
         }
       })
       .catch(console.error);
@@ -86,11 +88,23 @@ export default function Sidebar() {
           margin: '0 auto 8px',
           fontSize: '18px',
           fontWeight: 'bold',
+          overflow: 'hidden',
         }}
       >
-        {initials}
+        {profilePic ? (
+          <img
+            src={profilePic}
+            alt="Pofile"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          initials
+        )}
       </div>
-
       {/* username */}
       <p
         style={{
@@ -113,7 +127,49 @@ export default function Sidebar() {
       <NavLink to="/profile" style={linkStyle}>
         Profile
       </NavLink>
-      <NavLink to="/settings" style={linkStyle}>
+
+      <NavLink
+        to="/resume"
+        style={({ isActive }) => ({
+          color: isActive ? '#E6CECB' : '#3C1510',
+          backgroundColor: isActive ? '#932C20' : 'transparent',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          textDecoration: 'none',
+          marginBottom: '4px',
+          fontSize: '14px',
+        })}
+      >
+        Resume
+      </NavLink>
+
+      <NavLink
+        to="/cover-letter"
+        style={({ isActive }) => ({
+          color: isActive ? '#E6CECB' : '#3C1510',
+          backgroundColor: isActive ? '#932C20' : 'transparent',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          textDecoration: 'none',
+          marginBottom: '4px',
+          fontSize: '14px',
+        })}
+      >
+        Cover Letter
+      </NavLink>
+
+      <NavLink
+        to="/settings"
+        style={({ isActive }) => ({
+          color: isActive ? '#E6CECB' : '#3C1510',
+          backgroundColor: isActive ? '#932C20' : 'transparent',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          textDecoration: 'none',
+          marginBottom: '4px',
+          fontSize: '14px',
+        })}
+      >
         Settings
       </NavLink>
 
