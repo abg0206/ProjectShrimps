@@ -20,6 +20,9 @@ type ExperienceInfo = {
 };
 
 export default function ProfilePage() {
+  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
+  const userEmail = session.email ?? '';
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,7 +34,7 @@ export default function ProfilePage() {
   const [skillInput, setSkillInput] = useState('');
   const [skillError, setSkillError] = useState('');
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(userEmail));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
@@ -52,13 +55,10 @@ export default function ProfilePage() {
   const [SalaryExpectation, setSalaryExpectation] = useState('');
 
   // Read the logged-in user's email from sessionStorage (set by LoginPage)
-  const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
-  const userEmail = session.email ?? '';
 
   // Load profile from the backend on mount
   useEffect(() => {
     if (!userEmail) {
-      setLoading(false);
       return;
     }
 
@@ -208,7 +208,8 @@ export default function ProfilePage() {
         entry.end_date &&
         isValidMonthYear(entry.start_date) &&
         isValidMonthYear(entry.end_date) &&
-        entry.end_date < entry.start_date
+        entry.end_date.split('-').reverse().join('') <
+          entry.start_date.split('-').reverse().join('')
       ) {
         const msg = 'Education end date cannot be earlier than start date.';
         setEducationError(msg);

@@ -1,5 +1,5 @@
 import Sidebar from '../components/Sidebar';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JobCard, {
   Job,
@@ -199,6 +199,7 @@ export default function DashboardPage() {
 
   // Re-fetch whenever filters change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchJobs();
   }, [fetchJobs]);
 
@@ -602,31 +603,6 @@ export default function DashboardPage() {
     }
   }
 
-  const filtered = jobs
-    .filter((job) => {
-      const matchesSearch =
-        job.title.toLowerCase().includes(search.toLowerCase()) ||
-        job.company.toLowerCase().includes(search.toLowerCase());
-      const matchesStage = filterStage === 'all' || job.status === filterStage;
-      return matchesSearch && matchesStage;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'newest') {
-        return (
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-      } else if (sortBy === 'oldest') {
-        return (
-          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-      } else if (sortBy === 'company') {
-        return a.company.localeCompare(b.company);
-      } else if (sortBy === 'title') {
-        return a.title.localeCompare(b.title);
-      }
-      return 0;
-    });
-
   const inputStyle = {
     width: '100%',
     padding: '8px',
@@ -658,15 +634,6 @@ export default function DashboardPage() {
     border: '1px solid #3C1510',
     cursor: 'pointer' as const,
     fontSize: '14px',
-  };
-  const selectStyle = {
-    padding: '8px 12px',
-    borderRadius: '6px',
-    border: 'none',
-    fontSize: '14px',
-    backgroundColor: '#E6CECB',
-    color: '#3C1510',
-    cursor: 'pointer' as const,
   };
 
   // ── Render ───────────────────────────────────────────────────────────────────
