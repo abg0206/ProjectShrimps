@@ -129,36 +129,6 @@ export default function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/resume"
-        style={({ isActive }) => ({
-          color: isActive ? '#E6CECB' : '#3C1510',
-          backgroundColor: isActive ? '#932C20' : 'transparent',
-          padding: '8px 12px',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          marginBottom: '4px',
-          fontSize: '14px',
-        })}
-      >
-        Resume
-      </NavLink>
-
-      <NavLink
-        to="/cover-letter"
-        style={({ isActive }) => ({
-          color: isActive ? '#E6CECB' : '#3C1510',
-          backgroundColor: isActive ? '#932C20' : 'transparent',
-          padding: '8px 12px',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          marginBottom: '4px',
-          fontSize: '14px',
-        })}
-      >
-        Cover Letter
-      </NavLink>
-
-      <NavLink
         to="/settings"
         style={({ isActive }) => ({
           color: isActive ? '#E6CECB' : '#3C1510',
