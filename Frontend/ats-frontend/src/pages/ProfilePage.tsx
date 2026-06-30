@@ -184,6 +184,11 @@ export default function ProfilePage() {
     setEducation(education.filter((_, i) => i !== index));
   }
 
+  function monthYearToNumber(mmyy: string): number {
+    const [mm, yy] = mmyy.split('-').map(Number);
+    return yy * 100 + mm;
+  }
+
   function validateEducation(): string | null {
     for (const entry of education) {
       if (!entry.school.trim() || !entry.degree.trim()) {
@@ -208,7 +213,8 @@ export default function ProfilePage() {
         entry.end_date &&
         isValidMonthYear(entry.start_date) &&
         isValidMonthYear(entry.end_date) &&
-        entry.end_date < entry.start_date
+        entry.end_date.split('-').reverse().join('') <
+          entry.start_date.split('-').reverse().join('')
       ) {
         const msg = 'Education end date cannot be earlier than start date.';
         setEducationError(msg);
