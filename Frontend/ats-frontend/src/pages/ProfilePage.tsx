@@ -224,7 +224,7 @@ export default function ProfilePage() {
     setEducationError('');
     return null;
   }
-
+  
   //Experience handlers
   function handleAddExperience() {
     setExperienceError('');
