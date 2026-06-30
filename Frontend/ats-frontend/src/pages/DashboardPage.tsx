@@ -1193,7 +1193,7 @@ export default function DashboardPage() {
                 style={{ ...inputStyle, height: '100px', resize: 'vertical' }}
               />
             </div>
-
+//removed the deadline creation to the edit tab instead of at creation
             <div
               style={{
                 display: 'flex',
