@@ -32,6 +32,12 @@ function toDateInputValue(raw: unknown): string | null {
 function todayDateInputValue(): string {
   return new Date().toISOString().slice(0, 10);
 }
+// this function makes sures the dates are not inconsistent:
+function formatReminderDate(dateStr: string): string {
+  const [year, month, day] = dateStr.slice(0, 10).split('-').map(Number);
+  const localDate = new Date(year, month - 1, day);
+  return localDate.toLocaleDateString();
+}
 
 function normalise(raw: Record<string, string | number>): Job {
   return {
@@ -1148,9 +1154,7 @@ export default function DashboardPage() {
                     {detailJob.reminder_text
                       ? `${detailJob.reminder_text}${
                           detailJob.reminder_date
-                            ? ` — ${new Date(
-                                detailJob.reminder_date
-                              ).toLocaleDateString()}`
+                            ? ` — ${formatReminderDate(detailJob.reminder_date)}`
                             : ''
                         }`
                       : 'No reminder set'}

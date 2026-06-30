@@ -1,3 +1,9 @@
+function formatReminderDate(dateStr: string): string {
+  //date consistency
+  const [year, month, day] = dateStr.slice(0, 10).split('-').map(Number);
+  const localDate = new Date(year, month - 1, day);
+  return localDate.toLocaleDateString();
+}
 const STAGE_LABELS: Record<string, string> = {
   '0': 'Interested',
   '1': 'Applied',
@@ -147,7 +153,7 @@ export default function JobCard({
           }}
         >
           Remember: {job.reminder_text} —{' '}
-          {new Date(job.reminder_date).toLocaleDateString()}
+          {formatReminderDate(job.reminder_date)}
         </p>
       )}
 
