@@ -16,9 +16,10 @@ const REWRITE_GOALS = [
   'Fix grammar only',
   'More technical',
   'More executive / senior-sounding',
+  'Warmer / more personable',
 ];
 
-export default function ResumePage() {
+export default function CoverLetterPage() {
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
@@ -42,20 +43,20 @@ export default function ResumePage() {
   const [saveMessage, setSaveMessage] = useState('');
   const [saveError, setSaveError] = useState('');
 
-  // If we got here from "Tailor Resume" on a job card, drop that AI-generated
-  // resume straight into the editor.
+  // If we got here from "Tailor Cover Letter" on a job card, drop that
+  // AI-generated cover letter straight into the editor.
   useEffect(() => {
     const state = location.state as {
       aiContent?: string;
-      resumeHtml?: string;
+      coverLetterHtml?: string;
       jobTitle?: string;
       jobId?: number;
     } | null;
-    const incoming = state?.resumeHtml ?? state?.aiContent;
+    const incoming = state?.coverLetterHtml ?? state?.aiContent;
     if (!incoming) return;
 
     if (editorRef.current) {
-      editorRef.current.innerHTML = state?.resumeHtml
+      editorRef.current.innerHTML = state?.coverLetterHtml
         ? incoming
         : plainTextToEditorHtml(incoming);
       setIsEmpty(false);
@@ -100,55 +101,6 @@ export default function ResumePage() {
     updateActiveFormats();
   }
 
-  async function handleSave() {
-    const html = editorRef.current?.innerHTML || '';
-    const text = editorRef.current?.innerText.trim() || '';
-
-    if (!text) {
-      setSaveError('Write or upload a resume before saving.');
-      return;
-    }
-
-    if (!tailoredJobId) {
-      setSaveError(
-        'Open a resume from a job first so it can be saved to that job.'
-      );
-      return;
-    }
-
-    setSaving(true);
-    setSaveError('');
-    setSaveMessage('');
-
-    try {
-      const res = await fetch(
-        `/api/jobs/${encodeURIComponent(userEmail)}/${tailoredJobId}/resumes`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: tailoredFor ? `Resume for ${tailoredFor}` : 'Saved resume',
-            content: html,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setSaveError(data.error ?? 'Failed to save resume.');
-        return;
-      }
-
-      setSaveMessage('Resume saved to this job.');
-    } catch (err) {
-      console.error('Save resume error:', err);
-      setSaveError('Could not connect to the server.');
-    } finally {
-      setSaving(false);
-    }
-  }
-
   function handleUploadClick() {
     fileInputRef.current?.click();
   }
@@ -165,13 +117,11 @@ export default function ResumePage() {
         const text = await file.text();
         editorRef.current.innerText = text;
       } else if (ext === 'docx') {
-        // npm install mammoth
         const mammoth = await import('mammoth');
         const arrayBuffer = await file.arrayBuffer();
         const { value: html } = await mammoth.convertToHtml({ arrayBuffer });
         editorRef.current.innerHTML = html;
       } else if (ext === 'pdf') {
-        // npm install pdfjs-dist
         const pdfjsLib = await import('pdfjs-dist');
         pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
         const arrayBuffer = await file.arrayBuffer();
@@ -213,7 +163,7 @@ export default function ResumePage() {
     const currentText = editorRef.current?.innerText.trim() ?? '';
 
     if (!currentText) {
-      window.alert('Write or upload a resume first, then try AI Edit.');
+      window.alert('Write or upload a cover letter first, then try AI Edit.');
       return;
     }
 
@@ -227,6 +177,7 @@ export default function ResumePage() {
         body: JSON.stringify({
           content: currentText,
           rewriteType: rewriteGoal,
+          documentType: 'Cover Letter',
         }),
       });
 
@@ -247,6 +198,57 @@ export default function ResumePage() {
       setAiError('Could not connect to the server.');
     } finally {
       setAiLoading(false);
+    }
+  }
+
+  async function handleSave() {
+    const html = editorRef.current?.innerHTML || '';
+    const text = editorRef.current?.innerText.trim() || '';
+
+    if (!text) {
+      setSaveError('Write or upload a cover letter before saving.');
+      return;
+    }
+
+    if (!tailoredJobId) {
+      setSaveError(
+        'Open a cover letter from a job first so it can be saved to that job.'
+      );
+      return;
+    }
+
+    setSaving(true);
+    setSaveError('');
+    setSaveMessage('');
+
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${tailoredJobId}/cover-letters`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: tailoredFor
+              ? `Cover letter for ${tailoredFor}`
+              : 'Saved cover letter',
+            content: html,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setSaveError(data.error ?? 'Failed to save cover letter.');
+        return;
+      }
+
+      setSaveMessage('Cover letter saved to this job.');
+    } catch (err) {
+      console.error('Save cover letter error:', err);
+      setSaveError('Could not connect to the server.');
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -301,7 +303,7 @@ export default function ResumePage() {
               margin: 0,
             }}
           >
-            Resume
+            Cover Letter
           </h1>
 
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -325,7 +327,7 @@ export default function ResumePage() {
                 fontWeight: 500,
               }}
             >
-              ⬆ Upload Resume
+              ⬆ Upload Cover Letter
             </button>
             <select
               value={rewriteGoal}
@@ -379,8 +381,8 @@ export default function ResumePage() {
               marginBottom: '16px',
             }}
           >
-            ✨ This resume was tailored for <strong>{tailoredFor}</strong>.
-            Review it, then click Save.
+            ✨ This cover letter was tailored for <strong>{tailoredFor}</strong>
+            .
           </p>
         )}
 
@@ -574,7 +576,7 @@ export default function ResumePage() {
                 pointerEvents: 'none',
               }}
             >
-              Write your resume here...
+              Write your cover letter here...
             </div>
           )}
           <div

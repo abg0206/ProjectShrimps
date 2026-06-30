@@ -28,12 +28,24 @@ ENV_FILE="$BACKEND_DIR/.env"
 log "Loading config from Backend/.env..."
 
 while IFS='=' read -r key value; do
-  [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
-  value="${value%\"}"
-  value="${value#\"}"
-  value="${value%\'}"
-  value="${value#\'}"
-  export "$key=$value"
+    # remove CR if .env came from Windows
+    key="${key//$'\r'/}"
+    value="${value//$'\r'/}"
+
+    # skip comments/blank lines
+    [[ -z "$key" || "$key" =~ ^# ]] && continue
+
+    # trim whitespace
+    key="$(echo "$key" | xargs)"
+    value="$(echo "$value" | xargs)"
+
+    # remove surrounding quotes
+    value="${value%\"}"
+    value="${value#\"}"
+    value="${value%\'}"
+    value="${value#\'}"
+
+    export "$key=$value"
 done < "$ENV_FILE"
 
 DB_HOST="${DB_HOST:-localhost}"
@@ -93,6 +105,37 @@ if [[ "$DB_CHECK_RESULT" == OK:* ]]; then
 else
   ERR_MSG="${DB_CHECK_RESULT#FAIL:}"
   fail "Local PostgreSQL failed. Error: $ERR_MSG"
+fi
+
+# =============================================================================
+# IMPORT DATA FROM SQL DUMP (optional)
+# =============================================================================
+echo ""
+# Auto-detect any db_export_*.sql file in the project root
+DETECTED_DUMP="$(ls -t "$REPO_ROOT"/db_export_*.sql 2>/dev/null | head -n1 || true)"
+
+if [ -n "$DETECTED_DUMP" ]; then
+  warn "Found a data export file: $(basename "$DETECTED_DUMP")"
+  read -p "$(echo -e "${YELLOW}[prompt]${NC} Import this data into your local database? (y/N): ")" DO_IMPORT
+  DO_IMPORT="${DO_IMPORT:-N}"
+
+  if [[ "$DO_IMPORT" =~ ^[Yy]$ ]]; then
+    command -v psql >/dev/null 2>&1 || fail "psql not found. Install PostgreSQL client tools to import data."
+    log "Importing data from $(basename "$DETECTED_DUMP")..."
+    PGPASSWORD="$DB_PASSWORD" psql \
+      --host="$DB_HOST" \
+      --port="$DB_PORT" \
+      --username="$DB_USER" \
+      --dbname="$DB_NAME" \
+      --file="$DETECTED_DUMP" \
+      && log "Data imported successfully!" \
+      || warn "Import finished with some warnings — this is often fine (e.g. duplicate rows)."
+  else
+    log "Skipping data import."
+  fi
+else
+  log "No db_export_*.sql file found in project root — skipping import prompt."
+  log "(If you have a dump to import, place it in the project root and re-run.)"
 fi
 
 # =============================================================================

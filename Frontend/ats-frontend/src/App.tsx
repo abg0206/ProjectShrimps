@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
 import ResumePage from './pages/ResumePage';
+import CoverLetterPage from './pages/CoverLetterPage';
 import SettingsPage from './pages/SettingsPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -45,6 +46,14 @@ function App() {
           element={
             <RouteProtect>
               <ResumePage />
+            </RouteProtect>
+          }
+        />
+        <Route
+          path="/cover-letter"
+          element={
+            <RouteProtect>
+              <CoverLetterPage />
             </RouteProtect>
           }
         />

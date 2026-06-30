@@ -1,5 +1,6 @@
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import JobCard, {
   Job,
   StageEvent,
@@ -17,6 +18,21 @@ const STAGE_LABELS: Record<string, string> = {
 
 //we no longer need since we have a job card
 
+// Postgres DATE columns can come back as full ISO timestamps
+// (e.g. "2027-03-15T00:00:00.000Z"). <input type="date"> only
+// accepts a bare YYYY-MM-DD, so normalise here.
+function toDateInputValue(raw: unknown): string | null {
+  if (!raw) return null;
+  const str = String(raw);
+  return str.slice(0, 10);
+}
+
+// Today's date as YYYY-MM-DD, used as the floor for reminder date inputs
+// so users can't set a reminder in the past.
+function todayDateInputValue(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 function normalise(raw: Record<string, string | number>): Job {
   return {
     id: Number(raw.id ?? raw.unique_num),
@@ -25,8 +41,9 @@ function normalise(raw: Record<string, string | number>): Job {
     description: String(raw.description),
     status: String(raw.status ?? raw.stages ?? '0'),
     created_at: String(raw.created_at),
-    deadline: raw.deadline ? String(raw.deadline) : null,
     recruiter_notes: raw.recruiter_notes ? String(raw.recruiter_notes) : null,
+    reminder_text: raw.reminder_text ? String(raw.reminder_text) : null,
+    reminder_date: toDateInputValue(raw.reminder_date),
   };
 }
 
@@ -41,15 +58,37 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
   const userEmail = session.email ?? '';
 
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [archivedCount, setArchivedCount] = useState(0);
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // AI resume tailoring
+  const [tailoringJobId, setTailoringJobId] = useState<number | null>(null);
+  const [tailorResult, setTailorResult] = useState<{
+    job: Job;
+    content: string;
+    contentIsHtml?: boolean;
+  } | null>(null);
+  const [tailorError, setTailorError] = useState('');
+
+  // AI cover letter tailoring
+  const [tailoringCoverLetterJobId, setTailoringCoverLetterJobId] = useState<
+    number | null
+  >(null);
+  const [coverLetterResult, setCoverLetterResult] = useState<{
+    job: Job;
+    content: string;
+    contentIsHtml?: boolean;
+  } | null>(null);
+  const [coverLetterError, setCoverLetterError] = useState('');
 
   // Debounce search so we don't fire on every keystroke
   const debouncedSearch = useDebounce(search, 300);
@@ -62,7 +101,8 @@ export default function DashboardPage() {
   const [adding, setAdding] = useState(false);
   const [modalError, setModalError] = useState('');
 
-  const [newDeadline, setNewDeadline] = useState('');
+  const [newReminder, setNewReminder] = useState('');
+  const [newReminderDate, setNewReminderDate] = useState('');
 
   // Archive confirmation modal
   const [archiveTarget, setArchiveTarget] = useState<{
@@ -79,9 +119,12 @@ export default function DashboardPage() {
   const [detailEditTitle, setDetailEditTitle] = useState('');
   const [detailEditCompany, setDetailEditCompany] = useState('');
   const [detailEditDescription, setDetailEditDescription] = useState('');
-  const [detailEditDeadline, setDetailEditDeadline] = useState('');
+  const [detailEditReminder, setDetailEditReminder] = useState('');
+  const [detailEditReminderDate, setDetailEditReminderDate] = useState('');
   const [savingJobDetails, setSavingJobDetails] = useState(false);
   const [jobDetailsError, setJobDetailsError] = useState('');
+  const [reminderError, setReminderError] = useState('');
+  const [showSavedConfirmation, setShowSavedConfirmation] = useState(false);
 
   const [detailNotes, setDetailNotes] = useState('');
   const [savingNotes, setSaveNotes] = useState(false);
@@ -116,6 +159,8 @@ export default function DashboardPage() {
     setEditingJobDetails(false);
     setShowAddInterview(false);
     setEditingInterviewIndex(null);
+    setReminderError('');
+    setShowSavedConfirmation(false);
   }
 
   // Fetch jobs from the server, passing filters as query params
@@ -135,6 +180,15 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error('Failed to load jobs');
       const data = await res.json();
       setJobs(data.map(normalise));
+
+      // Fetch archived count separately (archived jobs live at a different endpoint)
+      const archivedRes = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/archived`
+      );
+      if (archivedRes.ok) {
+        const archivedData = await archivedRes.json();
+        setArchivedCount(archivedData.length);
+      }
     } catch (err) {
       console.error(err);
       setError('Could not load jobs. Please refresh.');
@@ -164,12 +218,18 @@ export default function DashboardPage() {
           title: newTitle.trim(),
           company: newCompany.trim(),
           description: newDescription.trim(),
-          deadline: newDeadline || null,
+          reminder_text: newReminder.trim() || null,
+          reminder_date: newReminderDate || null,
         }),
       });
       if (!res.ok) {
         const data = await res.json();
-        setModalError(data.error ?? 'Failed to add job.');
+        const message = data.error ?? 'Failed to add job.';
+        if (message.toLowerCase().includes('reminder')) {
+          setReminderError(message);
+        } else {
+          setModalError(message);
+        }
         return;
       }
       // Refetch so new job respects current filters/sort
@@ -177,7 +237,8 @@ export default function DashboardPage() {
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
-      setNewDeadline('');
+      setNewReminder('');
+      setNewReminderDate('');
       setShowAddModal(false);
     } catch (err) {
       console.error(err);
@@ -193,6 +254,8 @@ export default function DashboardPage() {
     setDetailJob(job);
     setDetailNotes(job.recruiter_notes ?? '');
     setNotesSaved(false);
+    loadInterviews(job.id);
+    loadStageHistory(job.id);
     startEditJobDetails(job);
   }
 
@@ -200,7 +263,8 @@ export default function DashboardPage() {
     setDetailEditTitle(job.title);
     setDetailEditCompany(job.company);
     setDetailEditDescription(job.description);
-    setDetailEditDeadline(job.deadline ?? '');
+    setDetailEditReminder(job.reminder_text ?? '');
+    setDetailEditReminderDate(toDateInputValue(job.reminder_date) ?? '');
     setJobDetailsError('');
     setEditingJobDetails(true);
   }
@@ -210,7 +274,7 @@ export default function DashboardPage() {
     setJobDetailsError('');
   }
 
-  // Save inline job-detail edits (title/company/description/deadline).
+  // Save inline job-detail edits (title/company/description/reminder).
   // Stage is intentionally left untouched here — it's changed via the
   // "Change Stage" dropdown, which already has its own archive-confirmation flow.
   async function saveJobDetails() {
@@ -232,17 +296,22 @@ export default function DashboardPage() {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            stages: detailJob.status,
             title: detailEditTitle.trim(),
             company: detailEditCompany.trim(),
             description: detailEditDescription.trim(),
-            deadline: detailEditDeadline || null,
+            reminder_text: detailEditReminder.trim() || null,
+            reminder_date: detailEditReminderDate || null,
           }),
         }
       );
       if (!res.ok) {
         const data = await res.json();
-        setJobDetailsError(data.error ?? 'Failed to save.');
+        const message = data.error ?? 'Failed to save.';
+        if (message.toLowerCase().includes('reminder')) {
+          setReminderError(message);
+        } else {
+          setJobDetailsError(message);
+        }
         return;
       }
       setDetailJob((prev) =>
@@ -252,12 +321,14 @@ export default function DashboardPage() {
               title: detailEditTitle.trim(),
               company: detailEditCompany.trim(),
               description: detailEditDescription.trim(),
-              deadline: detailEditDeadline || null,
+              reminder_text: detailEditReminder.trim() || null,
+              reminder_date: detailEditReminderDate || null,
             }
           : prev
       );
       await fetchJobs();
-      setEditingJobDetails(false);
+      setShowSavedConfirmation(true);
+      setTimeout(() => setShowSavedConfirmation(false), 2500);
     } catch (err) {
       console.error(err);
       setJobDetailsError('Could not connect to the server.');
@@ -290,16 +361,9 @@ export default function DashboardPage() {
         }
       );
       if (!res.ok) return;
-      // Record stage change in history
-      setStageHistoryMap((prev) => {
-        const next = new Map(prev);
-        const existing = next.get(jobId) ?? [];
-        next.set(jobId, [
-          ...existing,
-          { stage: newStage, changedAt: new Date().toISOString() },
-        ]);
-        return next;
-      });
+      // Refresh stage history from the server so it reflects what was
+      // actually recorded (and survives refresh/reopen).
+      await loadStageHistory(jobId);
       // Also update detailJob if it's open
       setDetailJob((prev) =>
         prev && prev.id === jobId ? { ...prev, status: newStage } : prev
@@ -325,6 +389,7 @@ export default function DashboardPage() {
       );
       if (res.ok) {
         setJobs((prev) => prev.filter((j) => j.id !== archiveTarget.id));
+        setArchivedCount((prev) => prev + 1);
         // In case the detail view still references this job, clear it too.
         setDetailJob((prev) =>
           prev && prev.id === archiveTarget.id ? null : prev
@@ -352,6 +417,164 @@ export default function DashboardPage() {
       setDetailJob((prev) => (prev && prev.id === jobId ? null : prev));
     } catch (err) {
       console.error('Delete failed:', err);
+    }
+  }
+
+  async function handleTailorResume(job: Job) {
+    setTailorError('');
+    setTailoringJobId(job.id);
+    try {
+      const savedRes = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${job.id}/resumes/latest`
+      );
+      const savedData = await savedRes.json();
+
+      if (savedRes.ok && savedData.resume?.content) {
+        setTailorResult({
+          job,
+          content: savedData.resume.content,
+          contentIsHtml: true,
+        });
+        return;
+      }
+
+      if (!savedRes.ok && savedRes.status !== 404) {
+        setTailorError(
+          savedData.error ?? 'Could not check for a saved resume for this job.'
+        );
+        return;
+      }
+
+      const res = await fetch(
+        `/api/ai/resume/${encodeURIComponent(userEmail)}/${job.id}`,
+        { method: 'POST' }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setTailorError(
+          data.error ?? 'Could not generate a tailored resume for this job.'
+        );
+        return;
+      }
+      setTailorResult({ job, content: data.content });
+    } catch (err) {
+      console.error('Tailor resume failed:', err);
+      setTailorError('Could not connect to the server.');
+    } finally {
+      setTailoringJobId(null);
+    }
+  }
+
+  function handleOpenTailoredResume() {
+    if (!tailorResult) return;
+    navigate('/resume', {
+      state: {
+        ...(tailorResult.contentIsHtml
+          ? { resumeHtml: tailorResult.content }
+          : { aiContent: tailorResult.content }),
+        jobTitle: `${tailorResult.job.title} at ${tailorResult.job.company}`,
+        jobId: tailorResult.job.id,
+      },
+    });
+  }
+
+  async function handleTailorCoverLetter(job: Job) {
+    setCoverLetterError('');
+    setTailoringCoverLetterJobId(job.id);
+    try {
+      const savedRes = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${job.id}/cover-letters/latest`
+      );
+      const savedData = await savedRes.json();
+
+      if (savedRes.ok && savedData.coverLetter?.content) {
+        setCoverLetterResult({
+          job,
+          content: savedData.coverLetter.content,
+          contentIsHtml: true,
+        });
+        return;
+      }
+
+      if (!savedRes.ok && savedRes.status !== 404) {
+        setCoverLetterError(
+          savedData.error ??
+            'Could not check for a saved cover letter for this job.'
+        );
+        return;
+      }
+
+      const res = await fetch(
+        `/api/ai/cover-letter/${encodeURIComponent(userEmail)}/${job.id}`,
+        { method: 'POST' }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setCoverLetterError(
+          data.error ??
+            'Could not generate a tailored cover letter for this job.'
+        );
+        return;
+      }
+      setCoverLetterResult({ job, content: data.content });
+    } catch (err) {
+      console.error('Tailor cover letter failed:', err);
+      setCoverLetterError('Could not connect to the server.');
+    } finally {
+      setTailoringCoverLetterJobId(null);
+    }
+  }
+
+  function handleOpenTailoredCoverLetter() {
+    if (!coverLetterResult) return;
+    navigate('/cover-letter', {
+      state: {
+        ...(coverLetterResult.contentIsHtml
+          ? { coverLetterHtml: coverLetterResult.content }
+          : { aiContent: coverLetterResult.content }),
+        jobTitle: `${coverLetterResult.job.title} at ${coverLetterResult.job.company}`,
+        jobId: coverLetterResult.job.id,
+      },
+    });
+  }
+
+  async function loadStageHistory(jobId: number) {
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/history`
+      );
+      if (!res.ok) return;
+      const data: { stage: string; changed_at: string }[] = await res.json();
+      setStageHistoryMap((prev) => {
+        const next = new Map(prev);
+        next.set(
+          jobId,
+          data.map((row) => ({
+            stage: row.stage,
+            changedAt: row.changed_at,
+          }))
+        );
+        return next;
+      });
+    } catch (err) {
+      console.error('Failed to load stage history:', err);
+    }
+  }
+
+  async function loadInterviews(jobId: number) {
+    try {
+      const res = await fetch(
+        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`
+      );
+      if (!res.ok) return;
+      const data: InterviewEntry[] = await res.json();
+      setJobInterviewsMap((prev) => {
+        const next = new Map(prev);
+        next.set(jobId, data);
+        return next;
+      });
+    } catch (err) {
+      console.error('Failed to load interviews:', err);
     }
   }
 
@@ -478,16 +701,21 @@ export default function DashboardPage() {
           >
             My Jobs
           </h1>
-          <button
-            onClick={() => {
-              closeAllModals();
-              setShowAddModal(true);
-              setModalError('');
-            }}
-            style={btnPrimary()}
-          >
-            Add Job
-          </button>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <button onClick={() => navigate('/archived')} style={btnSecondary}>
+              Archive
+            </button>
+            <button
+              onClick={() => {
+                closeAllModals();
+                setShowAddModal(true);
+                setModalError('');
+              }}
+              style={btnPrimary()}
+            >
+              Add Job
+            </button>
+          </div>
         </div>
 
         {/* Filters — single row, all server-driven */}
@@ -517,7 +745,13 @@ export default function DashboardPage() {
 
           <select
             value={filterStage}
-            onChange={(e) => setFilterStage(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value === '5') {
+                navigate('/archived');
+                return;
+              }
+              setFilterStage(e.target.value);
+            }}
             style={{
               padding: '8px 12px',
               borderRadius: '6px',
@@ -572,6 +806,38 @@ export default function DashboardPage() {
           </p>
         )}
 
+        {tailorError && (
+          <p
+            style={{
+              backgroundColor: '#F5DDD9',
+              border: '1px solid #932C20',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#932C20',
+              fontSize: '14px',
+              marginBottom: '20px',
+            }}
+          >
+            {tailorError}
+          </p>
+        )}
+
+        {coverLetterError && (
+          <p
+            style={{
+              backgroundColor: '#F5DDD9',
+              border: '1px solid #932C20',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#932C20',
+              fontSize: '14px',
+              marginBottom: '20px',
+            }}
+          >
+            {coverLetterError}
+          </p>
+        )}
+
         {/* Job count */}
         {!loading && (
           <p
@@ -594,7 +860,10 @@ export default function DashboardPage() {
             }}
           >
             {Object.entries(STAGE_LABELS).map(([val, label]) => {
-              const count = jobs.filter((j) => j.status === val).length;
+              const count =
+                val === '5'
+                  ? archivedCount
+                  : jobs.filter((j) => j.status === val).length;
               return (
                 <div
                   key={val}
@@ -655,6 +924,10 @@ export default function DashboardPage() {
                 onStatusChange={handleStatusChange}
                 onEdit={openEdit}
                 onDelete={handleDelete}
+                onTailorResume={handleTailorResume}
+                isTailoring={tailoringJobId === job.id}
+                onTailorCoverLetter={handleTailorCoverLetter}
+                isTailoringCoverLetter={tailoringCoverLetterJobId === job.id}
                 onViewDetail={(job) => {
                   closeAllModals();
                   setDetailJob(job);
@@ -662,7 +935,9 @@ export default function DashboardPage() {
                   setNotesSaved(false);
                   setShowAddInterview(false);
                   setEditingInterviewIndex(null);
-                  setEditingJobDetails(false);
+                  loadInterviews(job.id);
+                  loadStageHistory(job.id);
+                  startEditJobDetails(job);
                 }}
               />
             ))}
@@ -729,22 +1004,6 @@ export default function DashboardPage() {
               >
                 {STAGE_LABELS[detailJob.status]}
               </div>
-              {!editingJobDetails && (
-                <button
-                  onClick={() => startEditJobDetails(detailJob)}
-                  style={{
-                    backgroundColor: 'transparent',
-                    color: '#932C20',
-                    border: '1px solid #932C20',
-                    padding: '4px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                  }}
-                >
-                  Edit Job
-                </button>
-              )}
             </div>
 
             {editingJobDetails ? (
@@ -791,21 +1050,45 @@ export default function DashboardPage() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Application Deadline</label>
+                  <label style={labelStyle}>Reminder</label>
+                  <input
+                    type="text"
+                    value={detailEditReminder}
+                    onChange={(e) => setDetailEditReminder(e.target.value)}
+                    style={inputStyle}
+                  />
                   <input
                     type="date"
-                    value={detailEditDeadline}
-                    onChange={(e) => setDetailEditDeadline(e.target.value)}
-                    style={inputStyle}
+                    value={detailEditReminderDate}
+                    min={todayDateInputValue()}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val && val < todayDateInputValue()) return;
+                      setDetailEditReminderDate(val);
+                    }}
+                    style={{ ...inputStyle, marginTop: '8px' }}
                   />
                 </div>
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
+                    alignItems: 'center',
                     gap: '8px',
                   }}
                 >
+                  {showSavedConfirmation && (
+                    <span
+                      style={{
+                        color: '#16A34A',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        marginRight: '4px',
+                      }}
+                    >
+                      ✓ Saved!
+                    </span>
+                  )}
                   <button onClick={cancelEditJobDetails} style={btnSecondary}>
                     Cancel
                   </button>
@@ -849,7 +1132,7 @@ export default function DashboardPage() {
                   Added: {new Date(detailJob.created_at).toLocaleDateString()}
                 </p>
 
-                {/*deadline */}
+                {/* reminder */}
                 <div>
                   <p
                     style={{
@@ -859,12 +1142,18 @@ export default function DashboardPage() {
                       marginBottom: '4px',
                     }}
                   >
-                    Deadline
+                    Reminder
                   </p>
                   <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
-                    {detailJob.deadline
-                      ? new Date(detailJob.deadline).toLocaleDateString()
-                      : 'No deadline set'}
+                    {detailJob.reminder_text
+                      ? `${detailJob.reminder_text}${
+                          detailJob.reminder_date
+                            ? ` — ${new Date(
+                                detailJob.reminder_date
+                              ).toLocaleDateString()}`
+                            : ''
+                        }`
+                      : 'No reminder set'}
                   </p>
                 </div>
 
@@ -985,17 +1274,21 @@ export default function DashboardPage() {
                   cursor: 'pointer',
                 }}
               >
+                {/* Current stage always shown */}
                 <option value={detailJob.status}>
                   {STAGE_LABELS[detailJob.status]}
                 </option>
+                {/* Next stage in sequence — only for stages 0, 1, 2 (next would be 1, 2, 3) */}
                 {Number(detailJob.status) < 3 && (
                   <option value={String(Number(detailJob.status) + 1)}>
                     {STAGE_LABELS[String(Number(detailJob.status) + 1)]}
                   </option>
                 )}
+                {/* Rejected — always available unless already Rejected or Archived */}
                 {detailJob.status !== '4' && detailJob.status !== '5' && (
                   <option value="4">{STAGE_LABELS['4']}</option>
                 )}
+                {/* Archived — always available unless already Archived */}
                 {detailJob.status !== '5' && (
                   <option value="5">{STAGE_LABELS['5']}</option>
                 )}
@@ -1019,8 +1312,17 @@ export default function DashboardPage() {
                       date: Date;
                     };
 
+                const getTimelinePosition = (item: TimelineItem) => {
+                  if (item.kind === 'created') return 0;
+                  if (item.kind === 'interview') return 2.5;
+                  return Number(item.stage) || 0;
+                };
+
                 const items: TimelineItem[] = [
-                  { kind: 'created', date: new Date(detailJob.created_at) },
+                  {
+                    kind: 'created' as const,
+                    date: new Date(detailJob.created_at),
+                  },
                   ...stageHistory.map((e) => ({
                     kind: 'stage' as const,
                     stage: e.stage,
@@ -1032,7 +1334,14 @@ export default function DashboardPage() {
                     index: idx,
                     date: new Date(iv.interview_date),
                   })),
-                ].sort((a, b) => a.date.getTime() - b.date.getTime());
+                ].sort((a, b) => {
+                  const positionDifference =
+                    getTimelinePosition(a) - getTimelinePosition(b);
+
+                  if (positionDifference !== 0) return positionDifference;
+
+                  return a.date.getTime() - b.date.getTime();
+                });
 
                 const STAGE_COLORS_MAP: Record<string, string> = {
                   '0': '#6B7280',
@@ -1051,28 +1360,68 @@ export default function DashboardPage() {
                   '5': 'Archived',
                 };
 
-                function saveInterview() {
+                async function saveInterview() {
                   if (!newInterviewRound.trim() || !newInterviewDate) return;
-                  setJobInterviewsMap((prev) => {
-                    const next = new Map(prev);
-                    const existing = next.get(jobId) ?? [];
-                    const entry: InterviewEntry = {
-                      round_type: newInterviewRound.trim(),
-                      interview_date: newInterviewDate,
-                      notes: newInterviewNotes.trim(),
-                    };
-                    if (editingInterviewIndex !== null) {
-                      next.set(
-                        jobId,
-                        existing.map((iv, i) =>
-                          i === editingInterviewIndex ? entry : iv
-                        )
-                      );
-                    } else {
-                      next.set(jobId, [...existing, entry]);
+                  const entry: InterviewEntry = {
+                    round_type: newInterviewRound.trim(),
+                    interview_date: newInterviewDate,
+                    notes: newInterviewNotes.trim(),
+                  };
+
+                  if (editingInterviewIndex !== null) {
+                    const existing =
+                      jobInterviewsMap.get(jobId)?.[editingInterviewIndex];
+
+                    if (!existing?.id) {
+                      console.error('Cannot edit interview: missing id');
+                      return;
                     }
-                    return next;
-                  });
+
+                    try {
+                      const res = await fetch(
+                        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews/${existing.id}`,
+                        {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(entry),
+                        }
+                      );
+                      if (!res.ok) {
+                        console.error(
+                          'Failed to update interview:',
+                          await res.text()
+                        );
+                        return;
+                      }
+                      await loadInterviews(jobId);
+                    } catch (err) {
+                      console.error('Failed to update interview:', err);
+                      return;
+                    }
+                  } else {
+                    try {
+                      const res = await fetch(
+                        `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`,
+                        {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(entry),
+                        }
+                      );
+                      if (!res.ok) {
+                        console.error(
+                          'Failed to save interview:',
+                          await res.text()
+                        );
+                        return;
+                      }
+                      await loadInterviews(jobId);
+                    } catch (err) {
+                      console.error('Failed to save interview:', err);
+                      return;
+                    }
+                  }
+
                   setNewInterviewRound('');
                   setNewInterviewDate('');
                   setNewInterviewNotes('');
@@ -1091,16 +1440,39 @@ export default function DashboardPage() {
                   setShowAddInterview(true);
                 }
 
-                function deleteInterview(index: number) {
-                  setJobInterviewsMap((prev) => {
-                    const next = new Map(prev);
-                    const existing = next.get(jobId) ?? [];
-                    next.set(
-                      jobId,
-                      existing.filter((_, i) => i !== index)
+                async function deleteInterview(index: number) {
+                  const existing = jobInterviewsMap.get(jobId)?.[index];
+
+                  if (!existing?.id) {
+                    // No id to delete on the backend with — just drop it locally.
+                    setJobInterviewsMap((prev) => {
+                      const next = new Map(prev);
+                      const current = next.get(jobId) ?? [];
+                      next.set(
+                        jobId,
+                        current.filter((_, i) => i !== index)
+                      );
+                      return next;
+                    });
+                    return;
+                  }
+
+                  try {
+                    const res = await fetch(
+                      `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews/${existing.id}`,
+                      { method: 'DELETE' }
                     );
-                    return next;
-                  });
+                    if (!res.ok) {
+                      console.error(
+                        'Failed to delete interview:',
+                        await res.text()
+                      );
+                      return;
+                    }
+                    await loadInterviews(jobId);
+                  } catch (err) {
+                    console.error('Failed to delete interview:', err);
+                  }
                 }
 
                 return (
@@ -1669,12 +2041,24 @@ export default function DashboardPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>Application Deadline</label>
+              <label style={labelStyle}>Reminder</label>
+              <input
+                type="text"
+                placeholder="What's this reminder for?"
+                value={newReminder}
+                onChange={(e) => setNewReminder(e.target.value)}
+                style={inputStyle}
+              />
               <input
                 type="date"
-                value={newDeadline}
-                onChange={(e) => setNewDeadline(e.target.value)}
-                style={inputStyle}
+                value={newReminderDate}
+                min={todayDateInputValue()}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val && val < todayDateInputValue()) return;
+                  setNewReminderDate(val);
+                }}
+                style={{ ...inputStyle, marginTop: '8px' }}
               />
             </div>
             <div
@@ -1760,6 +2144,222 @@ export default function DashboardPage() {
                 style={btnPrimary(archiving)}
               >
                 {archiving ? 'Archiving…' : 'Archive'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reminder Error Modal */}
+      {reminderError && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 60,
+          }}
+          onClick={() => setReminderError('')}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '380px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              style={{
+                color: '#932C20',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              Reminder Error
+            </h2>
+            <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
+              {reminderError}
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <button onClick={() => setReminderError('')} style={btnPrimary()}>
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tailored Resume preview modal */}
+      {tailorResult && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+          onClick={() => setTailorResult(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '600px',
+              maxHeight: '80vh',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              ✨ Resume tailored for {tailorResult.job.title} at{' '}
+              {tailorResult.job.company}
+            </h2>
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '8px',
+                padding: '16px',
+                fontSize: '13px',
+                color: '#2b2b2b',
+                whiteSpace: 'pre-wrap',
+                overflowY: 'auto',
+                flex: 1,
+              }}
+            >
+              {tailorResult.contentIsHtml ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: tailorResult.content }}
+                />
+              ) : (
+                tailorResult.content
+              )}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
+              <button
+                onClick={() => setTailorResult(null)}
+                style={btnSecondary}
+              >
+                Close
+              </button>
+              <button onClick={handleOpenTailoredResume} style={btnPrimary()}>
+                Open in Resume Editor
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tailored Cover Letter preview modal */}
+      {coverLetterResult && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+          onClick={() => setCoverLetterResult(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '600px',
+              maxHeight: '80vh',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              ✨ Cover letter tailored for {coverLetterResult.job.title} at{' '}
+              {coverLetterResult.job.company}
+            </h2>
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '8px',
+                padding: '16px',
+                fontSize: '13px',
+                color: '#2b2b2b',
+                whiteSpace: 'pre-wrap',
+                overflowY: 'auto',
+                flex: 1,
+              }}
+            >
+              {coverLetterResult.contentIsHtml ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: coverLetterResult.content,
+                  }}
+                />
+              ) : (
+                coverLetterResult.content
+              )}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
+              <button
+                onClick={() => setCoverLetterResult(null)}
+                style={btnSecondary}
+              >
+                Close
+              </button>
+              <button
+                onClick={handleOpenTailoredCoverLetter}
+                style={btnPrimary()}
+              >
+                Open in Cover Letter Editor
               </button>
             </div>
           </div>

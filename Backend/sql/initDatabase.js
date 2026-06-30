@@ -264,6 +264,27 @@ async function main() {
          ) THEN
            ALTER TABLE job_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
          END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'recruiter_notes'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN recruiter_notes TEXT;
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'reminder_text'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN reminder_text VARCHAR(255);
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'job_table' AND column_name = 'reminder_date'
+         ) THEN
+           ALTER TABLE job_table ADD COLUMN reminder_date DATE;
+         END IF;
        END $$;
      `);
 
@@ -271,11 +292,40 @@ async function main() {
        CREATE TABLE IF NOT EXISTS resume_table (
          experience_id SERIAL PRIMARY KEY,
          email         VARCHAR(255),
+         title         VARCHAR(255),
+         content       TEXT,
          other_links   TEXT,
          linkedin      VARCHAR(255),
          education     TEXT,
-         summary       TEXT
+         summary       TEXT,
+         created_at    TIMESTAMP DEFAULT NOW()
        );
+     `);
+
+    await pool.query(`
+       DO $$
+       BEGIN
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'resume_table' AND column_name = 'title'
+         ) THEN
+           ALTER TABLE resume_table ADD COLUMN title VARCHAR(255);
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'resume_table' AND column_name = 'content'
+         ) THEN
+           ALTER TABLE resume_table ADD COLUMN content TEXT;
+         END IF;
+
+         IF NOT EXISTS (
+           SELECT 1 FROM information_schema.columns
+           WHERE table_name = 'resume_table' AND column_name = 'created_at'
+         ) THEN
+           ALTER TABLE resume_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
+         END IF;
+       END $$;
      `);
 
     await pool.query(`
@@ -287,12 +337,23 @@ async function main() {
      `);
 
     await pool.query(`
-       CREATE TABLE IF NOT EXISTS job_resume (
-         job_id    INTEGER NOT NULL,
-         resume_id INTEGER NOT NULL,
-         PRIMARY KEY (job_id, resume_id)
+       CREATE TABLE IF NOT EXISTS cover_letter_table (
+         cover_letter_id SERIAL PRIMARY KEY,
+         email           VARCHAR(255),
+         title           VARCHAR(255),
+         content         TEXT,
+         created_at      TIMESTAMP DEFAULT NOW()
        );
      `);
+
+    await pool.query(`
+       CREATE TABLE IF NOT EXISTS job_cover_letter (
+         job_id          INTEGER NOT NULL,
+         cover_letter_id INTEGER NOT NULL,
+         PRIMARY KEY (job_id, cover_letter_id)
+       );
+     `);
+
     await pool.query(`
   CREATE TABLE IF NOT EXISTS interview_table (
     interview_id   SERIAL PRIMARY KEY,
@@ -304,6 +365,51 @@ async function main() {
     created_at     TIMESTAMP DEFAULT NOW()
   );
 `);
+
+    // Migration: the frontend's round-type options ('First Round', 'Virtual',
+    // 'Final', etc.) don't match interview_type_enum, so store them as free
+    // text instead of forcing them through that enum.
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'interview_table' AND column_name = 'round_type'
+        ) THEN
+          ALTER TABLE interview_table ADD COLUMN round_type VARCHAR(100);
+        END IF;
+      END $$;
+    `);
+    await pool.query(`
+  CREATE TABLE IF NOT EXISTS stage_history (
+    history_id SERIAL PRIMARY KEY,
+    job_id     INTEGER NOT NULL,
+    stage      job_stage_enum NOT NULL,
+    changed_at TIMESTAMP DEFAULT NOW()
+  );
+`);
+
+    // Stage history to Job
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_stagehistory_job'
+        ) THEN
+          ALTER TABLE stage_history
+          ADD CONSTRAINT fk_stagehistory_job
+          FOREIGN KEY (job_id)
+          REFERENCES job_table(unique_num)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_stagehistory_job_id
+      ON stage_history(job_id);
+    `);
+
     //forein keys and indexes
     // Interview to Job
     await pool.query(`
@@ -353,6 +459,38 @@ async function main() {
       END $$;
     `);
 
+    // JobCoverLetter & Job deleate
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobcoverletter_job'
+        ) THEN
+          ALTER TABLE job_cover_letter
+          ADD CONSTRAINT fk_jobcoverletter_job
+          FOREIGN KEY (job_id)
+          REFERENCES job_table(unique_num)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `);
+
+    // JobCoverLetter & CoverLetter deleate
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobcoverletter_coverletter'
+        ) THEN
+          ALTER TABLE job_cover_letter
+          ADD CONSTRAINT fk_jobcoverletter_coverletter
+          FOREIGN KEY (cover_letter_id)
+          REFERENCES cover_letter_table(cover_letter_id)
+          ON DELETE CASCADE;
+        END IF;
+      END $$;
+    `);
+
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_job_company
       ON job_table(company);
@@ -371,6 +509,11 @@ async function main() {
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_resume_email
       ON resume_table(email);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_cover_letter_email
+      ON cover_letter_table(email);
     `);
 
     console.log('Tables created successfully');

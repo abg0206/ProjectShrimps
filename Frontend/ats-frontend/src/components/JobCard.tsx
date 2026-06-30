@@ -23,6 +23,7 @@ export type StageEvent = {
 };
 
 export type InterviewEntry = {
+  id?: number;
   round_type: string;
   interview_date: string;
   notes: string;
@@ -35,8 +36,9 @@ export type Job = {
   description: string;
   status: string;
   created_at: string;
-  deadline: string | null;
   recruiter_notes: string | null;
+  reminder_text: string | null;
+  reminder_date: string | null;
 };
 
 type JobCardProps = {
@@ -47,6 +49,10 @@ type JobCardProps = {
   onEdit: (job: Job) => void;
   onDelete: (jobId: number) => void;
   onViewDetail: (job: Job) => void;
+  onTailorResume: (job: Job) => void;
+  isTailoring?: boolean;
+  onTailorCoverLetter: (job: Job) => void;
+  isTailoringCoverLetter?: boolean;
 };
 
 export default function JobCard({
@@ -57,6 +63,10 @@ export default function JobCard({
   onEdit,
   onDelete,
   onViewDetail,
+  onTailorResume,
+  isTailoring = false,
+  onTailorCoverLetter,
+  isTailoringCoverLetter = false,
 }: JobCardProps) {
   return (
     <div
@@ -126,6 +136,21 @@ export default function JobCard({
         {job.description}
       </p>
 
+      {/* reminder — only shown when both text and date are set */}
+      {job.reminder_text && job.reminder_date && (
+        <p
+          style={{
+            color: '#c600a8',
+            fontSize: '14px',
+            fontWeight: 600,
+            margin: 0,
+          }}
+        >
+          Remember: {job.reminder_text} —{' '}
+          {new Date(job.reminder_date).toLocaleDateString()}
+        </p>
+      )}
+
       {/* bottom of card */}
       <div
         style={{
@@ -144,24 +169,47 @@ export default function JobCard({
           }}
         >
           <span>Added: {new Date(job.created_at).toLocaleDateString()}</span>
-          {job.deadline && (
-            <span
-              style={{
-                color: '#DC2626',
-                fontSize: '12px',
-              }}
-            >
-              Deadline: {new Date(job.deadline).toLocaleDateString()}
-            </span>
-          )}
         </div>
         <div
           style={{
             display: 'flex',
             gap: '12px',
+            alignItems: 'center',
           }}
           onClick={(e) => e.stopPropagation()}
         >
+          <button
+            onClick={() => onTailorResume(job)}
+            disabled={isTailoring}
+            title="Generate a resume tailored to this job"
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: isTailoring ? '#9b8a8a' : '#932C20',
+              cursor: isTailoring ? 'not-allowed' : 'pointer',
+              fontSize: '13px',
+              fontWeight: 500,
+              padding: 0,
+            }}
+          >
+            {isTailoring ? 'Tailoring…' : 'Tailor Resume'}
+          </button>
+          <button
+            onClick={() => onTailorCoverLetter(job)}
+            disabled={isTailoringCoverLetter}
+            title="Generate a cover letter tailored to this job"
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: isTailoringCoverLetter ? '#9b8a8a' : '#932C20',
+              cursor: isTailoringCoverLetter ? 'not-allowed' : 'pointer',
+              fontSize: '13px',
+              fontWeight: 500,
+              padding: 0,
+            }}
+          >
+            {isTailoringCoverLetter ? 'Tailoring…' : 'Tailor Cover Letter'}
+          </button>
           <button
             onClick={() => onEdit(job)}
             style={{
