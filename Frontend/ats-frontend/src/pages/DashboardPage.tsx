@@ -1290,7 +1290,7 @@ export default function DashboardPage() {
               <label style={labelStyle}>Label </label>
               <input
                 type="text"
-                value={''}
+                value={editDeadlineLabel}
                 onChange={(e) => setEditDeadlineLabel(e.target.value)}
                 placeholder="e.g. Deadline, Application Due, Submission Date"
                 style={inputStyle}
