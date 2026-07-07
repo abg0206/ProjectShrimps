@@ -77,17 +77,17 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
         
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /path/to/ProjectShrimps
-            git pull origin main
-            npm install --prefix Backend
-            npm install --prefix Frontend
-            npm run build --prefix Frontend
-            pm2 restart backend
-            pm2 restart frontend
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /path/to/ProjectShrimps
+          git pull origin main
+          npm install --prefix Backend
+          npm install --prefix Frontend
+          npm run build --prefix Frontend
+          pm2 restart backend
+          pm2 restart frontend
