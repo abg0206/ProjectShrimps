@@ -34,7 +34,11 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [saved, setSaved] = useState(false);
+  const [savedContact, setSavedContact] = useState(false);
+  const [savedExperience, setSavedExperience] = useState(false);
+  const [savedEducation, setSavedEducation] = useState(false);
+  const [savedSkills, setSavedSkills] = useState(false);
+  const [savedSummary, setSavedSummary] = useState(false);
 
   const [education, setEducation] = useState<EducationInfo[]>([]);
   const [educationError, setEducationError] = useState('');
@@ -309,29 +313,14 @@ export default function ProfilePage() {
     setProfilePicture(file);
   }
 
-  async function handleSave() {
+  async function handleSaveContact() {
     setError('');
-    setSaved(false);
-
+    setSavedContact(false);
     if (!firstName.trim() || !lastName.trim()) {
       setError('First name and last name are required.');
       return;
     }
-
-    const educationIssue = validateEducation();
-    if (educationIssue) {
-      setError(educationIssue);
-      return;
-    }
-
-    const experienceIssue = validateExperience();
-    if (experienceIssue) {
-      setError(experienceIssue);
-      return;
-    }
-
     setSaving(true);
-
     try {
       const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
@@ -340,31 +329,129 @@ export default function ProfilePage() {
           first_name: firstName.trim(),
           last_name: lastName.trim(),
           phone: phone.trim() ? phone.trim() : null,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error ?? 'Failed to save contact info.');
+        return;
+      }
+      setSavedContact(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSaveEducation() {
+    setError('');
+    setSavedEducation(false);
+    const issue = validateEducation();
+    if (issue) {
+      setError(issue);
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ education }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error ?? 'Failed to save education.');
+        return;
+      }
+      setSavedEducation(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSaveExperience() {
+    setError('');
+    setSavedExperience(false);
+    const issue = validateExperience();
+    if (issue) {
+      setError(issue);
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ experience }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error ?? 'Failed to save experience.');
+        return;
+      }
+      setSavedExperience(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSaveSummary() {
+    setError('');
+    setSavedSummary(false);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           summary: summary.trim() || null,
-          skills, //added these to the profile save function
-          education,
-          experience,
+          skills,
           target_role: targetRole.trim() || null,
           location_preference: locationPreference.trim() || null,
           work_mode_preference: workModePreference.trim() || null,
           salary_expectation: SalaryExpectation.trim() || null,
         }),
       });
-
       if (!res.ok) {
         const data = await res.json();
         setError(data.error ?? 'Failed to save profile.');
         return;
       }
-
-      setSaved(true);
-    } catch (err) {
-      console.error(err);
+      setSavedSummary(true);
+    } catch {
       setError('Could not connect to the server. Please try again.');
     } finally {
       setSaving(false);
     }
   }
+
+  async function handleSaveSkills() {
+  setError('');
+  setSavedSkills(false);
+  setSaving(true);
+  try {
+    const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skills }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error ?? 'Failed to save skills.');
+      return;
+    }
+    setSavedSkills(true);
+  } catch {
+    setError('Could not connect to the server. Please try again.');
+  } finally {
+    setSaving(false);
+  }
+}
 
   if (loading) {
     return (
@@ -377,7 +464,14 @@ export default function ProfilePage() {
           justifyContent: 'center',
         }}
       >
-        <p style={{ color: '#3C1510', fontSize: '16px' }}>Loading profile...</p>
+        <p
+          style={{
+            color: '#3C1510',
+            fontSize: '16px',
+          }}
+        >
+          Loading profile...
+        </p>
       </div>
     );
   }
@@ -638,6 +732,38 @@ export default function ProfilePage() {
             </div>
           </div>
 
+          {/* Contact save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '16px',
+            }}
+          >
+            {savedContact && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveContact}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Contact
+            </button>
+          </div>
+
           {/* Education */}
           <h2
             style={{
@@ -890,6 +1016,38 @@ export default function ProfilePage() {
           >
             + Add Education
           </button>
+
+          {/* Education save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '8px',
+            }}
+          >
+            {savedEducation && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveEducation}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Education
+            </button>
+          </div>
 
           {/* Experience */}
           <h2
@@ -1197,6 +1355,38 @@ export default function ProfilePage() {
           >
             + Add Experience
           </button>
+
+          {/* Experience save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '8px',
+            }}
+          >
+            {savedExperience && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveExperience}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Experience
+            </button>
+          </div>
           {/* Career Preferences */}
           <h2
             style={{
@@ -1423,6 +1613,18 @@ export default function ProfilePage() {
             ))}
           </div>
 
+          {/* Skills save */}
+<div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
+  {savedSkills && <span style={{ color: '#3C1510', fontSize: '13px' }}>✓ Saved</span>}
+  <button
+    onClick={handleSaveSkills}
+    disabled={saving}
+    style={{ backgroundColor: '#932C20', color: '#FFFFFF', padding: '8px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '14px' }}
+  >
+    Save Skills
+  </button>
+</div>
+
           <h2
             style={{
               color: '#3C1510',
@@ -1457,7 +1659,7 @@ export default function ProfilePage() {
             }}
           >
             <button
-              onClick={handleSave}
+              onClick={handleSaveSummary}
               disabled={saving}
               style={{
                 backgroundColor: '#932C20',
@@ -1474,9 +1676,9 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {saved && (
+        {savedSummary && (
           <p style={{ color: '#3C1510', marginTop: '16px', fontSize: '14px' }}>
-            ✓ Profile saved successfully
+            ✓ Summary saved successfully
           </p>
         )}
 
