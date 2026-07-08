@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RouteProtect from './components/RouteProtect';
 import ArchivedPage from './pages/ArchivedPage';
+import DocumentsPage from './pages/DocumentsPage';
 
 function App() {
   return (
