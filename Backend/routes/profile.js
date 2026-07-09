@@ -56,11 +56,14 @@ module.exports = function (pool) {
         salary_expectation,
       } = req.body;
 
-      if (!first_name || !last_name) {
-        return res
-          .status(400)
-          .json({ error: 'first_name and last_name are required' });
-      }
+      const firstNameValue =
+        typeof first_name === 'string' && first_name.trim()
+          ? first_name.trim()
+          : '';
+      const lastNameValue =
+        typeof last_name === 'string' && last_name.trim()
+          ? last_name.trim()
+          : '';
 
       const phoneValue = phone
         ? Number(String(phone).replace(/\D/g, '')) || null
@@ -115,8 +118,8 @@ module.exports = function (pool) {
            salary_expectation`,
         [
           email,
-          first_name,
-          last_name,
+          firstNameValue,
+          lastNameValue,
           phoneValue,
           summary ?? null,
           skillsValue,

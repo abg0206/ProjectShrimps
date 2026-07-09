@@ -136,6 +136,31 @@ export default function ProfilePage() {
     return month >= 1 && month <= 12;
   }
 
+  // Builds the full current profile payload so every save request carries
+  // the complete state. This prevents a backend PUT that does a full
+  // replace (rather than a partial merge) from wiping out sections that
+  // weren't touched by the button the user clicked. Individual save
+  // handlers can still pass `overrides` for the fields they specifically
+  // validated/updated, but nothing else gets lost in the process.
+  function buildFullProfilePayload(
+    overrides: Record<string, unknown> = {}
+  ) {
+    return {
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      phone: phone.trim() ? phone.trim() : null,
+      summary: summary.trim() || null,
+      skills,
+      education,
+      experience,
+      target_role: targetRole.trim() || null,
+      location_preference: locationPreference.trim() || null,
+      work_mode_preference: workModePreference.trim() || null,
+      salary_expectation: SalaryExpectation.trim() || null,
+      ...overrides,
+    };
+  }
+
   //Skills here
   function handleAddSkill() {
     setSkillError('');
@@ -217,8 +242,7 @@ export default function ProfilePage() {
         entry.end_date &&
         isValidMonthYear(entry.start_date) &&
         isValidMonthYear(entry.end_date) &&
-        entry.end_date.split('-').reverse().join('') <
-          entry.start_date.split('-').reverse().join('')
+        monthYearToNumber(entry.end_date) < monthYearToNumber(entry.start_date)
       ) {
         const msg = 'Education end date cannot be earlier than start date.';
         setEducationError(msg);
@@ -296,7 +320,7 @@ export default function ProfilePage() {
         entry.end_date &&
         isValidMonthYear(entry.start_date) &&
         isValidMonthYear(entry.end_date) &&
-        entry.end_date < entry.start_date
+        monthYearToNumber(entry.end_date) < monthYearToNumber(entry.start_date)
       ) {
         const msg = 'Experience end date cannot be earlier than start date.';
         setExperienceError(msg);
@@ -316,23 +340,15 @@ export default function ProfilePage() {
   async function handleSaveContact() {
     setError('');
     setSavedContact(false);
-    if (!firstName.trim() || !lastName.trim()) {
-      setError('First name and last name are required.');
-      return;
-    }
     setSaving(true);
     try {
       const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          phone: phone.trim() ? phone.trim() : null,
-        }),
+        body: JSON.stringify(buildFullProfilePayload()),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setError(data.error ?? 'Failed to save contact info.');
         return;
       }
@@ -357,10 +373,10 @@ export default function ProfilePage() {
       const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ education }),
+        body: JSON.stringify(buildFullProfilePayload({ education })),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setError(data.error ?? 'Failed to save education.');
         return;
       }
@@ -385,10 +401,10 @@ export default function ProfilePage() {
       const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ experience }),
+        body: JSON.stringify(buildFullProfilePayload({ experience })),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setError(data.error ?? 'Failed to save experience.');
         return;
       }
@@ -408,17 +424,18 @@ export default function ProfilePage() {
       const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          summary: summary.trim() || null,
-          skills,
-          target_role: targetRole.trim() || null,
-          location_preference: locationPreference.trim() || null,
-          work_mode_preference: workModePreference.trim() || null,
-          salary_expectation: SalaryExpectation.trim() || null,
-        }),
+        body: JSON.stringify(
+          buildFullProfilePayload({
+            summary: summary.trim() || null,
+            target_role: targetRole.trim() || null,
+            location_preference: locationPreference.trim() || null,
+            work_mode_preference: workModePreference.trim() || null,
+            salary_expectation: SalaryExpectation.trim() || null,
+          })
+        ),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setError(data.error ?? 'Failed to save profile.');
         return;
       }
@@ -431,27 +448,27 @@ export default function ProfilePage() {
   }
 
   async function handleSaveSkills() {
-  setError('');
-  setSavedSkills(false);
-  setSaving(true);
-  try {
-    const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ skills }),
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error ?? 'Failed to save skills.');
-      return;
+    setError('');
+    setSavedSkills(false);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildFullProfilePayload({ skills })),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'Failed to save skills.');
+        return;
+      }
+      setSavedSkills(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
     }
-    setSavedSkills(true);
-  } catch {
-    setError('Could not connect to the server. Please try again.');
-  } finally {
-    setSaving(false);
   }
-}
 
   if (loading) {
     return (
@@ -1614,16 +1631,36 @@ export default function ProfilePage() {
           </div>
 
           {/* Skills save */}
-<div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
-  {savedSkills && <span style={{ color: '#3C1510', fontSize: '13px' }}>✓ Saved</span>}
-  <button
-    onClick={handleSaveSkills}
-    disabled={saving}
-    style={{ backgroundColor: '#932C20', color: '#FFFFFF', padding: '8px 20px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '14px' }}
-  >
-    Save Skills
-  </button>
-</div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '12px',
+            }}
+          >
+            {savedSkills && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveSkills}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Skills
+            </button>
+          </div>
 
           <h2
             style={{
