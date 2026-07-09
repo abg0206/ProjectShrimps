@@ -91,9 +91,6 @@ function formatLocalDate(dateStr: string): string | null {
 
 export default function JobCard({
   job,
-  stageHistory,
-  interviews,
-  onStatusChange,
   onEdit,
   onDelete,
   onViewDetail,
