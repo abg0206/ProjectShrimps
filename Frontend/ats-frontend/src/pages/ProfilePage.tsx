@@ -142,9 +142,7 @@ export default function ProfilePage() {
   // weren't touched by the button the user clicked. Individual save
   // handlers can still pass `overrides` for the fields they specifically
   // validated/updated, but nothing else gets lost in the process.
-  function buildFullProfilePayload(
-    overrides: Record<string, unknown> = {}
-  ) {
+  function buildFullProfilePayload(overrides: Record<string, unknown> = {}) {
     return {
       first_name: firstName.trim(),
       last_name: lastName.trim(),
