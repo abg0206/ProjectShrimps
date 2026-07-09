@@ -121,6 +121,9 @@ export default function Sidebar() {
       <NavLink to="/dashboard" style={linkStyle}>
         Dashboard
       </NavLink>
+      <NavLink to="/documents" style={linkStyle}>
+        Documents
+      </NavLink>
       <NavLink to="/archived" style={linkStyle}>
         Archive
       </NavLink>
