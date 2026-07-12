@@ -6,7 +6,7 @@ import JobCard, {
   StageEvent,
   InterviewEntry,
 } from '../components/JobCard';
-
+import AnalyticsChart from '../components/AnalyticsChart';
 const STAGE_LABELS: Record<string, string> = {
   '0': 'Interested',
   '1': 'Applied',
@@ -2053,6 +2053,10 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+      
+      {/* S3-014: Stage Conversion Analytics */}
+      <AnalyticsChart email={userEmail} />
+
 
       {/*  Archive Confirmation Modal */}
       {archiveTarget && (
