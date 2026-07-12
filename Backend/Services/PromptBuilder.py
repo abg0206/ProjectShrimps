@@ -131,3 +131,22 @@ class PromptBuilder:
             "Rewrite.txt",
             variables
         )
+    def BuildCompanyResearchPrompt(
+    self,
+    company,
+    context
+    ):
+
+        prompt = self.LoadPrompt("CompanyResearch.txt")
+
+        prompt = prompt.replace(
+            "{{company}}",
+            company
+        )
+
+        prompt = prompt.replace(
+            "{{context}}",
+            context
+        )
+
+        return prompt
