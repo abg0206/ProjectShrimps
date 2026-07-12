@@ -10,11 +10,12 @@ const profileRouter = require('./routes/profile');
 const jobsRouter = require('./routes/jobs');
 const settingsRouter = require('./routes/settings');
 const aiRouter = require('./routes/ai');
-
+const analyticsRouter = require('./routes/analytics'); //analytics
 const app = express();
 
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
+
 
 // PostgreSQL Connection Pool
 const isLocal = process.env.NODE_ENV === 'development';
@@ -57,6 +58,8 @@ app.use('/api', jobsRouter(pool));
 app.use('/api/settings', settingsRouter);
 app.use('/api/users', settingsRouter);
 app.use('/api/ai', aiRouter(pool));
+app.use('/api/analytics', analyticsRouter(pool)); //analytics router mounted here
+
 
 // start
 const PORT = process.env.PORT || 3000;

@@ -145,6 +145,13 @@ module.exports = function (pool) {
           reminder_date || null,
         ]
       );
+      //ANALYTICS: LOG INITIAL STAGE TO STAGE_HISTORY <-------
+      // so LAG() in analytics has baseline row to compare against
+      await pool.query(
+        `INSERT INTO stage_history (job_id, stage) VALUES ($1, '0')`,
+        [result.rows[0].id]
+      );
+
       res.status(201).json(result.rows[0]);
     } catch (err) {
       console.error('Add job error:', err);
