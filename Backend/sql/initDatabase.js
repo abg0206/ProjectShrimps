@@ -1,21 +1,17 @@
 require('dotenv').config();
 const pool = require('../config/db');
 
+// Migration for the Documents domain (S3-BR-001..012), plus company
+// research fields and interview prep notes (S3-011, S3-012, S3-013).
+// job_table and interview_table must already exist before this runs.
 async function main() {
   try {
-    const result = await pool.query(`
-      SELECT table_name
-      FROM information_schema.tables
-      WHERE table_schema = 'public';
-    `);
-
-    console.log('Existing tables:', result.rows);
-
+    // --- enums ---------------------------------------------------------
     await pool.query(`
       DO $$
       BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'skill_enum') THEN
-          CREATE TYPE skill_enum AS ENUM ('Python', 'Java');
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'document_type_enum') THEN
+          CREATE TYPE document_type_enum AS ENUM ('resume', 'cover_letter');
         END IF;
       END $$;
     `);
@@ -23,8 +19,102 @@ async function main() {
     await pool.query(`
       DO $$
       BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'job_stage_enum') THEN
-          CREATE TYPE job_stage_enum AS ENUM ('0','1','2','3','4','5');
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'file_format_enum') THEN
+          CREATE TYPE file_format_enum AS ENUM ('pdf', 'docx', 'txt');
+        END IF;
+      END $$;
+    `);
+
+    // --- document (owning record) --------------------------------------
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS document_table (
+        document_id        SERIAL PRIMARY KEY,
+        email               VARCHAR(255) NOT NULL,
+        doc_type            document_type_enum NOT NULL,
+        title               VARCHAR(255) NOT NULL,
+        status              VARCHAR(20) NOT NULL DEFAULT 'draft',
+        tags                jsonb NOT NULL DEFAULT '[]'::jsonb,
+        current_version_id  INTEGER,
+        is_archived         BOOLEAN DEFAULT FALSE,
+        created_at          TIMESTAMP DEFAULT NOW(),
+        updated_at          TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
+    // Migration: add status/tags to document_table if the table pre-dates
+    // this metadata model (S3-002).
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'document_table' AND column_name = 'status'
+        ) THEN
+          ALTER TABLE document_table ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'draft';
+        END IF;
+
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'document_table' AND column_name = 'tags'
+        ) THEN
+          ALTER TABLE document_table ADD COLUMN tags jsonb NOT NULL DEFAULT '[]'::jsonb;
+        END IF;
+      END $$;
+    `);
+
+    // Document workflow status is separate from is_archived (which is the
+    // S3-BR-009 archive/restore lifecycle flag) — status tracks where the
+    // document is in its editing workflow.
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'chk_document_status'
+        ) THEN
+          ALTER TABLE document_table
+          ADD CONSTRAINT chk_document_status
+          CHECK (status IN ('draft', 'final'));
+        END IF;
+      END $$;
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_document_status
+      ON document_table(status);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_document_tags
+      ON document_table USING GIN (tags);
+    `);
+
+    // --- document_version (history) -------------------------------------
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS document_version_table (
+        version_id       SERIAL PRIMARY KEY,
+        document_id       INTEGER NOT NULL,
+        version_number    INTEGER NOT NULL,
+        email             VARCHAR(255) NOT NULL,
+        file_format       file_format_enum NOT NULL,
+        original_filename VARCHAR(255) NOT NULL,
+        content           TEXT NOT NULL,
+        file_size_bytes   INTEGER,
+        created_at        TIMESTAMP DEFAULT NOW(),
+        UNIQUE (document_id, version_number)
+      );
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_document_current_version'
+        ) THEN
+          ALTER TABLE document_table
+          ADD CONSTRAINT fk_document_current_version
+          FOREIGN KEY (current_version_id)
+          REFERENCES document_version_table(version_id)
+          ON DELETE SET NULL;
         END IF;
       END $$;
     `);
@@ -33,371 +123,38 @@ async function main() {
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM pg_enum
-          WHERE enumtypid = 'job_stage_enum'::regtype AND enumlabel = '5'
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_version_document'
         ) THEN
-          ALTER TYPE job_stage_enum ADD VALUE '5';
+          ALTER TABLE document_version_table
+          ADD CONSTRAINT fk_version_document
+          FOREIGN KEY (document_id)
+          REFERENCES document_table(document_id)
+          ON DELETE CASCADE;
         END IF;
       END $$;
     `);
 
+    // --- job <-> document link -------------------------------------------
     await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'interview_type_enum') THEN
-          CREATE TYPE interview_type_enum AS ENUM (
-            'Phone',
-            'Technical',
-            'Onsite',
-            'HR',
-            'Other'
-          );
-        END IF;
-      END $$;
-    `);
-
-    //tables logic
-
-    //User profile
-    //User account
-    await pool.query(`
-   CREATE TABLE IF NOT EXISTS user_account (
-     user_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-     clerk_id       VARCHAR(255) UNIQUE NOT NULL,
-     email          VARCHAR(255) UNIQUE NOT NULL,
-     email_verified BOOLEAN DEFAULT FALSE,
-     password_hash  VARCHAR(255),
-     created_at     TIMESTAMP DEFAULT NOW()
-   );
- `);
-
-    // Migration: add password_hash to user_account if missing
-    await pool.query(`
-   DO $$
-   BEGIN
-     IF NOT EXISTS (
-       SELECT 1 FROM information_schema.columns
-       WHERE table_name = 'user_account' AND column_name = 'password_hash'
-     ) THEN
-       ALTER TABLE user_account ADD COLUMN password_hash VARCHAR(255);
-     END IF;
-   END $$;
- `);
-
-    //User profile
-    await pool.query(`
-   CREATE TABLE IF NOT EXISTS user_profile (
-     user_id        UUID REFERENCES user_account(user_id) ON DELETE CASCADE,
-     email               VARCHAR(255) PRIMARY KEY,
-     phone               BIGINT NOT NULL,
-     first_name          VARCHAR(100) NOT NULL,
-     last_name           VARCHAR(101) NOT NULL,
-     summary             TEXT,
-     experience          TEXT,
-     skills              skill_enum[],
-     career_preferences  TEXT,
-     profile_picture_url VARCHAR(255)
-   );
- `);
-
-    // --- Migration: bring user_profile up to date with the Profile page ---
-    // skills used to be a skill_enum[] limited to 'Python'/'Java'. The UI lets
-    // users type any skill string, so we convert it to jsonb to store an
-    // arbitrary array of strings. experience was TEXT; the UI now sends an
-    // array of structured experience entries, so it becomes jsonb too.
-    // education, and the four separate career-preference fields, never
-    // existed as columns at all — they're added here.
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile'
-            AND column_name = 'skills'
-            AND udt_name = '_skill_enum'
-        ) THEN
-          ALTER TABLE user_profile
-          ALTER COLUMN skills TYPE jsonb
-          USING (
-            CASE
-              WHEN skills IS NULL THEN '[]'::jsonb
-              ELSE to_jsonb(skills::text[])
-            END
-          );
-        END IF;
-      END $$;
+      CREATE TABLE IF NOT EXISTS job_document_link (
+        job_id      INTEGER NOT NULL,
+        doc_type    document_type_enum NOT NULL,
+        document_id INTEGER NOT NULL,
+        version_id  INTEGER,
+        linked_by   VARCHAR(255) NOT NULL,
+        linked_at   TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (job_id, doc_type)
+      );
     `);
 
     await pool.query(`
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'skills'
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobdoclink_job'
         ) THEN
-          ALTER TABLE user_profile ADD COLUMN skills jsonb DEFAULT '[]'::jsonb;
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile'
-            AND column_name = 'experience'
-            AND data_type = 'text'
-        ) THEN
-          ALTER TABLE user_profile
-          ALTER COLUMN experience TYPE jsonb
-          USING (
-            CASE
-              WHEN experience IS NULL OR experience = '' THEN '[]'::jsonb
-              ELSE '[]'::jsonb
-            END
-          );
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'experience'
-        ) THEN
-          ALTER TABLE user_profile ADD COLUMN experience jsonb DEFAULT '[]'::jsonb;
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'education'
-        ) THEN
-          ALTER TABLE user_profile ADD COLUMN education jsonb DEFAULT '[]'::jsonb;
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'target_role'
-        ) THEN
-          ALTER TABLE user_profile ADD COLUMN target_role VARCHAR(255);
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'location_preference'
-        ) THEN
-          ALTER TABLE user_profile ADD COLUMN location_preference VARCHAR(255);
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'work_mode_preference'
-        ) THEN
-          ALTER TABLE user_profile ADD COLUMN work_mode_preference VARCHAR(50);
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'user_profile' AND column_name = 'salary_expectation'
-        ) THEN
-          ALTER TABLE user_profile ADD COLUMN salary_expectation VARCHAR(100);
-        END IF;
-      END $$;
-    `);
-    // --- end user_profile migration ---
-
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS job_table (
-         unique_num  SERIAL PRIMARY KEY,
-         email       VARCHAR(255) NOT NULL,
-         company     VARCHAR(255) NOT NULL,
-         title       VARCHAR(255) NOT NULL,
-         description TEXT NOT NULL,
-         stages      job_stage_enum NOT NULL DEFAULT '0',
-         is_deleted  BOOLEAN DEFAULT FALSE,
-         created_at  TIMESTAMP DEFAULT NOW()
-       );
-     `);
-
-    await pool.query(`
-       DO $$
-       BEGIN
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'job_table' AND column_name = 'email'
-         ) THEN
-           ALTER TABLE job_table ADD COLUMN email VARCHAR(255) NOT NULL DEFAULT '';
-         END IF;
- 
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'job_table' AND column_name = 'created_at'
-         ) THEN
-           ALTER TABLE job_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
-         END IF;
-
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'job_table' AND column_name = 'recruiter_notes'
-         ) THEN
-           ALTER TABLE job_table ADD COLUMN recruiter_notes TEXT;
-         END IF;
-
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'job_table' AND column_name = 'reminder_text'
-         ) THEN
-           ALTER TABLE job_table ADD COLUMN reminder_text VARCHAR(255);
-         END IF;
-
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'job_table' AND column_name = 'reminder_date'
-         ) THEN
-           ALTER TABLE job_table ADD COLUMN reminder_date DATE;
-         END IF;
-       END $$;
-     `);
-
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS resume_table (
-         experience_id SERIAL PRIMARY KEY,
-         email         VARCHAR(255),
-         title         VARCHAR(255),
-         content       TEXT,
-         other_links   TEXT,
-         linkedin      VARCHAR(255),
-         education     TEXT,
-         summary       TEXT,
-         created_at    TIMESTAMP DEFAULT NOW()
-       );
-     `);
-
-    await pool.query(`
-       DO $$
-       BEGIN
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'resume_table' AND column_name = 'title'
-         ) THEN
-           ALTER TABLE resume_table ADD COLUMN title VARCHAR(255);
-         END IF;
-
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'resume_table' AND column_name = 'content'
-         ) THEN
-           ALTER TABLE resume_table ADD COLUMN content TEXT;
-         END IF;
-
-         IF NOT EXISTS (
-           SELECT 1 FROM information_schema.columns
-           WHERE table_name = 'resume_table' AND column_name = 'created_at'
-         ) THEN
-           ALTER TABLE resume_table ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
-         END IF;
-       END $$;
-     `);
-
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS job_resume (
-         job_id    INTEGER NOT NULL,
-         resume_id INTEGER NOT NULL,
-         PRIMARY KEY (job_id, resume_id)
-       );
-     `);
-
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS cover_letter_table (
-         cover_letter_id SERIAL PRIMARY KEY,
-         email           VARCHAR(255),
-         title           VARCHAR(255),
-         content         TEXT,
-         created_at      TIMESTAMP DEFAULT NOW()
-       );
-     `);
-
-    await pool.query(`
-       CREATE TABLE IF NOT EXISTS job_cover_letter (
-         job_id          INTEGER NOT NULL,
-         cover_letter_id INTEGER NOT NULL,
-         PRIMARY KEY (job_id, cover_letter_id)
-       );
-     `);
-
-    await pool.query(`
-  CREATE TABLE IF NOT EXISTS interview_table (
-    interview_id   SERIAL PRIMARY KEY,
-    job_id         INTEGER NOT NULL,
-    interview_type interview_type_enum NOT NULL DEFAULT 'Other',
-    scheduled_at   TIMESTAMP,
-    reminder_at    TIMESTAMP,
-    notes          TEXT,
-    created_at     TIMESTAMP DEFAULT NOW()
-  );
-`);
-
-    // Migration: the frontend's round-type options ('First Round', 'Virtual',
-    // 'Final', etc.) don't match interview_type_enum, so store them as free
-    // text instead of forcing them through that enum.
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM information_schema.columns
-          WHERE table_name = 'interview_table' AND column_name = 'round_type'
-        ) THEN
-          ALTER TABLE interview_table ADD COLUMN round_type VARCHAR(100);
-        END IF;
-      END $$;
-    `);
-    await pool.query(`
-  CREATE TABLE IF NOT EXISTS stage_history (
-    history_id SERIAL PRIMARY KEY,
-    job_id     INTEGER NOT NULL,
-    stage      job_stage_enum NOT NULL,
-    changed_at TIMESTAMP DEFAULT NOW()
-  );
-`);
-
-    // Stage history to Job
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'fk_stagehistory_job'
-        ) THEN
-          ALTER TABLE stage_history
-          ADD CONSTRAINT fk_stagehistory_job
+          ALTER TABLE job_document_link
+          ADD CONSTRAINT fk_jobdoclink_job
           FOREIGN KEY (job_id)
           REFERENCES job_table(unique_num)
           ON DELETE CASCADE;
@@ -406,117 +163,125 @@ async function main() {
     `);
 
     await pool.query(`
-      CREATE INDEX IF NOT EXISTS idx_stagehistory_job_id
-      ON stage_history(job_id);
-    `);
-
-    //forein keys and indexes
-    // Interview to Job
-    await pool.query(`
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'fk_interview_job'
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobdoclink_document'
         ) THEN
-          ALTER TABLE interview_table
-          ADD CONSTRAINT fk_interview_job
-          FOREIGN KEY (job_id)
-          REFERENCES job_table(unique_num)
+          ALTER TABLE job_document_link
+          ADD CONSTRAINT fk_jobdoclink_document
+          FOREIGN KEY (document_id)
+          REFERENCES document_table(document_id)
           ON DELETE RESTRICT;
         END IF;
       END $$;
     `);
 
-    // JobResume & Job deleate
     await pool.query(`
       DO $$
       BEGIN
         IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobresume_job'
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobdoclink_version'
         ) THEN
-          ALTER TABLE job_resume
-          ADD CONSTRAINT fk_jobresume_job
-          FOREIGN KEY (job_id)
-          REFERENCES job_table(unique_num)
+          ALTER TABLE job_document_link
+          ADD CONSTRAINT fk_jobdoclink_version
+          FOREIGN KEY (version_id)
+          REFERENCES document_version_table(version_id)
+          ON DELETE SET NULL;
+        END IF;
+      END $$;
+    `);
+
+    // --- indexes ----------------------------------------------------------
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_document_email
+      ON document_table(email);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_document_email_type
+      ON document_table(email, doc_type);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_version_document_id
+      ON document_version_table(document_id);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_jobdoclink_document_id
+      ON job_document_link(document_id);
+    `);
+
+    console.log('Document tables created successfully');
+
+    // --- company research (S3-011 input UX / S3-012 persistence) -------
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'job_table' AND column_name = 'company_research_context'
+        ) THEN
+          ALTER TABLE job_table ADD COLUMN company_research_context TEXT;
+        END IF;
+
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'job_table' AND column_name = 'company_research_notes'
+        ) THEN
+          ALTER TABLE job_table ADD COLUMN company_research_notes TEXT;
+        END IF;
+
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'job_table' AND column_name = 'company_research_updated_at'
+        ) THEN
+          ALTER TABLE job_table ADD COLUMN company_research_updated_at TIMESTAMP;
+        END IF;
+      END $$;
+    `);
+
+    // --- interview prep notes (S3-013) ----------------------------------
+    // Structured prep notes per interview. "category" gives the structure
+    // (e.g. 'company_overview', 'questions_to_ask', 'talking_points',
+    // 'technical_prep') while staying flexible enough for the UI to define
+    // its own set of sections without another migration.
+    // S3-BR-003: created_at / updated_at give an audit trail for actions.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS interview_prep_notes (
+        prep_note_id SERIAL PRIMARY KEY,
+        interview_id INTEGER NOT NULL,
+        category     VARCHAR(50) NOT NULL DEFAULT 'general',
+        content      TEXT NOT NULL,
+        created_at   TIMESTAMP DEFAULT NOW(),
+        updated_at   TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'fk_prepnotes_interview'
+        ) THEN
+          ALTER TABLE interview_prep_notes
+          ADD CONSTRAINT fk_prepnotes_interview
+          FOREIGN KEY (interview_id)
+          REFERENCES interview_table(interview_id)
           ON DELETE CASCADE;
         END IF;
       END $$;
     `);
 
-    // JobResume & Resume deleate
     await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobresume_resume'
-        ) THEN
-          ALTER TABLE job_resume
-          ADD CONSTRAINT fk_jobresume_resume
-          FOREIGN KEY (resume_id)
-          REFERENCES resume_table(experience_id)
-          ON DELETE CASCADE;
-        END IF;
-      END $$;
+      CREATE INDEX IF NOT EXISTS idx_prepnotes_interview_id
+      ON interview_prep_notes(interview_id);
     `);
 
-    // JobCoverLetter & Job deleate
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobcoverletter_job'
-        ) THEN
-          ALTER TABLE job_cover_letter
-          ADD CONSTRAINT fk_jobcoverletter_job
-          FOREIGN KEY (job_id)
-          REFERENCES job_table(unique_num)
-          ON DELETE CASCADE;
-        END IF;
-      END $$;
-    `);
-
-    // JobCoverLetter & CoverLetter deleate
-    await pool.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'fk_jobcoverletter_coverletter'
-        ) THEN
-          ALTER TABLE job_cover_letter
-          ADD CONSTRAINT fk_jobcoverletter_coverletter
-          FOREIGN KEY (cover_letter_id)
-          REFERENCES cover_letter_table(cover_letter_id)
-          ON DELETE CASCADE;
-        END IF;
-      END $$;
-    `);
-
-    await pool.query(`
-      CREATE INDEX IF NOT EXISTS idx_job_company
-      ON job_table(company);
-    `);
-
-    await pool.query(`
-      CREATE INDEX IF NOT EXISTS idx_job_title
-      ON job_table(title);
-    `);
-
-    await pool.query(`
-      CREATE INDEX IF NOT EXISTS idx_interview_job_id
-      ON interview_table(job_id);
-    `);
-
-    await pool.query(`
-      CREATE INDEX IF NOT EXISTS idx_resume_email
-      ON resume_table(email);
-    `);
-
-    await pool.query(`
-      CREATE INDEX IF NOT EXISTS idx_cover_letter_email
-      ON cover_letter_table(email);
-    `);
-
-    console.log('Tables created successfully');
+    console.log(
+      'Company research columns and interview_prep_notes table created successfully'
+    );
   } catch (err) {
     console.error(err);
   } finally {
