@@ -18,7 +18,6 @@ module.exports = function (pool) {
       const result = await pool.query(
         `WITH transitions AS (
            SELECT
-             sh.history_id,
              sh.job_id,
              jt.title,
              jt.company,
@@ -48,10 +47,37 @@ module.exports = function (pool) {
         (r) => r.from_stage === '0' && r.to_stage === '1'
       );
 
+      // Conversion rate denominator: the full pool of jobs relevant to this
+      // funnel step. This must include jobs that have ALREADY converted
+      // (i.e. are now sitting in Applied), not just jobs still sitting in
+      // Interested — otherwise a converted job "disappears" from the pool
+      // the moment it moves stage, and the rate spikes (e.g. 1 conversion /
+      // 1 remaining-interested job = 100%, even though more jobs were
+      // actually in play).
+      const poolResult = await pool.query(
+        `WITH latest_stage AS (
+           SELECT DISTINCT ON (sh.job_id)
+             sh.job_id,
+             sh.stage::text AS current_stage
+           FROM stage_history sh
+           JOIN job_table jt
+             ON sh.job_id = jt.unique_num
+           WHERE jt.email = $1
+             AND jt.is_deleted = FALSE
+           ORDER BY sh.job_id, sh.changed_at DESC
+         )
+         SELECT COUNT(*) AS count
+         FROM latest_stage
+         WHERE current_stage IN ('0', '1')`,
+        [email]
+      );
+      const totalInterested = parseInt(poolResult.rows[0].count, 10);
+
       res.status(200).json({
         transitions: result.rows,         // all transitions in last 7 days
         interestedToApplied,              // specifically 0 → 1
         totalTransitions: result.rows.length,
+        totalInterested,                  // jobs currently Interested or Applied
       });
     } catch (err) {
       console.error('Analytics conversions error:', err);

@@ -1,18 +1,15 @@
 // S3-014 (Expand Dashboard Analytics)
 // report (Interested → Applied) for the last 7 days
 // CONNECTS TO: GET /api/analytics/:email/conversions (Backend/routes/analytics.js)
-//   • Imported by DashboardPage.tsx as <AnalyticsChart email={userEmail} />
+//   • Imported by DashboardPage.tsx as a persistent right-hand column,
+//     rendered as a sibling of the Sidebar + main content, e.g.:
+//       <div style={{ display: 'flex', minHeight: '100vh' }}>
+//         <Sidebar />
+//         <div style={{ flex: 1 }}>...main content...</div>
+//         <AnalyticsChart email={userEmail} />
+//       </div>
 
 import { useState, useEffect } from 'react';
-
-const STAGE_LABELS: Record<string, string> = {
-  '0': 'Interested',
-  '1': 'Applied',
-  '2': 'Interview',
-  '3': 'Offer',
-  '4': 'Rejected',
-  '5': 'Archived',
-};
 
 interface Transition {
   job_id: number;
@@ -25,14 +22,16 @@ interface Transition {
 
 interface Props {
   email: string;
+  // Bump this (e.g. increment a counter) whenever a job's stage changes
+  // elsewhere in the app, so this panel refetches and stays in sync.
+  refreshKey?: number;
 }
 
-export default function AnalyticsChart({ email }: Props) {
+export default function AnalyticsChart({ email, refreshKey }: Props) {
   const [interestedToApplied, setInterestedToApplied] = useState<Transition[]>([]);
   const [totalInterested, setTotalInterested] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isOpen, setIsOpen] = useState(false); // controls panel open/close
 
   useEffect(() => {
     if (!email) return;
@@ -48,15 +47,11 @@ export default function AnalyticsChart({ email }: Props) {
         if (!res.ok) throw new Error('Failed to fetch analytics');
         const data = await res.json();
         setInterestedToApplied(data.interestedToApplied ?? []);
-
-        // fetch total jobs at Interested stage for conversion rate denominator
-        const jobsRes = await fetch(
-          `/api/jobs/${encodeURIComponent(email)}?stage=0`
-        );
-        if (jobsRes.ok) {
-          const jobsData = await jobsRes.json();
-          setTotalInterested(jobsData.length);
-        }
+        // Denominator for conversion rate: jobs currently Interested OR
+        // Applied, computed server-side so already-converted jobs aren't
+        // dropped from the pool. (Previously this was a separate fetch of
+        // only stage=0 jobs, which undercounted and inflated the rate.)
+        setTotalInterested(data.totalInterested ?? 0);
       } catch (err) {
         console.error('Analytics fetch error:', err);
         setError('Could not load analytics.');
@@ -66,7 +61,7 @@ export default function AnalyticsChart({ email }: Props) {
     }
 
     fetchAnalytics();
-  }, [email]);
+  }, [email, refreshKey]);
 
   // Calculate conversion rate percentage
   const conversionRate =
@@ -74,48 +69,28 @@ export default function AnalyticsChart({ email }: Props) {
       ? Math.round((interestedToApplied.length / totalInterested) * 100)
       : 0;
 
-  // ── Styles UI
-  const floatingContainer: React.CSSProperties = {
-    position: 'fixed',
-    bottom: '24px',
-    right: '24px',
-    zIndex: 40,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    gap: '8px',
+  // ── Styles UI ── always-visible right-hand column, not a floating widget
+  const panelStyle: React.CSSProperties = {
+    width: '300px',
+    flexShrink: 0,
+    backgroundColor: '#E6CECB',
+    padding: '24px 20px',
+    minHeight: '100vh',
+    overflowY: 'auto',
+    boxShadow: '-2px 0 8px rgba(0,0,0,0.06)',
   };
 
-  const toggleButton: React.CSSProperties = {
-    backgroundColor: '#932C20',
-    color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '20px',
-    padding: '8px 16px',
-    fontSize: '13px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+  const headerRowStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
-  };
-
-  const panelStyle: React.CSSProperties = {
-    backgroundColor: '#FFFFFF',
-    borderRadius: '12px',
-    padding: '20px',
-    width: '300px',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
-    maxHeight: '400px',
-    overflowY: 'auto',
+    gap: '8px',
+    marginBottom: '2px',
   };
 
   const headerStyle: React.CSSProperties = {
-    fontSize: '15px',
+    fontSize: '16px',
     fontWeight: 'bold',
     color: '#3C1510',
-    marginBottom: '4px',
     margin: 0,
   };
 
@@ -129,7 +104,7 @@ export default function AnalyticsChart({ email }: Props) {
   const conversionBadgeStyle: React.CSSProperties = {
     display: 'inline-block',
     backgroundColor: '#932C20',
-    color: '#FFFFFF',
+    color: '#ffffff',
     borderRadius: '20px',
     padding: '4px 12px',
     fontSize: '12px',
@@ -138,7 +113,7 @@ export default function AnalyticsChart({ email }: Props) {
   };
 
   const rateBarContainerStyle: React.CSSProperties = {
-    backgroundColor: '#F3F0EF',
+    backgroundColor: '#E6CECB',
     borderRadius: '8px',
     height: '8px',
     width: '100%',
@@ -155,7 +130,7 @@ export default function AnalyticsChart({ email }: Props) {
   };
 
   const dividerStyle: React.CSSProperties = {
-    borderTop: '1px solid #F3F0EF',
+    borderTop: '1px solid #3C1510',
     margin: '12px 0',
   };
 
@@ -165,7 +140,7 @@ export default function AnalyticsChart({ email }: Props) {
     alignItems: 'center',
     padding: '8px 10px',
     borderRadius: '8px',
-    backgroundColor: '#F9F5F4',
+    backgroundColor: '#E6CECB',
     marginBottom: '6px',
   };
 
@@ -177,31 +152,35 @@ export default function AnalyticsChart({ email }: Props) {
 
   const jobCompanyStyle: React.CSSProperties = {
     fontSize: '11px',
-    color: '#666',
+    color: '#3C1510',
     marginTop: '2px',
   };
 
   const jobDateStyle: React.CSSProperties = {
     fontSize: '11px',
-    color: '#888',
+    color: '#3C1510',
     whiteSpace: 'nowrap',
   };
 
-  // don't render anything while loading or if there's an error
-  if (loading) return null;
-  if (error) return null;
-
   return (
-    <div style={floatingContainer}>
+    <div style={panelStyle}>
+      {/* Header */}
+      <div style={headerRowStyle}>
+        <span style={{ fontSize: '16px' }}>📊</span>
+        <h3 style={headerStyle}>Stage Conversion Report</h3>
+      </div>
+      <p style={subStyle}>Last 7 days · Interested → Applied</p>
 
-      {/* ── Expanded panel — only shown when isOpen = true  */}
-      {isOpen && (
-        <div style={panelStyle}>
-
-          {/* Header */}
-          <h3 style={headerStyle}>📌 Stage Conversion Report</h3>
-          <p style={subStyle}>Last 7 days · Interested → Applied</p>
-
+      {loading ? (
+        <p style={{ color: '#3C1510', fontSize: '12px', padding: '8px 0' }}>
+          Loading analytics…
+        </p>
+      ) : error ? (
+        <p style={{ color: '#932C20', fontSize: '12px', padding: '8px 0' }}>
+          {error}
+        </p>
+      ) : (
+        <>
           {/* Conversion badge */}
           <span style={conversionBadgeStyle}>
             {interestedToApplied.length} job
@@ -214,7 +193,7 @@ export default function AnalyticsChart({ email }: Props) {
               display: 'flex',
               justifyContent: 'space-between',
               fontSize: '11px',
-              color: '#888',
+              color: '#3C1510',
               marginBottom: '4px',
             }}>
               <span>Conversion rate</span>
@@ -231,7 +210,7 @@ export default function AnalyticsChart({ email }: Props) {
 
           {/* Job list */}
           {interestedToApplied.length === 0 ? (
-            <p style={{ color: '#999', fontSize: '12px', textAlign: 'center', padding: '8px 0' }}>
+            <p style={{ color: '#3C1510', fontSize: '12px', textAlign: 'center', padding: '8px 0' }}>
               No jobs moved from Interested to Applied in the last 7 days.
             </p>
           ) : (
@@ -259,34 +238,11 @@ export default function AnalyticsChart({ email }: Props) {
           <div style={dividerStyle} />
 
           {/* Footer */}
-          <p style={{ fontSize: '11px', color: '#aaa', textAlign: 'center', margin: 0 }}>
+          <p style={{ fontSize: '11px', color: '#3C1510', textAlign: 'center', margin: 0 }}>
             Showing transitions from the past 7 days only
           </p>
-
-        </div>
+        </>
       )}
-
-      {/* ── Toggle button — always visible in bottom-right  */}
-      <button
-        style={toggleButton}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        📊 {isOpen ? 'Hide Analytics ▼' : 'Analytics ▲'}
-        {/* Show count badge when collapsed and there are conversions */}
-        {!isOpen && interestedToApplied.length > 0 && (
-          <span style={{
-            backgroundColor: '#FFFFFF',
-            color: '#932C20',
-            borderRadius: '10px',
-            padding: '1px 7px',
-            fontSize: '11px',
-            fontWeight: 700,
-          }}>
-            {interestedToApplied.length}
-          </span>
-        )}
-      </button>
-
     </div>
   );
 }

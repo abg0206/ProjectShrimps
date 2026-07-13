@@ -81,6 +81,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Bumped whenever something that affects the analytics panel happens
+  // (job stage change, archive, add, or delete) so AnalyticsChart knows to
+  // refetch and stay in sync.
+  const [analyticsRefreshKey, setAnalyticsRefreshKey] = useState(0);
+
   // AI resume tailoring
   const [tailoringJobId, setTailoringJobId] = useState<number | null>(null);
   const [tailorResult, setTailorResult] = useState<{
@@ -426,7 +431,7 @@ export default function DashboardPage() {
                                                 <div
                                                   key={note.id}
                                                   style={{
-                                                    backgroundColor: '#fff',
+                                                    backgroundColor: '#F3E4E1',
                                                     borderRadius: '6px',
                                                     padding: '6px 10px',
                                                     marginBottom: '6px',
@@ -624,7 +629,7 @@ export default function DashboardPage() {
                                               borderRadius: '4px',
                                               border: '1px solid #D9958C',
                                               fontSize: '12px',
-                                              backgroundColor: '#fff',
+                                              backgroundColor: '#F3E4E1',
                                               marginBottom: '6px',
                                             }}
                                           >
@@ -775,6 +780,7 @@ export default function DashboardPage() {
       }
       // Refetch so new job respects current filters/sort
       await fetchJobs();
+      setAnalyticsRefreshKey((prev) => prev + 1);
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
@@ -911,6 +917,7 @@ export default function DashboardPage() {
         prev && prev.id === jobId ? { ...prev, status: newStage } : prev
       );
       await fetchJobs();
+      setAnalyticsRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error('Status update failed:', err);
     }
@@ -936,6 +943,7 @@ export default function DashboardPage() {
         setDetailJob((prev) =>
           prev && prev.id === archiveTarget.id ? null : prev
         );
+        setAnalyticsRefreshKey((prev) => prev + 1);
       }
     } catch (err) {
       console.error('Archive failed:', err);
@@ -957,6 +965,7 @@ export default function DashboardPage() {
       setJobs((prev) => prev.filter((j) => j.id !== jobId));
       // Clean up the detail view if it was pointing at the deleted job.
       setDetailJob((prev) => (prev && prev.id === jobId ? null : prev));
+      setAnalyticsRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error('Delete failed:', err);
     }
@@ -1457,6 +1466,9 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* S3-014: Stage Conversion Analytics — third column, always visible */}
+      <AnalyticsChart email={userEmail} refreshKey={analyticsRefreshKey} />
 
       {/* Job detail */}
       {detailJob && (
@@ -2712,6 +2724,7 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
       {/* Add Job Modal */}
       {showAddModal && (
         <div
@@ -2823,10 +2836,6 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-      
-      {/* S3-014: Stage Conversion Analytics */}
-      <AnalyticsChart email={userEmail} />
-
 
       {/*  Archive Confirmation Modal */}
       {archiveTarget && (
