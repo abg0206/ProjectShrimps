@@ -1,5 +1,6 @@
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Job = {
   id: number;
@@ -31,6 +32,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function ArchivedPage() {
+  const navigate = useNavigate();
   const session = JSON.parse(sessionStorage.getItem('user') ?? '{}');
   const userEmail = session.email ?? '';
 
@@ -336,6 +338,19 @@ export default function ArchivedPage() {
                     Added: {new Date(job.created_at).toLocaleDateString()}
                   </span>
                   <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      onClick={() => navigate(`/jobs/${job.id}`)}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: '#932C20',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        padding: 0,
+                      }}
+                    >
+                      View Details
+                    </button>
                     <button
                       onClick={() =>
                         setUnarchiveTarget({ id: job.id, title: job.title })

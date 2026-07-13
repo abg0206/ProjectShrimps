@@ -1,4 +1,20 @@
 const express = require('express');
+const { generateContent } = require('../Services/geminiService');
+const { buildCompanyResearchPrompt } = require('../Services/promptBuilder');
+
+// Same Gemini client/prompt-template pattern the resume/cover-letter
+// tailoring routes use (see routes/ai.js) — builds the CompanyResearch.txt
+// prompt and asks Gemini for a plain-text research report.
+async function generateCompanyResearch({ company, title, context }) {
+  const prompt = buildCompanyResearchPrompt({ company, title, context });
+  const result = await generateContent(prompt);
+
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to generate company research');
+  }
+
+  return result.content;
+}
 
 module.exports = function (pool) {
   const router = express.Router();
@@ -145,6 +161,13 @@ module.exports = function (pool) {
           reminder_date || null,
         ]
       );
+      //ANALYTICS: LOG INITIAL STAGE TO STAGE_HISTORY <-------
+      // so LAG() in analytics has baseline row to compare against
+      await pool.query(
+        `INSERT INTO stage_history (job_id, stage) VALUES ($1, '0')`,
+        [result.rows[0].id]
+      );
+
       res.status(201).json(result.rows[0]);
     } catch (err) {
       console.error('Add job error:', err);
@@ -278,6 +301,30 @@ module.exports = function (pool) {
     }
   });
 
+  // GET /jobs/:email/:id — single job's core fields, for detail views
+  // (e.g. the Job Detail page's header) that don't need the whole list.
+  router.get('/jobs/:email/:id', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const result = await pool.query(
+        `SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes, reminder_text, reminder_date::text AS reminder_date
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error('Get job error:', err);
+      res.status(500).json({ error: 'Failed to fetch job' });
+    }
+  });
+
   // GET /jobs/:email/:id/history — stage history for a job
   router.get('/jobs/:email/:id/history', async (req, res) => {
     try {
@@ -334,12 +381,21 @@ module.exports = function (pool) {
 
       // Confirm the job exists and belongs to this email before inserting.
       const job = await pool.query(
-        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        `SELECT unique_num, stages::text AS stage FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
         [id, email]
       );
 
       if (job.rows.length === 0) {
         return res.status(404).json({ error: 'Job not found' });
+      }
+
+      // Interviews can only be scheduled while the job is in the
+      // "Interview" stage (stage '2').
+      if (job.rows[0].stage !== '2') {
+        return res.status(409).json({
+          error:
+            'Interviews can only be added while the job status is "Interview"',
+        });
       }
 
       const result = await pool.query(
@@ -623,6 +679,278 @@ module.exports = function (pool) {
       client.release();
     }
   });
+
+  // ---------------------------------------------------------------------
+  // Company research (S3-011 / S3-012)
+  // ---------------------------------------------------------------------
+
+  // GET /jobs/:email/:id/company-research — fetch the saved research
+  // context + notes for a job's detail view.
+  router.get('/jobs/:email/:id/company-research', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const result = await pool.query(
+        `SELECT unique_num AS id,
+                company_research_context AS research_context,
+                company_research_notes AS research_notes,
+                company_research_updated_at AS updated_at
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error('Get company research error:', err);
+      res.status(500).json({ error: 'Failed to fetch company research' });
+    }
+  });
+
+  // POST /jobs/:email/:id/company-research/generate — trigger AI-assisted
+  // company research from user-provided context (S3-011). This only
+  // generates notes; saving them is a separate step (PUT below, S3-012) so
+  // the user can review/edit before persisting.
+  router.post(
+    '/jobs/:email/:id/company-research/generate',
+    async (req, res) => {
+      try {
+        const { email, id } = req.params;
+        const { context } = req.body;
+
+        if (!context || !String(context).trim()) {
+          return res.status(400).json({ error: 'context is required' });
+        }
+
+        const job = await pool.query(
+          `SELECT unique_num, title, company
+           FROM job_table
+           WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+          [id, email]
+        );
+
+        if (job.rows.length === 0) {
+          return res.status(404).json({ error: 'Job not found' });
+        }
+
+        const generatedNotes = await generateCompanyResearch({
+          company: job.rows[0].company,
+          title: job.rows[0].title,
+          context: context.trim(),
+        });
+
+        res.json({ success: true, research_notes: generatedNotes });
+      } catch (err) {
+        console.error('Generate company research error:', err);
+        res.status(500).json({ error: 'Failed to generate company research' });
+      }
+    }
+  );
+
+  // PUT /jobs/:email/:id/company-research — persist research context
+  // and/or editable notes to the job record (S3-012).
+  router.put('/jobs/:email/:id/company-research', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+      const { research_context, research_notes } = req.body;
+
+      if (research_context === undefined && research_notes === undefined) {
+        return res.status(400).json({
+          error: 'research_context or research_notes is required',
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE job_table
+         SET
+           company_research_context    = COALESCE($1, company_research_context),
+           company_research_notes      = COALESCE($2, company_research_notes),
+           company_research_updated_at = NOW()
+         WHERE unique_num = $3 AND email = $4 AND is_deleted = FALSE
+         RETURNING unique_num AS id,
+                   company_research_context AS research_context,
+                   company_research_notes AS research_notes,
+                   company_research_updated_at AS updated_at`,
+        [research_context ?? null, research_notes ?? null, id, email]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error('Update company research error:', err);
+      res.status(500).json({ error: 'Failed to update company research' });
+    }
+  });
+
+  // ---------------------------------------------------------------------
+  // Interview prep notes (S3-013)
+  // ---------------------------------------------------------------------
+
+  // GET /jobs/:email/:id/interviews/:interviewId/prep-notes — list
+  // structured prep notes for one interview.
+  router.get(
+    '/jobs/:email/:id/interviews/:interviewId/prep-notes',
+    async (req, res) => {
+      try {
+        const { email, id, interviewId } = req.params;
+
+        const interview = await pool.query(
+          `SELECT i.interview_id
+           FROM interview_table i
+           JOIN job_table j ON j.unique_num = i.job_id
+           WHERE i.interview_id = $1 AND i.job_id = $2 AND j.email = $3 AND j.is_deleted = FALSE`,
+          [interviewId, id, email]
+        );
+
+        if (interview.rows.length === 0) {
+          return res.status(404).json({ error: 'Interview not found' });
+        }
+
+        const result = await pool.query(
+          `SELECT prep_note_id AS id, category, content, created_at, updated_at
+           FROM interview_prep_notes
+           WHERE interview_id = $1
+           ORDER BY created_at ASC`,
+          [interviewId]
+        );
+
+        res.json(result.rows);
+      } catch (err) {
+        console.error('Get interview prep notes error:', err);
+        res.status(500).json({ error: 'Failed to fetch interview prep notes' });
+      }
+    }
+  );
+
+  // POST /jobs/:email/:id/interviews/:interviewId/prep-notes — add a
+  // prep note in a given category (e.g. 'questions_to_ask', 'talking_points').
+  router.post(
+    '/jobs/:email/:id/interviews/:interviewId/prep-notes',
+    async (req, res) => {
+      try {
+        const { email, id, interviewId } = req.params;
+        const { category, content } = req.body;
+
+        if (!content || !String(content).trim()) {
+          return res.status(400).json({ error: 'content is required' });
+        }
+
+        const interview = await pool.query(
+          `SELECT i.interview_id
+           FROM interview_table i
+           JOIN job_table j ON j.unique_num = i.job_id
+           WHERE i.interview_id = $1 AND i.job_id = $2 AND j.email = $3 AND j.is_deleted = FALSE`,
+          [interviewId, id, email]
+        );
+
+        if (interview.rows.length === 0) {
+          return res.status(404).json({ error: 'Interview not found' });
+        }
+
+        const result = await pool.query(
+          `INSERT INTO interview_prep_notes (interview_id, category, content)
+           VALUES ($1, $2, $3)
+           RETURNING prep_note_id AS id, category, content, created_at, updated_at`,
+          [interviewId, category?.trim() || 'general', content.trim()]
+        );
+
+        res.status(201).json(result.rows[0]);
+      } catch (err) {
+        console.error('Add interview prep note error:', err);
+        res.status(500).json({ error: 'Failed to add interview prep note' });
+      }
+    }
+  );
+
+  // PUT /jobs/:email/:id/interviews/:interviewId/prep-notes/:prepNoteId —
+  // edit an existing prep note.
+  router.put(
+    '/jobs/:email/:id/interviews/:interviewId/prep-notes/:prepNoteId',
+    async (req, res) => {
+      try {
+        const { email, id, interviewId, prepNoteId } = req.params;
+        const { category, content } = req.body;
+
+        if (!content || !String(content).trim()) {
+          return res.status(400).json({ error: 'content is required' });
+        }
+
+        const interview = await pool.query(
+          `SELECT i.interview_id
+           FROM interview_table i
+           JOIN job_table j ON j.unique_num = i.job_id
+           WHERE i.interview_id = $1 AND i.job_id = $2 AND j.email = $3 AND j.is_deleted = FALSE`,
+          [interviewId, id, email]
+        );
+
+        if (interview.rows.length === 0) {
+          return res.status(404).json({ error: 'Interview not found' });
+        }
+
+        const result = await pool.query(
+          `UPDATE interview_prep_notes
+           SET category = COALESCE($1, category), content = $2, updated_at = NOW()
+           WHERE prep_note_id = $3 AND interview_id = $4
+           RETURNING prep_note_id AS id, category, content, created_at, updated_at`,
+          [category?.trim() || null, content.trim(), prepNoteId, interviewId]
+        );
+
+        if (result.rows.length === 0) {
+          return res.status(404).json({ error: 'Prep note not found' });
+        }
+
+        res.json(result.rows[0]);
+      } catch (err) {
+        console.error('Update interview prep note error:', err);
+        res.status(500).json({ error: 'Failed to update interview prep note' });
+      }
+    }
+  );
+
+  // DELETE /jobs/:email/:id/interviews/:interviewId/prep-notes/:prepNoteId
+  router.delete(
+    '/jobs/:email/:id/interviews/:interviewId/prep-notes/:prepNoteId',
+    async (req, res) => {
+      try {
+        const { email, id, interviewId, prepNoteId } = req.params;
+
+        const interview = await pool.query(
+          `SELECT i.interview_id
+           FROM interview_table i
+           JOIN job_table j ON j.unique_num = i.job_id
+           WHERE i.interview_id = $1 AND i.job_id = $2 AND j.email = $3 AND j.is_deleted = FALSE`,
+          [interviewId, id, email]
+        );
+
+        if (interview.rows.length === 0) {
+          return res.status(404).json({ error: 'Interview not found' });
+        }
+
+        const result = await pool.query(
+          `DELETE FROM interview_prep_notes
+           WHERE prep_note_id = $1 AND interview_id = $2
+           RETURNING prep_note_id`,
+          [prepNoteId, interviewId]
+        );
+
+        if (result.rows.length === 0) {
+          return res.status(404).json({ error: 'Prep note not found' });
+        }
+
+        res.json({ success: true });
+      } catch (err) {
+        console.error('Delete interview prep note error:', err);
+        res.status(500).json({ error: 'Failed to delete interview prep note' });
+      }
+    }
+  );
 
   return router;
 };

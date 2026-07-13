@@ -6,7 +6,18 @@ import JobCard, {
   StageEvent,
   InterviewEntry,
 } from '../components/JobCard';
-
+import AnalyticsChart from '../components/AnalyticsChart';
+import {
+  getCompanyResearch,
+  generateCompanyResearch,
+  saveCompanyResearch,
+  listPrepNotes,
+  addPrepNote,
+  updatePrepNote,
+  deletePrepNote,
+  PREP_NOTE_CATEGORIES,
+  type PrepNote,
+} from '../lib/jobDetailApi';
 const STAGE_LABELS: Record<string, string> = {
   '0': 'Interested',
   '1': 'Applied',
@@ -70,6 +81,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Bumped whenever something that affects the analytics panel happens
+  // (job stage change, archive, add, or delete) so AnalyticsChart knows to
+  // refetch and stay in sync.
+  const [analyticsRefreshKey, setAnalyticsRefreshKey] = useState(0);
+
   // AI resume tailoring
   const [tailoringJobId, setTailoringJobId] = useState<number | null>(null);
   const [tailorResult, setTailorResult] = useState<{
@@ -130,6 +146,41 @@ export default function DashboardPage() {
   const [savingNotes, setSaveNotes] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
 
+  // Company research — S3-011 (generate) / S3-012 (persist notes)
+  const [researchContext, setResearchContext] = useState('');
+  const [researchNotes, setResearchNotes] = useState('');
+  const [researchUpdatedAt, setResearchUpdatedAt] = useState<string | null>(
+    null
+  );
+  const [researchLoading, setResearchLoading] = useState(false);
+  const [generatingResearch, setGeneratingResearch] = useState(false);
+  const [generateResearchError, setGenerateResearchError] = useState('');
+  const [savingResearch, setSavingResearch] = useState(false);
+  const [researchSaveMessage, setResearchSaveMessage] = useState('');
+  const [researchSaveError, setResearchSaveError] = useState('');
+
+  // Interview prep notes — S3-013
+  const [selectedInterviewId, setSelectedInterviewId] = useState<number | null>(
+    null
+  );
+  const [prepNotes, setPrepNotes] = useState<PrepNote[]>([]);
+  const [prepLoading, setPrepLoading] = useState(false);
+  const [prepError, setPrepError] = useState('');
+  const [newPrepCategory, setNewPrepCategory] = useState(
+    PREP_NOTE_CATEGORIES[0].value as string
+  );
+  const [newPrepContent, setNewPrepContent] = useState('');
+  const [addingPrepNote, setAddingPrepNote] = useState(false);
+  const [editingPrepNoteId, setEditingPrepNoteId] = useState<number | null>(
+    null
+  );
+  const [editPrepContent, setEditPrepContent] = useState('');
+  const [editPrepCategory, setEditPrepCategory] = useState('');
+  const [savingPrepNoteId, setSavingPrepNoteId] = useState<number | null>(null);
+  const [deletingPrepNoteId, setDeletingPrepNoteId] = useState<number | null>(
+    null
+  );
+
   // Per-job stage history and interviews stored by job id
   const [stageHistoryMap, setStageHistoryMap] = useState<
     Map<number, StageEvent[]>
@@ -161,6 +212,391 @@ export default function DashboardPage() {
     setEditingInterviewIndex(null);
     setReminderError('');
     setShowSavedConfirmation(false);
+    setResearchContext('');
+    setResearchNotes('');
+    setResearchUpdatedAt(null);
+    setGenerateResearchError('');
+    setResearchSaveMessage('');
+    setResearchSaveError('');
+    setSelectedInterviewId(null);
+    setPrepNotes([]);
+    setPrepError('');
+    setNewPrepContent('');
+    setEditingPrepNoteId(null);
+  }
+
+  // Company research — load saved context/notes for a job (S3-011 / S3-012)
+  async function loadCompanyResearch(jobId: number) {
+    setResearchLoading(true);
+    try {
+      const research = await getCompanyResearch(userEmail, jobId);
+      setResearchContext(research.research_context ?? '');
+      setResearchNotes(research.research_notes ?? '');
+      setResearchUpdatedAt(research.updated_at);
+    } catch (err) {
+      console.error('Failed to load company research:', err);
+    } finally {
+      setResearchLoading(false);
+    }
+  }
+
+  async function handleGenerateResearch() {
+    if (!detailJob) return;
+    if (!researchContext.trim()) {
+      setGenerateResearchError(
+        'Add some context first (role focus, what to look into, etc).'
+      );
+      return;
+    }
+    setGeneratingResearch(true);
+    setGenerateResearchError('');
+    try {
+      const result = await generateCompanyResearch(
+        userEmail,
+        detailJob.id,
+        researchContext.trim()
+      );
+      setResearchNotes(result.research_notes);
+    } catch (err) {
+      console.error('Failed to generate company research:', err);
+      setGenerateResearchError(
+        err instanceof Error ? err.message : 'Failed to generate research.'
+      );
+    } finally {
+      setGeneratingResearch(false);
+    }
+  }
+
+  async function handleSaveResearch() {
+    if (!detailJob) return;
+    setSavingResearch(true);
+    setResearchSaveError('');
+    setResearchSaveMessage('');
+    try {
+      const result = await saveCompanyResearch(userEmail, detailJob.id, {
+        research_context: researchContext,
+        research_notes: researchNotes,
+      });
+      setResearchUpdatedAt(result.updated_at);
+      setResearchSaveMessage('Saved.');
+      setTimeout(() => setResearchSaveMessage(''), 2500);
+    } catch (err) {
+      console.error('Failed to save company research:', err);
+      setResearchSaveError('Failed to save research.');
+    } finally {
+      setSavingResearch(false);
+    }
+  }
+
+  // Interview prep notes — S3-013
+
+  async function loadPrepNotes(jobId: number, interviewId: number) {
+    setPrepLoading(true);
+    setPrepError('');
+    try {
+      const notes = await listPrepNotes(userEmail, jobId, interviewId);
+      setPrepNotes(notes);
+    } catch (err) {
+      console.error('Failed to load prep notes:', err);
+      setPrepError('Could not load prep notes for this interview.');
+    } finally {
+      setPrepLoading(false);
+    }
+  }
+
+  async function handleAddPrepNote() {
+    if (!detailJob || !selectedInterviewId || !newPrepContent.trim()) return;
+    setAddingPrepNote(true);
+    setPrepError('');
+    try {
+      const note = await addPrepNote(
+        userEmail,
+        detailJob.id,
+        selectedInterviewId,
+        { category: newPrepCategory, content: newPrepContent.trim() }
+      );
+      setPrepNotes((prev) => [...prev, note]);
+      setNewPrepContent('');
+    } catch (err) {
+      console.error('Failed to add prep note:', err);
+      setPrepError('Failed to add prep note.');
+    } finally {
+      setAddingPrepNote(false);
+    }
+  }
+
+  function startEditPrepNote(note: PrepNote) {
+    setEditingPrepNoteId(note.id);
+    setEditPrepContent(note.content);
+    setEditPrepCategory(note.category);
+  }
+
+  async function handleSavePrepNoteEdit(noteId: number) {
+    if (!detailJob || !selectedInterviewId || !editPrepContent.trim()) return;
+    setSavingPrepNoteId(noteId);
+    try {
+      const updated = await updatePrepNote(
+        userEmail,
+        detailJob.id,
+        selectedInterviewId,
+        noteId,
+        { category: editPrepCategory, content: editPrepContent.trim() }
+      );
+      setPrepNotes((prev) => prev.map((n) => (n.id === noteId ? updated : n)));
+      setEditingPrepNoteId(null);
+    } catch (err) {
+      console.error('Failed to update prep note:', err);
+      setPrepError('Failed to update prep note.');
+    } finally {
+      setSavingPrepNoteId(null);
+    }
+  }
+
+  async function handleDeletePrepNote(noteId: number) {
+    if (!detailJob || !selectedInterviewId) return;
+    if (!confirm('Delete this prep note?')) return;
+    setDeletingPrepNoteId(noteId);
+    try {
+      await deletePrepNote(
+        userEmail,
+        detailJob.id,
+        selectedInterviewId,
+        noteId
+      );
+      setPrepNotes((prev) => prev.filter((n) => n.id !== noteId));
+    } catch (err) {
+      console.error('Failed to delete prep note:', err);
+      setPrepError('Failed to delete prep note.');
+    } finally {
+      setDeletingPrepNoteId(null);
+    }
+  }
+
+  function renderPrepNotesPanel() {
+    return (
+      <div
+        style={{
+          marginTop: '8px',
+          backgroundColor: '#F3E4E1',
+          borderRadius: '6px',
+          padding: '10px',
+        }}
+      >
+        {prepError && (
+          <p
+            style={{
+              color: '#932C20',
+              fontSize: '11px',
+              margin: '0 0 6px',
+            }}
+          >
+            {prepError}
+          </p>
+        )}
+
+        {prepLoading ? (
+          <p
+            style={{
+              color: '#3C1510',
+              fontSize: '12px',
+              margin: 0,
+            }}
+          >
+            Loading prep notes…
+          </p>
+        ) : (
+          <div style={{ marginBottom: '8px' }}>
+            {prepNotes.length === 0 && (
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '12px',
+                  margin: '0 0 6px',
+                }}
+              >
+                No prep notes yet.
+              </p>
+            )}
+            {prepNotes.map((note) => {
+              const categoryLabel =
+                PREP_NOTE_CATEGORIES.find((c) => c.value === note.category)
+                  ?.label ?? note.category;
+              return (
+                <div
+                  key={note.id}
+                  style={{
+                    backgroundColor: '#F3E4E1',
+                    borderRadius: '6px',
+                    padding: '6px 10px',
+                    marginBottom: '6px',
+                  }}
+                >
+                  {editingPrepNoteId === note.id ? (
+                    <>
+                      <select
+                        value={editPrepCategory}
+                        onChange={(e) => setEditPrepCategory(e.target.value)}
+                        style={{
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          border: '1px solid #D9958C',
+                          fontSize: '11px',
+                          marginBottom: '6px',
+                        }}
+                      >
+                        {PREP_NOTE_CATEGORIES.map((c) => (
+                          <option key={c.value} value={c.value}>
+                            {c.label}
+                          </option>
+                        ))}
+                      </select>
+                      <textarea
+                        value={editPrepContent}
+                        onChange={(e) => setEditPrepContent(e.target.value)}
+                        style={{
+                          ...inputStyle,
+                          height: '50px',
+                          fontSize: '12px',
+                          resize: 'vertical' as const,
+                          marginBottom: '6px',
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '8px',
+                        }}
+                      >
+                        <button
+                          onClick={() => handleSavePrepNoteEdit(note.id)}
+                          disabled={savingPrepNoteId === note.id}
+                          style={btnPrimary(savingPrepNoteId === note.id)}
+                        >
+                          {savingPrepNoteId === note.id ? 'Saving…' : 'Save'}
+                        </button>
+                        <button
+                          onClick={() => setEditingPrepNoteId(null)}
+                          style={btnSecondary}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p
+                        style={{
+                          color: '#932C20',
+                          fontSize: '9px',
+                          fontWeight: 700,
+                          textTransform: 'uppercase' as const,
+                          letterSpacing: '0.4px',
+                          margin: '0 0 3px',
+                        }}
+                      >
+                        {categoryLabel}
+                      </p>
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '12px',
+                          margin: '0 0 4px',
+                          whiteSpace: 'pre-wrap' as const,
+                        }}
+                      >
+                        {note.content}
+                      </p>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '10px',
+                        }}
+                      >
+                        <button
+                          onClick={() => startEditPrepNote(note)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#932C20',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            padding: 0,
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeletePrepNote(note.id)}
+                          disabled={deletingPrepNoteId === note.id}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#932C20',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            padding: 0,
+                          }}
+                        >
+                          {deletingPrepNoteId === note.id
+                            ? 'Deleting…'
+                            : 'Delete'}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Add note form */}
+        <div
+          style={{
+            borderTop: '1px solid #D9958C',
+            paddingTop: '8px',
+          }}
+        >
+          <select
+            value={newPrepCategory}
+            onChange={(e) => setNewPrepCategory(e.target.value)}
+            style={{
+              padding: '4px 8px',
+              borderRadius: '4px',
+              border: '1px solid #D9958C',
+              fontSize: '12px',
+              backgroundColor: '#F3E4E1',
+              marginBottom: '6px',
+            }}
+          >
+            {PREP_NOTE_CATEGORIES.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+          <textarea
+            value={newPrepContent}
+            onChange={(e) => setNewPrepContent(e.target.value)}
+            placeholder="Add a prep note…"
+            style={{
+              ...inputStyle,
+              height: '44px',
+              fontSize: '12px',
+              resize: 'vertical' as const,
+              marginBottom: '6px',
+            }}
+          />
+          <button
+            onClick={handleAddPrepNote}
+            disabled={addingPrepNote || !newPrepContent.trim()}
+            style={btnPrimary(addingPrepNote || !newPrepContent.trim())}
+          >
+            {addingPrepNote ? 'Adding…' : 'Add Note'}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Fetch jobs from the server, passing filters as query params
@@ -203,6 +639,34 @@ export default function DashboardPage() {
     fetchJobs();
   }, [fetchJobs]);
 
+  // Interview prep notes (S3-013) — notes panel lives inline under each
+  // interview in the Timeline and is opened per-interview, so we only need
+  // to clear the selection if the interview it belonged to disappears
+  // (e.g. deleted, or a different job's modal opened).
+  useEffect(() => {
+    if (!detailJob) {
+      if (selectedInterviewId !== null) setSelectedInterviewId(null);
+      return;
+    }
+    const interviews = jobInterviewsMap.get(detailJob.id) ?? [];
+    const stillValid = interviews.some((iv) => iv.id === selectedInterviewId);
+    if (selectedInterviewId !== null && !stillValid) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedInterviewId(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailJob, jobInterviewsMap]);
+
+  // Load prep notes whenever the selected interview changes.
+  useEffect(() => {
+    if (!detailJob || !selectedInterviewId) {
+      setPrepNotes([]);
+      return;
+    }
+    loadPrepNotes(detailJob.id, selectedInterviewId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailJob, selectedInterviewId]);
+
   // Add job
   async function handleAddJob() {
     setModalError('');
@@ -235,6 +699,7 @@ export default function DashboardPage() {
       }
       // Refetch so new job respects current filters/sort
       await fetchJobs();
+      setAnalyticsRefreshKey((prev) => prev + 1);
       setNewTitle('');
       setNewCompany('');
       setNewDescription('');
@@ -257,6 +722,7 @@ export default function DashboardPage() {
     setNotesSaved(false);
     loadInterviews(job.id);
     loadStageHistory(job.id);
+    loadCompanyResearch(job.id);
     startEditJobDetails(job);
   }
 
@@ -370,6 +836,7 @@ export default function DashboardPage() {
         prev && prev.id === jobId ? { ...prev, status: newStage } : prev
       );
       await fetchJobs();
+      setAnalyticsRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error('Status update failed:', err);
     }
@@ -395,6 +862,7 @@ export default function DashboardPage() {
         setDetailJob((prev) =>
           prev && prev.id === archiveTarget.id ? null : prev
         );
+        setAnalyticsRefreshKey((prev) => prev + 1);
       }
     } catch (err) {
       console.error('Archive failed:', err);
@@ -416,6 +884,7 @@ export default function DashboardPage() {
       setJobs((prev) => prev.filter((j) => j.id !== jobId));
       // Clean up the detail view if it was pointing at the deleted job.
       setDetailJob((prev) => (prev && prev.id === jobId ? null : prev));
+      setAnalyticsRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error('Delete failed:', err);
     }
@@ -562,20 +1031,24 @@ export default function DashboardPage() {
     }
   }
 
-  async function loadInterviews(jobId: number) {
+  async function loadInterviews(
+    jobId: number
+  ): Promise<InterviewEntry[] | null> {
     try {
       const res = await fetch(
         `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`
       );
-      if (!res.ok) return;
+      if (!res.ok) return null;
       const data: InterviewEntry[] = await res.json();
       setJobInterviewsMap((prev) => {
         const next = new Map(prev);
         next.set(jobId, data);
         return next;
       });
+      return data;
     } catch (err) {
       console.error('Failed to load interviews:', err);
+      return null;
     }
   }
 
@@ -904,6 +1377,7 @@ export default function DashboardPage() {
                   setEditingInterviewIndex(null);
                   loadInterviews(job.id);
                   loadStageHistory(job.id);
+                  loadCompanyResearch(job.id);
                   startEditJobDetails(job);
                 }}
               />
@@ -911,6 +1385,9 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* S3-014: Stage Conversion Analytics — third column, always visible */}
+      <AnalyticsChart email={userEmail} refreshKey={analyticsRefreshKey} />
 
       {/* Job detail */}
       {detailJob && (
@@ -1209,6 +1686,132 @@ export default function DashboardPage() {
               </div>
             </div>
 
+            {/* Company research (S3-011 / S3-012) */}
+            <div>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  marginBottom: '4px',
+                }}
+              >
+                Company Research
+              </p>
+
+              {researchLoading ? (
+                <p style={{ color: '#3C1510', fontSize: '13px', margin: 0 }}>
+                  Loading research…
+                </p>
+              ) : (
+                <>
+                  <label style={{ ...labelStyle, marginTop: '8px' }}>
+                    What should we focus on?
+                  </label>
+                  <textarea
+                    value={researchContext}
+                    onChange={(e) => setResearchContext(e.target.value)}
+                    placeholder="e.g. engineering culture, recent product launches, interview process for this role…"
+                    style={{
+                      ...inputStyle,
+                      height: '60px',
+                      resize: 'vertical' as const,
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '10px',
+                      alignItems: 'center',
+                      marginTop: '8px',
+                    }}
+                  >
+                    <button
+                      onClick={handleGenerateResearch}
+                      disabled={generatingResearch}
+                      style={btnPrimary(generatingResearch)}
+                    >
+                      {generatingResearch ? 'Generating…' : 'Generate with AI'}
+                    </button>
+                    {generateResearchError && (
+                      <span style={{ color: '#932C20', fontSize: '12px' }}>
+                        {generateResearchError}
+                      </span>
+                    )}
+                  </div>
+
+                  <label style={{ ...labelStyle, marginTop: '12px' }}>
+                    Research notes
+                  </label>
+                  <textarea
+                    value={researchNotes}
+                    onChange={(e) => setResearchNotes(e.target.value)}
+                    placeholder="Generated notes appear here — feel free to edit before saving."
+                    style={{
+                      ...inputStyle,
+                      height: '140px',
+                      resize: 'vertical' as const,
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                      gap: '12px',
+                      marginTop: '8px',
+                    }}
+                  >
+                    {researchSaveMessage && (
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '13px',
+                          margin: 0,
+                        }}
+                      >
+                        ✓ {researchSaveMessage}
+                      </p>
+                    )}
+                    {researchSaveError && (
+                      <p
+                        style={{
+                          color: '#932C20',
+                          fontSize: '13px',
+                          margin: 0,
+                        }}
+                      >
+                        {researchSaveError}
+                      </p>
+                    )}
+                    {researchUpdatedAt && (
+                      <span style={{ color: '#932C20', fontSize: '11px' }}>
+                        Last updated{' '}
+                        {new Date(researchUpdatedAt).toLocaleString()}
+                      </span>
+                    )}
+                    <button
+                      onClick={handleSaveResearch}
+                      disabled={savingResearch}
+                      style={{
+                        backgroundColor: savingResearch ? '#c0847a' : '#932C20',
+                        color: 'white',
+                        padding: '6px 16px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        cursor: savingResearch ? 'not-allowed' : 'pointer',
+                        fontSize: '13px',
+                      }}
+                    >
+                      {savingResearch ? 'Saving...' : 'Save'}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
             {/* change stage of job */}
             <div>
               <p
@@ -1382,7 +1985,27 @@ export default function DashboardPage() {
                         );
                         return;
                       }
-                      await loadInterviews(jobId);
+                      const created = await res
+                        .json()
+                        .catch(() => null as InterviewEntry | null);
+                      const refreshed = await loadInterviews(jobId);
+
+                      // Rather than closing the form, drop straight into
+                      // "edit" mode for the interview we just created so its
+                      // Prep Notes section is available immediately — no
+                      // need to close and reopen via the timeline's Edit
+                      // link just to jot down prep notes.
+                      const newId = created?.id;
+                      const newIndex =
+                        newId !== undefined && refreshed
+                          ? refreshed.findIndex((iv) => iv.id === newId)
+                          : -1;
+
+                      if (newIndex !== -1) {
+                        setEditingInterviewIndex(newIndex);
+                        setSelectedInterviewId(newId as number);
+                        return;
+                      }
                     } catch (err) {
                       console.error('Failed to save interview:', err);
                       return;
@@ -1462,32 +2085,49 @@ export default function DashboardPage() {
                       >
                         Timeline
                       </p>
-                      <button
-                        onClick={() => {
-                          if (showAddInterview) {
-                            setShowAddInterview(false);
-                            setEditingInterviewIndex(null);
-                          } else {
-                            setNewInterviewRound('');
-                            setNewInterviewDate('');
-                            setNewInterviewNotes('');
-                            setEditingInterviewIndex(null);
-                            setShowAddInterview(true);
-                          }
-                        }}
+                      {detailJob.status === '2' && (
+                        <button
+                          onClick={() => {
+                            if (showAddInterview) {
+                              setShowAddInterview(false);
+                              setEditingInterviewIndex(null);
+                            } else {
+                              setNewInterviewRound('');
+                              setNewInterviewDate('');
+                              setNewInterviewNotes('');
+                              setEditingInterviewIndex(null);
+                              setShowAddInterview(true);
+                            }
+                          }}
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#932C20',
+                            border: '2px solid #932C20',
+                            padding: '4px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                          }}
+                        >
+                          + Add Interview
+                        </button>
+                      )}
+                    </div>
+
+                    {detailJob.status !== '2' && (
+                      <p
                         style={{
-                          backgroundColor: 'transparent',
-                          color: '#932C20',
-                          border: '2px solid #932C20',
-                          padding: '4px 12px',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
+                          color: '#3C1510',
                           fontSize: '12px',
+                          opacity: 0.7,
+                          marginTop: '-8px',
+                          marginBottom: '12px',
                         }}
                       >
-                        + Add Interview
-                      </button>
-                    </div>
+                        Interviews can only be added while this job's status is
+                        &quot;Interview&quot;.
+                      </p>
+                    )}
 
                     {/* Add interview form */}
                     {showAddInterview && (
@@ -1604,6 +2244,50 @@ export default function DashboardPage() {
                             }}
                           />
                         </div>
+
+                        {/* Interview prep notes (S3-013) — only available once
+                            the interview has been saved and has an id. */}
+                        {editingInterviewIndex !== null &&
+                          detailInterviews[editingInterviewIndex]?.id !==
+                            undefined && (
+                            <div>
+                              {(() => {
+                                const editingId = detailInterviews[
+                                  editingInterviewIndex
+                                ]!.id as number;
+                                return (
+                                  <>
+                                    <button
+                                      onClick={() =>
+                                        setSelectedInterviewId((prev) =>
+                                          prev === editingId ? null : editingId
+                                        )
+                                      }
+                                      style={{
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        color: '#932C20',
+                                        cursor: 'pointer',
+                                        fontSize: '12px',
+                                        fontWeight:
+                                          selectedInterviewId === editingId
+                                            ? 700
+                                            : 400,
+                                        padding: 0,
+                                      }}
+                                    >
+                                      {selectedInterviewId === editingId
+                                        ? 'Hide Prep Notes'
+                                        : 'Prep Notes'}
+                                    </button>
+                                    {selectedInterviewId === editingId &&
+                                      renderPrepNotesPanel()}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          )}
+
                         <div
                           style={{
                             display: 'flex',
@@ -1839,6 +2523,34 @@ export default function DashboardPage() {
                                     <div
                                       style={{ display: 'flex', gap: '10px' }}
                                     >
+                                      {item.entry.id !== undefined && (
+                                        <button
+                                          onClick={() =>
+                                            setSelectedInterviewId((prev) =>
+                                              prev === item.entry.id
+                                                ? null
+                                                : (item.entry.id as number)
+                                            )
+                                          }
+                                          style={{
+                                            backgroundColor: 'transparent',
+                                            border: 'none',
+                                            color: '#932C20',
+                                            cursor: 'pointer',
+                                            fontSize: '11px',
+                                            fontWeight:
+                                              selectedInterviewId ===
+                                              item.entry.id
+                                                ? 700
+                                                : 400,
+                                            padding: 0,
+                                          }}
+                                        >
+                                          {selectedInterviewId === item.entry.id
+                                            ? 'Hide Prep Notes'
+                                            : 'Prep Notes'}
+                                        </button>
+                                      )}
                                       <button
                                         onClick={() =>
                                           startEditInterview(
@@ -1903,6 +2615,11 @@ export default function DashboardPage() {
                                       {item.entry.notes}
                                     </p>
                                   )}
+
+                                  {/* Interview prep notes (S3-013) — inline, per interview */}
+                                  {item.entry.id !== undefined &&
+                                    selectedInterviewId === item.entry.id &&
+                                    renderPrepNotesPanel()}
                                 </div>
                               </div>
                             );
@@ -1942,6 +2659,7 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
       {/* Add Job Modal */}
       {showAddModal && (
         <div

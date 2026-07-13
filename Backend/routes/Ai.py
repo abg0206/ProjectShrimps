@@ -195,3 +195,42 @@ def RewriteDocument():
     result = geminiService.RewriteDocument(prompt)
 
     return jsonify(result)
+
+
+@aiBlueprint.route(
+    "/company-research",
+    methods=["POST"]
+)
+def CompanyResearch():
+
+    data = request.get_json()
+
+    company = data.get("company", "").strip()
+
+    context = data.get("context", "").strip()
+
+    if company == "":
+
+        return jsonify({
+            "success": False,
+            "message": "Company name is required."
+        }), 400
+
+    promptBuilder = PromptBuilder()
+
+    prompt = promptBuilder.BuildCompanyResearchPrompt(
+        company,
+        context
+    )
+
+    geminiService = GeminiService()
+
+    result = geminiService.GenerateCompanyResearch(
+        prompt
+    )
+
+    if not result["success"]:
+
+        return jsonify(result), 500
+
+    return jsonify(result), 200

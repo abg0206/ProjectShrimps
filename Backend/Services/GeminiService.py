@@ -73,3 +73,23 @@ class GeminiService:
                 "success": False,
                 "message": str(error)
             }
+    
+    def GenerateCompanyResearch(self, prompt):
+        try:
+            response = self.client.models.generate_content(
+                model=self.modelName,
+                contents=prompt
+            )
+
+            return {
+                "success": True,
+                "content": response.text,
+                "error": None
+            }
+
+        except Exception as error:
+            return {
+                "success": False,
+                "content": None,
+                "error": str(error)
+            }

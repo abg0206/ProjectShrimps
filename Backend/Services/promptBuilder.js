@@ -97,9 +97,23 @@ function buildRewritePrompt({ documentType, rewriteType, content, job }) {
   });
 }
 
+// CompanyResearch.txt only has {{company}} and {{context}} placeholders —
+// fold the job title into the context so it isn't lost when present.
+function buildCompanyResearchPrompt({ company, title, context }) {
+  const contextWithTitle = title
+    ? `Applying for: ${title}\n\n${context ?? ''}`.trim()
+    : context;
+
+  return buildPrompt('CompanyResearch.txt', {
+    company: company ?? 'Not provided.',
+    context: formatForPrompt(contextWithTitle),
+  });
+}
+
 module.exports = {
   buildResumePrompt,
   buildCoverLetterPrompt,
   buildRewritePrompt,
+  buildCompanyResearchPrompt,
   formatForPrompt,
 };

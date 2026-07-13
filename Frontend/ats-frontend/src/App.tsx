@@ -9,6 +9,8 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RouteProtect from './components/RouteProtect';
 import ArchivedPage from './pages/ArchivedPage';
+import DocumentsPage from './pages/DocumentsPage';
+import JobDetailPage from './pages/JobDetailPage';
 
 function App() {
   return (
@@ -22,6 +24,22 @@ function App() {
           element={
             <RouteProtect>
               <DashboardPage />
+            </RouteProtect>
+          }
+        />
+        <Route
+          path="/jobs/:id"
+          element={
+            <RouteProtect>
+              <JobDetailPage />
+            </RouteProtect>
+          }
+        />
+        <Route
+          path="/documents"
+          element={
+            <RouteProtect>
+              <DocumentsPage />
             </RouteProtect>
           }
         />

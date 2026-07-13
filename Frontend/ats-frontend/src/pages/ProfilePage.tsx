@@ -37,7 +37,11 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(Boolean(userEmail));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [saved, setSaved] = useState(false);
+  const [savedContact, setSavedContact] = useState(false);
+  const [savedExperience, setSavedExperience] = useState(false);
+  const [savedEducation, setSavedEducation] = useState(false);
+  const [savedSkills, setSavedSkills] = useState(false);
+  const [savedSummary, setSavedSummary] = useState(false);
 
   const [education, setEducation] = useState<EducationInfo[]>([]);
   const [educationError, setEducationError] = useState('');
@@ -132,6 +136,29 @@ export default function ProfilePage() {
     return month >= 1 && month <= 12;
   }
 
+  // Builds the full current profile payload so every save request carries
+  // the complete state. This prevents a backend PUT that does a full
+  // replace (rather than a partial merge) from wiping out sections that
+  // weren't touched by the button the user clicked. Individual save
+  // handlers can still pass `overrides` for the fields they specifically
+  // validated/updated, but nothing else gets lost in the process.
+  function buildFullProfilePayload(overrides: Record<string, unknown> = {}) {
+    return {
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      phone: phone.trim() ? phone.trim() : null,
+      summary: summary.trim() || null,
+      skills,
+      education,
+      experience,
+      target_role: targetRole.trim() || null,
+      location_preference: locationPreference.trim() || null,
+      work_mode_preference: workModePreference.trim() || null,
+      salary_expectation: SalaryExpectation.trim() || null,
+      ...overrides,
+    };
+  }
+
   //Skills here
   function handleAddSkill() {
     setSkillError('');
@@ -208,8 +235,7 @@ export default function ProfilePage() {
         entry.end_date &&
         isValidMonthYear(entry.start_date) &&
         isValidMonthYear(entry.end_date) &&
-        entry.end_date.split('-').reverse().join('') <
-          entry.start_date.split('-').reverse().join('')
+        monthYearToNumber(entry.end_date) < monthYearToNumber(entry.start_date)
       ) {
         const msg = 'Education end date cannot be earlier than start date.';
         setEducationError(msg);
@@ -287,7 +313,7 @@ export default function ProfilePage() {
         entry.end_date &&
         isValidMonthYear(entry.start_date) &&
         isValidMonthYear(entry.end_date) &&
-        entry.end_date < entry.start_date
+        monthYearToNumber(entry.end_date) < monthYearToNumber(entry.start_date)
       ) {
         const msg = 'Experience end date cannot be earlier than start date.';
         setExperienceError(msg);
@@ -304,57 +330,133 @@ export default function ProfilePage() {
     setProfilePicture(file);
   }
 
-  async function handleSave() {
+  async function handleSaveContact() {
     setError('');
-    setSaved(false);
-
-    if (!firstName.trim() || !lastName.trim()) {
-      setError('First name and last name are required.');
-      return;
-    }
-
-    const educationIssue = validateEducation();
-    if (educationIssue) {
-      setError(educationIssue);
-      return;
-    }
-
-    const experienceIssue = validateExperience();
-    if (experienceIssue) {
-      setError(experienceIssue);
-      return;
-    }
-
+    setSavedContact(false);
     setSaving(true);
-
     try {
       const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          phone: phone.trim() ? phone.trim() : null,
-          summary: summary.trim() || null,
-          skills, //added these to the profile save function
-          education,
-          experience,
-          target_role: targetRole.trim() || null,
-          location_preference: locationPreference.trim() || null,
-          work_mode_preference: workModePreference.trim() || null,
-          salary_expectation: SalaryExpectation.trim() || null,
-        }),
+        body: JSON.stringify(buildFullProfilePayload()),
       });
-
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'Failed to save contact info.');
+        return;
+      }
+      setSavedContact(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSaveEducation() {
+    setError('');
+    setSavedEducation(false);
+    const issue = validateEducation();
+    if (issue) {
+      setError(issue);
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildFullProfilePayload({ education })),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'Failed to save education.');
+        return;
+      }
+      setSavedEducation(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSaveExperience() {
+    setError('');
+    setSavedExperience(false);
+    const issue = validateExperience();
+    if (issue) {
+      setError(issue);
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildFullProfilePayload({ experience })),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'Failed to save experience.');
+        return;
+      }
+      setSavedExperience(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSaveSummary() {
+    setError('');
+    setSavedSummary(false);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          buildFullProfilePayload({
+            summary: summary.trim() || null,
+            target_role: targetRole.trim() || null,
+            location_preference: locationPreference.trim() || null,
+            work_mode_preference: workModePreference.trim() || null,
+            salary_expectation: SalaryExpectation.trim() || null,
+          })
+        ),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
         setError(data.error ?? 'Failed to save profile.');
         return;
       }
+      setSavedSummary(true);
+    } catch {
+      setError('Could not connect to the server. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
 
-      setSaved(true);
-    } catch (err) {
-      console.error(err);
+  async function handleSaveSkills() {
+    setError('');
+    setSavedSkills(false);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildFullProfilePayload({ skills })),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'Failed to save skills.');
+        return;
+      }
+      setSavedSkills(true);
+    } catch {
       setError('Could not connect to the server. Please try again.');
     } finally {
       setSaving(false);
@@ -372,7 +474,14 @@ export default function ProfilePage() {
           justifyContent: 'center',
         }}
       >
-        <p style={{ color: '#3C1510', fontSize: '16px' }}>Loading profile...</p>
+        <p
+          style={{
+            color: '#3C1510',
+            fontSize: '16px',
+          }}
+        >
+          Loading profile...
+        </p>
       </div>
     );
   }
@@ -633,6 +742,38 @@ export default function ProfilePage() {
             </div>
           </div>
 
+          {/* Contact save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '16px',
+            }}
+          >
+            {savedContact && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveContact}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Contact
+            </button>
+          </div>
+
           {/* Education */}
           <h2
             style={{
@@ -885,6 +1026,38 @@ export default function ProfilePage() {
           >
             + Add Education
           </button>
+
+          {/* Education save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '8px',
+            }}
+          >
+            {savedEducation && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveEducation}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Education
+            </button>
+          </div>
 
           {/* Experience */}
           <h2
@@ -1192,6 +1365,38 @@ export default function ProfilePage() {
           >
             + Add Experience
           </button>
+
+          {/* Experience save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '8px',
+            }}
+          >
+            {savedExperience && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveExperience}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Experience
+            </button>
+          </div>
           {/* Career Preferences */}
           <h2
             style={{
@@ -1418,6 +1623,38 @@ export default function ProfilePage() {
             ))}
           </div>
 
+          {/* Skills save */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: '12px',
+            }}
+          >
+            {savedSkills && (
+              <span style={{ color: '#3C1510', fontSize: '13px' }}>
+                ✓ Saved
+              </span>
+            )}
+            <button
+              onClick={handleSaveSkills}
+              disabled={saving}
+              style={{
+                backgroundColor: '#932C20',
+                color: '#FFFFFF',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Save Skills
+            </button>
+          </div>
+
           <h2
             style={{
               color: '#3C1510',
@@ -1452,7 +1689,7 @@ export default function ProfilePage() {
             }}
           >
             <button
-              onClick={handleSave}
+              onClick={handleSaveSummary}
               disabled={saving}
               style={{
                 backgroundColor: '#932C20',
@@ -1469,9 +1706,9 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {saved && (
+        {savedSummary && (
           <p style={{ color: '#3C1510', marginTop: '16px', fontSize: '14px' }}>
-            ✓ Profile saved successfully
+            ✓ Summary saved successfully
           </p>
         )}
 
