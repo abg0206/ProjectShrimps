@@ -22,7 +22,6 @@ app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(requestId);
 
-
 // PostgreSQL Connection Pool
 const isLocal = process.env.NODE_ENV === 'development';
 const sslConfig = isLocal

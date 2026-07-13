@@ -23,7 +23,7 @@ module.exports = winston.createLogger({
     // Errors only, split out for easier troubleshooting
     new winston.transports.File({
       filename: path.join(logDir, 'error.log'),
-      level: 'error'
-    })
-  ]
+      level: 'error',
+    }),
+  ],
 });

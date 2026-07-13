@@ -160,9 +160,9 @@ export default function DashboardPage() {
   const [researchSaveError, setResearchSaveError] = useState('');
 
   // Interview prep notes — S3-013
-  const [selectedInterviewId, setSelectedInterviewId] = useState<
-    number | null
-  >(null);
+  const [selectedInterviewId, setSelectedInterviewId] = useState<number | null>(
+    null
+  );
   const [prepNotes, setPrepNotes] = useState<PrepNote[]>([]);
   const [prepLoading, setPrepLoading] = useState(false);
   const [prepError, setPrepError] = useState('');
@@ -176,9 +176,7 @@ export default function DashboardPage() {
   );
   const [editPrepContent, setEditPrepContent] = useState('');
   const [editPrepCategory, setEditPrepCategory] = useState('');
-  const [savingPrepNoteId, setSavingPrepNoteId] = useState<number | null>(
-    null
-  );
+  const [savingPrepNoteId, setSavingPrepNoteId] = useState<number | null>(null);
   const [deletingPrepNoteId, setDeletingPrepNoteId] = useState<number | null>(
     null
   );
@@ -344,9 +342,7 @@ export default function DashboardPage() {
         noteId,
         { category: editPrepCategory, content: editPrepContent.trim() }
       );
-      setPrepNotes((prev) =>
-        prev.map((n) => (n.id === noteId ? updated : n))
-      );
+      setPrepNotes((prev) => prev.map((n) => (n.id === noteId ? updated : n)));
       setEditingPrepNoteId(null);
     } catch (err) {
       console.error('Failed to update prep note:', err);
@@ -378,303 +374,228 @@ export default function DashboardPage() {
 
   function renderPrepNotesPanel() {
     return (
-                                      <div
-                                        style={{
-                                          marginTop: '8px',
-                                          backgroundColor: '#F3E4E1',
-                                          borderRadius: '6px',
-                                          padding: '10px',
-                                        }}
-                                      >
-                                        {prepError && (
-                                          <p
-                                            style={{
-                                              color: '#932C20',
-                                              fontSize: '11px',
-                                              margin: '0 0 6px',
-                                            }}
-                                          >
-                                            {prepError}
-                                          </p>
-                                        )}
+      <div
+        style={{
+          marginTop: '8px',
+          backgroundColor: '#F3E4E1',
+          borderRadius: '6px',
+          padding: '10px',
+        }}
+      >
+        {prepError && (
+          <p
+            style={{
+              color: '#932C20',
+              fontSize: '11px',
+              margin: '0 0 6px',
+            }}
+          >
+            {prepError}
+          </p>
+        )}
 
-                                        {prepLoading ? (
-                                          <p
-                                            style={{
-                                              color: '#3C1510',
-                                              fontSize: '12px',
-                                              margin: 0,
-                                            }}
-                                          >
-                                            Loading prep notes…
-                                          </p>
-                                        ) : (
-                                          <div style={{ marginBottom: '8px' }}>
-                                            {prepNotes.length === 0 && (
-                                              <p
-                                                style={{
-                                                  color: '#3C1510',
-                                                  fontSize: '12px',
-                                                  margin: '0 0 6px',
-                                                }}
-                                              >
-                                                No prep notes yet.
-                                              </p>
-                                            )}
-                                            {prepNotes.map((note) => {
-                                              const categoryLabel =
-                                                PREP_NOTE_CATEGORIES.find(
-                                                  (c) =>
-                                                    c.value === note.category
-                                                )?.label ?? note.category;
-                                              return (
-                                                <div
-                                                  key={note.id}
-                                                  style={{
-                                                    backgroundColor: '#F3E4E1',
-                                                    borderRadius: '6px',
-                                                    padding: '6px 10px',
-                                                    marginBottom: '6px',
-                                                  }}
-                                                >
-                                                  {editingPrepNoteId ===
-                                                  note.id ? (
-                                                    <>
-                                                      <select
-                                                        value={
-                                                          editPrepCategory
-                                                        }
-                                                        onChange={(e) =>
-                                                          setEditPrepCategory(
-                                                            e.target.value
-                                                          )
-                                                        }
-                                                        style={{
-                                                          padding: '4px 8px',
-                                                          borderRadius: '4px',
-                                                          border:
-                                                            '1px solid #D9958C',
-                                                          fontSize: '11px',
-                                                          marginBottom: '6px',
-                                                        }}
-                                                      >
-                                                        {PREP_NOTE_CATEGORIES.map(
-                                                          (c) => (
-                                                            <option
-                                                              key={c.value}
-                                                              value={c.value}
-                                                            >
-                                                              {c.label}
-                                                            </option>
-                                                          )
-                                                        )}
-                                                      </select>
-                                                      <textarea
-                                                        value={
-                                                          editPrepContent
-                                                        }
-                                                        onChange={(e) =>
-                                                          setEditPrepContent(
-                                                            e.target.value
-                                                          )
-                                                        }
-                                                        style={{
-                                                          ...inputStyle,
-                                                          height: '50px',
-                                                          fontSize: '12px',
-                                                          resize:
-                                                            'vertical' as const,
-                                                          marginBottom: '6px',
-                                                        }}
-                                                      />
-                                                      <div
-                                                        style={{
-                                                          display: 'flex',
-                                                          gap: '8px',
-                                                        }}
-                                                      >
-                                                        <button
-                                                          onClick={() =>
-                                                            handleSavePrepNoteEdit(
-                                                              note.id
-                                                            )
-                                                          }
-                                                          disabled={
-                                                            savingPrepNoteId ===
-                                                            note.id
-                                                          }
-                                                          style={btnPrimary(
-                                                            savingPrepNoteId ===
-                                                              note.id
-                                                          )}
-                                                        >
-                                                          {savingPrepNoteId ===
-                                                          note.id
-                                                            ? 'Saving…'
-                                                            : 'Save'}
-                                                        </button>
-                                                        <button
-                                                          onClick={() =>
-                                                            setEditingPrepNoteId(
-                                                              null
-                                                            )
-                                                          }
-                                                          style={btnSecondary}
-                                                        >
-                                                          Cancel
-                                                        </button>
-                                                      </div>
-                                                    </>
-                                                  ) : (
-                                                    <>
-                                                      <p
-                                                        style={{
-                                                          color: '#932C20',
-                                                          fontSize: '9px',
-                                                          fontWeight: 700,
-                                                          textTransform:
-                                                            'uppercase' as const,
-                                                          letterSpacing:
-                                                            '0.4px',
-                                                          margin: '0 0 3px',
-                                                        }}
-                                                      >
-                                                        {categoryLabel}
-                                                      </p>
-                                                      <p
-                                                        style={{
-                                                          color: '#3C1510',
-                                                          fontSize: '12px',
-                                                          margin: '0 0 4px',
-                                                          whiteSpace:
-                                                            'pre-wrap' as const,
-                                                        }}
-                                                      >
-                                                        {note.content}
-                                                      </p>
-                                                      <div
-                                                        style={{
-                                                          display: 'flex',
-                                                          gap: '10px',
-                                                        }}
-                                                      >
-                                                        <button
-                                                          onClick={() =>
-                                                            startEditPrepNote(
-                                                              note
-                                                            )
-                                                          }
-                                                          style={{
-                                                            background:
-                                                              'none',
-                                                            border: 'none',
-                                                            color: '#932C20',
-                                                            cursor: 'pointer',
-                                                            fontSize: '11px',
-                                                            padding: 0,
-                                                          }}
-                                                        >
-                                                          Edit
-                                                        </button>
-                                                        <button
-                                                          onClick={() =>
-                                                            handleDeletePrepNote(
-                                                              note.id
-                                                            )
-                                                          }
-                                                          disabled={
-                                                            deletingPrepNoteId ===
-                                                            note.id
-                                                          }
-                                                          style={{
-                                                            background:
-                                                              'none',
-                                                            border: 'none',
-                                                            color: '#932C20',
-                                                            cursor: 'pointer',
-                                                            fontSize: '11px',
-                                                            padding: 0,
-                                                          }}
-                                                        >
-                                                          {deletingPrepNoteId ===
-                                                          note.id
-                                                            ? 'Deleting…'
-                                                            : 'Delete'}
-                                                        </button>
-                                                      </div>
-                                                    </>
-                                                  )}
-                                                </div>
-                                              );
-                                            })}
-                                          </div>
-                                        )}
+        {prepLoading ? (
+          <p
+            style={{
+              color: '#3C1510',
+              fontSize: '12px',
+              margin: 0,
+            }}
+          >
+            Loading prep notes…
+          </p>
+        ) : (
+          <div style={{ marginBottom: '8px' }}>
+            {prepNotes.length === 0 && (
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '12px',
+                  margin: '0 0 6px',
+                }}
+              >
+                No prep notes yet.
+              </p>
+            )}
+            {prepNotes.map((note) => {
+              const categoryLabel =
+                PREP_NOTE_CATEGORIES.find((c) => c.value === note.category)
+                  ?.label ?? note.category;
+              return (
+                <div
+                  key={note.id}
+                  style={{
+                    backgroundColor: '#F3E4E1',
+                    borderRadius: '6px',
+                    padding: '6px 10px',
+                    marginBottom: '6px',
+                  }}
+                >
+                  {editingPrepNoteId === note.id ? (
+                    <>
+                      <select
+                        value={editPrepCategory}
+                        onChange={(e) => setEditPrepCategory(e.target.value)}
+                        style={{
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          border: '1px solid #D9958C',
+                          fontSize: '11px',
+                          marginBottom: '6px',
+                        }}
+                      >
+                        {PREP_NOTE_CATEGORIES.map((c) => (
+                          <option key={c.value} value={c.value}>
+                            {c.label}
+                          </option>
+                        ))}
+                      </select>
+                      <textarea
+                        value={editPrepContent}
+                        onChange={(e) => setEditPrepContent(e.target.value)}
+                        style={{
+                          ...inputStyle,
+                          height: '50px',
+                          fontSize: '12px',
+                          resize: 'vertical' as const,
+                          marginBottom: '6px',
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '8px',
+                        }}
+                      >
+                        <button
+                          onClick={() => handleSavePrepNoteEdit(note.id)}
+                          disabled={savingPrepNoteId === note.id}
+                          style={btnPrimary(savingPrepNoteId === note.id)}
+                        >
+                          {savingPrepNoteId === note.id ? 'Saving…' : 'Save'}
+                        </button>
+                        <button
+                          onClick={() => setEditingPrepNoteId(null)}
+                          style={btnSecondary}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p
+                        style={{
+                          color: '#932C20',
+                          fontSize: '9px',
+                          fontWeight: 700,
+                          textTransform: 'uppercase' as const,
+                          letterSpacing: '0.4px',
+                          margin: '0 0 3px',
+                        }}
+                      >
+                        {categoryLabel}
+                      </p>
+                      <p
+                        style={{
+                          color: '#3C1510',
+                          fontSize: '12px',
+                          margin: '0 0 4px',
+                          whiteSpace: 'pre-wrap' as const,
+                        }}
+                      >
+                        {note.content}
+                      </p>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '10px',
+                        }}
+                      >
+                        <button
+                          onClick={() => startEditPrepNote(note)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#932C20',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            padding: 0,
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeletePrepNote(note.id)}
+                          disabled={deletingPrepNoteId === note.id}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#932C20',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            padding: 0,
+                          }}
+                        >
+                          {deletingPrepNoteId === note.id
+                            ? 'Deleting…'
+                            : 'Delete'}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-                                        {/* Add note form */}
-                                        <div
-                                          style={{
-                                            borderTop: '1px solid #D9958C',
-                                            paddingTop: '8px',
-                                          }}
-                                        >
-                                          <select
-                                            value={newPrepCategory}
-                                            onChange={(e) =>
-                                              setNewPrepCategory(
-                                                e.target.value
-                                              )
-                                            }
-                                            style={{
-                                              padding: '4px 8px',
-                                              borderRadius: '4px',
-                                              border: '1px solid #D9958C',
-                                              fontSize: '12px',
-                                              backgroundColor: '#F3E4E1',
-                                              marginBottom: '6px',
-                                            }}
-                                          >
-                                            {PREP_NOTE_CATEGORIES.map((c) => (
-                                              <option
-                                                key={c.value}
-                                                value={c.value}
-                                              >
-                                                {c.label}
-                                              </option>
-                                            ))}
-                                          </select>
-                                          <textarea
-                                            value={newPrepContent}
-                                            onChange={(e) =>
-                                              setNewPrepContent(
-                                                e.target.value
-                                              )
-                                            }
-                                            placeholder="Add a prep note…"
-                                            style={{
-                                              ...inputStyle,
-                                              height: '44px',
-                                              fontSize: '12px',
-                                              resize: 'vertical' as const,
-                                              marginBottom: '6px',
-                                            }}
-                                          />
-                                          <button
-                                            onClick={handleAddPrepNote}
-                                            disabled={
-                                              addingPrepNote ||
-                                              !newPrepContent.trim()
-                                            }
-                                            style={btnPrimary(
-                                              addingPrepNote ||
-                                                !newPrepContent.trim()
-                                            )}
-                                          >
-                                            {addingPrepNote
-                                              ? 'Adding…'
-                                              : 'Add Note'}
-                                          </button>
-                                        </div>
-                                      </div>
+        {/* Add note form */}
+        <div
+          style={{
+            borderTop: '1px solid #D9958C',
+            paddingTop: '8px',
+          }}
+        >
+          <select
+            value={newPrepCategory}
+            onChange={(e) => setNewPrepCategory(e.target.value)}
+            style={{
+              padding: '4px 8px',
+              borderRadius: '4px',
+              border: '1px solid #D9958C',
+              fontSize: '12px',
+              backgroundColor: '#F3E4E1',
+              marginBottom: '6px',
+            }}
+          >
+            {PREP_NOTE_CATEGORIES.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+          <textarea
+            value={newPrepContent}
+            onChange={(e) => setNewPrepContent(e.target.value)}
+            placeholder="Add a prep note…"
+            style={{
+              ...inputStyle,
+              height: '44px',
+              fontSize: '12px',
+              resize: 'vertical' as const,
+              marginBottom: '6px',
+            }}
+          />
+          <button
+            onClick={handleAddPrepNote}
+            disabled={addingPrepNote || !newPrepContent.trim()}
+            style={btnPrimary(addingPrepNote || !newPrepContent.trim())}
+          >
+            {addingPrepNote ? 'Adding…' : 'Add Note'}
+          </button>
+        </div>
+      </div>
     );
   }
 
@@ -728,9 +649,7 @@ export default function DashboardPage() {
       return;
     }
     const interviews = jobInterviewsMap.get(detailJob.id) ?? [];
-    const stillValid = interviews.some(
-      (iv) => iv.id === selectedInterviewId
-    );
+    const stillValid = interviews.some((iv) => iv.id === selectedInterviewId);
     if (selectedInterviewId !== null && !stillValid) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedInterviewId(null);
@@ -2205,8 +2124,8 @@ export default function DashboardPage() {
                           marginBottom: '12px',
                         }}
                       >
-                        Interviews can only be added while this job's status
-                        is &quot;Interview&quot;.
+                        Interviews can only be added while this job's status is
+                        &quot;Interview&quot;.
                       </p>
                     )}
 
@@ -2627,8 +2546,7 @@ export default function DashboardPage() {
                                             padding: 0,
                                           }}
                                         >
-                                          {selectedInterviewId ===
-                                          item.entry.id
+                                          {selectedInterviewId === item.entry.id
                                             ? 'Hide Prep Notes'
                                             : 'Prep Notes'}
                                         </button>

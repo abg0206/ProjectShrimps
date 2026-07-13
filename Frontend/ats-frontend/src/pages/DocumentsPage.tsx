@@ -69,17 +69,13 @@ export default function DocumentsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Rename modal
-  const [renameTarget, setRenameTarget] = useState<DocumentRecord | null>(
-    null
-  );
+  const [renameTarget, setRenameTarget] = useState<DocumentRecord | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const [renaming, setRenaming] = useState(false);
 
   // Attach-to-job modal (S3-BR-013: a document may be attached to only one
   // job at a time — this both attaches and moves it).
-  const [attachTarget, setAttachTarget] = useState<DocumentRecord | null>(
-    null
-  );
+  const [attachTarget, setAttachTarget] = useState<DocumentRecord | null>(null);
   const [jobOptions, setJobOptions] = useState<JobOption[]>([]);
   const [loadingJobOptions, setLoadingJobOptions] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState('');
@@ -157,7 +153,9 @@ export default function DocumentsPage() {
     setUploadError('');
     try {
       const content =
-        format === 'txt' ? await uploadFile.text() : await fileToBase64(uploadFile);
+        format === 'txt'
+          ? await uploadFile.text()
+          : await fileToBase64(uploadFile);
 
       const tags = uploadTags
         .split(',')
@@ -198,8 +196,7 @@ export default function DocumentsPage() {
     try {
       const version = await downloadDocument(userEmail, doc.id);
       const filename =
-        version.original_filename ||
-        `${doc.title}.${version.file_format}`;
+        version.original_filename || `${doc.title}.${version.file_format}`;
       saveFileDownload(version.content, version.file_format, filename);
     } catch (err) {
       console.error('Download error:', err);
@@ -440,7 +437,11 @@ export default function DocumentsPage() {
 
   return (
     <div
-      style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#D9958C' }}
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        backgroundColor: '#D9958C',
+      }}
     >
       <Sidebar />
 
@@ -456,7 +457,14 @@ export default function DocumentsPage() {
             gap: '12px',
           }}
         >
-          <h1 style={{ color: '#3C1510', fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
+          <h1
+            style={{
+              color: '#3C1510',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              margin: 0,
+            }}
+          >
             Document Library
           </h1>
 
@@ -596,7 +604,9 @@ export default function DocumentsPage() {
         )}
 
         {!isLoading && (
-          <p style={{ color: '#3C1510', fontSize: '13px', marginBottom: '16px' }}>
+          <p
+            style={{ color: '#3C1510', fontSize: '13px', marginBottom: '16px' }}
+          >
             {documents.length} document{documents.length !== 1 ? 's' : ''}
           </p>
         )}
@@ -639,7 +649,13 @@ export default function DocumentsPage() {
                       alignItems: 'flex-start',
                     }}
                   >
-                    <p style={{ fontWeight: 'bold', color: '#3C1510', margin: 0 }}>
+                    <p
+                      style={{
+                        fontWeight: 'bold',
+                        color: '#3C1510',
+                        margin: 0,
+                      }}
+                    >
                       {doc.title}
                     </p>
                     <button
@@ -675,7 +691,9 @@ export default function DocumentsPage() {
                   </p>
 
                   {doc.tags?.length > 0 && (
-                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    <div
+                      style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}
+                    >
                       {doc.tags.map((tag) => (
                         <span
                           key={tag}
@@ -698,7 +716,9 @@ export default function DocumentsPage() {
                   </p>
 
                   {doc.linked_job_id && (
-                    <p style={{ color: '#3C1510', margin: 0, fontSize: '12px' }}>
+                    <p
+                      style={{ color: '#3C1510', margin: 0, fontSize: '12px' }}
+                    >
                       Attached to:{' '}
                       <strong>
                         {doc.linked_job_title}
@@ -819,7 +839,14 @@ export default function DocumentsPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ color: '#3C1510', fontSize: '18px', fontWeight: 'bold', margin: 0 }}>
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
               Upload Document
             </h2>
 
@@ -884,7 +911,13 @@ export default function DocumentsPage() {
               </p>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
               <button
                 onClick={() => setShowUploadModal(false)}
                 disabled={uploading}
@@ -946,7 +979,14 @@ export default function DocumentsPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ color: '#3C1510', fontSize: '18px', fontWeight: 'bold', margin: 0 }}>
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
               Rename Document
             </h2>
             <input
@@ -955,7 +995,13 @@ export default function DocumentsPage() {
               onChange={(e) => setRenameValue(e.target.value)}
               style={inputStyle}
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
               <button
                 onClick={() => setRenameTarget(null)}
                 disabled={renaming}
@@ -1017,16 +1063,24 @@ export default function DocumentsPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ color: '#3C1510', fontSize: '18px', fontWeight: 'bold', margin: 0 }}>
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
               Attach "{attachTarget.title}" to a Job
             </h2>
 
             {needsReplaceConfirm ? (
               <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
-                That job already has a {attachTarget.doc_type === 'resume' ? 'resume' : 'cover letter'}{' '}
-                attached. Attaching this one will replace it. A document can only
-                be attached to one job at a time, so it will also be removed
-                from any job it's currently attached to.
+                That job already has a{' '}
+                {attachTarget.doc_type === 'resume' ? 'resume' : 'cover letter'}{' '}
+                attached. Attaching this one will replace it. A document can
+                only be attached to one job at a time, so it will also be
+                removed from any job it's currently attached to.
               </p>
             ) : (
               <p style={{ color: '#3C1510', fontSize: '13px', margin: 0 }}>
@@ -1068,7 +1122,13 @@ export default function DocumentsPage() {
               </p>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
+            >
               <button
                 onClick={() => setAttachTarget(null)}
                 disabled={attaching}
@@ -1093,7 +1153,8 @@ export default function DocumentsPage() {
                   padding: '8px 20px',
                   borderRadius: '6px',
                   border: 'none',
-                  cursor: attaching || !selectedJobId ? 'not-allowed' : 'pointer',
+                  cursor:
+                    attaching || !selectedJobId ? 'not-allowed' : 'pointer',
                   fontSize: '14px',
                 }}
               >

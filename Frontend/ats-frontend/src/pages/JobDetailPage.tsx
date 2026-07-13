@@ -93,9 +93,9 @@ export default function JobDetailPage() {
 
   // --- Interview prep notes state (S3-013) ------------------------------
   const [interviews, setInterviews] = useState<Interview[]>([]);
-  const [selectedInterviewId, setSelectedInterviewId] = useState<
-    number | null
-  >(null);
+  const [selectedInterviewId, setSelectedInterviewId] = useState<number | null>(
+    null
+  );
   const [prepNotes, setPrepNotes] = useState<PrepNote[]>([]);
   const [prepLoading, setPrepLoading] = useState(false);
   const [prepError, setPrepError] = useState('');
@@ -172,7 +172,9 @@ export default function JobDetailPage() {
 
   async function handleGenerateResearch() {
     if (!researchContext.trim()) {
-      setGenerateError('Add some context first (role focus, what to look into, etc).');
+      setGenerateError(
+        'Add some context first (role focus, what to look into, etc).'
+      );
       return;
     }
     setGenerating(true);
@@ -252,9 +254,7 @@ export default function JobDetailPage() {
         noteId,
         { category: editCategory, content: editContent.trim() }
       );
-      setPrepNotes((prev) =>
-        prev.map((n) => (n.id === noteId ? updated : n))
-      );
+      setPrepNotes((prev) => prev.map((n) => (n.id === noteId ? updated : n)));
       setEditingNoteId(null);
     } catch (err) {
       console.error(err);
@@ -289,7 +289,11 @@ export default function JobDetailPage() {
 
   return (
     <div
-      style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#D9958C' }}
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        backgroundColor: '#D9958C',
+      }}
     >
       <Sidebar />
 
@@ -341,7 +345,13 @@ export default function JobDetailPage() {
               >
                 {job.title}
               </h1>
-              <p style={{ color: '#3C1510', fontSize: '15px', margin: '4px 0 0' }}>
+              <p
+                style={{
+                  color: '#3C1510',
+                  fontSize: '15px',
+                  margin: '4px 0 0',
+                }}
+              >
                 {job.company}
               </p>
             </div>
@@ -420,7 +430,9 @@ export default function JobDetailPage() {
                 style={{ ...textareaStyle, marginBottom: '10px' }}
               />
 
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <div
+                style={{ display: 'flex', gap: '10px', alignItems: 'center' }}
+              >
                 <button
                   onClick={handleSaveResearch}
                   disabled={savingResearch}
@@ -446,8 +458,7 @@ export default function JobDetailPage() {
                       marginLeft: 'auto',
                     }}
                   >
-                    Last updated{' '}
-                    {new Date(researchUpdatedAt).toLocaleString()}
+                    Last updated {new Date(researchUpdatedAt).toLocaleString()}
                   </span>
                 )}
               </div>
@@ -519,130 +530,150 @@ export default function JobDetailPage() {
                     </p>
                   ) : (
                     <div style={{ marginBottom: '20px' }}>
-                      {[...notesByCategory.map((c) => [c.label, c.notes] as const), ...(otherNotes.length ? [[CATEGORY_LABELS['general'] ?? 'Other', otherNotes] as const] : [])].map(
-                        ([label, notes]) =>
-                          notes.length === 0 ? null : (
-                            <div key={label} style={{ marginBottom: '14px' }}>
-                              <h3
+                      {[
+                        ...notesByCategory.map(
+                          (c) => [c.label, c.notes] as const
+                        ),
+                        ...(otherNotes.length
+                          ? [
+                              [
+                                CATEGORY_LABELS['general'] ?? 'Other',
+                                otherNotes,
+                              ] as const,
+                            ]
+                          : []),
+                      ].map(([label, notes]) =>
+                        notes.length === 0 ? null : (
+                          <div key={label} style={{ marginBottom: '14px' }}>
+                            <h3
+                              style={{
+                                color: '#932C20',
+                                fontSize: '13px',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                marginBottom: '8px',
+                              }}
+                            >
+                              {label}
+                            </h3>
+                            {notes.map((note) => (
+                              <div
+                                key={note.id}
                                 style={{
-                                  color: '#932C20',
-                                  fontSize: '13px',
-                                  fontWeight: 700,
-                                  textTransform: 'uppercase',
-                                  letterSpacing: '0.5px',
+                                  backgroundColor: '#fff',
+                                  borderRadius: '8px',
+                                  padding: '10px 14px',
                                   marginBottom: '8px',
                                 }}
                               >
-                                {label}
-                              </h3>
-                              {notes.map((note) => (
-                                <div
-                                  key={note.id}
-                                  style={{
-                                    backgroundColor: '#fff',
-                                    borderRadius: '8px',
-                                    padding: '10px 14px',
-                                    marginBottom: '8px',
-                                  }}
-                                >
-                                  {editingNoteId === note.id ? (
-                                    <>
-                                      <select
-                                        value={editCategory}
-                                        onChange={(e) =>
-                                          setEditCategory(e.target.value)
-                                        }
+                                {editingNoteId === note.id ? (
+                                  <>
+                                    <select
+                                      value={editCategory}
+                                      onChange={(e) =>
+                                        setEditCategory(e.target.value)
+                                      }
+                                      style={{
+                                        padding: '4px 8px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #D9958C',
+                                        fontSize: '13px',
+                                        marginBottom: '8px',
+                                      }}
+                                    >
+                                      {PREP_NOTE_CATEGORIES.map((c) => (
+                                        <option key={c.value} value={c.value}>
+                                          {c.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                    <textarea
+                                      value={editContent}
+                                      onChange={(e) =>
+                                        setEditContent(e.target.value)
+                                      }
+                                      rows={3}
+                                      style={{
+                                        ...textareaStyle,
+                                        marginBottom: '8px',
+                                      }}
+                                    />
+                                    <div
+                                      style={{ display: 'flex', gap: '8px' }}
+                                    >
+                                      <button
+                                        onClick={() => handleSaveEdit(note.id)}
+                                        disabled={savingNoteId === note.id}
+                                        style={btnPrimary(
+                                          savingNoteId === note.id
+                                        )}
+                                      >
+                                        {savingNoteId === note.id
+                                          ? 'Saving…'
+                                          : 'Save'}
+                                      </button>
+                                      <button
+                                        onClick={() => setEditingNoteId(null)}
+                                        style={btnSecondary}
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <p
+                                      style={{
+                                        color: '#3C1510',
+                                        fontSize: '14px',
+                                        margin: '0 0 8px',
+                                        whiteSpace: 'pre-wrap',
+                                      }}
+                                    >
+                                      {note.content}
+                                    </p>
+                                    <div
+                                      style={{ display: 'flex', gap: '12px' }}
+                                    >
+                                      <button
+                                        onClick={() => startEdit(note)}
                                         style={{
-                                          padding: '4px 8px',
-                                          borderRadius: '4px',
-                                          border: '1px solid #D9958C',
+                                          background: 'none',
+                                          border: 'none',
+                                          color: '#932C20',
+                                          cursor: 'pointer',
                                           fontSize: '13px',
-                                          marginBottom: '8px',
+                                          padding: 0,
                                         }}
                                       >
-                                        {PREP_NOTE_CATEGORIES.map((c) => (
-                                          <option key={c.value} value={c.value}>
-                                            {c.label}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <textarea
-                                        value={editContent}
-                                        onChange={(e) =>
-                                          setEditContent(e.target.value)
+                                        Edit
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          handleDeleteNote(note.id)
                                         }
-                                        rows={3}
-                                        style={{ ...textareaStyle, marginBottom: '8px' }}
-                                      />
-                                      <div style={{ display: 'flex', gap: '8px' }}>
-                                        <button
-                                          onClick={() => handleSaveEdit(note.id)}
-                                          disabled={savingNoteId === note.id}
-                                          style={btnPrimary(
-                                            savingNoteId === note.id
-                                          )}
-                                        >
-                                          {savingNoteId === note.id
-                                            ? 'Saving…'
-                                            : 'Save'}
-                                        </button>
-                                        <button
-                                          onClick={() => setEditingNoteId(null)}
-                                          style={btnSecondary}
-                                        >
-                                          Cancel
-                                        </button>
-                                      </div>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <p
+                                        disabled={deletingNoteId === note.id}
                                         style={{
-                                          color: '#3C1510',
-                                          fontSize: '14px',
-                                          margin: '0 0 8px',
-                                          whiteSpace: 'pre-wrap',
+                                          background: 'none',
+                                          border: 'none',
+                                          color: '#932C20',
+                                          cursor: 'pointer',
+                                          fontSize: '13px',
+                                          padding: 0,
                                         }}
                                       >
-                                        {note.content}
-                                      </p>
-                                      <div style={{ display: 'flex', gap: '12px' }}>
-                                        <button
-                                          onClick={() => startEdit(note)}
-                                          style={{
-                                            background: 'none',
-                                            border: 'none',
-                                            color: '#932C20',
-                                            cursor: 'pointer',
-                                            fontSize: '13px',
-                                            padding: 0,
-                                          }}
-                                        >
-                                          Edit
-                                        </button>
-                                        <button
-                                          onClick={() => handleDeleteNote(note.id)}
-                                          disabled={deletingNoteId === note.id}
-                                          style={{
-                                            background: 'none',
-                                            border: 'none',
-                                            color: '#932C20',
-                                            cursor: 'pointer',
-                                            fontSize: '13px',
-                                            padding: 0,
-                                          }}
-                                        >
-                                          {deletingNoteId === note.id
-                                            ? 'Deleting…'
-                                            : 'Delete'}
-                                        </button>
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )
+                                        {deletingNoteId === note.id
+                                          ? 'Deleting…'
+                                          : 'Delete'}
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )
                       )}
                       {prepNotes.length === 0 && (
                         <p style={{ color: '#3C1510', fontSize: '14px' }}>

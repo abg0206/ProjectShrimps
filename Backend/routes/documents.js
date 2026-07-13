@@ -15,7 +15,11 @@ module.exports = function (pool) {
   // Maps the URL-friendly path segment ("cover-letter") to the DB enum
   // value ("cover_letter") used everywhere else.
   const urlToDocType = (seg) =>
-    seg === 'cover-letter' ? 'cover_letter' : seg === 'resume' ? 'resume' : null;
+    seg === 'cover-letter'
+      ? 'cover_letter'
+      : seg === 'resume'
+        ? 'resume'
+        : null;
 
   const DOCUMENT_COLUMNS = `
     d.document_id AS id,
@@ -90,7 +94,9 @@ module.exports = function (pool) {
         if (!DOC_TYPES.includes(doc_type)) {
           return res
             .status(400)
-            .json({ error: `doc_type must be one of: ${DOC_TYPES.join(', ')}` });
+            .json({
+              error: `doc_type must be one of: ${DOC_TYPES.join(', ')}`,
+            });
         }
         conditions.push(`d.doc_type = $${paramIndex}::document_type_enum`);
         params.push(doc_type);
@@ -101,7 +107,9 @@ module.exports = function (pool) {
         if (!ALLOWED_STATUSES.includes(status)) {
           return res
             .status(400)
-            .json({ error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}` });
+            .json({
+              error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
+            });
         }
         conditions.push(`d.status = $${paramIndex}`);
         params.push(status);
@@ -195,8 +203,15 @@ module.exports = function (pool) {
 
     try {
       const { email } = req.params;
-      const { doc_type, title, status, tags, file_format, original_filename, content } =
-        req.body;
+      const {
+        doc_type,
+        title,
+        status,
+        tags,
+        file_format,
+        original_filename,
+        content,
+      } = req.body;
 
       if (!doc_type || !DOC_TYPES.includes(doc_type)) {
         return res
@@ -209,7 +224,9 @@ module.exports = function (pool) {
       if (status !== undefined && !ALLOWED_STATUSES.includes(status)) {
         return res
           .status(400)
-          .json({ error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}` });
+          .json({
+            error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
+          });
       }
       const tagsError = validateTags(tags);
       if (tagsError) {
@@ -229,7 +246,10 @@ module.exports = function (pool) {
         [
           email,
           doc_type,
-          title?.trim() || (doc_type === 'resume' ? 'Untitled Resume' : 'Untitled Cover Letter'),
+          title?.trim() ||
+            (doc_type === 'resume'
+              ? 'Untitled Resume'
+              : 'Untitled Cover Letter'),
           status || 'draft',
           JSON.stringify(tags || []),
         ]
@@ -293,7 +313,9 @@ module.exports = function (pool) {
       if (status !== undefined && !ALLOWED_STATUSES.includes(status)) {
         return res
           .status(400)
-          .json({ error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}` });
+          .json({
+            error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
+          });
       }
       const tagsError = validateTags(tags);
       if (tagsError) {
@@ -361,14 +383,21 @@ module.exports = function (pool) {
       const src = source.rows[0];
       if (!src.content) {
         await client.query('ROLLBACK');
-        return res.status(409).json({ error: 'Source document has no version to duplicate' });
+        return res
+          .status(409)
+          .json({ error: 'Source document has no version to duplicate' });
       }
 
       const newDoc = await client.query(
         `INSERT INTO document_table (email, doc_type, title, status, tags)
          VALUES ($1, $2, $3, 'draft', $4::jsonb)
          RETURNING document_id`,
-        [email, src.doc_type, title?.trim() || `${src.title} (Copy)`, JSON.stringify(src.tags)]
+        [
+          email,
+          src.doc_type,
+          title?.trim() || `${src.title} (Copy)`,
+          JSON.stringify(src.tags),
+        ]
       );
       const newDocumentId = newDoc.rows[0].document_id;
 
@@ -500,7 +529,10 @@ module.exports = function (pool) {
         await client.query('ROLLBACK');
         return res
           .status(409)
-          .json({ error: 'Cannot add a version to an archived document. Restore it first.' });
+          .json({
+            error:
+              'Cannot add a version to an archived document. Restore it first.',
+          });
       }
 
       const maxVersion = await client.query(
@@ -586,7 +618,15 @@ module.exports = function (pool) {
              (document_id, version_number, email, file_format, original_filename, content, file_size_bytes)
            VALUES ($1, $2, $3, $4, $5, $6, $7)
            RETURNING version_id, version_number, created_at`,
-          [id, nextVersion, email, file_format, original_filename, content, Buffer.byteLength(content, 'utf8')]
+          [
+            id,
+            nextVersion,
+            email,
+            file_format,
+            original_filename,
+            content,
+            Buffer.byteLength(content, 'utf8'),
+          ]
         );
 
         await client.query(
@@ -627,7 +667,9 @@ module.exports = function (pool) {
       if (format && !ALLOWED_FORMATS.includes(format)) {
         return res
           .status(400)
-          .json({ error: `format must be one of: ${ALLOWED_FORMATS.join(', ')}` });
+          .json({
+            error: `format must be one of: ${ALLOWED_FORMATS.join(', ')}`,
+          });
       }
 
       const params = [id, email];
@@ -694,7 +736,9 @@ module.exports = function (pool) {
       );
 
       if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'Document not found or already archived' });
+        return res
+          .status(404)
+          .json({ error: 'Document not found or already archived' });
       }
 
       res.status(200).json({ success: true, archived: result.rows[0].id });
@@ -718,7 +762,9 @@ module.exports = function (pool) {
       );
 
       if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'Document not found or not archived' });
+        return res
+          .status(404)
+          .json({ error: 'Document not found or not archived' });
       }
 
       res.status(200).json({ success: true, restored: result.rows[0].id });
@@ -772,53 +818,60 @@ module.exports = function (pool) {
   // caller needing to already know its document_id (S3-005, S3-010: lets
   // the download workflow be driven from the job detail view as well as
   // the library view).
-  router.get('/jobs/:email/:jobId/documents/:docTypeParam/download', async (req, res) => {
-    try {
-      const { email, jobId, docTypeParam } = req.params;
+  router.get(
+    '/jobs/:email/:jobId/documents/:docTypeParam/download',
+    async (req, res) => {
+      try {
+        const { email, jobId, docTypeParam } = req.params;
 
-      const docType = urlToDocType(docTypeParam);
-      if (!docType) {
-        return res
-          .status(400)
-          .json({ error: 'Document type in URL must be "resume" or "cover-letter"' });
-      }
+        const docType = urlToDocType(docTypeParam);
+        if (!docType) {
+          return res
+            .status(400)
+            .json({
+              error: 'Document type in URL must be "resume" or "cover-letter"',
+            });
+        }
 
-      const job = await pool.query(
-        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
-        [jobId, email]
-      );
-      if (job.rows.length === 0) {
-        return res.status(404).json({ error: 'Job not found' });
-      }
+        const job = await pool.query(
+          `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+          [jobId, email]
+        );
+        if (job.rows.length === 0) {
+          return res.status(404).json({ error: 'Job not found' });
+        }
 
-      const result = await pool.query(
-        `SELECT v.version_id, v.version_number, v.file_format, v.original_filename, v.content
+        const result = await pool.query(
+          `SELECT v.version_id, v.version_number, v.file_format, v.original_filename, v.content
          FROM job_document_link jdl
          JOIN document_version_table v ON v.version_id = jdl.version_id
          JOIN document_table d ON d.document_id = jdl.document_id
          WHERE jdl.job_id = $1 AND jdl.doc_type = $2::document_type_enum AND d.email = $3`,
-        [jobId, docType, email]
-      );
+          [jobId, docType, email]
+        );
 
-      if (result.rows.length === 0) {
-        return res
-          .status(404)
-          .json({ error: `No ${docType.replace('_', ' ')} is linked to this job` });
+        if (result.rows.length === 0) {
+          return res
+            .status(404)
+            .json({
+              error: `No ${docType.replace('_', ' ')} is linked to this job`,
+            });
+        }
+
+        const row = result.rows[0];
+        res.status(200).json({
+          version_id: row.version_id,
+          version_number: row.version_number,
+          file_format: row.file_format,
+          original_filename: row.original_filename,
+          content: row.content,
+        });
+      } catch (err) {
+        console.error('Download job document error:', err);
+        res.status(500).json({ error: 'Failed to download job document' });
       }
-
-      const row = result.rows[0];
-      res.status(200).json({
-        version_id: row.version_id,
-        version_number: row.version_number,
-        file_format: row.file_format,
-        original_filename: row.original_filename,
-        content: row.content,
-      });
-    } catch (err) {
-      console.error('Download job document error:', err);
-      res.status(500).json({ error: 'Failed to download job document' });
     }
-  });
+  );
 
   // PUT /jobs/:email/:jobId/documents/:docType — link (or replace the link
   // for) a job's resume or cover letter. docType path segment is
@@ -830,149 +883,175 @@ module.exports = function (pool) {
   // resend the request with { confirm: true } or it is rejected with 409.
   // S3-BR-012: both the job and the document are ownership-checked, and
   // the write happens in a transaction to keep the link consistent.
-  router.put('/jobs/:email/:jobId/documents/:docTypeParam', async (req, res) => {
-    const client = await pool.connect();
-    try {
-      const { email, jobId, docTypeParam } = req.params;
-      const { document_id, confirm } = req.body;
+  router.put(
+    '/jobs/:email/:jobId/documents/:docTypeParam',
+    async (req, res) => {
+      const client = await pool.connect();
+      try {
+        const { email, jobId, docTypeParam } = req.params;
+        const { document_id, confirm } = req.body;
 
-      const docType = urlToDocType(docTypeParam);
-      if (!docType) {
-        return res
-          .status(400)
-          .json({ error: 'Document type in URL must be "resume" or "cover-letter"' }); // S3-BR-001
-      }
-      if (!document_id) {
-        return res.status(400).json({ error: 'document_id is required' });
-      }
+        const docType = urlToDocType(docTypeParam);
+        if (!docType) {
+          return res
+            .status(400)
+            .json({
+              error: 'Document type in URL must be "resume" or "cover-letter"',
+            }); // S3-BR-001
+        }
+        if (!document_id) {
+          return res.status(400).json({ error: 'document_id is required' });
+        }
 
-      await client.query('BEGIN');
+        await client.query('BEGIN');
 
-      const job = await client.query(
-        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE FOR UPDATE`,
-        [jobId, email]
-      );
-      if (job.rows.length === 0) {
-        await client.query('ROLLBACK');
-        return res.status(404).json({ error: 'Job not found' }); // S3-BR-012
-      }
+        const job = await client.query(
+          `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE FOR UPDATE`,
+          [jobId, email]
+        );
+        if (job.rows.length === 0) {
+          await client.query('ROLLBACK');
+          return res.status(404).json({ error: 'Job not found' }); // S3-BR-012
+        }
 
-      const document = await client.query(
-        `SELECT document_id, doc_type, current_version_id, is_archived
+        const document = await client.query(
+          `SELECT document_id, doc_type, current_version_id, is_archived
          FROM document_table
          WHERE document_id = $1 AND email = $2`,
-        [document_id, email]
-      );
-      if (document.rows.length === 0) {
-        await client.query('ROLLBACK');
-        return res.status(404).json({ error: 'Document not found' }); // S3-BR-012 ownership check
-      }
-      if (document.rows[0].doc_type !== docType) {
-        await client.query('ROLLBACK');
-        return res.status(400).json({
-          error: `Document is a ${document.rows[0].doc_type}, not a ${docType}`,
-        });
-      }
-      if (document.rows[0].is_archived) {
-        await client.query('ROLLBACK');
-        return res
-          .status(409)
-          .json({ error: 'Cannot link an archived document. Restore it first.' });
-      }
+          [document_id, email]
+        );
+        if (document.rows.length === 0) {
+          await client.query('ROLLBACK');
+          return res.status(404).json({ error: 'Document not found' }); // S3-BR-012 ownership check
+        }
+        if (document.rows[0].doc_type !== docType) {
+          await client.query('ROLLBACK');
+          return res.status(400).json({
+            error: `Document is a ${document.rows[0].doc_type}, not a ${docType}`,
+          });
+        }
+        if (document.rows[0].is_archived) {
+          await client.query('ROLLBACK');
+          return res
+            .status(409)
+            .json({
+              error: 'Cannot link an archived document. Restore it first.',
+            });
+        }
 
-      // S3-BR-013: a document may be attached to only one job at a time.
-      // If it's currently attached elsewhere, detach it there first so the
-      // move is atomic with the new link below.
-      await client.query(
-        `DELETE FROM job_document_link WHERE document_id = $1 AND job_id != $2`,
-        [document_id, jobId]
-      );
+        // S3-BR-013: a document may be attached to only one job at a time.
+        // If it's currently attached elsewhere, detach it there first so the
+        // move is atomic with the new link below.
+        await client.query(
+          `DELETE FROM job_document_link WHERE document_id = $1 AND job_id != $2`,
+          [document_id, jobId]
+        );
 
-      const existingLink = await client.query(
-        `SELECT document_id FROM job_document_link WHERE job_id = $1 AND doc_type = $2::document_type_enum FOR UPDATE`,
-        [jobId, docType]
-      );
+        const existingLink = await client.query(
+          `SELECT document_id FROM job_document_link WHERE job_id = $1 AND doc_type = $2::document_type_enum FOR UPDATE`,
+          [jobId, docType]
+        );
 
-      if (
-        existingLink.rows.length > 0 &&
-        Number(existingLink.rows[0].document_id) !== Number(document_id) &&
-        !confirm
-      ) {
-        // S3-BR-011: replacing an existing link needs explicit confirmation.
-        await client.query('ROLLBACK');
-        return res.status(409).json({
-          error: 'A document of this type is already linked to this job. Resend with confirm: true to replace it.',
-          requires_confirmation: true,
-          currently_linked_document_id: existingLink.rows[0].document_id,
-        });
-      }
+        if (
+          existingLink.rows.length > 0 &&
+          Number(existingLink.rows[0].document_id) !== Number(document_id) &&
+          !confirm
+        ) {
+          // S3-BR-011: replacing an existing link needs explicit confirmation.
+          await client.query('ROLLBACK');
+          return res.status(409).json({
+            error:
+              'A document of this type is already linked to this job. Resend with confirm: true to replace it.',
+            requires_confirmation: true,
+            currently_linked_document_id: existingLink.rows[0].document_id,
+          });
+        }
 
-      await client.query(
-        `INSERT INTO job_document_link (job_id, doc_type, document_id, version_id, linked_by)
+        await client.query(
+          `INSERT INTO job_document_link (job_id, doc_type, document_id, version_id, linked_by)
          VALUES ($1, $2::document_type_enum, $3, $4, $5)
          ON CONFLICT (job_id, doc_type)
          DO UPDATE SET document_id = EXCLUDED.document_id,
                        version_id = EXCLUDED.version_id,
                        linked_by = EXCLUDED.linked_by,
                        linked_at = NOW()`,
-        [jobId, docType, document_id, document.rows[0].current_version_id, email]
-      );
+          [
+            jobId,
+            docType,
+            document_id,
+            document.rows[0].current_version_id,
+            email,
+          ]
+        );
 
-      await client.query('COMMIT');
+        await client.query('COMMIT');
 
-      res.status(200).json({
-        success: true,
-        job_id: Number(jobId),
-        doc_type: docType,
-        document_id: Number(document_id),
-      });
-    } catch (err) {
-      await client.query('ROLLBACK');
-      console.error('Link document to job error:', err);
-      res.status(500).json({ error: 'Failed to link document to job' });
-    } finally {
-      client.release();
+        res.status(200).json({
+          success: true,
+          job_id: Number(jobId),
+          doc_type: docType,
+          document_id: Number(document_id),
+        });
+      } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Link document to job error:', err);
+        res.status(500).json({ error: 'Failed to link document to job' });
+      } finally {
+        client.release();
+      }
     }
-  });
+  );
 
   // DELETE /jobs/:email/:jobId/documents/:docType — unlink a job's resume
   // or cover letter (does not touch the document itself).
-  router.delete('/jobs/:email/:jobId/documents/:docTypeParam', async (req, res) => {
-    try {
-      const { email, jobId, docTypeParam } = req.params;
+  router.delete(
+    '/jobs/:email/:jobId/documents/:docTypeParam',
+    async (req, res) => {
+      try {
+        const { email, jobId, docTypeParam } = req.params;
 
-      const docType = urlToDocType(docTypeParam);
-      if (!docType) {
-        return res
-          .status(400)
-          .json({ error: 'Document type in URL must be "resume" or "cover-letter"' });
-      }
+        const docType = urlToDocType(docTypeParam);
+        if (!docType) {
+          return res
+            .status(400)
+            .json({
+              error: 'Document type in URL must be "resume" or "cover-letter"',
+            });
+        }
 
-      const job = await pool.query(
-        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
-        [jobId, email]
-      );
-      if (job.rows.length === 0) {
-        return res.status(404).json({ error: 'Job not found' });
-      }
+        const job = await pool.query(
+          `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+          [jobId, email]
+        );
+        if (job.rows.length === 0) {
+          return res.status(404).json({ error: 'Job not found' });
+        }
 
-      const result = await pool.query(
-        `DELETE FROM job_document_link
+        const result = await pool.query(
+          `DELETE FROM job_document_link
          WHERE job_id = $1 AND doc_type = $2::document_type_enum
          RETURNING document_id`,
-        [jobId, docType]
-      );
+          [jobId, docType]
+        );
 
-      if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'No document of this type linked to job' });
+        if (result.rows.length === 0) {
+          return res
+            .status(404)
+            .json({ error: 'No document of this type linked to job' });
+        }
+
+        res
+          .status(200)
+          .json({
+            success: true,
+            unlinked_document_id: result.rows[0].document_id,
+          });
+      } catch (err) {
+        console.error('Unlink document from job error:', err);
+        res.status(500).json({ error: 'Failed to unlink document from job' });
       }
-
-      res.status(200).json({ success: true, unlinked_document_id: result.rows[0].document_id });
-    } catch (err) {
-      console.error('Unlink document from job error:', err);
-      res.status(500).json({ error: 'Failed to unlink document from job' });
     }
-  });
+  );
 
   return router;
 };

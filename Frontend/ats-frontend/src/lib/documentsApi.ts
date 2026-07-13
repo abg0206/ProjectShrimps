@@ -36,7 +36,9 @@ export interface JobOption {
 
 // Maps a document's own doc_type to the URL segment the job-linking
 // endpoints expect ("cover-letter", not "cover_letter").
-export function docTypeToUrlSegment(docType: DocType): 'resume' | 'cover-letter' {
+export function docTypeToUrlSegment(
+  docType: DocType
+): 'resume' | 'cover-letter' {
   return docType === 'cover_letter' ? 'cover-letter' : 'resume';
 }
 
@@ -173,7 +175,11 @@ export function duplicateDocument(
 export function addVersion(
   email: string,
   id: number,
-  payload: { file_format: FileFormat; original_filename?: string; content: string }
+  payload: {
+    file_format: FileFormat;
+    original_filename?: string;
+    content: string;
+  }
 ): Promise<VersionRecord> {
   return request(`/api/documents/${enc(email)}/${id}/versions`, {
     method: 'POST',
@@ -260,7 +266,11 @@ export async function linkJobDocument(
     );
     return { requiresConfirmation: false, document_id: data.document_id };
   } catch (err) {
-    if (err instanceof ApiError && err.status === 409 && err.requires_confirmation) {
+    if (
+      err instanceof ApiError &&
+      err.status === 409 &&
+      err.requires_confirmation
+    ) {
       return {
         requiresConfirmation: true,
         currentlyLinkedDocumentId: Number(err.currently_linked_document_id),

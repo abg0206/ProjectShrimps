@@ -28,7 +28,9 @@ interface Props {
 }
 
 export default function AnalyticsChart({ email, refreshKey }: Props) {
-  const [interestedToApplied, setInterestedToApplied] = useState<Transition[]>([]);
+  const [interestedToApplied, setInterestedToApplied] = useState<Transition[]>(
+    []
+  );
   const [totalInterested, setTotalInterested] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -189,16 +191,19 @@ export default function AnalyticsChart({ email, refreshKey }: Props) {
 
           {/* Progress bar */}
           <div style={{ marginBottom: '16px' }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: '11px',
-              color: '#3C1510',
-              marginBottom: '4px',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '11px',
+                color: '#3C1510',
+                marginBottom: '4px',
+              }}
+            >
               <span>Conversion rate</span>
               <span style={{ fontWeight: 600, color: '#3C1510' }}>
-                {interestedToApplied.length} of {totalInterested} ({conversionRate}%)
+                {interestedToApplied.length} of {totalInterested} (
+                {conversionRate}%)
               </span>
             </div>
             <div style={rateBarContainerStyle}>
@@ -210,12 +215,26 @@ export default function AnalyticsChart({ email, refreshKey }: Props) {
 
           {/* Job list */}
           {interestedToApplied.length === 0 ? (
-            <p style={{ color: '#3C1510', fontSize: '12px', textAlign: 'center', padding: '8px 0' }}>
+            <p
+              style={{
+                color: '#3C1510',
+                fontSize: '12px',
+                textAlign: 'center',
+                padding: '8px 0',
+              }}
+            >
               No jobs moved from Interested to Applied in the last 7 days.
             </p>
           ) : (
             <>
-              <p style={{ fontSize: '12px', color: '#3C1510', fontWeight: 600, marginBottom: '8px' }}>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: '#3C1510',
+                  fontWeight: 600,
+                  marginBottom: '8px',
+                }}
+              >
                 Jobs that moved forward:
               </p>
               {interestedToApplied.map((t, i) => (
@@ -238,7 +257,14 @@ export default function AnalyticsChart({ email, refreshKey }: Props) {
           <div style={dividerStyle} />
 
           {/* Footer */}
-          <p style={{ fontSize: '11px', color: '#3C1510', textAlign: 'center', margin: 0 }}>
+          <p
+            style={{
+              fontSize: '11px',
+              color: '#3C1510',
+              textAlign: 'center',
+              margin: 0,
+            }}
+          >
             Showing transitions from the past 7 days only
           </p>
         </>

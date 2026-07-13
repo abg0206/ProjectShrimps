@@ -75,9 +75,7 @@ export default function CoverLetterPage() {
 
   // S3-009/S3-010: the document-library document currently linked to this
   // job's cover-letter slot (if any).
-  const [linkedDocumentId, setLinkedDocumentId] = useState<number | null>(
-    null
-  );
+  const [linkedDocumentId, setLinkedDocumentId] = useState<number | null>(null);
   const [loadingLinked, setLoadingLinked] = useState(false);
   const [pendingReplace, setPendingReplace] = useState<{
     documentId: number;
@@ -310,7 +308,9 @@ export default function CoverLetterPage() {
           );
         }
         setSaveMessage(
-          tailoredJobId ? 'Cover letter saved to this job.' : 'Cover letter saved.'
+          tailoredJobId
+            ? 'Cover letter saved to this job.'
+            : 'Cover letter saved.'
         );
         return;
       }
@@ -318,7 +318,9 @@ export default function CoverLetterPage() {
       if (!tailoredJobId) {
         // Guarded against above, but keeps TypeScript's narrowing happy and
         // fails safely if this branch is ever reached unexpectedly.
-        setSaveError('Open a cover letter from a job first so it can be linked there.');
+        setSaveError(
+          'Open a cover letter from a job first so it can be linked there.'
+        );
         return;
       }
 
@@ -781,12 +783,16 @@ export default function CoverLetterPage() {
               Replace linked cover letter?
             </h2>
             <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
-              A different cover letter is already linked to this job. Your
-              new cover letter has been saved to your Document Library —
-              replace the one linked to this job with it?
+              A different cover letter is already linked to this job. Your new
+              cover letter has been saved to your Document Library — replace the
+              one linked to this job with it?
             </p>
             <div
-              style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
             >
               <button
                 onClick={() => {

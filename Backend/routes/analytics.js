@@ -13,7 +13,7 @@ module.exports = function (pool) {
     try {
       const { email } = req.params;
 
-      // LAG() looks at the prev row for the same job_id 
+      // LAG() looks at the prev row for the same job_id
       // to assume what stage the job was in BEFORE this transition
       const result = await pool.query(
         `WITH transitions AS (
@@ -74,10 +74,10 @@ module.exports = function (pool) {
       const totalInterested = parseInt(poolResult.rows[0].count, 10);
 
       res.status(200).json({
-        transitions: result.rows,         // all transitions in last 7 days
-        interestedToApplied,              // specifically 0 → 1
+        transitions: result.rows, // all transitions in last 7 days
+        interestedToApplied, // specifically 0 → 1
         totalTransitions: result.rows.length,
-        totalInterested,                  // jobs currently Interested or Applied
+        totalInterested, // jobs currently Interested or Applied
       });
     } catch (err) {
       console.error('Analytics conversions error:', err);
@@ -90,7 +90,6 @@ module.exports = function (pool) {
   router.get('/:email/velocity', async (req, res) => {
     try {
       const { email } = req.params;
-
 
       // so we can calculate how long the job stayed in each stage
       const result = await pool.query(

@@ -393,7 +393,8 @@ module.exports = function (pool) {
       // "Interview" stage (stage '2').
       if (job.rows[0].stage !== '2') {
         return res.status(409).json({
-          error: 'Interviews can only be added while the job status is "Interview"',
+          error:
+            'Interviews can only be added while the job status is "Interview"',
         });
       }
 

@@ -50,9 +50,7 @@ export default function ResumePage() {
   // S3-009/S3-010: the document-library document currently linked to this
   // job's resume slot (if any). When set, Save adds a new version to it
   // instead of creating a brand-new library document every time.
-  const [linkedDocumentId, setLinkedDocumentId] = useState<number | null>(
-    null
-  );
+  const [linkedDocumentId, setLinkedDocumentId] = useState<number | null>(null);
   const [loadingLinked, setLoadingLinked] = useState(false);
   // Set only when the PUT link call comes back 409 (a *different* document
   // is already linked to this job's resume slot) — S3-BR-011.
@@ -221,7 +219,9 @@ export default function ResumePage() {
       if (!tailoredJobId) {
         // Guarded against above, but keeps TypeScript's narrowing happy and
         // fails safely if this branch is ever reached unexpectedly.
-        setSaveError('Open a resume from a job first so it can be linked there.');
+        setSaveError(
+          'Open a resume from a job first so it can be linked there.'
+        );
         return;
       }
 
@@ -278,7 +278,9 @@ export default function ResumePage() {
     } catch (err) {
       console.error('Confirm replace error:', err);
       setSaveError(
-        err instanceof Error ? err.message : 'Could not replace the linked resume.'
+        err instanceof Error
+          ? err.message
+          : 'Could not replace the linked resume.'
       );
     } finally {
       setConfirming(false);
@@ -779,12 +781,16 @@ export default function ResumePage() {
               Replace linked resume?
             </h2>
             <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
-              A different resume is already linked to this job. Your new
-              resume has been saved to your Document Library — replace the
-              one linked to this job with it?
+              A different resume is already linked to this job. Your new resume
+              has been saved to your Document Library — replace the one linked
+              to this job with it?
             </p>
             <div
-              style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}
             >
               <button
                 onClick={() => {

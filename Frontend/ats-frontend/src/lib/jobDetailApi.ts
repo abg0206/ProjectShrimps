@@ -29,16 +29,16 @@ export interface Interview {
 }
 
 export type PrepNoteCategory =
-  | 'questions_to_ask'
-  | 'talking_points'
-  | 'general';
+  'questions_to_ask' | 'talking_points' | 'general';
 
-export const PREP_NOTE_CATEGORIES: { value: PrepNoteCategory; label: string }[] =
-  [
-    { value: 'talking_points', label: 'Talking Points' },
-    { value: 'questions_to_ask', label: 'Questions to Ask' },
-    { value: 'general', label: 'General' },
-  ];
+export const PREP_NOTE_CATEGORIES: {
+  value: PrepNoteCategory;
+  label: string;
+}[] = [
+  { value: 'talking_points', label: 'Talking Points' },
+  { value: 'questions_to_ask', label: 'Questions to Ask' },
+  { value: 'general', label: 'General' },
+];
 
 export interface PrepNote {
   id: number;
@@ -94,13 +94,10 @@ export function generateCompanyResearch(
   jobId: number,
   context: string
 ): Promise<{ success: boolean; research_notes: string }> {
-  return request(
-    `/api/jobs/${enc(email)}/${jobId}/company-research/generate`,
-    {
-      method: 'POST',
-      body: JSON.stringify({ context }),
-    }
-  );
+  return request(`/api/jobs/${enc(email)}/${jobId}/company-research/generate`, {
+    method: 'POST',
+    body: JSON.stringify({ context }),
+  });
 }
 
 export function saveCompanyResearch(
