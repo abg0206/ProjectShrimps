@@ -11,6 +11,7 @@ const jobsRouter = require('./routes/jobs');
 const settingsRouter = require('./routes/settings');
 const aiRouter = require('./routes/ai');
 const analyticsRouter = require('./routes/analytics'); //analytics
+const documentsRouter = require('./routes/documents');
 const app = express();
 
 app.use(cors({ origin: '*', credentials: true }));
@@ -59,6 +60,7 @@ app.use('/api/settings', settingsRouter);
 app.use('/api/users', settingsRouter);
 app.use('/api/ai', aiRouter(pool));
 app.use('/api/analytics', analyticsRouter(pool)); //analytics router mounted here
+app.use('/api', documentsRouter(pool));
 
 
 // start
