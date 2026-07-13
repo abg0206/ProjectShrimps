@@ -1103,20 +1103,24 @@ export default function DashboardPage() {
     }
   }
 
-  async function loadInterviews(jobId: number) {
+  async function loadInterviews(
+    jobId: number
+  ): Promise<InterviewEntry[] | null> {
     try {
       const res = await fetch(
         `/api/jobs/${encodeURIComponent(userEmail)}/${jobId}/interviews`
       );
-      if (!res.ok) return;
+      if (!res.ok) return null;
       const data: InterviewEntry[] = await res.json();
       setJobInterviewsMap((prev) => {
         const next = new Map(prev);
         next.set(jobId, data);
         return next;
       });
+      return data;
     } catch (err) {
       console.error('Failed to load interviews:', err);
+      return null;
     }
   }
 
@@ -2050,7 +2054,27 @@ export default function DashboardPage() {
                         );
                         return;
                       }
-                      await loadInterviews(jobId);
+                      const created = await res
+                        .json()
+                        .catch(() => null as InterviewEntry | null);
+                      const refreshed = await loadInterviews(jobId);
+
+                      // Rather than closing the form, drop straight into
+                      // "edit" mode for the interview we just created so its
+                      // Prep Notes section is available immediately — no
+                      // need to close and reopen via the timeline's Edit
+                      // link just to jot down prep notes.
+                      const newId = created?.id;
+                      const newIndex =
+                        newId !== undefined && refreshed
+                          ? refreshed.findIndex((iv) => iv.id === newId)
+                          : -1;
+
+                      if (newIndex !== -1) {
+                        setEditingInterviewIndex(newIndex);
+                        setSelectedInterviewId(newId as number);
+                        return;
+                      }
                     } catch (err) {
                       console.error('Failed to save interview:', err);
                       return;
