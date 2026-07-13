@@ -30,12 +30,20 @@ module.exports = function (pool) {
     v.version_number AS current_version_number,
     v.file_format AS current_file_format,
     v.original_filename AS current_original_filename,
-    v.created_at AS current_version_created_at
+    v.created_at AS current_version_created_at,
+    jdl.job_id AS linked_job_id,
+    j.title AS linked_job_title,
+    j.company AS linked_job_company
   `;
 
+  // S3-BR-013: a document can be attached to at most one job (the
+  // job_document_link.document_id UNIQUE constraint enforces this at the DB
+  // level), so this join can never fan a document out into multiple rows.
   const DOCUMENT_FROM = `
     FROM document_table d
     LEFT JOIN document_version_table v ON v.version_id = d.current_version_id
+    LEFT JOIN job_document_link jdl ON jdl.document_id = d.document_id
+    LEFT JOIN job_table j ON j.unique_num = jdl.job_id
   `;
 
   // S3-BR-004 / S3-BR-005: reject unsupported formats (or a filename whose
@@ -871,6 +879,14 @@ module.exports = function (pool) {
           .status(409)
           .json({ error: 'Cannot link an archived document. Restore it first.' });
       }
+
+      // S3-BR-013: a document may be attached to only one job at a time.
+      // If it's currently attached elsewhere, detach it there first so the
+      // move is atomic with the new link below.
+      await client.query(
+        `DELETE FROM job_document_link WHERE document_id = $1 AND job_id != $2`,
+        [document_id, jobId]
+      );
 
       const existingLink = await client.query(
         `SELECT document_id FROM job_document_link WHERE job_id = $1 AND doc_type = $2::document_type_enum FOR UPDATE`,

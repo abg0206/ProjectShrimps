@@ -8,6 +8,13 @@ import {
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { plainTextToEditorHtml } from '../lib/utils';
+import {
+  getJobDocuments,
+  linkJobDocument,
+  createDocument,
+  addVersion,
+  downloadDocument,
+} from '../lib/documentsApi';
 
 const REWRITE_GOALS = [
   'Professional, ATS-friendly',
@@ -40,6 +47,22 @@ export default function ResumePage() {
   const [saveMessage, setSaveMessage] = useState('');
   const [saveError, setSaveError] = useState('');
 
+  // S3-009/S3-010: the document-library document currently linked to this
+  // job's resume slot (if any). When set, Save adds a new version to it
+  // instead of creating a brand-new library document every time.
+  const [linkedDocumentId, setLinkedDocumentId] = useState<number | null>(
+    null
+  );
+  const [loadingLinked, setLoadingLinked] = useState(false);
+  // Set only when the PUT link call comes back 409 (a *different* document
+  // is already linked to this job's resume slot) — S3-BR-011.
+  const [pendingReplace, setPendingReplace] = useState<{
+    documentId: number;
+    title: string;
+    content: string;
+  } | null>(null);
+  const [confirming, setConfirming] = useState(false);
+
   // Read the navigation state once during render — it's a plain value from
   // useLocation(), not a ref, so reading it here is fine.
   type NavState = {
@@ -47,6 +70,10 @@ export default function ResumePage() {
     resumeHtml?: string;
     jobTitle?: string;
     jobId?: number;
+    // Set when opened from the Documents page ("Preview") so Save can add a
+    // version to this exact library document even when it isn't (yet)
+    // linked to any job.
+    documentId?: number;
   } | null;
   const initialNavState = location.state as NavState;
   const hasIncomingResume = Boolean(
@@ -61,20 +88,53 @@ export default function ResumePage() {
   );
 
   // If we got here from "Tailor Resume" on a job card, drop that AI-generated
-  // resume straight into the editor.
+  // resume straight into the editor. Otherwise, if this job already has a
+  // resume linked in the document library (S3-009/S3-010), load it so the
+  // person is editing their real saved resume instead of a blank page.
   useEffect(() => {
     const incoming = initialNavState?.resumeHtml ?? initialNavState?.aiContent;
-    if (!incoming) return;
 
-    if (editorRef.current) {
-      editorRef.current.innerHTML = initialNavState?.resumeHtml
-        ? incoming
-        : plainTextToEditorHtml(incoming);
-      setIsEmpty(false);
+    if (incoming) {
+      if (editorRef.current) {
+        editorRef.current.innerHTML = initialNavState?.resumeHtml
+          ? incoming
+          : plainTextToEditorHtml(incoming);
+        setIsEmpty(false);
+      }
+      // Clear the navigation state so a refresh/back doesn't redo this.
+      navigate(location.pathname, { replace: true, state: null });
     }
 
-    // Clear the navigation state so a refresh/back doesn't redo this.
-    navigate(location.pathname, { replace: true, state: null });
+    // Previewing a document straight from the Documents library already
+    // tells us exactly which document this is — no need to look it up via
+    // the job link, and it lets Save work even for a document that isn't
+    // attached to any job yet (S3-BR-013).
+    if (initialNavState?.documentId) {
+      setLinkedDocumentId(initialNavState.documentId);
+      return;
+    }
+
+    if (!tailoredJobId) return;
+
+    setLoadingLinked(true);
+    getJobDocuments(userEmail, tailoredJobId)
+      .then(async (links) => {
+        const link = links.resume;
+        if (!link) return;
+        setLinkedDocumentId(link.document_id);
+        if (!incoming) {
+          const version = await downloadDocument(userEmail, link.document_id);
+          if (editorRef.current) {
+            editorRef.current.innerHTML = version.content;
+            setIsEmpty(false);
+          }
+          setSaveMessage(
+            `Loaded your saved resume (v${link.version_number}) for this job.`
+          );
+        }
+      })
+      .catch((err) => console.error('Load linked resume error:', err))
+      .finally(() => setLoadingLinked(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -119,9 +179,9 @@ export default function ResumePage() {
       return;
     }
 
-    if (!tailoredJobId) {
+    if (!tailoredJobId && !linkedDocumentId) {
       setSaveError(
-        'Open a resume from a job first so it can be saved to that job.'
+        'Open a resume from a job or your Document Library first so it can be saved.'
       );
       return;
     }
@@ -130,31 +190,98 @@ export default function ResumePage() {
     setSaveError('');
     setSaveMessage('');
 
+    const title = tailoredFor ? `Resume for ${tailoredFor}` : 'Saved resume';
+
     try {
-      const res = await fetch(
-        `/api/jobs/${encodeURIComponent(userEmail)}/${tailoredJobId}/resumes`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: tailoredFor ? `Resume for ${tailoredFor}` : 'Saved resume',
-            content: html,
-          }),
+      if (linkedDocumentId) {
+        // Already have a library document for this resume — content
+        // changes only ever happen through a new version (S3-BR-007).
+        await addVersion(userEmail, linkedDocumentId, {
+          file_format: 'txt',
+          original_filename: `${title}.txt`,
+          content: html,
+        });
+        // Only re-link if we're editing in the context of a job; a document
+        // opened straight from the library may not be attached to one.
+        if (tailoredJobId) {
+          await linkJobDocument(
+            userEmail,
+            tailoredJobId,
+            'resume',
+            linkedDocumentId,
+            true
+          );
         }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setSaveError(data.error ?? 'Failed to save resume.');
+        setSaveMessage(
+          tailoredJobId ? 'Resume saved to this job.' : 'Resume saved.'
+        );
         return;
       }
 
+      if (!tailoredJobId) {
+        // Guarded against above, but keeps TypeScript's narrowing happy and
+        // fails safely if this branch is ever reached unexpectedly.
+        setSaveError('Open a resume from a job first so it can be linked there.');
+        return;
+      }
+
+      // No document linked yet — create one in the library, then link it.
+      const created = await createDocument(userEmail, {
+        doc_type: 'resume',
+        title,
+        file_format: 'txt',
+        original_filename: `${title}.txt`,
+        content: html,
+      });
+
+      const linkResult = await linkJobDocument(
+        userEmail,
+        tailoredJobId,
+        'resume',
+        created.id
+      );
+
+      if (linkResult.requiresConfirmation) {
+        // S3-BR-011: a different resume is already linked to this job.
+        // The new document stays in the library either way; ask before
+        // replacing the link.
+        setPendingReplace({ documentId: created.id, title, content: html });
+        return;
+      }
+
+      setLinkedDocumentId(created.id);
       setSaveMessage('Resume saved to this job.');
     } catch (err) {
       console.error('Save resume error:', err);
-      setSaveError('Could not connect to the server.');
+      setSaveError(
+        err instanceof Error ? err.message : 'Could not connect to the server.'
+      );
     } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleConfirmReplace() {
+    if (!pendingReplace || !tailoredJobId) return;
+    setConfirming(true);
+    try {
+      await linkJobDocument(
+        userEmail,
+        tailoredJobId,
+        'resume',
+        pendingReplace.documentId,
+        true
+      );
+      setLinkedDocumentId(pendingReplace.documentId);
+      setSaveMessage('Resume saved to this job.');
+      setPendingReplace(null);
+    } catch (err) {
+      console.error('Confirm replace error:', err);
+      setSaveError(
+        err instanceof Error ? err.message : 'Could not replace the linked resume.'
+      );
+    } finally {
+      setConfirming(false);
       setSaving(false);
     }
   }
@@ -610,10 +737,92 @@ export default function ResumePage() {
               fontSize: '14px',
             }}
           >
-            {saving ? 'Saving...' : 'Save'}
+            {saving || loadingLinked ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
+
+      {/* Confirm-to-replace (S3-BR-011): a different resume is already
+          linked to this job; the new one is saved to the library either
+          way, this just confirms swapping the job's link. */}
+      {pendingReplace && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#E6CECB',
+              borderRadius: '10px',
+              padding: '24px',
+              width: '380px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+          >
+            <h2
+              style={{
+                color: '#3C1510',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: 0,
+              }}
+            >
+              Replace linked resume?
+            </h2>
+            <p style={{ color: '#3C1510', fontSize: '14px', margin: 0 }}>
+              A different resume is already linked to this job. Your new
+              resume has been saved to your Document Library — replace the
+              one linked to this job with it?
+            </p>
+            <div
+              style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}
+            >
+              <button
+                onClick={() => {
+                  setPendingReplace(null);
+                  setSaving(false);
+                }}
+                disabled={confirming}
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#3C1510',
+                  padding: '8px 20px',
+                  borderRadius: '6px',
+                  border: '1px solid #3C1510',
+                  cursor: confirming ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmReplace}
+                disabled={confirming}
+                style={{
+                  backgroundColor: confirming ? '#B8736B' : '#932C20',
+                  color: '#FFFFFF',
+                  padding: '8px 20px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  cursor: confirming ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                }}
+              >
+                {confirming ? 'Replacing…' : 'Replace'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

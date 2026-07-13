@@ -1,12 +1,19 @@
 const express = require('express');
+const { generateContent } = require('../Services/geminiService');
+const { buildCompanyResearchPrompt } = require('../Services/promptBuilder');
 
-// TODO(S3-011): point this at whatever AI client the app already uses for
-// resume/cover-letter tailoring — this file doesn't have access to that
-// client, so it's stubbed here. Should return a string of research notes.
+// Same Gemini client/prompt-template pattern the resume/cover-letter
+// tailoring routes use (see routes/ai.js) — builds the CompanyResearch.txt
+// prompt and asks Gemini for a plain-text research report.
 async function generateCompanyResearch({ company, title, context }) {
-  throw new Error(
-    'generateCompanyResearch is not wired up yet — see TODO(S3-011) in jobs.js'
-  );
+  const prompt = buildCompanyResearchPrompt({ company, title, context });
+  const result = await generateContent(prompt);
+
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to generate company research');
+  }
+
+  return result.content;
 }
 
 module.exports = function (pool) {
@@ -291,6 +298,30 @@ module.exports = function (pool) {
     } catch (err) {
       console.error('Delete job error:', err);
       res.status(500).json({ error: 'Failed to delete job' });
+    }
+  });
+
+  // GET /jobs/:email/:id — single job's core fields, for detail views
+  // (e.g. the Job Detail page's header) that don't need the whole list.
+  router.get('/jobs/:email/:id', async (req, res) => {
+    try {
+      const { email, id } = req.params;
+
+      const result = await pool.query(
+        `SELECT unique_num AS id, title, company, description, stages AS status, created_at, recruiter_notes, reminder_text, reminder_date::text AS reminder_date
+         FROM job_table
+         WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        [id, email]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error('Get job error:', err);
+      res.status(500).json({ error: 'Failed to fetch job' });
     }
   });
 

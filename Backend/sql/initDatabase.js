@@ -192,6 +192,30 @@ async function main() {
       END $$;
     `);
 
+    // S3-BR-013: a document may be attached to only one job at a time.
+    // Older data could in theory have the same document linked to more
+    // than one job (before this rule existed), so clear that out before
+    // enforcing it — keep only the most recently linked row per document.
+    await pool.query(`
+      DELETE FROM job_document_link a
+      USING job_document_link b
+      WHERE a.document_id = b.document_id
+        AND a.linked_at < b.linked_at;
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'uq_jobdoclink_document'
+        ) THEN
+          ALTER TABLE job_document_link
+          ADD CONSTRAINT uq_jobdoclink_document
+          UNIQUE (document_id);
+        END IF;
+      END $$;
+    `);
+
     // --- indexes ----------------------------------------------------------
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_document_email
