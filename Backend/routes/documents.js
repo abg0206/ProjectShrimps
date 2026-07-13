@@ -92,11 +92,9 @@ module.exports = function (pool) {
       if (doc_type) {
         // S3-BR-001: only resume / cover_letter are valid library types.
         if (!DOC_TYPES.includes(doc_type)) {
-          return res
-            .status(400)
-            .json({
-              error: `doc_type must be one of: ${DOC_TYPES.join(', ')}`,
-            });
+          return res.status(400).json({
+            error: `doc_type must be one of: ${DOC_TYPES.join(', ')}`,
+          });
         }
         conditions.push(`d.doc_type = $${paramIndex}::document_type_enum`);
         params.push(doc_type);
@@ -105,11 +103,9 @@ module.exports = function (pool) {
 
       if (status) {
         if (!ALLOWED_STATUSES.includes(status)) {
-          return res
-            .status(400)
-            .json({
-              error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
-            });
+          return res.status(400).json({
+            error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
+          });
         }
         conditions.push(`d.status = $${paramIndex}`);
         params.push(status);
@@ -222,11 +218,9 @@ module.exports = function (pool) {
         return res.status(400).json({ error: 'content is required' });
       }
       if (status !== undefined && !ALLOWED_STATUSES.includes(status)) {
-        return res
-          .status(400)
-          .json({
-            error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
-          });
+        return res.status(400).json({
+          error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
+        });
       }
       const tagsError = validateTags(tags);
       if (tagsError) {
@@ -311,11 +305,9 @@ module.exports = function (pool) {
         return res.status(400).json({ error: 'title cannot be empty' });
       }
       if (status !== undefined && !ALLOWED_STATUSES.includes(status)) {
-        return res
-          .status(400)
-          .json({
-            error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
-          });
+        return res.status(400).json({
+          error: `status must be one of: ${ALLOWED_STATUSES.join(', ')}`,
+        });
       }
       const tagsError = validateTags(tags);
       if (tagsError) {
@@ -527,12 +519,10 @@ module.exports = function (pool) {
       }
       if (doc.rows[0].is_archived) {
         await client.query('ROLLBACK');
-        return res
-          .status(409)
-          .json({
-            error:
-              'Cannot add a version to an archived document. Restore it first.',
-          });
+        return res.status(409).json({
+          error:
+            'Cannot add a version to an archived document. Restore it first.',
+        });
       }
 
       const maxVersion = await client.query(
@@ -665,11 +655,9 @@ module.exports = function (pool) {
       const { version, format } = req.query;
 
       if (format && !ALLOWED_FORMATS.includes(format)) {
-        return res
-          .status(400)
-          .json({
-            error: `format must be one of: ${ALLOWED_FORMATS.join(', ')}`,
-          });
+        return res.status(400).json({
+          error: `format must be one of: ${ALLOWED_FORMATS.join(', ')}`,
+        });
       }
 
       const params = [id, email];
@@ -826,11 +814,9 @@ module.exports = function (pool) {
 
         const docType = urlToDocType(docTypeParam);
         if (!docType) {
-          return res
-            .status(400)
-            .json({
-              error: 'Document type in URL must be "resume" or "cover-letter"',
-            });
+          return res.status(400).json({
+            error: 'Document type in URL must be "resume" or "cover-letter"',
+          });
         }
 
         const job = await pool.query(
@@ -851,11 +837,9 @@ module.exports = function (pool) {
         );
 
         if (result.rows.length === 0) {
-          return res
-            .status(404)
-            .json({
-              error: `No ${docType.replace('_', ' ')} is linked to this job`,
-            });
+          return res.status(404).json({
+            error: `No ${docType.replace('_', ' ')} is linked to this job`,
+          });
         }
 
         const row = result.rows[0];
@@ -893,11 +877,9 @@ module.exports = function (pool) {
 
         const docType = urlToDocType(docTypeParam);
         if (!docType) {
-          return res
-            .status(400)
-            .json({
-              error: 'Document type in URL must be "resume" or "cover-letter"',
-            }); // S3-BR-001
+          return res.status(400).json({
+            error: 'Document type in URL must be "resume" or "cover-letter"',
+          }); // S3-BR-001
         }
         if (!document_id) {
           return res.status(400).json({ error: 'document_id is required' });
@@ -932,11 +914,9 @@ module.exports = function (pool) {
         }
         if (document.rows[0].is_archived) {
           await client.query('ROLLBACK');
-          return res
-            .status(409)
-            .json({
-              error: 'Cannot link an archived document. Restore it first.',
-            });
+          return res.status(409).json({
+            error: 'Cannot link an archived document. Restore it first.',
+          });
         }
 
         // S3-BR-013: a document may be attached to only one job at a time.
@@ -1012,11 +992,9 @@ module.exports = function (pool) {
 
         const docType = urlToDocType(docTypeParam);
         if (!docType) {
-          return res
-            .status(400)
-            .json({
-              error: 'Document type in URL must be "resume" or "cover-letter"',
-            });
+          return res.status(400).json({
+            error: 'Document type in URL must be "resume" or "cover-letter"',
+          });
         }
 
         const job = await pool.query(
@@ -1040,12 +1018,10 @@ module.exports = function (pool) {
             .json({ error: 'No document of this type linked to job' });
         }
 
-        res
-          .status(200)
-          .json({
-            success: true,
-            unlinked_document_id: result.rows[0].document_id,
-          });
+        res.status(200).json({
+          success: true,
+          unlinked_document_id: result.rows[0].document_id,
+        });
       } catch (err) {
         console.error('Unlink document from job error:', err);
         res.status(500).json({ error: 'Failed to unlink document from job' });
