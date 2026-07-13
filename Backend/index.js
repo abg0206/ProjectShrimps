@@ -3,7 +3,7 @@
 require('express-async-errors');
 
 const express = require('express');
-const logger = require('./logger');
+const logger = require('./Services/logger');
 const requestId = require('./middleware/requestId');
 const errorHandler = require('./middleware/errorHandler');
 const clientErrorsRoute = require('./routes/clientErrors');

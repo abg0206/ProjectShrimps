@@ -381,12 +381,20 @@ module.exports = function (pool) {
 
       // Confirm the job exists and belongs to this email before inserting.
       const job = await pool.query(
-        `SELECT unique_num FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
+        `SELECT unique_num, stages::text AS stage FROM job_table WHERE unique_num = $1 AND email = $2 AND is_deleted = FALSE`,
         [id, email]
       );
 
       if (job.rows.length === 0) {
         return res.status(404).json({ error: 'Job not found' });
+      }
+
+      // Interviews can only be scheduled while the job is in the
+      // "Interview" stage (stage '2').
+      if (job.rows[0].stage !== '2') {
+        return res.status(409).json({
+          error: 'Interviews can only be added while the job status is "Interview"',
+        });
       }
 
       const result = await pool.query(

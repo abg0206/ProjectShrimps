@@ -2166,32 +2166,49 @@ export default function DashboardPage() {
                       >
                         Timeline
                       </p>
-                      <button
-                        onClick={() => {
-                          if (showAddInterview) {
-                            setShowAddInterview(false);
-                            setEditingInterviewIndex(null);
-                          } else {
-                            setNewInterviewRound('');
-                            setNewInterviewDate('');
-                            setNewInterviewNotes('');
-                            setEditingInterviewIndex(null);
-                            setShowAddInterview(true);
-                          }
-                        }}
+                      {detailJob.status === '2' && (
+                        <button
+                          onClick={() => {
+                            if (showAddInterview) {
+                              setShowAddInterview(false);
+                              setEditingInterviewIndex(null);
+                            } else {
+                              setNewInterviewRound('');
+                              setNewInterviewDate('');
+                              setNewInterviewNotes('');
+                              setEditingInterviewIndex(null);
+                              setShowAddInterview(true);
+                            }
+                          }}
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#932C20',
+                            border: '2px solid #932C20',
+                            padding: '4px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                          }}
+                        >
+                          + Add Interview
+                        </button>
+                      )}
+                    </div>
+
+                    {detailJob.status !== '2' && (
+                      <p
                         style={{
-                          backgroundColor: 'transparent',
-                          color: '#932C20',
-                          border: '2px solid #932C20',
-                          padding: '4px 12px',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
+                          color: '#3C1510',
                           fontSize: '12px',
+                          opacity: 0.7,
+                          marginTop: '-8px',
+                          marginBottom: '12px',
                         }}
                       >
-                        + Add Interview
-                      </button>
-                    </div>
+                        Interviews can only be added while this job's status
+                        is &quot;Interview&quot;.
+                      </p>
+                    )}
 
                     {/* Add interview form */}
                     {showAddInterview && (
