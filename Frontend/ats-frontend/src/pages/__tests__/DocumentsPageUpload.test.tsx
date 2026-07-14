@@ -1,20 +1,26 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { screen, fireEvent, cleanup } from '@testing-library/react';
 import { mockLoggedInUser, renderDocumentsPage } from './testUtils';
 
 beforeEach(() => {
   mockLoggedInUser();
 });
 
+afterEach(() => {
+  cleanup();
+});
+
 describe('DocumentsPage - Upload', () => {
-  it('opens the upload modal when "Upload Document" is clicked', () => {
+  it('opens the upload modal when "Upload Document" is clicked', async () => {
     renderDocumentsPage();
+    await screen.findByText('No documents yet.');
     fireEvent.click(screen.getByText('Upload Document'));
     expect(screen.getByText('Choose File')).toBeInTheDocument();
   });
 
-  it('rejects a file that is not PDF/DOC/DOCX', () => {
+  it('rejects a file that is not PDF/DOC/DOCX', async () => {
     renderDocumentsPage();
+    await screen.findByText('No documents yet.');
     fireEvent.click(screen.getByText('Upload Document'));
 
     const fileInput = document.querySelector(
@@ -33,6 +39,7 @@ describe('DocumentsPage - Upload', () => {
 
   it('accepts a valid PDF and adds it to the list after clicking Upload', async () => {
     renderDocumentsPage();
+    await screen.findByText('No documents yet.');
     fireEvent.click(screen.getByText('Upload Document'));
 
     const fileInput = document.querySelector(

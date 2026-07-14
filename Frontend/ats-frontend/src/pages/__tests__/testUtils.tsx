@@ -28,10 +28,12 @@ export async function uploadTestFile(
   fireEvent: typeof import('@testing-library/react').fireEvent,
   fileName: string
 ) {
+  // Wait for the initial (mocked, empty) fetch to resolve first.
+  // Otherwise its setDocuments([]) can race with and overwrite the upload below.
+  await screen.findByText('No documents yet.');
+
   fireEvent.click(screen.getByText('Upload Document'));
-  const fileInput = document.querySelector(
-    'input[type="file"]'
-  ) as HTMLInputElement;
+  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
   const file = new File(['content'], fileName, { type: 'application/pdf' });
   fireEvent.change(fileInput, { target: { files: [file] } });
   fireEvent.click(screen.getByText('Upload'));

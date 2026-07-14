@@ -15,7 +15,7 @@ describe('DocumentsPage - Archive/Unarchive', () => {
     renderDocumentsPage();
     await uploadTestFile(screen, fireEvent, 'portfolio.pdf');
 
-    fireEvent.click(screen.getByText('Archive'));
+    fireEvent.click(screen.getByRole('button', { name: 'Archive' }));
 
     expect(await screen.findByText('Unarchive')).toBeInTheDocument();
   });
