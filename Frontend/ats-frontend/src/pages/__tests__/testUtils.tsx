@@ -33,7 +33,9 @@ export async function uploadTestFile(
   await screen.findByText('No documents yet.');
 
   fireEvent.click(screen.getByText('Upload Document'));
-  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+  const fileInput = document.querySelector(
+    'input[type="file"]'
+  ) as HTMLInputElement;
   const file = new File(['content'], fileName, { type: 'application/pdf' });
   fireEvent.change(fileInput, { target: { files: [file] } });
   fireEvent.click(screen.getByText('Upload'));
